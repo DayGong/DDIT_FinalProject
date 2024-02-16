@@ -14,7 +14,7 @@
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
 	<bean id="uploadFolder" class="java.lang.String">
-		<constructor-arg value="D:\\D_setting\\A_TeachingMaterial\\09_FinalPoject\\workspace\\finalProj\\src\\main\\webapp\\resources\\upload"></constructor-arg>
+		<constructor-arg value="D:\\D_setting\\A_TeachingMaterial\\09_FinalPoject\\workspace\\DDIT_FinalProject\\finalProj\\src\\main\\webapp\\resources\\upload"></constructor-arg>
 	</bean>
 	
 	<!-- 데이터베이스 연결 설정 시작 -->
