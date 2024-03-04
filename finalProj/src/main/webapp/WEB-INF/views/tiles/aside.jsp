@@ -3,8 +3,8 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>  
 <nav id="sidebar" class="">
     <div class="sidebar-header">
-        <a href="index.html"><img class="main-logo" src="img/logo/logo.png" alt="" /></a>
-        <strong><a href="index.html"><img src="img/logo/logosn.png" alt="" /></a></strong>
+        <a href="index.html"><img class="main-logo" src="/resources/kiaalap/img/logo/logo.png" alt="" /></a>
+        <strong><a href="index.html"><img src="/resources/kiaalap/img/logo/logosn.png" alt="" /></a></strong>
     </div>
     <div class="left-custom-menu-adp-wrap comment-scrollbar">
         <nav class="sidebar-nav left-sidebar-menu-pro">
