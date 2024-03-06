@@ -50,11 +50,16 @@
     <link rel="stylesheet" href="/resources/kiaalap/css/responsive.css">
     <!-- modernizr JS ============================================ -->
     <!-- 폰트 -->
-    <link rel="stylesheet" href="/resources/css/font.css">
+    <link rel="stylesheet" href="/resources/css/webfonts.css">
     <script src="/resources/kiaalap/js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
-
+<style>
+	body{
+		 font-family: "Pretendard";
+	}
+</style>
 <body>
+
     <!--[if lt IE 8]>
 		<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 	<![endif]-->

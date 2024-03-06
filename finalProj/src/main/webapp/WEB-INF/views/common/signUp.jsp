@@ -33,30 +33,33 @@
 <style>
 #signUpContainer{
 	color:#333;
-	padding:60px 80px;
+	padding: 60px 150px;
 	background-color: rgba(255, 255, 255, 0.6);
 	border-radius: 26px;
 	backdrop-filter: blur(6px);
 	box-shadow: 0px 35px 68px 0px rgba(145, 192, 255, 0.5), inset 0px -8px 16px 0px rgba(145, 192, 255, 0.6), inset 0px 11px 28px 0px rgb(255, 255, 255);
 }
+
 #signUpContainer h2{
-	font-family: 'Pretendard-Bold';
 	text-align:center;
 	font-size:2rem;
 	
 }
-#signUpContainer input{
+#signUpContainer input[type='text']{
 	height:40px;
 	border:1px solid #ddd;
 	border-radius:5px;
 }
 #signUpContainer span{
-	font-family: 'Pretendard-SemiBold';
 	font-size:1.2rem;
 }
 
-.signUpinputAll{
+.signUpinputAll, .signUpinputAll li{
 	display:block;
+}
+
+.signUpinputAll li{
+	margin-bottom: 20px;
 }
 </style>
 
@@ -66,36 +69,36 @@
 		회원가입 
 		<img src="..\resources\images\member\signUp1.png" style="width:50px;">
 	</h2>
-	<form id="frm">
-		<ul class="signUpinputAll">
-			<li>
-				<span>회원 성함</span>
-				<input type="text" name="title">
-			</li>
-			<li>
-				<span>아이디</span>
-				<input type="text" name="description">
-			</li>
-			<li>
-				<span>비밀번호</span>
-				<input type="text" name="category">
-			</li>
-			<li>
-				<span>비밀번호 확인</span>
-				<input type="text" name="category">
-			</li>
-			<li>
-				<span>썸네일</span>
-				<input type="file" multiple="multiple" name="upload">
-			</li>
-		</ul>
-		<p>
-			<button type="button" id="insertBtn">
-				회원가입하기
-			</button>
-			<button type="button" id="goList" onclick="javascript:location.href=''">
-				목록
-			</button>
-		</p>
-	</form>
-</div>
+		<form id="frm">
+			<ul class="signUpinputAll">
+				<li>
+					<span>회원 성함</span>
+					<input type="text" name="title">
+				</li>
+				<li>
+					<span>아이디</span>
+					<input type="text" name="description">
+				</li>
+				<li>
+					<span>비밀번호</span>
+					<input type="text" name="category">
+				</li>
+				<li>
+					<span>비밀번호 확인</span>
+					<input type="text" name="category">
+				</li>
+				<li>
+					<span>썸네일</span>
+					<input type="file" multiple="multiple" name="upload">
+				</li>
+			</ul>
+			<p>
+				<button type="button" id="insertBtn">
+					회원가입하기
+				</button>
+				<button type="button" id="goList" onclick="javascript:location.href=''">
+					목록
+				</button>
+			</p>
+		</form>
+	</div>
