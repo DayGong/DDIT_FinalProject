@@ -16,7 +16,7 @@
                             </div>
                             <div class="col-lg-6 col-md-7 col-sm-6 col-xs-12">
                                 <div class="header-top-menu tabl-d-n">
-                                    <ul class="nav navbar-nav mai-top-nav">
+                                    <ul class="nav navbar-nav mai-top-nav" style="font-family: 'Pretendard-Bold';">
                                         <li class="nav-item"><a href="#" class="nav-link">Home</a>
                                         </li>
                                         <li class="nav-item"><a href="#" class="nav-link">About</a>

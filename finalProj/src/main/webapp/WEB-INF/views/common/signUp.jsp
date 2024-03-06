@@ -33,7 +33,6 @@
 <style>
 #signUpContainer{
 	color:#333;
-	font-family: 'Pretendard';
 	padding:60px 80px;
 	background-color: rgba(255, 255, 255, 0.6);
 	border-radius: 26px;
@@ -41,6 +40,7 @@
 	box-shadow: 0px 35px 68px 0px rgba(145, 192, 255, 0.5), inset 0px -8px 16px 0px rgba(145, 192, 255, 0.6), inset 0px 11px 28px 0px rgb(255, 255, 255);
 }
 #signUpContainer h2{
+	font-family: 'Pretendard-Bold';
 	text-align:center;
 	font-size:2rem;
 	
@@ -51,20 +51,23 @@
 	border-radius:5px;
 }
 #signUpContainer span{
+	font-family: 'Pretendard-SemiBold';
 	font-size:1.2rem;
-	font-weight:600;
-	
+}
+
+.signUpinputAll{
+	display:block;
 }
 </style>
 
 <!-- 회원가입 폼 전체 -->
 <div id="signUpContainer">
-	<h2 style="font-weight:600;">
+	<h2>
 		회원가입 
 		<img src="..\resources\images\member\signUp1.png" style="width:50px;">
 	</h2>
 	<form id="frm">
-		<ul>
+		<ul class="signUpinputAll">
 			<li>
 				<span>회원 성함</span>
 				<input type="text" name="title">
