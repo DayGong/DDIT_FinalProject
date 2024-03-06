@@ -8,6 +8,11 @@
 	</settings>
 	<!-- 자주 사용하는 타입의 별칭을 세팅 -->
 	<typeAliases>
+		<!-- classroom -->
+		<typeAlias type="kr.or.ddit.classroom.vo.ClasAlbumVO" alias="clasAlbumVO" />
+		<typeAlias type="kr.or.ddit.classroom.vo.ClasVO" alias="clasVO" />
+		<typeAlias type="kr.or.ddit.classroom.vo.NtcnVO" alias="ntcnVO" />
+		<typeAlias type="kr.or.ddit.classroom.vo.SkedVO" alias="skedVO" />
 	</typeAliases>
 </configuration>
 
