@@ -9,7 +9,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Dashboard V.1 | Kiaalap - Kiaalap Admin Template</title>
+    <title>Doodle</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- favicon ============================================ -->
@@ -49,6 +49,8 @@
     <!-- responsive CSS ============================================ -->
     <link rel="stylesheet" href="/resources/kiaalap/css/responsive.css">
     <!-- modernizr JS ============================================ -->
+    <!-- 폰트 -->
+    <link rel="stylesheet" href="/resources/css/font.css">
     <script src="/resources/kiaalap/js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
 
