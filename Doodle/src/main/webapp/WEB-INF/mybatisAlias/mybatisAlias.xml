@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<!-- null일 경우 -->
+		<setting name="jdbcTypeForNull" value="VARCHAR"/>
+	</settings>
+	<!-- 자주 사용하는 타입의 별칭을 세팅 -->
+	<typeAliases>
+		<typeAlias type="kr.or.ddit.vo.AlbumTagVO" alias="albumTagVO" />
+		<typeAlias type="kr.or.ddit.vo.AnswerVO" alias="answerVO" />
+		<typeAlias type="kr.or.ddit.vo.AschaVO" alias="aschaVO" />
+		<typeAlias type="kr.or.ddit.vo.AschaWeekPlanVO" alias="aschaWeekPlanVO" />
+		<typeAlias type="kr.or.ddit.vo.AswperVO" alias="aswperVO" />
+		<typeAlias type="kr.or.ddit.vo.AtchFileVO" alias="atchFileVO" />
+		<typeAlias type="kr.or.ddit.vo.AtendVO" alias="atendVO" />
+		<typeAlias type="kr.or.ddit.vo.AtentDissVO" alias="atentDissVO" />
+		<typeAlias type="kr.or.ddit.vo.AtnlcReqstVO" alias="atnlcReqstVO" />
+		<typeAlias type="kr.or.ddit.vo.ChttRoomVO" alias="chttRoomVO" />
+		<typeAlias type="kr.or.ddit.vo.ChttVO" alias="chttVO" />
+		<typeAlias type="kr.or.ddit.vo.ClasAlbumVO" alias="clasAlbumVO" />
+		<typeAlias type="kr.or.ddit.vo.ClasStdntVO" alias="clasStdntVO" />
+		<typeAlias type="kr.or.ddit.vo.ClasVO" alias="clasVO" />
+		<typeAlias type="kr.or.ddit.vo.CmmnCodeVO" alias="cmmnCodeVO" />
+		<typeAlias type="kr.or.ddit.vo.CmmnDetailCodeVO" alias="cmmnDetailCodeVO" />
+		<typeAlias type="kr.or.ddit.vo.CnsltVO" alias="cnsltVO" />
+		<typeAlias type="kr.or.ddit.vo.DclzVO" alias="dclzVO" />
+        <typeAlias type="kr.or.ddit.vo.DietVO" alias="dietVO" />
+      	<typeAlias type="kr.or.ddit.vo.FamilyRelateVO" alias="familyRelateVO" />
+      	<typeAlias type="kr.or.ddit.vo.FaqVO" alias="faqVO" />
+      	<typeAlias type="kr.or.ddit.vo.GcVO" alias="gcVO" />
+      	<typeAlias type="kr.or.ddit.vo.HoldAllrgyVO" alias="holdAllrgyVO" />
+      	<typeAlias type="kr.or.ddit.vo.HrtchrVO" alias="hrtchrVO" />
+      	<typeAlias type="kr.or.ddit.vo.IemRspnsVO" alias="IemRspnsVO" />
+		<typeAlias type="kr.or.ddit.vo.MemberVO" alias="memberVO"/>
+      	<typeAlias type="kr.or.ddit.vo.MngrVO" alias="mngrVO"/>
+      	<typeAlias type="kr.or.ddit.vo.NoticeVO" alias="noticeVO"/>
+      	<typeAlias type="kr.or.ddit.vo.NtcnVO" alias="ntcnVO"/>
+      	<typeAlias type="kr.or.ddit.vo.NttVO" alias="nttVO"/>
+      	<typeAlias type="kr.or.ddit.vo.PresentnPapersVO" alias="presentnPapersVO"/>
+     	<typeAlias type="kr.or.ddit.vo.QuesVO" alias="quesVO"/>
+		<typeAlias type="kr.or.ddit.vo.SchafsSchdulVO" alias="schafsSchdulVO"/>
+      	<typeAlias type="kr.or.ddit.vo.SchulPsitnMberVO" alias="schulPsitnMberVO"/>
+     	<typeAlias type="kr.or.ddit.vo.SchulVO" alias="schulVO"/>
+	    <typeAlias type="kr.or.ddit.vo.SkedVO" alias="skedVO"/>
+	    <typeAlias type="kr.or.ddit.vo.StdntLvlhRcordVO" alias="stdntLvlhRcordVO"/>
+	    <typeAlias type="kr.or.ddit.vo.SttemntVO" alias="sttemntVO"/>
+	    <typeAlias type="kr.or.ddit.vo.TaskResultVO" alias="taskResultVO"/>
+	    <typeAlias type="kr.or.ddit.vo.TaskVO" alias="taskVO"/>
+	    <typeAlias type="kr.or.ddit.vo.UnitEvlVO" alias="unitEvlVO"/>
+	    <typeAlias type="kr.or.ddit.vo.VoteNdQustnrVO" alias="voteNdQustnrVO"/>
+        <typeAlias type="kr.or.ddit.vo.VoteQustnrDetailIemVO" alias="voteQustnrDetailIemVO"/>
+	    <typeAlias type="kr.or.ddit.vo.VoteQustnrIemVO" alias="voteQustnrIemVO"/>
+	    <typeAlias type="kr.or.ddit.vo.VwMemberAuthVO" alias="vwMemberAuthVO"/>
+	    <typeAlias type="kr.or.ddit.vo.UnitEvlScoreVO" alias="unitEvlScoreVO"/>
+		<typeAlias type="kr.or.ddit.vo.CnsltDiaryVO" alias="cnsltDiaryVO"/>
+		<typeAlias type="kr.or.ddit.vo.ClasFamVO" alias="clasFamVO"/>
+		<typeAlias type="kr.or.ddit.vo.ChldrnClasVO" alias="chldrnClasVO"/>
+		<typeAlias type="kr.or.ddit.vo.CnsltDiarySearchVO" alias="cnsltDiarySearchVO"/>
+		<typeAlias type="kr.or.ddit.vo.SttemntSearchVO" alias="sttemntSearchVO"/>
+		<typeAlias type="kr.or.ddit.vo.VwStdntStdnprntVO" alias="vwStdntStdnprntVO"/>
+		<typeAlias type="kr.or.ddit.vo.SanctnDocVO" alias="sanctnDocVO"/>
+		<typeAlias type="kr.or.ddit.vo.SanctnDocSearchVO" alias="sanctnDocSearchVO"/>
+		<typeAlias type="kr.or.ddit.vo.EdcInfoNttVO" alias="edcInfoNttVO"/>
+		<typeAlias type="kr.or.ddit.vo.HmpgManageVO" alias="hmpgManageVO"/>
+		<typeAlias type="kr.or.ddit.vo.AschaDclzVO" alias="aschaDclzVO"/>
+		<typeAlias type="kr.or.ddit.vo.DiarySearchVO" alias="diarySearchVO"/>
+	</typeAliases>
+</configuration>
+
+
+
+
+
+
+

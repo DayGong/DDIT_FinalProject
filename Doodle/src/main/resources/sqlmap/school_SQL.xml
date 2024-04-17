@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.school.mapper.SchoolMapper">
+	 <sql id="where">
+      <if test="keyword!=null and keyword!=''">
+         AND (
+               NTT_NM LIKE '%' || #{keyword} || '%'
+            OR   NTT_CN LIKE '%' || #{keyword} || '%'
+            OR   MBER_ID LIKE '%' || #{keyword} || '%'
+         )
+      </if>
+   </sql>
+   
+	<resultMap type="memberVO" id="memberMap">
+		<result property="mberId" column="MBER_ID"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="ihidnum" column="IHIDNUM"/>
+		<result property="moblphonNo" column="MOBLPHON_NO"/>
+		<result property="mberEmail" column="MBER_EMAIL"/>
+		<result property="zip" column="ZIP"/>
+		<result property="mberAdres" column="MBER_ADRES"/>
+		<result property="mberImage" column="MBER_IMAGE"/>
+		<result property="mberSecsnAt" column="MBER_SECSN_AT"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+	</resultMap>
+	
+	<resultMap type="nttVO" id="nttMap">
+		<result property="nttCode" column="NTT_CODE"/>
+		<result property="nttNm" column="NTT_NM"/>
+		<result property="nttCn" column="NTT_CN"/>
+		<result property="nttWritngDt" column="NTT_WRITNG_DT"/>
+		<result property="nttSttemntAccmlt" column="NTT_STTEMNT_ACCMLT"/>
+		<result property="nttAtchFileCode" column="NTT_ATCH_FILE_CODE"/>
+		<result property="cmmnNttSe" column="CMMN_NTT_SE"/>
+		<result property="cmmnNttSttemnt" column="CMMN_NTT_STTEMNT"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="mberNm" column="MBER_NAME"/>
+		<result property="nttRdcnt" column="NTT_RDCNT"/>
+		<result property="rnum" column="RNUM"/>
+		 <association property="memberVO" resultMap="memberMap"/>
+	</resultMap>
+
+	<!-- 학교 목록 조회 -->
+	<select id="schoolList" parameterType="hashMap" resultType="schulVO">
+		WITH T AS(
+		    SELECT  ROW_NUMBER() OVER (ORDER BY S.SCHUL_CODE DESC) RNUM
+		          	, S.*
+		    FROM (
+		        SELECT 	  SCHUL_CODE
+		        		, SCHUL_NM
+		        		, SCHUL_ADRES
+		        		, SCHUL_TLPHON_NO
+		        		, SCHUL_ANNVRSRY
+		        FROM   	SCHUL
+		        WHERE  	1 = 1
+		        AND SCHUL_NM LIKE '%' || #{keyword} || '%'
+		        ORDER BY SCHUL_CODE ASC
+		    ) S
+		)
+		SELECT T.*
+		FROM   T
+		WHERE  T.RNUM BETWEEN (#{currentPage}*#{size}) - (#{size}-1) AND (#{currentPage}*#{size})
+	</select>
+	
+	<!-- 전체 글 수 -->
+	<select id="schoolGetTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*) FROM SCHUL
+		WHERE 1 = 1
+		AND SCHUL_NM LIKE '%' || #{keyword} || '%'
+	</select>
+	
+	<!-- 자료실 -->
+	<!-- 자료실 게시판 조회 -->
+  	<!-- kr.or.ddit.school.mapper.SchoolMapper.dataRoom -->
+	<select id="dataRoom" parameterType="hashMap" resultMap="nttMap">
+	  WITH T AS (
+	   SELECT COUNT(*) OVER() - ROW_NUMBER() OVER(ORDER BY NTT_CODE DESC) + 1 AS RNUM  <!-- 순번 -->
+	        , NTT_CODE 					<!-- 게시글 코드 -->
+			, NTT_NM 					<!-- 게시글 제목 -->
+			, NTT_CN 					<!-- 게시글 내용 -->
+			, NTT_WRITNG_DT	 			<!-- 게시글 등록일자 -->
+			, NTT_STTEMNT_ACCMLT 		<!-- 게시글 신고누적 -->
+			, NTT_ATCH_FILE_CODE 		<!-- 첨부파일 코드 -->
+			, CMMN_NTT_SE 				<!-- 공통게시물 -->
+			, CMMN_NTT_STTEMNT 			<!-- 게시글 신고상태 -->
+			, CLAS_CODE 				<!-- 반 코드 -->
+			, SCHUL_CODE 				<!-- 학교 코드 -->
+			, M.MBER_ID 				<!-- 작성자 아이디 -->
+			, M.MBER_NM AS MBER_NAME 	<!-- 작성자 이름 -->
+			, NTT_RDCNT 				<!-- 조회 수-->
+		FROM NTT
+		JOIN MEMBER M ON NTT.MBER_ID = M.MBER_ID
+		WHERE SCHUL_CODE = #{schulCode} <!-- 학교명 -->
+		AND CMMN_NTT_SE='A08102' <!-- 자료실 게시판 공통 -->
+    	<if test="keyword!=null and keyword!=''">
+	         AND (
+	               NTT_NM LIKE '%' || #{keyword} || '%'
+	         )
+	      </if>
+    )
+   SELECT T.* FROM T
+   WHERE  T.RNUM BETWEEN (#{currentPage}*10) - (10 - 1) AND (#{currentPage}*10)
+   </select>
+	
+	 <!-- 자료실 총 게시물 수 -->
+	 <!-- kr.or.ddit.school.mapper.SchoolMapper.dataRoomGetTotal -->
+	<select id="dataRoomGetTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*) FROM NTT
+		WHERE  1 = 1
+		AND CMMN_NTT_SE = 'A08102'
+		<include refid="where"></include>
+	</select>
+	
+	<!-- 자료실 게시글 등록 	-->
+    <!-- kr.or.ddit.school.mapper.SchoolMapper.dataRoomCreate -->
+	<insert id="dataRoomCreate" parameterType="nttVO">
+    <selectKey keyProperty="nttCode" resultType="String" order="BEFORE">
+      SELECT NVL(MAX(TO_NUMBER(NTT_CODE)), 0) + 1 AS NTT_CODE FROM NTT
+    </selectKey>
+   INSERT INTO NTT(
+        NTT_CODE				<!-- 게시글 코드 -->
+        , NTT_NM				<!-- 게시글 제목 -->	
+        , NTT_CN				<!-- 게시글 내용 -->
+        , NTT_WRITNG_DT 		<!-- 게시글 등록일자 -->  
+        , NTT_STTEMNT_ACCMLT	<!-- 게시글 신고누적 --> 
+        , NTT_ATCH_FILE_CODE	<!-- 첨부파일 코드  --> 
+        , CMMN_NTT_SE			<!-- 공통게시물 -->    
+        , CMMN_NTT_STTEMNT		<!-- 게시글 신고상태 -->
+       <!--   , CLAS_CODE 			반 코드  -->
+        , SCHUL_CODE 			<!-- 학교 코드 -->    
+        ,  MBER_ID				<!-- 작성자 아이디 -->   
+        , NTT_RDCNT)			<!-- 조회 수-->  
+    VALUES(
+        #{nttCode}
+        ,#{nttNm}
+        ,#{nttCn}
+        ,SYSDATE
+        ,0
+        ,(	SELECT 	#{schulCode}||
+				'DTR'||
+				NVL(LPAD((SUBSTR(MAX(ATCH_FILE_CODE), -5) + 1), 5, 0), '00001')
+		  FROM 	ATCH_FILE
+		 WHERE 	ATCH_FILE_CODE LIKE #{schulCode}||'DTR'||'%')
+        ,'A08102'
+        ,'A15001'
+        <!-- 반코드, -->
+        ,#{schulCode}
+        ,#{mberId}
+        ,0
+    )
+	</insert>
+	
+	<!-- 첨부파일코드 생성 -->
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.getDataMaxCode -->
+	<select id="getDataMaxCode" parameterType="nttVO" resultType="String">
+		SELECT 	#{schulCode}||
+				'DTR'||
+				NVL(LPAD((SUBSTR(MAX(ATCH_FILE_CODE), -5) + 1), 5, 0), '00001')
+		  FROM 	ATCH_FILE
+		 WHERE 	ATCH_FILE_CODE LIKE #{schulCode}||'DTR'||'%'
+	</select>
+	
+	<!-- 파일업로드 -->
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.uploadFile -->
+	<insert id="uploadFile" parameterType="atchFileVO">
+		INSERT INTO ATCH_FILE(ATCH_FILE_CODE, ATCH_FILE_SN, ATCH_FILE_COURS
+		, ATCH_FILE_NM, ATCH_FILE_TY, ATCH_FILE_DE, REGIST_ID)
+		VALUES (
+			#{atchFileCode}
+			, #{atchFileSn}
+			, #{atchFileCours}
+			, #{atchFileNm}
+			, #{atchFileTy}
+			, SYSDATE
+			, #{registId}
+		)
+	</insert>
+	
+	<!-- 자료실 게시판 상세조회 -->
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.dataRoomDetail -->
+	<select id="dataRoomDetail" parameterType="nttVO"  resultMap="nttMap">
+	SELECT NTT_CODE				<!-- 게시글 코드 -->
+	, NTT_NM					<!-- 게시글 제목 -->
+	, NTT_CN					<!-- 게시글 내용 -->
+	, NTT_WRITNG_DT	            <!-- 게시글 등록일자 -->  
+	, NTT_STTEMNT_ACCMLT        <!-- 게시글 신고누적 -->  
+	, NTT_ATCH_FILE_CODE        <!-- 첨부파일 코드 -->   
+	, CMMN_NTT_SE               <!-- 공통게시물 -->     
+	, CMMN_NTT_STTEMNT          <!-- 게시글 신고상태 -->  
+	, CLAS_CODE                 <!-- 반 코드 -->      
+	, SCHUL_CODE                <!-- 학교 코드 -->     
+	, M.MBER_ID                 <!-- 작성자 아이디 -->   
+	, M.MBER_NM AS MBER_NAME    <!-- 작성자 이름 -->    
+	, NTT_RDCNT                 <!-- 조회 수-->       
+	FROM NTT
+	JOIN MEMBER M ON NTT.MBER_ID = M.MBER_ID
+	WHERE
+	<!-- AND SUBSTR(M.MBER_ID, 8, 1) = '1' -->
+	CMMN_NTT_SE='A08102'
+	AND NTT_CODE = #{nttCode}
+	</select>
+	
+	<!-- 자료실 게시판 조회수 증가 -->
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.totalViews -->
+	<update id="totalViews" parameterType="String">
+	UPDATE NTT
+	SET NTT_RDCNT = NTT_RDCNT + 1 <!-- 조회수 -->
+	WHERE NTT_CODE = #{nttCode}
+	</update>
+	
+	<!--자료실 상세조회 해당 게시물 첨부파일 다운로드를 위한 디비에 저장된 파일명 가져오기  -->
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.getFileName -->
+	<select id="getFileName" resultType="atchFileVO" parameterType="atchFileVO">
+		SELECT
+			ATCH_FILE_CODE
+			,ATCH_FILE_SN
+			,ATCH_FILE_COURS
+			,ATCH_FILE_NM
+			,ATCH_FILE_TY
+			,ATCH_FILE_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID
+		FROM 
+			ATCH_FILE
+		WHERE
+	 		ATCH_FILE_CODE = #{atchFileCode} AND ATCH_FILE_SN=#{atchFileSn}
+	 	ORDER BY ATCH_FILE_SN
+	</select>
+	
+	<!-- 자료실 상세조회 해당 게시물 첨부 파일 리스트 가져오기 -->
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.selectAtchList -->
+	<select id="selectAtchList" resultType="atchFileVO" parameterType="String">
+		SELECT
+			ATCH_FILE_CODE
+			,ATCH_FILE_SN
+			,ATCH_FILE_COURS
+			,ATCH_FILE_NM
+			,ATCH_FILE_TY
+			,ATCH_FILE_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID 
+		FROM 
+			ATCH_FILE
+		WHERE 
+			ATCH_FILE_CODE = #{nttAtchFileCode}
+	</select>
+	
+	<!-- 자료실 게시물 셀렉트 메서드 -->
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.selectNttVO -->
+	<select id="selectNttVO" parameterType="nttVO" resultType="nttVO">
+		SELECT
+			NTT_CODE
+			,NTT_NM
+			,NTT_CN
+			,NTT_WRITNG_DT
+			,NTT_STTEMNT_ACCMLT
+			,NTT_ATCH_FILE_CODE
+			,CMMN_NTT_SE
+			,CMMN_NTT_STTEMNT
+			,CLAS_CODE
+			,SCHUL_CODE
+			,MBER_ID
+			,NTT_RDCNT
+		FROM
+			NTT
+		WHERE
+			NTT_CODE = #{nttCode}
+	</select>
+	
+	<!-- 자료실 상세조회 수정 시 기존 첨부 파일 개별 삭제시 실행되는 쿼리문 -->
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.deleteAtchFile2 -->
+	<delete id="deleteAtchFile2" parameterType="atchFileVO">
+		DELETE
+		FROM 
+			ATCH_FILE
+		WHERE
+			ATCH_FILE_CODE = #{atchFileCode}
+		AND 
+			ATCH_FILE_SN = #{atchFileSn}
+	</delete>
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.updateFileSn -->
+	<update id="updateFileSn" parameterType="hashMap">
+		UPDATE
+ 			ATCH_FILE
+		SET
+			ATCH_FILE_SN = #{atchFileSn}
+		WHERE 
+			ATCH_FILE_CODE = #{atchFileCode} AND ATCH_FILE_SN = #{orignAtchFileSn}
+	</update>
+	
+	<!-- 자료실 게시판 수정 -->
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.dataRoomUpdateAjax -->
+	<update id="dataRoomUpdateAjax" parameterType="nttVO">
+	UPDATE 
+		NTT
+	SET 
+		NTT_NM = #{nttNm}
+		, NTT_CN = #{nttCn}
+	WHERE 
+		NTT_CODE = #{nttCode}
+	</update>
+	
+	<!-- 자료실 게시판 삭제 -->
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.dataRoomDeleteAjax -->
+	<delete id="dataRoomDeleteAjax" parameterType="String">
+	  	DELETE FROM NTT WHERE NTT_CODE = #{nttCode}
+	</delete>
+	
+	<!-- 자유게시판 첨부파일 해당 게시글 삭제시 첨부파일도 함께 삭제 -->
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.deleteAtchFile -->
+	<delete id="deleteAtchFile" parameterType="String">
+		DELETE FROM ATCH_FILE WHERE ATCH_FILE_CODE = #{atchFileCode}
+	</delete>
+	<!-- 자료실 끝 -->
+	
+	<!-- 교육 정보 인서트(크롤링)) -->
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.eduInfoInsertAjax -->
+	<insert id="eduInfoInsertAjax" parameterType="edcInfoNttVO">
+	 INSERT INTO EDC_INFO_NTT (
+	     EDC_INFO_NTT_CODE
+	     , EDC_INFO_NTT_NM
+	     , EDC_INFO_NTT_WRITNG_DT
+	     , EDC_INFO_NTT_WRTER
+	     , EDC_INFO_NTT_URL
+	     )
+     VALUES(EDC_INFO_NTT_CODE_SEQ.NEXTVAL,#{edcInfoNttNm}, #{edcInfoNttWritngDt}, #{edcInfoNttWrter}, #{edcInfoNttUrl})
+	</insert>
+	
+	<!-- 교육 정보 게시판 게시물 개수 -->
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.edcInfoListGetTotal -->
+	<select id="edcInfoListGetTotal" resultType="int">
+		SELECT COUNT(*) FROM EDC_INFO_NTT
+		<if test="keyword!=null and keyword!=''">
+        WHERE  EDC_INFO_NTT_NM LIKE '%' || #{keyword} || '%'
+        </if>
+	</select>
+	
+	<!-- 교육 정보 게시판 조회 -->
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.edcInfoListAjax -->
+	<select id="edcInfoListAjax" parameterType="hashMap" resultType="edcInfoNttVO">
+	    WITH T AS (
+            SELECT 
+                EDC_INFO_NTT_CODE, 			<!-- 게시물 코드 -->
+                EDC_INFO_NTT_NM,            <!-- 게시물 명 -->
+                EDC_INFO_NTT_WRITNG_DT,     <!-- 게시일자 -->
+                EDC_INFO_NTT_WRTER,         <!-- 작성자 -->
+                EDC_INFO_NTT_URL            <!-- 게시물 경로 -->
+            FROM 
+                EDC_INFO_NTT
+            <if test="keyword!=null and keyword!=''">
+            WHERE  EDC_INFO_NTT_NM LIKE '%' || #{keyword} || '%'
+            </if>
+            ORDER BY EDC_INFO_NTT_WRITNG_DT DESC
+        ) 
+        SELECT J.* FROM (
+        SELECT 
+            ROWNUM RNUM
+            , T.* 
+          FROM 
+            T) J
+        WHERE 
+            J.RNUM BETWEEN (#{currentPage}*#{size}) - (#{size}-1) AND (#{currentPage}*#{size})	
+	</select>
+	
+	<!-- 교육 정보 인서트 전 기존 데이터 전체 삭제 -->
+	<!-- kr.or.ddit.school.mapper.SchoolMapper.deleteEduInfoAjax -->
+	<delete id="deleteEduInfoAjax">
+		DELETE FROM EDC_INFO_NTT
+	</delete>
+	
+</mapper>

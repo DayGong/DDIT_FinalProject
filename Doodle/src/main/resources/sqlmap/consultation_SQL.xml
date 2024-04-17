@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.consultation.mapper.ConsultationMapper">
+
+	<!-- 예약 개수를 가져오는 메서드 (6개면 TRUE, 아니면 FALSE) -->
+	<select id="loadResveCnt" parameterType="cnsltVO" resultType="String">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.loadResveCnt */
+		SELECT 
+		    CASE 
+		        WHEN COUNT(C.CNSLT_CODE) = 6 THEN 'TRUE' 
+		        ELSE 'FALSE' 
+		    END
+		FROM 
+			CNSLT C
+		WHERE	1 = 1
+			AND	TO_CHAR(C.CNSLT_DE, 'YYYY-MM-DD') = #{cnsltDe}
+		    AND C.CLAS_CODE = #{clasCode}
+	</select>
+
+	<resultMap type="cnsltVO" id="loadCnsltResveListVOMap">
+		<result property="cnsltCode" column="CNSLT_CODE"/>
+		<result property="cnsltDe" column="CNSLT_DE"/>
+		<result property="cnsltDiary" column="CNSLT_DIARY"/>
+		<result property="cnsltRequstCn" column="CNSLT_REQUST_CN"/>
+		<result property="cmmnCnsltSttus" column="CMMN_CNSLT_STTUS"/>
+		<result property="cmmnCnsltSttusNm" column="CMMN_CNSLT_STTUS_NM"/>
+		<result property="cnsltTrgetId" column="CNSLT_TRGET_ID"/>
+		<result property="cmmnCnsltTime" column="CMMN_CNSLT_TIME"/>
+		<result property="cnsltTrgetIdNm" column="CNSLT_TRGET_ID_NM"/>
+		<result property="cnsltCn" column="CNSLT_CN"/>
+	</resultMap>
+	
+	<!-- 상담 목록을 불러오는 SELECT -->
+	<select id="loadCnsltResveList" parameterType="cnsltVO" resultMap="loadCnsltResveListVOMap">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.loadCnsltResveList */
+		SELECT 
+		        C.CNSLT_CODE													/* 상담 코드 */
+		    ,   C.CNSLT_DE														/* 상담 일자 */
+		    ,	C.CNSLT_DIARY													/* 상담 일지 */
+		    ,	C.CNSLT_REQUST_CN												/* 상담 요청 내용 */
+		    ,   C.CMMN_CNSLT_STTUS												/* 공통 상담 상태(A09) */
+		    ,	C.CNSLT_TRGET_ID												/* 상담 대상 아이디 */
+		    ,	FN_GET_MBER_NM(C.CNSLT_TRGET_ID) CNSLT_TRGET_ID_NM				/* 상담 대상 명 */
+		    ,	C.CMMN_CNSLT_TIME												/* 상담 시간 */
+		    ,   FN_CMMN_CODE_TO_NM(C.CMMN_CNSLT_STTUS) CMMN_CNSLT_STTUS_NM  	/* 공통 상담 상태(A09) 명 */
+		    ,	CD.CNSLT_CN														/* 상담 완료 시 상담 내역 */
+		FROM 
+			CNSLT C 
+			LEFT JOIN CNSLT_DIARY CD 
+				ON (C.CNSLT_CODE = CD.CNSLT_CODE)
+		WHERE 	
+			C.CLAS_CODE = #{clasCode}
+	</select>
+	
+	<resultMap type="cnsltVO" id="loadCnsltTimeVOMap">
+		<result property="cnsltCode" column="CNSLT_CODE"/>
+		<collection property="cmmnDetailCodeCnsltTimeList" resultMap="cmmnDetailCodeCnsltTimeMap" />
+	</resultMap>
+	
+	<resultMap type="cmmnDetailCodeVO" id="cmmnDetailCodeCnsltTimeMap">
+		<result property="cmmnDetailCodeNm" column="CMMN_DETAIL_CODE_NM"/>
+	</resultMap>
+	
+	<!-- 상담 시간을 불러오는 SELECT -->
+	<select id="loadCnsltTime" parameterType="cnsltVO" resultMap="loadCnsltTimeVOMap">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.loadCnsltTime */
+		SELECT 
+		    	C.CNSLT_CODE
+			,   CDC.CMMN_DETAIL_CODE_NM
+		FROM CNSLT C 
+		    RIGHT OUTER JOIN CMMN_DETAIL_CODE CDC
+		        ON (    
+		                C.CNSLT_DE = #{cnsltDe}
+		            AND C.CLAS_CODE = #{clasCode}
+		            and C.CMMN_CNSLT_TIME = CDC.CMMN_DETAIL_CODE_NM)
+		WHERE	1 = 1
+			AND	CDC.CMMN_CODE = 'A17'
+		ORDER BY 
+			CDC.CMMN_DETAIL_CODE_NM ASC
+	</select>
+	
+	<!-- 학교 코드를 불러오는 SELECT -->
+	<select id="getSchulCode" parameterType="cnsltVO" resultType="String">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.getSchulCode */
+		SELECT 
+			SCHUL_CODE 
+		FROM 
+			SCHUL
+		WHERE 
+			SCHUL_CODE = (SELECT 
+								SCHUL_CODE 
+		                    FROM 
+		                    	CLAS
+		                    WHERE 	1 = 1
+		                    	AND CLAS_CODE = #{clasCode})
+	</select>
+	
+	<!-- 담임선생님 아이디를 불러오는 SELECT -->
+	<select id="getTcherId" parameterType="cnsltVO" resultType="String">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.getTcherId */
+		SELECT 
+			MBER_ID
+		FROM 
+			HRTCHR
+		WHERE 	1 = 1
+			AND CLAS_CODE = #{clasCode}
+	</select>
+	
+	<!-- 상담 시간을 반환하는 SELECT -->
+	<select id="loadTime" resultType="String">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.loadTime */
+		SELECT 
+			CMMN_DETAIL_CODE_NM
+		FROM 
+			CMMN_DETAIL_CODE
+		WHERE	1 = 1 
+			AND	CMMN_CODE = 'A17'
+	</select>
+	
+	<resultMap type="cnsltVO" id="loadCnsltResveVOMap">
+		<result property="cnsltCode" column="CNSLT_CODE"/>
+		<result property="cnsltDe" column="CNSLT_DE"/>
+		<result property="cmmnCnsltTime" column="CMMN_CNSLT_TIME"/>
+		<result property="cnsltTrgetId" column="CNSLT_TRGET_ID"/>
+		<result property="cnsltTrgetIdNm" column="CNSLT_TRGET_ID_NM"/>
+	</resultMap>
+	
+	<!-- 상담 예약 내역을 불러오는 메서드 -->
+	<select id="loadCnsltResve" parameterType="cnsltVO" resultMap="loadCnsltResveVOMap">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.loadTime */
+		SELECT 
+				C.CNSLT_CODE
+			,	C.CNSLT_DE
+			,	C.CMMN_CNSLT_TIME
+			,	C.CNSLT_TRGET_ID
+			,	FN_GET_MBER_NM(C.CNSLT_TRGET_ID) CNSLT_TRGET_ID_NM
+		FROM CNSLT C 
+			LEFT OUTER JOIN CMMN_DETAIL_CODE CDC
+				ON	(C.CMMN_CNSLT_TIME = CDC.CMMN_DETAIL_CODE_NM)
+		WHERE 	1 = 1
+			AND	C.CLAS_CODE = #{clasCode}
+			AND TO_CHAR(C.CNSLT_DE,'YYYY-MM-DD') = TO_CHAR(#{cnsltDe}, 'YYYY-MM-DD')
+	</select>
+	
+	<!-- 상담 요청을 진행하는 INSERT -->
+	<insert id="setCnsltRequest" parameterType="cnsltVO">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.setCnsltRequest */
+		INSERT INTO CNSLT
+			(	CNSLT_CODE
+			,	CNSLT_DE
+			,	CNSLT_REQUST_CN
+			,	CMMN_CNSLT_STTUS
+			,	SCHUL_CODE
+			,	CNSLT_TRGET_ID
+			,	CLAS_CODE
+			,	CNSLT_TCHER_ID
+			,	CMMN_CNSLT_TIME)
+		VALUES 
+			(	CNSLT_CODE_SEQ.NEXTVAL
+			,	#{cnsltDe}
+			,	#{cnsltRequstCn}
+			,	#{cmmnCnsltSttus}
+			,	#{schulCode}
+			,	#{cnsltTrgetId}
+			,	#{clasCode}
+			,	#{cnsltTcherId}
+			,	#{cmmnCnsltTime})
+	</insert>
+	
+	<resultMap type="cnsltVO" id="getOneCnsltResveVOMap">
+		<result property="cnsltCode" column="CNSLT_CODE"/>
+		<result property="cnsltDe" column="CNSLT_DE"/>
+		<result property="cnsltRequstCn" column="CNSLT_REQUST_CN"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="cmmnCnsltSttus" column="CMMN_CNSLT_STTUS"/>
+		<result property="cmmnCnsltSttusNm" column="CMMN_CNSLT_STTUS_NM"/>
+		<result property="cnsltTrgetId" column="CNSLT_TRGET_ID"/>
+		<result property="cmmnCnsltTime" column="CMMN_CNSLT_TIME"/>
+		<result property="cnsltTrgetIdNm" column="CNSLT_TRGET_ID_NM"/>
+	</resultMap>
+	
+	<!-- 상담 코드로 상담 내역을 불러오는 SELECT -->
+	<select id="getOneCnsltResve" parameterType="cnsltVO" resultMap="getOneCnsltResveVOMap">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.getOneCnsltResve */
+		SELECT 
+		        CNSLT_CODE													/* 상담 코드 */
+		    ,   CNSLT_DE													/* 상담 일자 */
+		    ,	CNSLT_REQUST_CN												/* 상담 요청 내용 */
+		    ,	CLAS_CODE
+		    ,   CMMN_CNSLT_STTUS											/* 공통 상담 상태(A09) */
+		    ,   FN_CMMN_CODE_TO_NM(C.CMMN_CNSLT_STTUS) CMMN_CNSLT_STTUS_NM  /* 공통 상담 상태(A09) 명 */
+		    ,	CNSLT_TRGET_ID												/* 상담 대상 아이디 */
+		    ,	CMMN_CNSLT_TIME												/* 상담 시간 */
+		    ,	FN_GET_MBER_NM(C.CNSLT_TRGET_ID) CNSLT_TRGET_ID_NM			/* 상담 대상 명 */
+		FROM 
+		    CNSLT C
+		WHERE 	1 = 1
+		    AND C.CNSLT_CODE = #{cnsltCode}
+	</select>
+	
+	<!-- 상담 예약 수정을 실행하는 UPDATE -->
+	<update id="modifyCnsltResveAct">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.modifyCnsltResveAct */
+		UPDATE CNSLT SET 
+		        CNSLT_DE = #{cnsltDe}
+		    ,   CNSLT_REQUST_CN = #{cnsltRequstCn}
+		    ,   CMMN_CNSLT_TIME = #{cmmnCnsltTime}
+		WHERE 1 = 1
+			AND	CNSLT_CODE = #{cnsltCode}
+	</update>
+	
+	<!-- 상담 예약을 삭제하는 DELETE문 -->
+	<delete id="deleteCnsltResve" parameterType="String">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.deleteCnsltResve */
+		DELETE
+		FROM 
+			CNSLT
+		WHERE
+			CNSLT_CODE = #{cnsltCode}
+	</delete>
+	
+	<resultMap type="cnsltVO" id="loadTeacherCnsltResveListVO">
+		<result property="cnsltCode" column="CNSLT_CODE"/>
+		<result property="cnsltDe" column="CNSLT_DE"/>
+		<result property="cnsltDiary" column="CNSLT_DIARY"/>
+		<result property="cnsltRequstCn" column="CNSLT_REQUST_CN"/>
+		<result property="cmmnCnsltSttus" column="CMMN_CNSLT_STTUS"/>
+		<result property="cmmnCnsltSttusNm" column="CMMN_CNSLT_STTUS_NM"/>
+		<result property="cnsltTrgetId" column="CNSLT_TRGET_ID"/>
+		<result property="cnsltTrgetIdNm" column="CNSLT_TRGET_ID_NM"/>
+		<result property="cnsltTcherId" column="CNSLT_TCHER_ID"/>
+		<result property="cnsltTcherIdNm" column="CNSLT_TCHER_ID_NM"/>
+		<result property="cmmnCnsltTime" column="CMMN_CNSLT_TIME"/>
+		<result property="cnsltCn" column="CNSLT_CN"/>
+	</resultMap>
+	
+	<!-- 선생님이 상담 내역을 불러오는 SELECT -->
+	<select id="loadTeacherCnsltResveList" parameterType="String" resultMap="loadTeacherCnsltResveListVO">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.loadTeacherCnsltResveList */
+		SELECT 
+				C.CNSLT_CODE													/* 상담 코드 */
+		    ,   C.CNSLT_DE														/* 상담 일시 */
+		    ,	C.CNSLT_DIARY													/* 상담 일지*/
+		    ,	C.CNSLT_REQUST_CN												/* 상담 요청 내용 */
+		    ,   C.CMMN_CNSLT_STTUS												/* 공통 상담 상태(A09) */
+		    ,   FN_CMMN_CODE_TO_NM(C.CMMN_CNSLT_STTUS) CMMN_CNSLT_STTUS_NM  	/* 공통 상담 상태(A09) 명 */
+		    ,	C.CNSLT_TRGET_ID												/* 상담 대상 아이디 */
+		    ,	FN_GET_MBER_NM(C.CNSLT_TRGET_ID) CNSLT_TRGET_ID_NM				/* 상담 대상 명 */
+		    ,   C.CNSLT_TCHER_ID												/* 담임선생님 아이디 */
+		    ,   FN_GET_MBER_NM(C.CNSLT_TCHER_ID) CNSLT_TCHER_ID_NM				/* 담임선생님 명*/
+		    ,	C.CMMN_CNSLT_TIME												/* 상담 시간 */
+		    ,	CD.CNSLT_CN														/* 상담 완료 시 상담 내역 */
+		FROM 
+			CNSLT C 
+			LEFT JOIN CNSLT_DIARY CD 
+				ON (C.CNSLT_CODE = CD.CNSLT_CODE)
+		WHERE
+			C.CLAS_CODE = #{clasCode}
+	</select>
+	
+	<!-- 상담 상태를 변경하는 메서드 -->
+	<update id="changeSttus" parameterType="cnsltVO">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.changeSttus */
+		UPDATE 
+			CNSLT
+		SET 
+				CMMN_CNSLT_STTUS = #{cmmnCnsltSttus}
+			<if test="cnsltDiary != null || cnsltDiary != ''">
+			,	CNSLT_DIARY = #{cnsltDiary}
+			</if>
+		WHERE	1 = 1
+			AND	CNSLT_CODE = #{cnsltCode}
+	</update>
+	
+	<resultMap type="cnsltVO" id="loadCnsltDiaryListMap">
+		<result property="cnsltCode" column="CNSLT_CODE"/>
+		<result property="cnsltDe" column="CNSLT_DE"/>
+		<result property="cnsltRequstCn" column="CNSLT_REQUST_CN"/>
+		<result property="cmmnCnsltSttus" column="CMMN_CNSLT_STTUS"/>
+		<result property="cmmnCnsltSttusNm" column="CMMN_CNSLT_STTUS_NM"/>
+		<result property="cnsltTrgetId" column="CNSLT_TRGET_ID"/>
+		<result property="cnsltTrgetIdNm" column="CNSLT_TRGET_ID_NM"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="cnsltTcherId" column="CNSLT_TCHER_ID"/>
+		<result property="cnsltTcherIdNm" column="CNSLT_TCHER_ID_NM"/>
+		<result property="cmmnCnsltTime" column="CMMN_CNSLT_TIME"/>
+		<result property="cnsltCn" column="CNSLT_CN"/>
+	</resultMap>
+	
+	<!-- 상담 일지 게시판을 불러오는 메서드 -->
+	<select id="loadCnsltDiaryList" resultMap="loadCnsltDiaryListMap">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.loadCnsltDiaryList */
+		WITH T AS (
+		    SELECT 
+		            ROW_NUMBER() OVER (ORDER BY S.CNSLT_CODE DESC) RNUM
+		        ,   S.*
+		    FROM (
+				SELECT 
+				        C.CNSLT_CODE
+				    ,   C.CNSLT_DE
+				    ,   C.CNSLT_REQUST_CN
+				    ,   CMMN_CNSLT_STTUS
+				    ,   FN_CMMN_CODE_TO_NM(C.CMMN_CNSLT_STTUS) CMMN_CNSLT_STTUS_NM
+				    ,   C.CNSLT_TRGET_ID
+				    ,   FN_GET_MBER_NM(C.CNSLT_TRGET_ID) CNSLT_TRGET_ID_NM
+				    ,   C.CLAS_CODE
+				    ,   C.CNSLT_TCHER_ID
+				    ,   FN_GET_MBER_NM(C.CNSLT_TCHER_ID) CNSLT_TCHER_ID_NM
+				    ,   C.CMMN_CNSLT_TIME
+				    ,   CD.CNSLT_CN
+				FROM 
+				    CNSLT C 
+				    LEFT JOIN CNSLT_DIARY CD
+						ON (C.CNSLT_CODE = CD.CNSLT_CODE)
+				WHERE	 CD.DELETE_AT = 1
+					<if test="cnsltDeRB != 'beforeAll'">
+					AND (
+						<choose>
+							<when test="cnsltDeRB == 'before7'">TO_CHAR(CNSLT_DE, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when>
+							<when test="cnsltDeRB == 'before30'">TO_CHAR(CNSLT_DE, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when>
+							<otherwise>TO_CHAR(CNSLT_DE, 'YYYY-MM-DD') BETWEEN #{startDate} AND #{endDate}</otherwise>
+						</choose>
+					)
+					</if>
+					<if test="cnsltTimeCB[0] != 'timeAll'">
+					AND C.CMMN_CNSLT_TIME IN
+						<foreach collection="cnsltTimeCB" item="time" index="index" separator="," open="(" close=")">
+							#{time}
+						</foreach>
+					</if>
+					AND (
+					    <foreach collection="cnsltSttusCB" item="sttus" index="index" separator=" OR ">
+					        <choose>
+					            <when test="sttus == 'sttusSuccess'">
+					                (C.CMMN_CNSLT_STTUS = 'A09004' AND CD.CNSLT_CN IS NOT NULL)
+					            </when>
+					            <when test="sttus == 'sttusNoCn'">
+					                (C.CMMN_CNSLT_STTUS = 'A09004' AND CD.CNSLT_CN IS NULL)
+					            </when>
+					            <when test="sttus == 'sttusDeny'">
+					            	(C.CMMN_CNSLT_STTUS = 'A09003')
+					            </when>
+					            <otherwise>
+					                (C.CMMN_CNSLT_STTUS = 'A09003' OR C.CMMN_CNSLT_STTUS = 'A09004')
+					            </otherwise>
+					        </choose> 
+					    </foreach>
+					)
+					<if test="keyword != null || keyword == ''">
+				    AND (
+				    	<choose>
+				    		<when test="searchCondition == 'cnsltRequstCn'"> C.CNSLT_REQUST_CN LIKE '%' || #{keyword} || '%' </when>
+				    		<when test="searchCondition == 'cnsltTrgetId'">  FN_GET_MBER_NM(C.CNSLT_TRGET_ID) LIKE '%' || #{keyword} || '%' </when>
+				    		<when test="searchCondition == 'cnsltTcherId'">  FN_GET_MBER_NM(C.CNSLT_TCHER_ID) LIKE '%' || #{keyword} || '%' </when>
+				    		<otherwise>
+				    		(
+				    				C.CNSLT_REQUST_CN LIKE '%' || #{keyword} || '%'
+				    			OR	FN_GET_MBER_NM(C.CNSLT_TRGET_ID) LIKE '%' || #{keyword} || '%'
+				    			OR	FN_GET_MBER_NM(C.CNSLT_TCHER_ID) LIKE '%' || #{keyword} || '%'
+				    		)
+				    		</otherwise>
+				    	</choose>
+				    )
+				    </if>
+			) S
+		)
+		SELECT T.*
+		FROM T
+		WHERE T.RNUM BETWEEN (#{currentPage}*#{size}) - (#{size}-1) AND (#{currentPage}*#{size})
+	</select>
+	
+	<select id="getCnsltDiaryTotal" parameterType="cnsltDiarySearchVO" resultType="int">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.getCnsltDiaryTotal */
+		SELECT 
+		    COUNT(C.CNSLT_CODE)
+		FROM 
+		    CNSLT C 
+		    LEFT JOIN MEMBER M1 ON (C.CNSLT_TRGET_ID = M1.MBER_ID)
+			LEFT JOIN MEMBER M2 ON (C.CNSLT_TCHER_ID = M2.MBER_ID)
+		    LEFT JOIN CNSLT_DIARY CD ON ( C.CNSLT_CODE = CD.CNSLT_CODE )
+		WHERE	
+				CD.DELETE_AT = 1
+			<if test="cnsltDeRB != 'beforeAll'">
+			AND (
+				<choose>
+					<when test="cnsltDeRB == 'before7'">TO_CHAR(CNSLT_DE, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when>
+					<when test="cnsltDeRB == 'before30'">TO_CHAR(CNSLT_DE, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when>
+					<otherwise>TO_CHAR(CNSLT_DE, 'YYYY-MM-DD') BETWEEN #{startDate} AND #{endDate}</otherwise>
+				</choose>
+			)
+			</if>
+			<if test="cnsltTimeCB[0] != 'timeAll'">
+			AND C.CMMN_CNSLT_TIME IN
+				<foreach collection="cnsltTimeCB" item="time" index="index" separator="," open="(" close=")">
+					#{time}
+				</foreach>
+			</if>
+			AND (
+			    <foreach collection="cnsltSttusCB" item="sttus" index="index" separator=" OR ">
+			        <choose>
+			            <when test="sttus == 'sttusSuccess'">
+			                (C.CMMN_CNSLT_STTUS = 'A09004' AND CD.CNSLT_CN IS NOT NULL)
+			            </when>
+			            <when test="sttus == 'sttusNoCn'">
+			                (C.CMMN_CNSLT_STTUS = 'A09004' AND CD.CNSLT_CN IS NULL)
+			            </when>
+			            <when test="sttus == 'sttusDeny'">
+			            	(C.CMMN_CNSLT_STTUS = 'A09003')
+			            </when>
+			            <otherwise>
+			                (C.CMMN_CNSLT_STTUS = 'A09003' OR C.CMMN_CNSLT_STTUS = 'A09004')
+			            </otherwise>
+			        </choose> 
+			    </foreach>
+			)
+		    <if test="keyword != null || keyword == ''">
+		    AND (
+		    	<choose>
+		    		<when test="searchCondition == 'cnsltRequstCn'"> C.CNSLT_REQUST_CN LIKE '%' || #{keyword} || '%' </when>
+		    		<when test="searchCondition == 'cnsltTrgetId'">  M1.MBER_NM LIKE '%' || #{keyword} || '%' </when>
+		    		<when test="searchCondition == 'cnsltTcherId'">  M2.MBER_NM LIKE '%' || #{keyword} || '%' </when>
+		    		<otherwise>
+		    		(
+		    				C.CNSLT_REQUST_CN LIKE '%' || #{keyword} || '%'
+		    			OR	M1.MBER_NM LIKE '%' || #{keyword} || '%'
+		    			OR	M2.MBER_NM LIKE '%' || #{keyword} || '%'
+		    		)
+		    		</otherwise>
+		    	</choose>
+		    )
+		    </if>
+	</select>
+	
+	<resultMap type="cnsltVO" id="getOneCnsltDiaryMap">
+		<result property="cnsltCode" column="CNSLT_CODE"/>
+		<result property="cnsltDe" column="CNSLT_DE"/>
+		<result property="cnsltDiary" column="CNSLT_DIARY"/>
+		<result property="cnsltRequstCn" column="CNSLT_REQUST_CN"/>
+		<result property="cmmnCnsltSttus" column="CMMN_CNSLT_STTUS"/>
+		<result property="cmmnCnsltSttusNm" column="CMMN_CNSLT_STTUS_NM"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="cnsltTrgetId" column="CNSLT_TRGET_ID"/>
+		<result property="cnsltTrgetIdNm" column="CNSLT_TRGET_ID_NM"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="cnsltTcherId" column="CNSLT_TCHER_ID"/>
+		<result property="cnsltTcherIdNm" column="CNSLT_TCHER_ID_NM"/>
+		<result property="cmmnCnsltTime" column="CMMN_CNSLT_TIME"/>
+		<result property="cnsltCn" column="CNSLT_CN"/>
+	</resultMap>
+	
+	<!-- 상담 일지를 불러오는 메서드 -->
+	<select id="getOneCnsltDiary" parameterType="String" resultMap="getOneCnsltDiaryMap">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.getOneCnsltDiary */
+		SELECT 
+		        C.CNSLT_CODE
+		    ,   C.CNSLT_DE
+		    ,   C.CNSLT_DIARY
+		    ,   C.CNSLT_REQUST_CN
+		    ,   CMMN_CNSLT_STTUS
+		    ,   FN_CMMN_CODE_TO_NM(C.CMMN_CNSLT_STTUS) CMMN_CNSLT_STTUS_NM
+		    ,   C.SCHUL_CODE
+		    ,   C.CNSLT_TRGET_ID
+		    ,   FN_GET_MBER_NM(C.CNSLT_TRGET_ID) CNSLT_TRGET_ID_NM
+		    ,   C.CLAS_CODE
+		    ,   C.CNSLT_TCHER_ID
+		    ,   FN_GET_MBER_NM(C.CNSLT_TCHER_ID) CNSLT_TCHER_ID_NM
+		    ,   C.CMMN_CNSLT_TIME
+		    ,   CD.CNSLT_CN 
+		FROM 
+		    CNSLT C 
+		    LEFT JOIN CNSLT_DIARY CD
+				ON (	C.CNSLT_CODE = CD.CNSLT_CODE
+					AND CD.DELETE_AT = 1)
+		WHERE	
+		    	CMMN_CNSLT_STTUS IN ('A09003', 'A09004')
+		    AND	C.CNSLT_CODE = #{cnsltCode}
+	</select>
+	
+	<resultMap type="familyRelateVO" id="getFamilyRelateO">
+		<result property="stdntId" column="STDNT_ID"/>
+		<result property="stdntIdNm" column="STDNT_ID_NM"/>
+		<result property="familyRelateNm" column="CMMN_DETAIL_CODE_NM"/>
+		<result property="clasInNo" column="CLAS_IN_NO"/>
+	</resultMap>
+	
+	<!-- 자녀의 정보를 불러오는 메서드 -->
+	<select id="getFamilyRelate" parameterType="hashMap" resultMap="getFamilyRelateO">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.getFamilyRelate */
+		SELECT 
+		        FR.STDNT_ID                             					/* 학생 아이디 */
+		    ,   FN_GET_MBER_NM(FR.STDNT_ID) STDNT_ID_NM 					/* 학생 이름 */
+		    ,   FN_CMMN_CODE_TO_NM(FR.CMMN_DETAIL_CODE) CMMN_DETAIL_CODE_NM /* 가족 관계 */
+		    ,   CS.CLAS_IN_NO                           					/* 학급 내 번호 */
+		FROM FAMILY_RELATE FR
+		    LEFT JOIN CLAS_STDNT CS
+		        ON (FR.STDNT_ID = CS.MBER_ID)
+		WHERE
+				FR.STDNPRNT_ID = #{cnsltTrgetId}
+			AND	CS.CLAS_CODE = #{clasCode}
+	</select>
+	
+	<!-- 상담 내용을 등록/수정하는 메서드 -->
+	<update id="insertCnsltCnAct" parameterType="cnsltDiaryVO">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.insertCnsltDiary */
+		MERGE INTO 
+			CNSLT_DIARY CD
+		USING DUAL 
+			ON (CD.CNSLT_CODE = #{cnsltCode})
+		WHEN MATCHED THEN
+			UPDATE
+			SET		CD.CNSLT_CN = #{cnsltCn}
+		WHEN NOT MATCHED THEN
+			INSERT (CNSLT_CODE,	CNSLT_CN, DELETE_AT)
+			VALUES (#{cnsltCode}, #{cnsltCn, jdbcType = VARCHAR}, 1)
+	</update>
+	
+	<!-- 상담 내용을 삭제하는 메서드 -->
+	<delete id="delCnsltCn" parameterType="String">
+		/* kr.or.ddit.consultation.mapper.ConsultationMapper.delCnsltCn */
+		UPDATE 
+			CNSLT_DIARY 
+		SET 
+			DELETE_AT = 0
+		WHERE 
+			CNSLT_CODE = #{cnsltCode}
+	</delete>
+	
+	<resultMap type="clasStdntVO" id="viewChildInfoVO">
+		<result property="clasStdntCode" column="CLAS_STDNT_CODE"/>
+		<result property="clasInNo" column="CLAS_IN_NO"/>
+		<result property="cmmnStdntClsfNm" column="CMMN_STDNT_CLSF_NM"/>
+		<result property="cmmnClasPsitnSttusNm" column="CMMN_CLAS_PSITN_STTUS_NM"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<association property="memberVO" resultMap="memberVOMap" />
+	</resultMap>
+	
+	<resultMap type="memberVO" id="memberVOMap">
+		<result property="mberId" column="MBER_ID"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="ihidnum" column="IHIDNUM"/>
+		<result property="moblphonNo" column="MOBLPHON_NO"/>
+		<result property="mberEmail" column="MBER_EMAIL"/>
+		<result property="zip" column="ZIP"/>
+		<result property="mberAdres" column="MBER_ADRES"/>
+		<result property="mberImage" column="MBER_IMAGE"/>
+	</resultMap>
+	
+	<!-- 자녀 정보 상세보기 메서드 -->
+	<select id="viewChildInfo" parameterType="hashMap" resultMap="viewChildInfoVO">
+		SELECT 
+		        M.MBER_ID
+		    ,   M.MBER_NM
+		    ,   M.IHIDNUM       /* 주민등록번호 */
+		    ,   M.MOBLPHON_NO   /* 핸드폰 번호 */
+		    ,   M.MBER_EMAIL    /* 이메일 */
+		    ,   M.ZIP           /* 우편번호 */
+		    ,   M.MBER_ADRES    /* 주소*/
+		    ,   M.MBER_IMAGE    /* 회원 이미지 */
+		    ,	CS.CLAS_STDNT_CODE	/* 반 학생 코드 */
+		    ,   CS.CLAS_IN_NO   /* 학급 내 번호 */
+		    ,   FN_CMMN_CODE_TO_NM(CS.CMMN_STDNT_CLSF) CMMN_STDNT_CLSF_NM  /* 공통 반 학생 직급명 */
+		    ,   FN_CMMN_CODE_TO_NM(CS.CMMN_CLAS_PSITN_STTUS) CMMN_CLAS_PSITN_STTUS_NM   /* 공통 반 소속 상태명 */
+		    ,   CS.CLAS_CODE    /* 반 코드 */
+		    ,   CS.SCHUL_CODE   /* 학교 코드 */
+		FROM CLAS_STDNT CS
+		LEFT JOIN MEMBER M ON (M.MBER_ID = #{mberId} AND CS.CLAS_CODE = #{clasCode})
+		WHERE M.MBER_ID = CS.MBER_ID
+	</select>
+	
+</mapper>

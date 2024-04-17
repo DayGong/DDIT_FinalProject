@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.classroom.mapper.UnitTestMapper">
+
+	<resultMap type="gcVO" id="gcMap">
+		<result property="gcCode" column="GC_CODE"/>
+		<result property="clasStdntCode" column="CLAS_STDNT_CODE"/>
+		<result property="scre" column="SCRE"/>
+		<result property="gcDate" column="GC_DATE"/>
+		<result property="unitEvlCode" column="UNIT_EVL_CODE"/>
+		<result property="avgClasScore" column="AVG_CLAS_SCORE"/>
+		<collection property="clasStdntVOList" resultMap="clasStdntMap"></collection>
+	</resultMap>
+	
+	<resultMap type="clasStdntVO" id="clasStdntMap">
+		<result property="clasStdntCode" column="CLAS_STDNT_CODE"/>
+		<result property="clasInNo" column="CLAS_IN_NO"/>
+		<result property="cmmnStdntClsf" column="CMMN_STDNT_CLSF"/>
+		<result property="cmmnClasPsitnSttus" column="CMMN_CLAS_PSITN_STTUS"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<collection property="memberVOList" resultMap="memberMap"></collection>
+	</resultMap>
+	
+	<resultMap type="memberVO" id="memberMap">
+		<result property="mberId" column="MBER_ID"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="ihidnum" column="IHIDNUM"/>
+		<result property="moblphonNo" column="MOBLPHON_NO"/>
+		<result property="mberEmail" column="MBER_EMAIL"/>
+		<result property="zip" column="ZIP"/>
+		<result property="mberAdres" column="MBER_ADRES"/>
+		<result property="mberImage" column="MBER_IMAGE"/>
+		<result property="mberSecsnAt" column="MBER_SECSN_AT"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+	</resultMap>
+	
+	<!-- 단원평가 내용. -->
+	<resultMap type="unitEvlScoreVO" id="ScoreUeMap">
+		<result property="unitEvlCode" column="UNIT_EVL_CODE"/>
+		<result property="unitEvlNm" column="UNIT_EVL_NM"/>
+		<result property="unitEvlBeginDt" column="UNIT_EVL_BEGIN_DT"/>
+		<result property="unitEvlEndDt" column="UNIT_EVL_END_DT"/>
+		<result property="yetCnt" column="YET_CNT"/>
+		<result property="doneCnt" column="DONE_CNT"/>
+		<result property="allCnt" column="ALL_CNT"/>
+		<result property="avgClasScore" column="AVG_CLAS_SCORE"/>
+		<result property="maxScore" column="MAX_SCORE"/>
+		<result property="minScore" column="MIN_SCORE"/>
+		<collection property="unitEvlScoreVOList" resultMap="ScoreMemberMap"></collection>
+		<collection property="quesList" resultMap="quesMap"></collection>
+	</resultMap>
+
+	<!-- 단원평가 정답 내용. -->
+	<resultMap type = "unitEvlScoreVO" id = "quesMap">
+		<result property="quesNo" column="QUES_NO"/>
+		<result property="unitEvlCode" column="UNIT_EVL_CODE"/>
+		<result property="quesQues" column="QUES_QUES"/>
+		<result property="quesCnsr" column="QUES_CNSR"/>
+		<result property="quesExplna" column="QUES_EXPLNA"/>
+		<result property="quesAllot" column="QUES_ALLOT"/>
+	</resultMap>
+
+	<!-- 학생 성적 내용. -->
+	<resultMap type = "unitEvlScoreVO" id = "ScoreMemberMap">
+		<result property="clasInNo" column="CLAS_IN_NO"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="mberId" column="MBER_Id"/>
+		<result property="clasStdntCode" column="CLAS_STDNT_CODE"/>
+		<result property="gcCode" column="GC_CODE"/>
+		<result property="gcDate" column="GC_DATE"/>
+		<result property="scre" column="SCRE"/>
+		<collection property="aswperList" resultMap="scoreAswperMap"></collection>
+	</resultMap>
+	
+	<!-- 학생 답안 내용 -->
+	<resultMap type = "unitEvlScoreVO" id = "scoreAswperMap">
+		<result property="quesNo" column="AP_NO"/>
+		<result property="aswperCn" column="ASWPER_CN"/>
+	</resultMap>
+	
+	<!-- 학생의 학부모 정보 -->
+	<resultMap type = "familyRelateVO" id = "parentsMap">
+	<result property="schulCode" column="SCHUL_CODE"/>
+	<result property="stdnprntId" column="STDNPRNT_ID"/>
+	<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+	<result property="mberSortNm" column="CMMN_DETAIL_CODE_NM"/>
+	
+	<collection property="parentMemberVO" resultMap="memberMap"/>
+	</resultMap>
+	
+	<!-- 해당 반의 단원평가 목록 + 모든 단원평가에 대한 모든 반학생의 평균 성적 정보 + 응시인원 정보 -->
+	<select id = "getUnitTestList" parameterType = "String" resultType = "unitEvlScoreVO">
+		with gclist as(
+		select   ue.unit_evl_code,
+		         ue.unit_evl_nm,
+		         ue.unit_evl_begin_dt,
+		         ue.unit_evl_end_dt,
+		         cs.clas_stdnt_code,
+		         cs.clas_in_no,
+		         cs.mber_id,
+		         gc.gc_code,
+		         nvl(gc.scre,0) scre
+		from     unit_evl ue
+		         inner join clas_stdnt cs
+		         on cs.clas_code = ue.clas_code
+		         left outer join gc
+		         on gc.unit_evl_code = ue.unit_evl_code
+		         and gc.clas_stdnt_code = cs.clas_stdnt_code
+		where    ue.clas_code = #{clasCode}
+		and      cs.clas_stdnt_join_date &lt; ue.unit_evl_end_dt
+		order by ue.unit_evl_code)
+		
+		select   gclist.unit_evl_code,
+		         gclist.unit_evl_nm,
+		         gclist.unit_evl_begin_dt,
+		         gclist.unit_evl_end_dt,
+		         nvl(cnt.cnt,0) done_cnt,
+		         count(*) all_cnt,
+		         round(nvl(avg(gclist.scre),0),1) avg_clas_score
+		from     gclist 
+	             left outer join (select unit_evl_code,
+                                  count(*) cnt
+                      	          from gclist
+                       	          where gc_code is not null
+                       	          group by unit_evl_code) cnt
+		         on gclist.unit_evl_code = cnt.unit_evl_code
+		group by gclist.unit_evl_code,
+				 gclist.unit_evl_nm, cnt.cnt,
+				 gclist.unit_evl_begin_dt,
+				 gclist.unit_evl_end_dt
+		order by gclist.unit_evl_end_dt desc,
+				 gclist.unit_evl_begin_dt desc,
+				 gclist.unit_evl_code desc
+	</select>
+	
+	<!-- 단원평가 기본 상세 정보 -->
+	<select id ="detail" parameterType ="String" resultType ="unitEvlVO">
+		select UNIT_EVL_CODE, UNIT_EVL_NM, UNIT_EVL_BEGIN_DT, UNIT_EVL_END_DT, CLAS_CODE
+		from unit_evl
+		where UNIT_EVL_CODE = #{data}
+	</select>
+
+	<!-- 단원평가에 대한 문항 get -->
+	<select id = "getQuesList" parameterType ="String" resultType ="quesVO">
+		select QUES_NO, UNIT_EVL_CODE, QUES_QUES, QUES_CNSR, QUES_EXPLNA, QUES_ALLOT
+		from ques
+		where UNIT_EVL_CODE = #{data}
+		order by QUES_NO asc
+	</select>
+	
+	<!-- 하나의 단원평가에 대한 모든 학생 시험 결과 -->
+	<select id = "getGcList" parameterType = "String" resultMap ="gcMap">
+		select 	cs.clas_in_no, m.mber_nm, m.mber_id , gc.scre, gc.clas_stdnt_code, gc.gc_date
+		from GC inner join clas_stdnt cs
+				on gc.clas_stdnt_code = cs.clas_stdnt_code
+				inner join member m
+				on cs.mber_id = m.mber_id
+		where 	UNIT_EVL_CODE = #{unitEvlCode}
+		order by cs.clas_in_no asc
+	</select>
+	
+		<!-- 하나의 학생이 하나의 단원평가에 대한 결과 (목록) -->
+	<select id = "getStdGc" parameterType = "map" resultMap ="gcMap">
+		select cs.clas_in_no,
+	           m.mber_nm,
+	           m.mber_id ,
+	           gc.scre,
+	           gc.clas_stdnt_code, 
+	           gc.gc_date,
+	           (select round(avg(scre),1) 
+	           from gc
+	           where UNIT_EVL_CODE = #{unitEvlCode}) AVG_CLAS_SCORE
+		from   GC
+			   inner join clas_stdnt cs
+			   on gc.clas_stdnt_code = cs.clas_stdnt_code
+			   inner join member m
+			   on cs.mber_id = m.mber_id
+		where  UNIT_EVL_CODE = #{unitEvlCode}
+		and    m.mber_id = #{mberId}
+		order by gc.scre asc
+	</select>
+		
+	<!-- 한명의 학생이 반에 대한 모든 단원평가 결과 list get -->
+	<select id = "getStdGcList" parameterType ="map" resultMap ="ScoreUeMap">
+		with gclist as(
+		select   ue.unit_evl_code,
+		         ue.unit_evl_nm,
+		         ue.unit_evl_begin_dt,
+		         ue.unit_evl_end_dt,
+		         cs.clas_stdnt_code,
+		         cs.clas_in_no,
+		         cs.mber_id,
+		         gc.gc_code,
+		         nvl(gc.scre,0) scre
+		from     unit_evl ue
+		         inner join clas_stdnt cs
+		         on cs.clas_code = ue.clas_code
+		         left outer join gc
+		         on gc.unit_evl_code = ue.unit_evl_code
+		         and gc.clas_stdnt_code = cs.clas_stdnt_code
+		where    ue.clas_code = #{clasCode}
+		and      cs.clas_stdnt_join_date &lt; ue.unit_evl_end_dt
+		)        
+		         
+		select   gclist.unit_evl_code,
+		         gclist.unit_evl_nm,
+		         gclist.unit_evl_begin_dt,
+		         gclist.unit_evl_end_dt,
+		         round(nvl(avg(gclist.scre),0), 1) avg_clas_score,
+		         std.scre,
+		         std.gc_code
+		from     gclist 
+		         left outer join (select   unit_evl_code,
+		                                   count(*) cnt
+		                          from     gclist
+		                          where    gc_code is not null
+		                          group by unit_evl_code
+		                          ) cnt
+		         on gclist.unit_evl_code = cnt.unit_evl_code
+		         inner join      (select   unit_evl_code,
+		                            	   scre,
+		                                   gc_code
+		                          from     gclist
+		                          where    clas_stdnt_code = #{clasStdntCode}
+		                          order by unit_evl_code,
+		                                   gc_code
+		                          ) std
+		         on std.unit_evl_code = gclist.unit_evl_code
+		group by gclist.unit_evl_code,
+		         gclist.unit_evl_nm,
+		         cnt.cnt,
+		         gclist.unit_evl_begin_dt,
+		         gclist.unit_evl_end_dt,
+		         std.scre,
+		         std.gc_code
+		order by gclist.unit_evl_end_dt desc,
+		         gclist.unit_evl_begin_dt desc,
+		         gclist.unit_evl_code desc
+	</select>
+
+	<!-- 단원평가 생성 -->
+	<insert id = "createUnitTest" parameterType ="unitEvlVO">
+		insert into unit_evl (UNIT_EVL_CODE, UNIT_EVL_NM, UNIT_EVL_BEGIN_DT, UNIT_EVL_END_DT, CLAS_CODE)
+		values(#{unitEvlCode}, #{unitEvlNm}, #{unitEvlBeginDt}, #{unitEvlEndDt}, #{clasCode})
+	</insert>
+	
+	<!-- 문항 생성 -->
+	<insert id = "createQues" parameterType ="quesVO">
+		insert into ques (QUES_NO, UNIT_EVL_CODE, QUES_QUES, QUES_CNSR, QUES_EXPLNA, QUES_ALLOT)
+		values(#{quesNo},#{unitEvlCode},#{quesQues},#{quesCnsr},#{quesExplna},#{quesAllot})
+	</insert>
+	
+	<!-- 단원평가 생성할 때 넘버링하기 위해 get -->
+	<select id = "getMaxUECode" resultType="String">
+		select 'UE'||trim(to_char(nvl(max(substr(unit_evl_code,3))+1, 10000001),'00000000')) ueid from unit_evl
+	</select>
+	
+	<!-- 성적표 생성 -->
+	<insert id = "makeGc" parameterType = "gcVO">
+		insert into gc(GC_CODE, CLAS_STDNT_CODE, SCRE, UNIT_EVL_CODE, GC_DATE)
+		values ((select 'GC' || trim(to_char(nvl(max(substr(gc_code,3))+1,10000001), '00000000'))
+		           from gc)
+		         , #{clasStdntCode}
+		         , 0
+		         , #{unitEvlCode}
+		         , sysdate
+		       )
+	</insert>
+	
+	<!-- 학생 답안 생성 -->
+	<insert id = "insertAswper" parameterType ="aswperVO">
+		insert into aswper(QUES_NO, UNIT_EVL_CODE, CLAS_STDNT_CODE, ASWPER_CN)
+		values(#{quesNo},#{unitEvlCode},#{clasStdntCode},#{aswperCn} )
+	</insert>
+	
+	<!-- 성적표 성적 update -->
+	<update id ="scoreUpdate" parameterType ="gcVO">
+		update gc
+		set scre = #{scre}
+		  , gc_date = sysdate
+		where clas_stdnt_code = #{clasStdntCode}
+		and unit_evl_code = #{unitEvlCode}
+	</update>
+
+	<!-- 학생 답안 select -->	
+	<select id = "getAswper" parameterType = "aswperVO" resultType ="aswperVO">
+		select 	 QUES_NO, UNIT_EVL_CODE, CLAS_STDNT_CODE, ASWPER_CN
+		from 	 aswper
+		where 	 unit_evl_code = #{unitEvlCode}
+		and 	 clas_stdnt_code = #{clasStdntCode}
+		order by ques_no asc
+	</select>
+	
+	<!-- 학생 답안 삭제 -->
+	<delete id ="delAswper" parameterType ="gcVO">
+		delete from aswper
+		where unit_evl_code = #{unitEvlCode}
+		  and clas_stdnt_code = #{clasStdntCode}
+	</delete>
+
+	<!-- 학생 성적표 삭제 -->
+	<delete id ="delGc" parameterType ="gcVO">
+		delete from gc
+		where unit_evl_code = #{unitEvlCode}
+		  and clas_stdnt_code = #{clasStdntCode}
+	</delete>
+	
+	<!-- 단원평가 수정 -->
+	<update id = "updateUnitTest" parameterType ="unitEvlVO">
+		update unit_evl
+		set unit_evl_nm = #{unitEvlNm}
+		   , unit_evl_begin_dt = #{unitEvlBeginDt}
+		   , unit_evl_end_dt =#{unitEvlEndDt}
+		where unit_evl_code = #{unitEvlCode}
+	</update>
+	
+	<!-- 단원평가 항목 삭제.이거 왜있지 -->
+	<delete id ="deleteQues" parameterType ="String">
+		delete from ques
+		where unit_evl_code = #{unitEvlCode}
+	</delete>
+	
+	<!-- 단원평가 삭제 -->
+	<delete id ="deleteUnitTest" parameterType ="String">
+		delete from unit_evl
+		where unit_evl_code = #{unitEvlCode}
+	</delete>
+	
+	<!-- 단원평가코드&회원아이디로 반학생 데이터 get -->
+	<select id ="getClasStdntWithUnitEvlCodeAndMberId" parameterType ="map" resultType ="clasStdntVO">
+		select *
+		from clas_stdnt cs
+		       inner join clas c
+		       on c.clas_code = cs.clas_code
+		       inner join unit_evl ue
+		       on ue.clas_code = cs.clas_code
+		       inner join member m
+		       on m.mber_id = cs.mber_id
+		where m.mber_id = #{mberId}    
+		and    ue.unit_evl_code = #{unitEvlCode}
+	</select>
+	
+	<!-- 하나의 단원평가에 대한 모든 반학생 성적 get -->
+	<select id ="getAllStdScoreInOneUnitEvl" parameterType = "String" resultMap ="ScoreUeMap">
+		select 
+		        ue.unit_evl_code,
+		        ue.unit_evl_nm,
+		        ue.unit_evl_end_dt,
+		        cs.clas_in_no,
+		        cs.mber_id,
+		        cs.clas_stdnt_code,
+		        m.mber_nm,
+		        m.mber_id,
+		        cs.clas_stdnt_join_date,
+		        cs.clas_stdnt_exit_date,
+		        gc.gc_code,
+		        gc.scre,
+		        (select round(nvl(avg(scre),0), 1)
+		         from gc
+		         where UNIT_EVL_CODE = #{unitEvlCode}) avg_clas_score
+		from  unit_evl ue 
+		        inner join clas_stdnt cs
+		        on ue.clas_code = cs.clas_code
+		        left outer join gc
+		        on ue.unit_evl_code = gc.unit_evl_code
+		        and gc.clas_stdnt_code = cs.clas_stdnt_code
+		        inner join member m
+		        on m.mber_id = cs.mber_id
+		        and ue.unit_evl_code = #{unitEvlCode}
+		where cs.clas_stdnt_join_date &lt; ue.unit_evl_end_dt
+		order by cs.clas_in_no asc
+	</select>
+	
+	<!-- 반코드와 아이디를 통해 반학생 정보 get -->
+	<select id ="getClasStdntWithClasCodeAndMberId" parameterType = "map" resultType ="clasStdntVO">
+		select CLAS_STDNT_CODE, CLAS_IN_NO, CMMN_STDNT_CLSF, CMMN_CLAS_PSITN_STTUS, CLAS_CODE, SCHUL_CODE, MBER_ID, CLAS_STDNT_JOIN_DATE, CLAS_STDNT_EXIT_DATE
+		from clas_stdnt cs
+		where cs.mber_id = #{mberId}
+		and    cs.clas_code = #{clasCode}
+	</select>
+	
+	<!-- 하나의 단원평가 정보 + 모든 학생의 답안 정보 + 응시 인원 정보 + 평균 점수 -->
+	<select id ="getUnitEvlAndAllGc" parameterType = "map" resultMap = "ScoreUeMap">
+		with sub as(
+		select   ue.unit_evl_code,
+		         ue.unit_evl_nm,
+		         unit_evl_begin_dt,
+		         unit_evl_end_dt,
+		         ue.clas_code, 
+		         cs.clas_stdnt_code,
+		         cs.clas_in_no,
+		         cs.cmmn_stdnt_clsf,
+		         cs.cmmn_clas_psitn_sttus,
+		         cs.clas_stdnt_join_date,
+		         cs.clas_stdnt_exit_date,
+		         cs.mber_id,
+		         m.mber_nm,
+		         gc.gc_code,
+		         gc.scre,
+		         gc.gc_date
+		from     unit_evl ue
+		         left join clas_stdnt cs
+		         on ue.clas_code = cs.clas_code
+		         left outer join gc
+		         on gc.unit_evl_code = ue.unit_evl_code
+		         and gc.clas_stdnt_code = cs.clas_stdnt_code
+		         left join member m 
+		         on m.mber_id = cs.mber_id
+		)
+		select   sub1.unit_evl_code,
+		         sub1.unit_evl_nm,
+		         sub1.unit_evl_begin_dt,
+		         sub1.unit_evl_end_dt,
+		         yet.cnt yet_cnt,
+		         don.cnt done_cnt,
+		         tot.cnt all_cnt,
+		         av.avg_clas_score,
+		         maxs.max_score,
+        	     mins.min_score,
+		         q.ques_no,
+		         q.ques_ques,
+		         q.ques_cnsr,
+		         q.ques_explna,
+		         q.ques_allot,
+		         sub1.clas_in_no,
+		         sub1.mber_nm,
+		         sub1.clas_stdnt_code,
+		         sub1.mber_id,
+		         sub1.gc_code,
+		         sub1.gc_date,
+		         nvl(sub1.scre,0) scre,
+		         q.ques_no ap_no,
+		         nvl(ap.aswper_cn, ' ') aswper_cn
+		from     sub sub1
+		         inner join ques q
+		         on q.unit_evl_code = sub1.unit_evl_code
+		         left outer join aswper ap
+		         on sub1.clas_stdnt_code = ap.clas_stdnt_code
+		         and ap.unit_evl_code = q.unit_evl_code
+		         and ap.ques_no = q.ques_no
+		         left outer join (select  sub2.unit_evl_code, round(avg(nvl(sub2.scre,0)),1) avg_clas_score
+		                          from     sub sub2
+		                          where    sub2.clas_code = #{clasCode}
+		                          group by sub2.unit_evl_code
+		                          ) av
+		         on av.unit_evl_code = sub1.unit_evl_code
+		         left outer join (select  sub3.unit_evl_code,
+		                                   count(*) cnt
+		                          from     sub sub3
+		                          where    sub3.clas_code = #{clasCode}
+		                          group by sub3.unit_evl_code
+		                          ) tot
+		         on tot.unit_evl_code = sub1.unit_evl_code
+		         left outer join (select  sub4.unit_evl_code,
+		                                   count(*) cnt
+		                          from     sub sub4
+		                          where    sub4.gc_code is not null
+		                          and      sub4.clas_code = #{clasCode}
+		                          group by sub4.unit_evl_code
+		                          ) don
+		         on don.unit_evl_code = sub1.unit_evl_code
+		         left outer join (select  sub5.unit_evl_code,
+		                                   count(*) cnt
+		                          from     sub sub5
+		                          where    sub5.gc_code is null
+		                          and      sub5.clas_code = #{clasCode}
+		                          group by sub5.unit_evl_code
+		                          ) yet
+		         on yet.unit_evl_code = sub1.unit_evl_code
+		         left outer join (select   sub6.unit_evl_code,
+		                                   max(nvl(sub6.scre,0)) max_score
+		                          from     sub sub6
+		                          group by sub6.unit_evl_code
+		                        ) maxs
+		         on maxs.unit_evl_code = sub1.unit_evl_code
+		         left outer join (select   sub7.unit_evl_code,
+		                                   min(nvl(sub7.scre,0)) min_score
+		                          from     sub sub7
+		                          group by sub7.unit_evl_code
+		                        ) mins
+                 on mins.unit_evl_code = sub1.unit_evl_code
+		where    1 = 1
+		and      sub1.clas_code = #{clasCode}
+<!-- 		and      sub1.clas_stdnt_join_date &lt; sub1.unit_evl_end_dt -->
+		<if test="unitEvlCode != '' and unitEvlCode !=null">
+		and      sub1.unit_evl_code = #{unitEvlCode}
+		</if>
+		<if test="mberId != '' and mberId !=null">
+		and      sub1.mber_id = #{mberId}
+		</if>
+		order by sub1.unit_evl_end_dt desc,
+				 sub1.unit_evl_begin_dt desc,
+				 sub1.unit_evl_code asc,
+		         sub1.clas_in_no asc,
+		         q.ques_no asc
+	</select>
+	
+	<!-- 학생의 학부모 정보 구하기 --> 
+	<select id ="getParents" parameterType="String" resultMap ="parentsMap">
+		select fr.cmmn_detail_code, cdc.cmmn_detail_code_nm, fr.stdnprnt_id, m.mber_nm, m.moblphon_no
+		from family_relate fr
+		       inner join member m
+		       on m.mber_id = fr.stdnprnt_id
+		       inner join cmmn_detail_code cdc
+		       on cdc.cmmn_detail_code = fr.cmmn_detail_code
+		where fr.stdnt_id = #{mberId}
+	</select>
+	
+	<!-- 진행중인 반 단원평가 get -->
+	<select id = "getDoingExam" parameterType = "map" resultType = "unitEvlVO">
+		select ue.unit_evl_code,
+		        ue.unit_evl_nm,
+		        ue.unit_evl_begin_dt,
+		        ue.unit_evl_end_dt,
+		        ue.clas_code
+		from 	unit_evl ue
+		where 	ue.clas_code = #{clasCode}
+		and 	ue.unit_evl_end_dt &gt;= sysdate
+		order by ue.unit_evl_end_dt desc
+	</select>
+	
+</mapper>

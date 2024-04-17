@@ -1,0 +1,279 @@
+@font-face {
+  font-family: 'educate-icon';
+  src:
+    url('fonts/educate-icon.ttf?kufm5h') format('truetype'),
+    url('fonts/educate-icon.woff?kufm5h') format('woff'),
+    url('fonts/educate-icon.svg?kufm5h#educate-icon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.educate-icon {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'educate-icon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.educate-danger:before {
+  content: "\e91b";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-info:before {
+  content: "\e91c";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-warning:before {
+  content: "\e91d";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-star:before {
+  content: "\e919";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-star-half:before {
+  content: "\e91a";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-apps:before {
+  content: "\e900";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-bell:before {
+  content: "\e901";
+  font-weight: 600;
+  font-size: 1.3rem;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-charts:before {
+  content: "\e902";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-checked:before {
+  content: "\e903";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-cloud:before {
+  content: "\e904";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-comment:before {
+  content: "\e905";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-course:before {
+  content: "\e906";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-data-table:before {
+  content: "\e907";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-department:before {
+  content: "\e908";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-event:before {
+  content: "\e909";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-form:before {
+  content: "\e90a";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-home:before {
+  content: "\e90b";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-interface:before {
+  content: "\e90c";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-landing:before {
+  content: "\e90d";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-library:before {
+  content: "\e90e";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-menu:before {
+  content: "\e90f";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-message:before {
+  content: "\e910";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-miscellanous:before {
+  content: "\e911";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-nav:before {
+  content: "\e912";
+  font-weight: 600;
+  font-size: 1.3rem;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-pages:before {
+  content: "\e913";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-professor:before {
+  content: "\e914";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-project:before {
+  content: "\e915";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-search:before {
+  content: "\e916";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-settings:before {
+  content: "\e917";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-student:before {
+  content: "\e918";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-price-tag:before {
+  content: "\e935";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}
+.educate-price-tags:before {
+  content: "\e936";
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #006DF0;
+  vertical-align: sub;
+  display: inline-block;
+}

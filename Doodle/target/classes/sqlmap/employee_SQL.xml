@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.employee.mapper.EmployeeMapper">
+	
+	<sql id="employeeWhere">
+  		   AND 	CMMN_EMP_CLSF IS NOT NULL
+		   AND 	A.SCHUL_CODE = C.SCHUL_CODE
+		   AND 	C.MBER_ID = B.MBER_ID
+		   AND  A.SCHUL_CODE = #{schulCode}
+		<if test="keyword!=null and keyword!=''">
+		    AND (
+		            B.MBER_ID LIKE '%' || #{keyword} || '%'	<!-- 회원 아이디 -->
+	            OR	B.MBER_NM LIKE '%' || #{keyword} || '%'	<!-- 회원 이름 -->
+	            OR	FN_CMMN_CODE_TO_NM(C.CMMN_SCHUL_PSITN_STTUS) LIKE '%' || #{keyword} || '%' <!-- 공통 학교 소속 상태(A02) -->
+				OR	FN_CMMN_CODE_TO_NM(C.CMMN_EMP_CLSF) LIKE '%' || #{keyword} || '%' <!-- 공통 직원 직급(A14) -->
+		    )
+		</if>
+   </sql>
+	
+	<sql id="studentWhere">
+  		   AND 	CMMN_GRADE IS NOT NULL
+		   AND 	A.SCHUL_CODE = C.SCHUL_CODE
+		   AND 	C.MBER_ID = B.MBER_ID
+		   AND  A.SCHUL_CODE = #{schulCode}
+		<if test="keyword!=null and keyword!=''">
+		    AND (
+		            B.MBER_ID LIKE '%' || #{keyword} || '%'	<!-- 회원 아이디 -->
+	            OR	B.MBER_NM LIKE '%' || #{keyword} || '%'	<!-- 회원 이름 -->
+	            OR	FN_CMMN_CODE_TO_NM(C.CMMN_SCHUL_PSITN_STTUS) LIKE '%' || #{keyword} || '%' <!-- 공통 학교 소속 상태(A02) -->
+				OR	FN_CMMN_CODE_TO_NM(C.CMMN_EMP_CLSF) LIKE '%' || #{keyword} || '%' <!-- 공통 직원 직급(A14) -->
+		    )
+		</if>
+   </sql>
+	
+	<resultMap type="schulVO" id="schulMap">
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="schulNm" column="SCHUL_NM"/>
+		<result property="schulAdres" column="SCHUL_ADRES"/>
+		<result property="schulTlphonNo" column="SCHUL_TLPHON_NO"/>
+		<result property="schulAnnvrsry" column="SCHUL_ANNVRSRY"/>
+		
+		<collection property="schulPsitnMberVOList" resultMap="schulPsitnMberMap"></collection>
+	</resultMap>
+	
+	<resultMap type="schulPsitnMberVO" id="schulPsitnMberMap">
+		<result property="rnum" column="RNUM"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="cmmnSchulPsitnSttus" column="CMMN_SCHUL_PSITN_STTUS"/>
+		<result property="cmmnGrade" column="CMMN_GRADE"/>
+		<result property="cmmnEmpClsf" column="CMMN_EMP_CLSF"/>
+		
+		<association property="memberVO" resultMap="memberMap"></association>
+	</resultMap>
+	
+	<resultMap type="memberVO" id="memberMap">
+		<result property="mberId" column="MBER_ID"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="ihidnum" column="IHIDNUM"/>
+		<result property="moblphonNo" column="MOBLPHON_NO"/>
+		<result property="mberEmail" column="MBER_EMAIL"/>
+		<result property="zip" column="ZIP"/>
+		<result property="mberAdres" column="MBER_ADRES"/>
+		<result property="mberImage" column="MBER_IMAGE"/>
+		<result property="mberSecsnAt" column="MBER_SECSN_AT"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+	</resultMap>
+	
+	
+	<!-- 교직원 리스트 -->
+	<select id="employeeList" parameterType="hashMap" resultMap="schulMap">
+		<!-- kr.or.ddit.school.mapper.SchoolMapper.employeeList -->
+		WITH T AS(
+			SELECT  ROW_NUMBER() OVER(ORDER BY B.MBER_ID DESC) RNUM
+				 ,	A.SCHUL_CODE		<!-- 학교 코드 -->
+				 , 	A.SCHUL_NM			<!-- 학교 명 -->
+				 , 	A.SCHUL_ADRES		<!-- 학교 주소 -->
+				 , 	A.SCHUL_TLPHON_NO	<!-- 학교 번호 -->
+				 , 	A.SCHUL_ANNVRSRY	<!-- 학교 개교기념일 -->
+				 , 	B.MBER_ID			<!-- 회원 아이디 -->
+				 , 	B.PASSWORD			<!-- 회원 비밀번호 -->
+				 , 	B.MBER_NM			<!-- 회원 이름 -->
+				 , 	B.IHIDNUM			<!-- 회원 주민번호 -->
+				 , 	B.MOBLPHON_NO		<!-- 회원 전화번호 -->
+				 , 	B.MBER_EMAIL		<!-- 회원 이메일 -->
+				 , 	B.ZIP				<!-- 회원 우편 번호 -->
+				 , 	B.MBER_ADRES		<!-- 회원 주소 -->
+				 , 	B.MBER_IMAGE		<!-- 회원 사진 -->
+				 ,	B.MBER_SECSN_AT		<!-- 회원 탈퇴 여부 -->
+				 , 	B.CMMN_DETAIL_CODE	<!-- 공통 회원 분류(A01) -->
+				 , 	FN_CMMN_CODE_TO_NM(C.CMMN_SCHUL_PSITN_STTUS) CMMN_SCHUL_PSITN_STTUS <!-- 공통 학교 소속 상태(A02) -->
+				 , 	FN_CMMN_CODE_TO_NM(C.CMMN_GRADE) CMMN_GRADE		<!-- 공통 학년(A22) -->
+				 , 	FN_CMMN_CODE_TO_NM(C.CMMN_EMP_CLSF) CMMN_EMP_CLSF	<!-- 공통 직원 직급(A14) -->
+			        
+			  FROM 	SCHUL A, 
+			        MEMBER B, 
+			        SCHUL_PSITN_MBER C
+			 WHERE 	1=1
+			 <include refid="employeeWhere"></include>
+
+		)
+		SELECT T.* FROM T
+      	WHERE  T.RNUM BETWEEN (#{currentPage}*10) - (10 - 1) AND (#{currentPage}*10)
+	</select>
+	
+	<!-- 교직원 수 -->
+	<!-- map : {"schulCode":"7581092","currentPage":3,"keyword":"신용"}  -->
+	<select id="getEmployeeTotal" parameterType="hashMap" resultType="int">
+		<!-- kr.or.ddit.school.mapper.SchoolMapper.getEmployeeTotal -->
+		SELECT  COUNT(*) 
+		FROM    SCHUL A, 
+		        MEMBER B, 
+		        SCHUL_PSITN_MBER C
+		WHERE   1=1
+		<include refid="employeeWhere"></include>
+	</select>
+	
+	<!-- 교직원 상세 -->
+	<select id="employeeDetail" parameterType="hashMap" resultMap="schulMap">
+		<!-- kr.or.ddit.school.mapper.SchoolMapper.employeeDetail -->
+		SELECT 	
+				A.SCHUL_CODE 														<!-- 학교코드 -->
+			 , 	A.SCHUL_NM															<!-- 학교이름 -->
+			 , 	A.SCHUL_ADRES														<!-- 학교주소 -->
+			 , 	A.SCHUL_TLPHON_NO													<!-- 학교번호 -->
+			 , 	A.SCHUL_ANNVRSRY													<!-- 개교기념일 -->
+     		 , 	B.MBER_ID															<!-- 회원아이디 -->
+     		 ,	B.PASSWORD															<!-- 비밀번호 -->
+     		 , 	B.MBER_NM															<!-- 회원이름 -->
+     		 , 	B.IHIDNUM															<!-- 주민등록번호 -->
+     		 , 	B.MOBLPHON_NO														<!-- 회원 전화번호 -->
+     		 , 	B.MBER_EMAIL														<!-- 회원 이메일 -->
+     		 , 	B.ZIP																<!-- 회원 우편번호 -->
+     		 , 	B.MBER_ADRES														<!-- 회원 주소 -->
+     		 ,  B.MBER_IMAGE														<!-- 회원 사진 -->
+     		 , 	B.MBER_SECSN_AT														<!-- 회원 탈퇴 여부 -->
+     		 , 	B.CMMN_DETAIL_CODE													<!-- 공통 회원 분류(A01) -->
+     		 , 	C.CMMN_SCHUL_PSITN_STTUS											<!-- 공통 학교 소속 상태(A02) -->
+     		 , 	C.CMMN_GRADE														<!-- 공통 학년(A22) -->
+     		 , 	C.CMMN_EMP_CLSF														<!-- 공통 직원 직급(A14) -->        
+		  FROM 	SCHUL A, 															<!-- 학교 테이블 -->
+		        MEMBER B, 															<!-- 회원 테이블 -->
+		        SCHUL_PSITN_MBER C													<!-- 학교 소속 회원 테이블 -->
+		        
+		 WHERE 	1=1
+		   AND 	CMMN_EMP_CLSF IS NOT NULL											<!-- 공통 직원 직급(A14) -->
+		   AND 	A.SCHUL_CODE = C.SCHUL_CODE											<!-- 학교코드 -->
+		   AND 	C.MBER_ID = B.MBER_ID												<!-- 회원이름 -->
+		   AND  A.SCHUL_CODE = #{schulCode} 										<!-- 학교코드 -->
+           AND  B.MBER_ID = #{mberId}  												<!-- 회원이름 -->
+	</select>
+	
+	<!-- 멤버 등록 -->
+	<insert id="insertMember" parameterType="memberVO">
+		INSERT INTO MEMBER
+			(		
+					MBER_ID				<!-- 회원 아이디 -->
+				, 	PASSWORD			<!-- 비밀번호 -->
+				, 	MBER_NM				<!-- 회원 이름 -->
+				, 	IHIDNUM				<!-- 주민등록번호 -->
+				, 	MOBLPHON_NO			<!-- 회원 전화번호 -->
+				, 	MBER_EMAIL			<!-- 회원 이메일 -->
+				, 	ZIP					<!-- 회원 우편번호 -->
+				, 	MBER_ADRES			<!-- 회원 주소 -->
+				, 	MBER_IMAGE			<!-- 회원 사진 -->
+				, 	MBER_SECSN_AT		<!-- 회원 탈퇴 여부 -->
+				, 	CMMN_DETAIL_CODE	<!-- 공통 회원 분류(A01) -->
+			)
+			VALUES
+			(		
+					#{mberId}			<!-- 회원 아이디 -->
+				, 	#{password}			<!-- 비밀번호 -->
+				, 	#{mberNm}			<!-- 회원 이름 -->
+				, 	#{ihidnum}			<!-- 주민등록번호 -->
+				, 	#{moblphonNo}		<!-- 회원 전화번호 -->
+				, 	#{mberEmail}		<!-- 회원 이메일 -->
+				, 	#{zip}				<!-- 회원 우편번호 -->
+				, 	#{mberAdres}		<!-- 회원 주소 -->
+				, 	#{mberImage}		<!-- 회원 사진 -->
+				, 	'0'		<!-- 회원 탈퇴 여부 -->
+				, 	#{cmmnDetailCode}	<!-- 공통 회원 분류(A01) -->
+			)
+	</insert>
+	
+	<!-- 교직원 등록 -->
+	<insert id="insertSchoolMember" parameterType="schulPsitnMberVO">
+			INSERT INTO SCHUL_PSITN_MBER
+			(
+					SCHUL_CODE				<!-- 학교 코드 -->
+				, 	MBER_ID					<!-- 회원 아이디 -->
+				, 	CMMN_SCHUL_PSITN_STTUS	<!-- 공통 학교 소속 상태(A02) -->
+				, 	CMMN_GRADE				<!-- 공통 학년(A22) -->
+				, 	CMMN_EMP_CLSF			<!-- 공통 직원 직급(A14) -->
+			)
+			VALUES
+			(
+					#{schulCode}			<!-- 학교 코드 -->
+				, 	#{mberId}				<!-- 회원 아이디 -->
+				, 	#{cmmnSchulPsitnSttus}	<!-- 공통 학교 소속 상태(a02) -->
+				, 	''						<!-- 공통 학년(a22) -->
+				, 	#{cmmnEmpClsf}			<!-- 공통 직원 직급(A14) -->
+			)
+	</insert>
+	
+	<!-- 멤버 등록시 아이디 중복체크 -->
+	<select id="idDupChk" resultType="int" parameterType="memberVO">
+		SELECT COUNT(*) FROM MEMBER WHERE MBER_ID = #{mberId}
+	</select>
+	
+	<!-- 멤버 수정 -->
+	<update id="updateMember" parameterType="memberVO">
+		UPDATE 	MEMBER A
+		   SET 	A.MBER_NM = #{mberNm}, 			<!-- 회원 이름 -->
+		    	A.MBER_EMAIL = #{mberEmail}, 	<!-- 회원 이메일 -->
+		    	A.MOBLPHON_NO = #{moblphonNo}, 	<!-- 회원 전화번호 -->
+		    	A.ZIP = #{zip},					<!-- 회원 우편번호 -->
+		    	A.MBER_ADRES = #{mberAdres},	<!-- 회원 주소 -->
+	    		A.MBER_IMAGE = #{mberImage} 	<!-- 회원 사진 -->
+		 WHERE 	A.MBER_ID = #{mberId}			<!-- 회원 아이디 -->
+	</update>
+		
+		<!-- 교직원 수정 -->
+	<update id="updateEmployeeSchulPsitnMber" parameterType="schulPsitnMberVO">
+		UPDATE 	SCHUL_PSITN_MBER B
+		   SET 	B.CMMN_SCHUL_PSITN_STTUS = #{cmmnSchulPsitnSttus},	<!-- 공통 학교 소속 상태(a02) -->
+		    	B.CMMN_EMP_CLSF = #{cmmnEmpClsf}					<!-- 공통 직원 직급(A14) -->
+		    	
+		 WHERE 	B.MBER_ID = #{mberId}								<!-- 회원 아이디 -->
+	</update>
+	
+	<!-- 교직원 삭제 -->
+	<delete id="employeeDeleteAjax" parameterType="schulPsitnMberVO">
+		<!-- kr.or.ddit.school.mapper.SchoolMapper.employeeDeleteAjax -->
+		DELETE FROM SCHUL_PSITN_MBER A 
+		 WHERE A.SCHUL_CODE = #{schulCode} <!-- 학교 코드 -->	
+		   AND A.MBER_ID = #{mberId}	<!-- 회원 아이디 -->
+	</delete>
+	
+	<!-- 학생 리스트 -->
+	<select id="studentList" parameterType="hashMap" resultMap="schulMap">
+		<!-- kr.or.ddit.school.mapper.SchoolMapper.studentList -->
+		WITH T AS(
+			SELECT  ROW_NUMBER() OVER(ORDER BY B.MBER_ID DESC) RNUM
+				 ,	A.SCHUL_CODE		<!-- 학교 코드 -->
+				 , 	A.SCHUL_NM			<!-- 학교 명 -->
+				 , 	A.SCHUL_ADRES		<!-- 학교 주소 -->
+				 , 	A.SCHUL_TLPHON_NO	<!-- 학교 번호 -->
+				 , 	A.SCHUL_ANNVRSRY	<!-- 학교 개교기념일 -->
+				 , 	B.MBER_ID			<!-- 회원 아이디 -->
+				 , 	B.PASSWORD			<!-- 회원 비밀번호 -->
+				 , 	B.MBER_NM			<!-- 회원 이름 -->
+				 , 	B.IHIDNUM			<!-- 회원 주민번호 -->
+				 , 	B.MOBLPHON_NO		<!-- 회원 전화번호 -->
+				 , 	B.MBER_EMAIL		<!-- 회원 이메일 -->
+				 , 	B.ZIP				<!-- 회원 우편 번호 -->
+				 , 	B.MBER_ADRES		<!-- 회원 주소 -->
+				 , 	B.MBER_IMAGE		<!-- 회원 사진 -->
+				 ,	B.MBER_SECSN_AT		<!-- 회원 탈퇴 여부 -->
+				 , 	B.CMMN_DETAIL_CODE	<!-- 공통 회원 분류(A01) -->
+				 , 	FN_CMMN_CODE_TO_NM(C.CMMN_SCHUL_PSITN_STTUS) CMMN_SCHUL_PSITN_STTUS <!-- 공통 학교 소속 상태(A02) -->
+				 , 	FN_CMMN_CODE_TO_NM(C.CMMN_GRADE) CMMN_GRADE		<!-- 공통 학년(A22) -->
+				 , 	FN_CMMN_CODE_TO_NM(C.CMMN_EMP_CLSF) CMMN_EMP_CLSF	<!-- 공통 직원 직급(A14) -->
+			        
+			  FROM 	SCHUL A, 
+			        MEMBER B, 
+			        SCHUL_PSITN_MBER C
+			 WHERE 	1=1
+			 <include refid="studentWhere"></include>
+
+		)
+		SELECT T.* FROM T
+      	WHERE  T.RNUM BETWEEN (#{currentPage}*10) - (10 - 1) AND (#{currentPage}*10)
+	</select>
+	
+   	<!-- 학생 수 -->
+	<select id="getStudentTotal" parameterType="hashMap" resultType="int">
+		<!-- kr.or.ddit.school.mapper.SchoolMapper."getStudentTotal" -->
+		SELECT  COUNT(*) 
+		FROM    SCHUL A, 
+		        MEMBER B, 
+		        SCHUL_PSITN_MBER C
+		WHERE   1=1
+		<include refid="studentWhere"></include>
+	</select>
+	
+	<!-- 학생 상세 -->
+	<select id="studentDetail" parameterType="hashMap" resultMap="schulMap">
+		<!-- kr.or.ddit.school.mapper.SchoolMapper.studentDetail -->
+		SELECT 	
+				A.SCHUL_CODE 														<!-- 학교코드 -->
+			 , 	A.SCHUL_NM															<!-- 학교이름 -->
+			 , 	A.SCHUL_ADRES														<!-- 학교주소 -->
+			 , 	A.SCHUL_TLPHON_NO													<!-- 학교번호 -->
+			 , 	A.SCHUL_ANNVRSRY													<!-- 개교기념일 -->
+     		 , 	B.MBER_ID															<!-- 회원아이디 -->
+     		 ,	B.PASSWORD															<!-- 비밀번호 -->
+     		 , 	B.MBER_NM															<!-- 회원이름 -->
+     		 , 	B.IHIDNUM															<!-- 주민등록번호 -->
+     		 , 	B.MOBLPHON_NO														<!-- 회원 전화번호 -->
+     		 , 	B.MBER_EMAIL														<!-- 회원 이메일 -->
+     		 , 	B.ZIP																<!-- 회원 우편번호 -->
+     		 , 	B.MBER_ADRES														<!-- 회원 주소 -->
+     		 ,  B.MBER_IMAGE														<!-- 회원 사진 -->
+     		 , 	B.MBER_SECSN_AT														<!-- 회원 탈퇴 여부 -->
+     		 , 	B.CMMN_DETAIL_CODE													<!-- 공통 회원 분류(A01) -->
+     		 , 	C.CMMN_SCHUL_PSITN_STTUS											<!-- 공통 학교 소속 상태(A02) -->
+     		 , 	C.CMMN_GRADE														<!-- 공통 학년(A22) -->
+     		 , 	C.CMMN_EMP_CLSF														<!-- 공통 직원 직급(A14) -->        
+		  FROM 	SCHUL A, 															<!-- 학교 테이블 -->
+		        MEMBER B, 															<!-- 회원 테이블 -->
+		        SCHUL_PSITN_MBER C													<!-- 학교 소속 회원 테이블 -->
+		        
+		 WHERE 	1=1
+		   AND 	CMMN_GRADE IS NOT NULL												<!-- 공통 학년(A22) -->
+		   AND 	A.SCHUL_CODE = C.SCHUL_CODE											<!-- 학교코드 -->
+		   AND 	C.MBER_ID = B.MBER_ID												<!-- 회원이름 -->
+		   AND  A.SCHUL_CODE = #{schulCode}											<!-- 학교코드 -->
+           AND  B.MBER_ID = #{mberId}  												<!-- 회원 아이디 -->
+	</select>
+	
+	<!-- 학생 등록 -->
+	<insert id="insertSchoolStudent" parameterType="schulPsitnMberVO">
+			INSERT INTO SCHUL_PSITN_MBER
+			(
+					SCHUL_CODE				<!-- 학교 코드 -->
+				, 	MBER_ID					<!-- 회원 아이디 -->
+				, 	CMMN_SCHUL_PSITN_STTUS	<!-- 공통 학교 소속 상태(A02) -->
+				, 	CMMN_GRADE				<!-- 공통 학년(A22) -->
+				, 	CMMN_EMP_CLSF			<!-- 공통 직원 직급(A14) -->
+			)
+			VALUES
+			(
+					#{schulCode}			<!-- 학교 코드 -->
+				, 	#{mberId}				<!-- 회원 아이디 -->
+				, 	#{cmmnSchulPsitnSttus}	<!-- 공통 학교 소속 상태(a02) -->
+				, 	#{cmmnGrade}			<!-- 공통 학년(a22) -->
+				, 	''			<!-- 공통 직원 직급(A14) -->
+			)
+	</insert>
+	
+	<!-- 학생 수정 -->
+	<update id="updateStudentSchulPsitnMber" parameterType="schulPsitnMberVO">
+		<!-- kr.or.ddit.school.mapper.SchoolMapper.updateStudentSchulPsitnMber -->
+		UPDATE 	SCHUL_PSITN_MBER B
+		   SET 	B.CMMN_SCHUL_PSITN_STTUS = #{cmmnSchulPsitnSttus},	<!-- 공통 학교 소속 상태(a02) -->
+		    	B.CMMN_GRADE = #{cmmnGrade}							<!-- 공통 학년(A22) -->
+		    	
+		 WHERE 	B.MBER_ID = #{mberId}								<!-- 회원 아이디 -->
+	</update>
+	
+	<select id="employeeMemberImage" parameterType="memberVO" resultType="String">
+		SELECT MBER_IMAGE
+		FROM MEMBER
+		WHERE 1=1
+		AND MBER_ID = #{mberId}
+	</select>
+	
+	<!-- 학생 삭제 -->
+	<delete id="studentDeleteAjax" parameterType="schulPsitnMberVO">
+		<!-- kr.or.ddit.school.mapper.SchoolMapper.employeeDeleteAjax -->
+		DELETE FROM SCHUL_PSITN_MBER A 
+		 WHERE A.SCHUL_CODE = #{schulCode} <!-- 학교 코드 -->	
+		   AND A.MBER_ID = #{mberId}	<!-- 회원 아이디 -->
+	</delete>
+	<!-- 서명 등록/수정 -->
+	<update id="insertSign" parameterType="schulPsitnMberVO">
+		UPDATE SCHUL_PSITN_MBER
+		   SET SIGN = #{sign}
+		 WHERE MBER_ID = #{mberId}
+	</update>
+	
+	<!-- 아이디 최대값 -->
+	<select id="selectMaxId" parameterType="String" resultType="String">
+		SELECT MAX(MBER_ID)
+		  FROM MEMBER
+		 WHERE CMMN_DETAIL_CODE = #{cmmnDetailCode}
+	</select>
+	
+	<!-- 멤버 삭제 -->
+	<delete id="deleteMember">
+		DELETE FROM MEMBER
+		 WHERE MBER_ID = #{mberId}
+	</delete>
+</mapper>

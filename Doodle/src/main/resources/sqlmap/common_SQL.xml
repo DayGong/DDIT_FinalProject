@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.common.mapper.CommonMapper">
+	<!-- 로그인 시 아이디 유뮤 체크 -->
+	<resultMap type="memberVO" id="memberMap">
+		<result property="mberId" column="MBER_ID" />
+		<result property="password" column="PASSWORD" />
+		<result property="mberNm" column="MBER_NM" />
+		<result property="ihidnum" column="IHIDNUM" />
+		<result property="moblphonNo" column="MOBLPHON_NO" />
+		<result property="mberEmail" column="MBER_EMAIL" />
+		<result property="zip" column="ZIP" />
+		<result property="mberAdres" column="MBER_ADRES" />
+		<result property="mberImage" column="MBER_IMAGE" />
+		<result property="mberSecsnAt" column="MBER_SECSN_AT" />
+		<collection property="vwMemberAuthVOList"
+			resultMap="vwMemberAuthMap"></collection>
+	</resultMap>
+
+	<resultMap type="vwMemberAuthVO" id="vwMemberAuthMap">
+		<result property="mberId" column="MBER_ID" />
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE" />
+	</resultMap>
+	
+
+	<select id="loginChk" parameterType="String" resultMap="memberMap">
+		SELECT 
+		A.MBER_ID, 
+		A.PASSWORD, 
+		A.MBER_NM, 
+		A.IHIDNUM,
+		A.MOBLPHON_NO, 
+		A.MBER_EMAIL, 
+		A.ZIP, 
+		A.MBER_ADRES, 
+		A.MBER_IMAGE, 
+		A.MBER_SECSN_AT, 
+		B.CMMN_DETAIL_CODE
+		FROM MEMBER A LEFT OUTER JOIN VW_MEMBER_AUTH B
+		ON(A.MBER_ID = B.MBER_ID)
+		WHERE A.MBER_ID = TO_CHAR(#{username})
+	</select>
+
+
+	<!-- 회원가입시 아이디 중복체크 -->
+	<select id="idDupChk" resultType="int" parameterType="memberVO">
+		SELECT COUNT(*) FROM MEMBER WHERE MBER_ID = #{mberId}
+	</select>
+	<!-- 회원가입 -->
+	<insert id="signUp" parameterType="memberVO">
+		INSERT 
+		INTO 
+			MEMBER
+		VALUES(
+			#{mberId}
+			,#{password}
+			,#{mberNm}
+			,#{ihidnum}
+			,#{moblphonNo}
+			,#{mberEmail}
+			,#{zip}
+			,#{mberAdres}
+			,#{mberImage}
+			,0
+			,'ROLE_A01003')
+	</insert>
+	
+	<!-- 최초 1회 비밀번호 변경 -->
+	<update id="updatePassword" parameterType="memberVO">
+		UPDATE 	MEMBER
+		   SET 	PASSWORD = #{password}
+		 WHERE 	MBER_ID = #{mberId}
+	</update>
+	
+	<!-- 학부모 회원가입시 자녀 아이디 체크 -->
+	<select id="childChk" resultType="int" parameterType="memberVO">
+		SELECT COUNT(*) FROM MEMBER WHERE MBER_ID = #{mberId} AND CMMN_DETAIL_CODE=#{cmmnDetailCode}
+	</select>
+	
+	<!-- 학부모 회원가입시 가족관계 선택할 수 있도록 가족관계 카테고리 호출 -->
+	<select id="familyCategory" resultType="CmmnDetailCodeVO">
+		SELECT * FROM CMMN_DETAIL_CODE WHERE CMMN_CODE = 'A04'
+	</select>
+	<!-- 학부모 회원가입시 가족관계에 학교코드 데이터를 넣을 수 있도록 학생(자녀)아이디로 학교코드 호출 -->
+	<select id="getSchulCode" resultType="String">
+		SELECT SCHUL_CODE FROM SCHUL_PSITN_MBER WHERE MBER_ID = #{mberChildId}
+	</select>
+	<!-- 학부모 회원가입시 가족관계 테이블에도 insert -->
+	<insert id="insertFamilyRelate" parameterType="familyRelateVO">
+		INSERT INTO FAMILY_RELATE VALUES(#{schulCode},#{stdntId},#{stdnprntId},#{cmmnDetailCode})
+	</insert>
+	<!-- 학부모 회원가입시 학교소속회원 insert -->
+	<insert id="insertSchulPsitnMber" parameterType="schulPsitnMberVO">
+		INSERT INTO schul_psitn_mber(SCHUL_CODE, MBER_ID, CMMN_SCHUL_PSITN_STTUS, CMMN_GRADE, CMMN_EMP_CLSF,SIGN)
+		VALUES(#{schulCode},#{mberId},'A02101',null,null,null)
+	</insert>
+	
+	
+	<!-- 방문자 수와 브라우저를 등록하는 메서드 -->
+	<update id="addVisitrCo" parameterType="String">
+		/* kr.or.ddit.common.mapper.CommonMapper.addVisitrCo */
+		MERGE INTO
+		    HMPG_MANAGE HM
+		USING DUAL
+		    ON (TO_CHAR(HM.HMPG_MANAGE_DE, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD'))
+		WHEN MATCHED THEN
+		    UPDATE
+		    SET 		HM.VISITR_CO = NVL(HM.VISITR_CO, 0) + 1
+			<choose>
+			    <when test="browserName == 'Whale'">
+			    	,	HM.BRWSR_WHALE_CO = NVL(HM.BRWSR_WHALE_CO, 0) + 1
+			    </when>
+			    <when test="browserName == 'Chrome'">
+			    	,	HM.BRWSR_CHROME_CO = NVL(HM.BRWSR_CHROME_CO, 0) + 1
+			    </when>
+			    <when test="browserName == 'Edge'">
+			    	,	HM.BRWSR_EDGE_CO = NVL(HM.BRWSR_EDGE_CO, 0) + 1
+			    </when>
+			    <otherwise>
+			    	,	HM.BRWSR_ETC_CO = NVL(HM.BRWSR_ETC_CO, 0) + 1
+			    </otherwise>
+			</choose>
+		WHEN NOT MATCHED THEN
+		    INSERT  (
+		    			HMPG_MANAGE_DE
+		    		,	VISITR_CO
+			<choose>
+		    	<when test="browserName == 'Whale'">
+		    		,	BRWSR_WHALE_CO
+		    	</when>
+			    <when test="browserName == 'Chrome'">
+			    	,	BRWSR_CHROME_CO
+			    </when>
+			    <when test="browserName == 'Edge'">
+			    	,	BRWSR_EDGE_CO
+			    </when>
+			    <otherwise>
+			    	,	BRWSR_ETC_CO
+			    </otherwise>
+			</choose>
+		    )
+		    VALUES  (TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 1, 1)
+	</update>
+	
+	<!-- 로그인 수를 등록하는 메서드 -->
+	<update id="addLoginCo">
+		/* kr.or.ddit.common.mapper.CommonMapper.addLoginCo */
+		MERGE INTO
+		    HMPG_MANAGE HM
+		USING DUAL
+		    ON (TO_CHAR(HM.HMPG_MANAGE_DE, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD'))
+		WHEN MATCHED THEN
+		    UPDATE
+		    SET 		HM.LOGIN_CO = NVL(HM.LOGIN_CO, 0) + 1
+		WHEN NOT MATCHED THEN
+		    INSERT  (
+		    			HMPG_MANAGE_DE
+		    		,	LOGIN_CO
+		    )
+		    VALUES  (TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 1)
+	</update>
+	
+</mapper>

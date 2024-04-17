@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.admin.mapper.AdminMapper">
+
+	<!-- 신고 게시판 목록 개수를 구하는 SELECT -->
+	<select id="getSttemntListTotal" parameterType="sttemntSearchVO" resultType="int">
+		/* kr.or.ddit.admin.mapper.AdminMapper.getSttemntListTotal */
+		SELECT 
+			COUNT(S.STTEMNT_CODE)
+		FROM 
+			STTEMNT S
+			LEFT OUTER JOIN NTT N ON (S.NTT_CODE = N.NTT_CODE)
+			LEFT OUTER JOIN CLAS_ALBUM CA ON (S.NTT_CODE = CA.CLAS_ALBUM_CODE)
+		WHERE 1 = 1
+	</select>
+	
+	<resultMap type="sttemntVO" id="loadSttemntListMap">
+		<result property="sttemntCode" column="STTEMNT_CODE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="nttCode" column="NTT_CODE"/>
+		<result property="cmmnSttemntCn" column="CMMN_STTEMNT_CN"/>
+		<result property="cmmnSttemntCnNm" column="CMMN_STTEMNT_CN_NM"/>
+		<result property="wrterId" column="WRTER_ID"/>
+		<result property="sttemntId" column="STTEMNT_ID"/>
+		<result property="cmmnSttemntProcessSttus" column="CMMN_STTEMNT_PROCESS_STTUS"/>
+		<result property="cmmnSttemntProcessSttusNm" column="CMMN_STTEMNT_PROCESS_STTUS_NM"/>
+		<result property="rceptDt" column="RCEPT_DT"/>
+		<result property="processDt" column="PROCESS_DT"/>
+		<result property="nttSttemntAccmlt" column="NTT_STTEMNT_ACCMLT"/>
+	</resultMap>
+	
+	<!-- 신고 게시판 목록을 가져오는 SELECT -->
+	<select id="loadSttemntList" parameterType="sttemntSearchVO" resultMap="loadSttemntListMap">
+		/* kr.or.ddit.admin.mapper.AdminMapper.loadSttemntList */
+		WITH T AS (
+			SELECT
+					ROW_NUMBER() OVER (ORDER BY DECODE(RES.CMMN_STTEMNT_PROCESS_STTUS, 'A21001', 1), RES.STTEMNT_CODE DESC) RNUM
+				,	RES.*
+			FROM (
+					SELECT 
+					        S.STTEMNT_CODE      										/* 신고 코드 */
+					    ,   S.SCHUL_CODE        										/* 학교 코드 */
+					    ,   CA.CLAS_CODE        										/* 반 코드 */
+					    ,   S.NTT_CODE													/* 게시물 코드 */
+					    ,	S.CMMN_STTEMNT_CN   										/* 공통 신고 내용(A24) */       															
+					    ,   FN_CMMN_CODE_TO_NM(S.CMMN_STTEMNT_CN) CMMN_STTEMNT_CN_NM	/* 공통 신고 내용(A24) 이름 */
+					    ,   S.WRTER_ID   												/* 작성자 아이디 */
+					    ,   S.STTEMNT_ID           										/* 신고자 아이디 */
+					    ,	S.CMMN_STTEMNT_PROCESS_STTUS								/* 공통 신고 처리 상태(A21) */
+					    ,   FN_CMMN_CODE_TO_NM(S.CMMN_STTEMNT_PROCESS_STTUS) CMMN_STTEMNT_PROCESS_STTUS_NM	/* 공통 신고 처리 상태(A21) 이름 */	
+					    ,	TO_CHAR(S.RCEPT_DT, 'YYYY-MM-DD') RCEPT_DT					/* 접수 일자 */
+					    ,	TO_CHAR(S.PROCESS_DT, 'YYYY-MM-DD')	PROCESS_DT				/* 처리 일자 */
+					    ,	CA.NTT_STTEMNT_ACCMLT										/* 게시물 신고누적 */
+					FROM 
+						STTEMNT S
+						LEFT OUTER JOIN NTT N ON (S.NTT_CODE = N.NTT_CODE)
+						LEFT OUTER JOIN CLAS_ALBUM CA ON (S.NTT_CODE = CA.CLAS_ALBUM_CODE)
+					WHERE 1 = 1
+					<if test="rceptDtRd != 'rceptAll'">
+					AND
+						<choose>
+							<when test="rceptDtRd == 'rcept7'">TO_CHAR(S.RCEPT_DT, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when>
+							<when test="rceptDtRd == 'rcept30'">TO_CHAR(S.RCEPT_DT, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when>
+							<when test="rceptDtRd == 'rceptToday'">TO_CHAR(S.RCEPT_DT, 'YYYY-MM-DD') == SYSDATE</when>
+							<otherwise>TO_CHAR(S.RCEPT_DT, 'YYYY-MM-DD') BETWEEN #{rceptStDt} AND #{rceptEdDt}</otherwise>														
+						</choose>
+					</if>
+					<if test="processDtRd != 'processAll'">
+					AND
+						<choose>
+							<when test="processDtRd == 'process7'">TO_CHAR(S.PROCESS_DT, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when>
+							<when test="processDtRd == 'process30'">TO_CHAR(S.PROCESS_DT, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when>
+							<when test="processDtRd == 'processToday'">TO_CHAR(S.PROCESS_DT, 'YYYY-MM-DD') == SYSDATE</when>
+							<otherwise>TO_CHAR(S.PROCESS_DT, 'YYYY-MM-DD') BETWEEN #{processStDt} AND #{processEdDt}</otherwise>														
+						</choose>
+					</if>
+					<if test="sttemntSttusCB[0] != 'sttusAll'">
+					AND S.CMMN_STTEMNT_PROCESS_STTUS IN
+						<foreach collection="sttemntSttusCB" item="status" index="index" separator="," open="(" close=")">
+							#{status}
+						</foreach>
+					</if>
+					<if test="keyword != null || keyword == ''">
+				    AND (
+				    	<choose>
+				    		<when test="searchCondition == 'nttCode'"> S.NTT_CODE LIKE '%' || #{keyword} || '%' </when>
+				    		<when test="searchCondition == 'writerId'">  S.WRTER_ID LIKE '%' || #{keyword} || '%' </when>
+				    		<when test="searchCondition == 'cmmnSttemntCnNm'">  FN_CMMN_CODE_TO_NM(S.CMMN_STTEMNT_CN) LIKE '%' || #{keyword} || '%' </when>
+				    		<when test="searchCondition == 'complaintId'">  S.STTEMNT_ID LIKE '%' || #{keyword} || '%' </when>
+				    		<otherwise>
+				    		(
+				    				S.NTT_CODE LIKE '%' || #{keyword} || '%'
+				    			OR	S.WRTER_ID LIKE '%' || #{keyword} || '%'
+				    			OR	FN_CMMN_CODE_TO_NM(S.CMMN_STTEMNT_CN) LIKE '%' || #{keyword} || '%'
+				    			OR	S.STTEMNT_ID LIKE '%' || #{keyword} || '%'
+				    		)
+				    		</otherwise>
+				    	</choose>
+				    )
+				    </if>
+				) RES
+			)
+		SELECT T.*
+		FROM T
+		WHERE T.RNUM BETWEEN (#{currentPage}*#{size}) - (#{size}-1) AND (#{currentPage}*#{size})
+	</select>
+	
+	<!-- 신고 내용 목록을 불러오는 SELECT -->
+	<select id="getComplaintCn" resultType="cmmnDetailCodeVO">
+		/* kr.or.ddit.admin.mapper.AdminMapper.getComplaintCn */
+		SELECT 
+		        CMMN_DETAIL_CODE
+		    ,   CMMN_DETAIL_CODE_NM
+		FROM 
+		    CMMN_DETAIL_CODE CDC
+		WHERE 
+		    CMMN_CODE = 'A24'
+	</select>
+	
+	<resultMap type="clasAlbumVO" id="getClasAlbumInfoMap">
+		<result property="clasAlbumCode" column="CLAS_STDNT_CODE"/>
+		<result property="albumNm" column="ALBUM_NM"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="albumDe" column="ALBUM_DE"/>
+		<result property="nttSttemntAccmlt" column="NTT_STTEMNT_ACCMLT"/>
+	</resultMap>
+	
+	<!-- 신고된 게시물의 정보를 불러오는 SELECT(반 앨범인 경우) -->
+	<select id="getClasAlbumInfo" parameterType="String" resultMap="getClasAlbumInfoMap">
+		/* kr.or.ddit.admin.mapper.AdminMapper.getClasAlbumInfo */
+		SELECT
+		        CA.CLAS_ALBUM_CODE											/* 반 앨범 코드 */
+		    ,   CA.ALBUM_NM													/* 앨범 명 */
+		    ,   CA.CLAS_CODE												/* 반 코드 */
+		    ,   CS.MBER_ID													/* 작성자 아이디 */
+		    ,   FN_CLAS_STDNT_CODE_TO_MBER_NM(CA.CLAS_STDNT_CODE) MBER_NM 	/* 반 학생 이름 */
+		    ,   CA.ALBUM_DE													/* 앨범 등록 일자 */
+		    ,   CA.NTT_STTEMNT_ACCMLT										/* 게시물 신고누적 */
+		FROM CLAS_ALBUM CA
+		LEFT OUTER JOIN CLAS_STDNT CS ON (CS.CLAS_STDNT_CODE = CA.CLAS_STDNT_CODE)
+		WHERE CA.ATCH_FILE_CODE = #{nttCode}
+	</select>
+	
+	<!-- 게시물의 공통 신고 상태 명을 불러오는 SELECT -->
+	<select id="getCmmnSttemntCn" parameterType="String" resultType="String">
+		/* kr.or.ddit.admin.mapper.AdminMapper.getCmmnSttemntCn */
+		SELECT
+			CMMN_DETAIL_CODE_NM
+		FROM 
+			CMMN_DETAIL_CODE
+		WHERE
+			CMMN_DETAIL_CODE = #{cmmnSttemnt}
+	</select>
+	
+	<insert id="addComplaint" parameterType="sttemntVO">
+		/* kr.or.ddit.admin.mapper.AdminMapper.addComplaint */
+		INSERT INTO STTEMNT (
+				STTEMNT_CODE					/* 신고 코드 */
+			,	CMMN_STTEMNT_CN					/* 공통 신고 내용(A24) */
+			,	CMMN_STTEMNT_PROCESS_STTUS		/* 공통 신고 처리 상태(A21) */
+			,	NTT_CODE						/* 게시물 코드 */
+			,	SCHUL_CODE						/* 학교 코드 */
+			,	WRTER_ID						/* 작성자 아이디 */
+			,	STTEMNT_ID						/* 신고자 아이디 */
+			,	CLAS_CODE						/* 반 코드 */
+			,	RCEPT_DT						/* 접수 일자 */
+			,	PROCESS_DT						/* 처리 일자 */
+		)
+		VALUES	(
+				STTEMNT_CODE_SEQ.NEXTVAL
+			,	#{cmmnSttemntCn}
+			,	#{cmmnSttemntProcessSttus}
+			,	#{nttCode}
+			,	#{schulCode, jdbcType = VARCHAR}
+			,	#{wrterId}
+			,	#{sttemntId}
+			,	#{clasCode}
+			,	SYSDATE
+			,	#{processDt, jdbcType = DATE}
+		)
+	</insert>
+	
+	<!-- 상태를 변경하는 메서드 -->
+	<update id="updateProcessSttus" parameterType="hashMap">
+		/* kr.or.ddit.admin.mapper.AdminMapper.updateProcessSttus */
+		UPDATE 
+			STTEMNT
+		SET
+			<choose>
+				<when test="cmmnSttemntProcessSttus == 'A21002'">
+					CMMN_STTEMNT_PROCESS_STTUS = 'A21002',
+				</when>
+				<otherwise>
+					CMMN_STTEMNT_PROCESS_STTUS = 'A21003',
+				</otherwise>
+			</choose>
+			PROCESS_DT = SYSDATE
+		WHERE 
+				NTT_CODE = #{nttCode}
+			AND	CMMN_STTEMNT_PROCESS_STTUS NOT IN ('A21002', 'A21003')
+	</update>
+	
+	<!-- 신고된 갤러리 게시물의 처리 -->
+	<update id="changeTargetComplaintSttus" parameterType="hashMap">
+		/* kr.or.ddit.admin.mapper.AdminMapper.changeTargetComplaintSttus */
+		UPDATE
+			CLAS_ALBUM
+		SET
+			<choose>
+				<when test="cmmnSttemntProcessSttus == 'A21002'">
+					NTT_STTEMNT_STTUS = 'A15001'
+				</when>
+				<otherwise>
+					NTT_STTEMNT_STTUS = 'A15003'
+				</otherwise>
+			</choose>
+		WHERE ATCH_FILE_CODE = #{nttCode}
+	</update>
+	
+	<!-- 관리자 메인 화면에서 신고 게시물 수를 불러오는 메서드 -->
+	<select id="getComplaintNtt" resultType="int">
+		/* kr.or.ddit.admin.mapper.AdminMapper.getComplaintNtt */
+		SELECT
+		    COUNT(STTEMNT_CODE)
+		FROM 
+		    STTEMNT
+	</select>
+	
+	<!-- 오늘 접수된 신고 게시물 수를 불러오는 메서드 -->
+	<select id="getTodayComplaintNtt" resultType="int">
+		/* kr.or.ddit.admin.mapper.AdminMapper.getTodayComplaintNtt */
+		SELECT
+		    COUNT(STTEMNT_CODE)
+		FROM 
+		    STTEMNT
+		WHERE
+			TO_CHAR(RCEPT_DT, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+	</select>
+	
+	<!-- 미확인 신고 게시물 수를 불러오는 메서드 -->
+	<select id="getUncnfrmComplaintNtt" resultType="int">
+		/* kr.or.ddit.admin.mapper.AdminMapper.getUncnfrmComplaintNtt */
+		SELECT
+		    COUNT(STTEMNT_CODE)
+		FROM 
+		    STTEMNT
+		WHERE
+				TO_CHAR(RCEPT_DT, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+			AND	CMMN_STTEMNT_PROCESS_STTUS = 'A21001'
+	</select>
+	
+	<!-- 이상 없음 처리된 게시물 수를 불러오는 메서드 -->
+	<select id="getNoProblemComplaintNtt" resultType="int">
+		/* kr.or.ddit.admin.mapper.AdminMapper.getNoProblemComplaintNtt */
+		SELECT
+		    COUNT(STTEMNT_CODE)
+		FROM 
+		    STTEMNT
+		WHERE
+				TO_CHAR(RCEPT_DT, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+			AND	CMMN_STTEMNT_PROCESS_STTUS = 'A21002'
+	</select>
+	
+	<!-- 정지 처리된 게시물 수를 불러오는 메서드 -->
+	<select id="getStopComplaintNtt" resultType="int">
+		/* kr.or.ddit.admin.mapper.AdminMapper.getStopComplaintNtt */
+		SELECT
+		    COUNT(STTEMNT_CODE)
+		FROM 
+		    STTEMNT
+		WHERE
+				TO_CHAR(RCEPT_DT, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+			AND	CMMN_STTEMNT_PROCESS_STTUS = 'A21003'
+	</select>
+	
+	<resultMap type="hmpgManageVO" id="hmpgManageVOMap">
+		<result property="brwsrChromeCo" column="BRWSR_CHROME_CO"/>
+		<result property="brwsrWhaleCo" column="BRWSR_WHALE_CO"/>
+		<result property="brwsrEdgeCo" column="BRWSR_EDGE_CO"/>
+		<result property="brwsrEtcCo" column="BRWSR_ETC_CO"/>
+		<result property="brwsrSum" column="BRWSR_SUM"/>
+	</resultMap>
+	
+	<!-- 브라우저 수를 구하는 메서드 -->
+	<select id="getHmpgBrwsrCo" resultMap="hmpgManageVOMap">
+		/* kr.or.ddit.admin.mapper.AdminMapper.getHmpgBrwsrCo */
+		SELECT 
+		        SUM(BRWSR_CHROME_CO) AS BRWSR_CHROME_CO
+		    ,   SUM(BRWSR_WHALE_CO) AS BRWSR_WHALE_CO
+		    ,   SUM(BRWSR_EDGE_CO) AS BRWSR_EDGE_CO
+		    ,   SUM(BRWSR_ETC_CO) AS BRWSR_ETC_CO
+		    ,   SUM(BRWSR_CHROME_CO + BRWSR_WHALE_CO + BRWSR_EDGE_CO + BRWSR_ETC_CO) AS BRWSR_SUM
+		FROM 
+		    HMPG_MANAGE
+	</select>
+	
+	<!-- 총 방문자 수를 구하는 메서드 -->
+	<select id="getTotalVisitrCo" resultType="int">
+		/* kr.or.ddit.admin.mapper.AdminMapper.getTotalVisitrCo */
+		SELECT
+			SUM(VISITR_CO) AS VISITR_CO
+		FROM
+		    HMPG_MANAGE
+	</select>
+	
+	<!-- 오늘 로그인한 회원 수를 구하는 메서드 -->
+	<select id="getTodayLoginCo" resultType="int">
+		/* kr.or.ddit.admin.mapper.AdminMapper.getTodayLoginCo */
+		SELECT
+			NVL(LOGIN_CO, 0)
+		FROM
+			HMPG_MANAGE
+		WHERE
+			TO_CHAR(HMPG_MANAGE_DE, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+	</select>
+	
+	<!-- 전날과 비교해서 방문자 수와 회원가입한 회원 수를 조회하는 메서드 -->
+	<select id="getCmprBfeCo" resultType="hmpgManageVO">
+		/* kr.or.ddit.admin.mapper.AdminMapper.getCmprBfeCo */
+		SELECT 
+		        NVL(HM.VISITR_CO, 0) - NVL(RES.VISITR_CO, 0) AS VISITR_CO,
+		        NVL(HM.MBER_SBSCRB_CO, 0) - NVL(RES.MBER_SBSCRB_CO, 0) AS MBER_SBSCRB_CO
+		FROM 
+		    HMPG_MANAGE HM
+		LEFT OUTER JOIN (
+		        SELECT
+		                NVL(VISITR_CO, 0) VISITR_CO,
+		                NVL(MBER_SBSCRB_CO, 0) MBER_SBSCRB_CO
+		        FROM
+		            HMPG_MANAGE
+		        WHERE
+		            HMPG_MANAGE_DE = TO_CHAR((SYSDATE - 1), 'YYYY-MM-DD')
+		    ) RES
+		ON 
+		    HM.HMPG_MANAGE_DE = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+		WHERE 
+    		HM.HMPG_MANAGE_DE = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+	</select>
+	
+	<!-- 게시물 테이블을 조회수 내림차순으로 가져오는 메서드 -->
+	<select id="getNttList" resultType="nttVO">
+		/* kr.or.ddit.admin.mapper.AdminMapper.getNttList */
+		SELECT
+		        NTT_CODE
+		    ,   NTT_NM
+		FROM (
+				SELECT 
+				        NTT_CODE
+				    ,   NTT_NM
+				FROM 
+				    NTT
+				ORDER BY 
+				    NTT_RDCNT DESC
+			)
+		WHERE 
+			<![CDATA[ ROWNUM <= 7 ]]>
+	</select>
+	
+	<!-- 차트에 뿌려질 일주일 방문객 수 가져오는 메서드 -->
+	<select id="setVisitrChart" resultType="hmpgManageVO">
+	/* kr.or.ddit.admin.mapper.AdminMapper.setVisitrChart */
+		WITH DateRange AS (
+		    SELECT 
+		        TRUNC(SYSDATE) - (LEVEL - 1) AS DateRange
+		    FROM 
+		        DUAL
+		    CONNECT BY 
+		        <![CDATA[ LEVEL <= 7 ]]> 	/* 7일간의 날짜를 생성 */
+		)
+		SELECT
+		        DateRange               AS HMPG_MANAGE_DE
+		    ,   NVL(VISITR_CO, 0)       AS VISITR_CO
+		    ,   NVL(LOGIN_CO, 0)        AS LOGIN_CO
+		    ,   NVL(MBER_SBSCRB_CO, 0)  AS MBER_SBSCRB_CO
+		FROM
+		    DateRange
+		LEFT JOIN HMPG_MANAGE 
+		    ON TO_CHAR(HMPG_MANAGE_DE, 'YYYY-MM-DD') = TO_CHAR(DateRange, 'YYYY-MM-DD')
+		WHERE 1 = 1
+		ORDER BY
+		    TO_CHAR(DateRange, 'YYYY-MM-DD')
+	</select>
+</mapper>

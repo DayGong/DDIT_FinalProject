@@ -1,0 +1,334 @@
+@charset "UTF-8";
+
+/*
+부트스트랩 충돌 방지를 위해 모든 이름 앞에 두들을 뜻하는 "d-" 추가
+*/
+
+:root {
+	/*
+	색상 변수
+	
+	사용 방법 : 
+	background-color : var(--yellow-color);
+	*/
+	/*파랑*/
+	--blue-color            : #1F81FF;
+	--blue-color-dark       : #2876da;
+	--blue-color-darker     : #2a6cc1;
+	/*노랑*/
+	--yellow-color          : #ffd34f;
+	--yellow-color-dark     : #f2c846;
+	--yellow-color-darker   : #e4b627;
+	/*검정*/              
+	--black-color           : #262626;
+	--black-color-dark      : #1f1f1f;
+	--black-color-darker    : #121212;
+	--black-color-light     : #2f2f2f;
+	--black-color-lighter   : #373737;
+	--black-color-lightest  : #303030;
+	/*흰색(폰트 등)*/              
+	--white-color           : #ffffff;
+	--white-color-few-dark  : #efefef;
+	--white-color-dark      : #dfdfdf;
+	--white-color-darker    : #bfbfbf;
+	/*회색(종료, 비활성화, 없음 등)*/
+	--gray-color            : #cccccc;
+	--gray-color-dark       : #acacac;
+	--gray-color-darker     : #959595;
+	/*빨강(금지, 삭제, 불가 등)*/
+	--red-color             : #df3c3c;
+	--red-color-dark        : #bc3b3b;
+	--red-color-darker      : #993a3a;
+	/*녹색(성공, 완료) 등*/
+	--green-color           : #96DB5B;
+	--green-color-dark      : #8AC954;
+	--green-color-darker    : #80BA4F;
+	
+	/*btn style*/
+	--d-btn-border-radius   : 5px;
+	--d-btn-text-align      : center;
+	--d-btn-vertical-align  : middle;
+	--d-btn-border          : none;
+	--d-btn-font-weight     : 550;
+	--d-btn-padding         : 8px 15px;
+	--d-btn-color           : var(--white-color);
+}
+
+/*
+<button> 요소 스타일.
+<div> 에 쓰면 버튼처럼 보이게 함.
+*/
+.d-btn {
+	border-radius : 5px;
+	text-align: center;
+	vertical-align: middle;
+	border: none;
+	font-weight: 550;
+	padding:6px 12px;
+}
+
+/*
+<button> 색상 변경
+
+사용 방법 :
+<button class = "d-btn-blue">
+*/
+.d-btn-blue {
+	background-color : var(--blue-color);
+	border-radius    : var(--d-btn-border-radius);
+	text-align       : var(--d-btn-text-align);    
+	vertical-align   : var(--d-btn-vertical-align);
+	border           : var(--d-btn-border);        
+	font-weight      : var(--d-btn-font-weight);   
+	padding          : var(--d-btn-padding);       
+	color            : var(--d-btn-color);         
+}
+.d-btn-blue:hover{
+	background-color : var(--blue-color-dark);
+	color: var(--white-color-dark);
+}
+.d-btn-blue:active{
+	background-color : var(--blue-color-darker);
+	color: var(--white-color-darker);
+}
+.d-btn-yellow {
+	background-color : var(--yellow-color);
+	border-radius    : var(--d-btn-border-radius);
+	text-align       : var(--d-btn-text-align);    
+	vertical-align   : var(--d-btn-vertical-align);
+	border           : var(--d-btn-border);        
+	font-weight      : var(--d-btn-font-weight);   
+	padding          : var(--d-btn-padding);       
+	color            : var(--d-btn-color);    
+}
+.d-btn-yellow:hover {
+	background-color : var(--yellow-color-dark);
+	color: var(--white-color-few-dark);
+}
+.d-btn-yellow:active {
+	background-color : var(--yellow-color-darker);
+	color: var(--white-color-dark);
+}
+.d-btn-black {
+	background-color : var(--black-color);
+	border-radius    : var(--d-btn-border-radius);
+	text-align       : var(--d-btn-text-align);    
+	vertical-align   : var(--d-btn-vertical-align);
+	border           : var(--d-btn-border);        
+	font-weight      : var(--d-btn-font-weight);   
+	padding          : var(--d-btn-padding);       
+	color            : var(--d-btn-color);    
+}
+.d-btn-black:hover {
+	background-color : var(--black-color-dark);
+	color: var(--white-color-dark);
+}
+.d-btn-black:active {
+	background-color : var(--black-color-darker);
+	color: var(--white-color-darker);
+}
+.d-btn-gray {
+	background-color : var(--gray-color);
+	border-radius    : var(--d-btn-border-radius);
+	text-align       : var(--d-btn-text-align);    
+	vertical-align   : var(--d-btn-vertical-align);
+	border           : var(--d-btn-border);        
+	font-weight      : var(--d-btn-font-weight);   
+	padding          : var(--d-btn-padding);       
+	color            : var(--d-btn-color);    
+}
+.d-btn-gray:hover {
+	background-color : var(--gray-color-dark);
+	color: var(--white-color-few-dark);
+}
+.d-btn-gray:active {
+	background-color : var(--gray-color-darker);
+	color: var(--white-color-dark);
+}
+.d-btn-red {
+	background-color : var(--red-color);
+	border-radius    : var(--d-btn-border-radius);
+	text-align       : var(--d-btn-text-align);    
+	vertical-align   : var(--d-btn-vertical-align);
+	border           : var(--d-btn-border);        
+	font-weight      : var(--d-btn-font-weight);   
+	padding          : var(--d-btn-padding);       
+	color            : var(--d-btn-color);    
+}
+.d-btn-red:hover {
+	background-color : var(--red-color-dark);
+	color: var(--white-color-dark);
+}
+.d-btn-red:active {
+	background-color : var(--red-color-darker);
+	color: var(--white-color-darker);
+}
+.d-btn-green {
+	background-color : var(--green-color);
+	border-radius    : var(--d-btn-border-radius);
+	text-align       : var(--d-btn-text-align);    
+	vertical-align   : var(--d-btn-vertical-align);
+	border           : var(--d-btn-border);        
+	font-weight      : var(--d-btn-font-weight);   
+	padding          : var(--d-btn-padding);       
+	color            : var(--d-btn-color);    
+}
+.d-btn-green:hover {
+	background-color : var(--green-color-dark);
+	color: var(--white-color-few-dark);
+}
+.d-btn-green:active {
+	background-color : var(--green-color-darker);
+	color: var(--white-color-dark);
+}
+
+.d-btn-white {
+	background-color : var(--white-color);
+	border-radius    : var(--d-btn-border-radius);
+	text-align       : var(--d-btn-text-align);    
+	vertical-align   : var(--d-btn-vertical-align);
+	border           : var(--d-btn-border);        
+	font-weight      : var(--d-btn-font-weight);   
+	padding          : var(--d-btn-padding);       
+}
+.d-btn-white:hover {
+	background-color : var(--white-color-dark);
+}
+.d-btn-white:active {
+	background-color : var(--white-color-darker);
+}
+
+/*
+<div> 색상 변경
+
+사용 방법 :
+<button class = "d-div-blue">
+*/
+.d-div-blue {
+	background-color : var(--blue-color);
+	border-radius    : var(--d-btn-border-radius);
+	text-align       : var(--d-btn-text-align);    
+	vertical-align   : var(--d-btn-vertical-align);
+	border           : var(--d-btn-border);        
+	font-weight      : var(--d-btn-font-weight);   
+	padding          : var(--d-btn-padding);       
+	color            : var(--d-btn-color);    
+}
+.d-div-yellow {
+	background-color : var(--yellow-color);
+	border-radius    : var(--d-btn-border-radius);
+	text-align       : var(--d-btn-text-align);    
+	vertical-align   : var(--d-btn-vertical-align);
+	border           : var(--d-btn-border);        
+	font-weight      : var(--d-btn-font-weight);   
+	padding          : var(--d-btn-padding);       
+	color            : var(--d-btn-color);    
+}
+.d-div-black {
+	background-color : var(--black-color);
+	border-radius    : var(--d-btn-border-radius);
+	text-align       : var(--d-btn-text-align);    
+	vertical-align   : var(--d-btn-vertical-align);
+	border           : var(--d-btn-border);        
+	font-weight      : var(--d-btn-font-weight);   
+	padding          : var(--d-btn-padding);       
+	color            : var(--d-btn-color);    
+}
+.d-div-gray {
+	background-color : var(--gray-color);
+	border-radius    : var(--d-btn-border-radius);
+	text-align       : var(--d-btn-text-align);    
+	vertical-align   : var(--d-btn-vertical-align);
+	border           : var(--d-btn-border);        
+	font-weight      : var(--d-btn-font-weight);   
+	padding          : var(--d-btn-padding);       
+	color            : var(--d-btn-color);    
+}
+.d-div-red {
+	background-color : var(--red-color);
+	border-radius    : var(--d-btn-border-radius);
+	text-align       : var(--d-btn-text-align);    
+	vertical-align   : var(--d-btn-vertical-align);
+	border           : var(--d-btn-border);        
+	font-weight      : var(--d-btn-font-weight);   
+	padding          : var(--d-btn-padding);       
+	color            : var(--d-btn-color);    
+}
+.d-div-green {
+	background-color : var(--green-color);
+	border-radius    : var(--d-btn-border-radius);
+	text-align       : var(--d-btn-text-align);    
+	vertical-align   : var(--d-btn-vertical-align);
+	border           : var(--d-btn-border);        
+	font-weight      : var(--d-btn-font-weight);   
+	padding          : var(--d-btn-padding);       
+	color            : var(--d-btn-color);    
+}
+
+/*
+마우스 올려놓은 <tr> 색상 변경
+
+사용 방법 :
+<tr class = "d-tr">
+*/
+.d-tr:hover {
+	background-color: #f5f5f5;
+}
+.d-tr:active {
+	background-color: #efefef;
+}
+
+/*
+<table>
+*/
+.d-tb {
+	border-collapse : collapse;
+	border		    : 1px solid;
+	border-color    : var(--gray-color-dark);
+	border-radius   : 3px;
+}
+.d-tb th {
+	padding			: 3px 5px;
+	text-align		: left;
+	background-color: var(--gray-color);
+	font-weight		: 550;
+	color			: var(--black-color-lightest);
+	border			: 1px solid;
+	border-color 	: var(--gray-color-dark);
+}
+.d-tb td {
+	padding			: 3px 5px;
+	border 			: 1px solid;
+	color			: var(--black-color-lightest);
+	border-color 	: var(--gray-color-dark);
+}
+
+/*
+<select>
+*/
+.d-sel-white {
+	padding          : 5px 10px;
+	border-radius    : 3px;
+	border-color     : var(--gray-color-darker);
+	color            : var(--black-color-lightest);
+	background-color : var(--white-color);
+	font-weight      : var(--d-btn-font-weight);
+}
+.d-sel-white:active {
+	color            : var(--black-color-lighter);
+	background-color : var(--white-color-dark);
+	
+}
+.d-sel-blue {
+	padding          : 5px 15px;
+	border-radius    : 3px;
+	border-color     : var(--gray-color-darker);
+	color            : var(--white-color);
+	background-color : var(--blue-color);
+	font-weight      : var(--d-btn-font-weight);
+}
+.d-sel-blue:active {
+	color            : var(--white-color-dark);
+	background-color : var(--blue-color-dark);
+	
+}

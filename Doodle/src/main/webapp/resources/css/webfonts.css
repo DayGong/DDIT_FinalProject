@@ -1,0 +1,58 @@
+@charset "UTF-8";
+
+/* 기본 폰트 */
+/* @import url('./xeicon.css'); */
+
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 900;
+    src: url(/resources/css/font/pretendard/Pretendard-Black.woff) format('woff');
+}
+
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 800;
+    src: url(/css/font/pretendard/Pretendard-ExtraBold.woff) format('woff');
+}
+
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 700;
+    src: url(/resources/css/font/pretendard/Pretendard-Bold.woff) format('woff');
+}
+
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 600;
+    src: url(/resources/css/font/pretendard/Pretendard-SemiBold.woff) format('woff');
+}
+
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 500;
+    src: url(/resources/css/font/pretendard/Pretendard-Medium.woff) format('woff');
+}
+
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 400;
+    src: url(/resources/css/font/pretendard/Pretendard-Regular.woff) format('woff');
+}
+
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 300;
+    src: url(/resources/css/font/pretendard/Pretendard-Light.woff) format('woff');
+}
+
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 200;
+    src: url(/resources/css/font/pretendard/Pretendard-ExtraLight.woff) format('woff');
+}
+
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 100;
+    src: url(/resources/css/font/pretendard/Pretendard-Thin.woff) format('woff');
+}

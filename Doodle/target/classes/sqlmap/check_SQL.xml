@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.util.mapper.CheckMapper">
+
+<select id ="checkBelongClStd" parameterType ="hashMap" resultType ="clasStdntVO">
+	select 	CLAS_STDNT_CODE, CLAS_IN_NO, CMMN_STDNT_CLSF, CMMN_CLAS_PSITN_STTUS, CLAS_CODE, SCHUL_CODE, MBER_ID
+	from 	clas_stdnt
+	where 	mber_id = #{mberId}
+	and 	clas_code = #{clasCode}
+</select>
+
+<select id ="checkBelongClTch" parameterType ="hashMap" resultType ="hrtchrVO">
+	select 	CLAS_CODE, SCHUL_CODE, MBER_ID, CMMN_DETAIL_CODE
+	from 	hrtchr
+	where 	mber_id = #{mberId}
+	and 	clas_code = #{clasCode}
+</select>
+
+<select id ="checkBelongClPrnt" parameterType ="hashMap" resultType ="clasStdntVO">
+	select rownum, sub.*
+	from(
+	        select 		cs.CLAS_STDNT_CODE,
+	                    cs.CLAS_IN_NO,
+	                    cs.CMMN_STDNT_CLSF, 
+	                    cs.CMMN_CLAS_PSITN_STTUS,
+	                    cs.CLAS_CODE, 
+	                    cs.SCHUL_CODE, 
+	                    cs.MBER_ID
+	        from    	clas_stdnt cs
+	        left outer 	join family_relate fr
+	        on          fr.stdnt_id = cs.mber_id
+	        where     	fr.stdnprnt_id = #{mberId}
+	        and        	cs.cmmn_clas_psitn_sttus = 'A03101'
+	        and 	    clas_code = #{clasCode}
+	        ) sub
+	where rownum = 1 
+</select>
+
+<select id ="checkBelongSch" parameterType ="hashMap" resultType ="schulPsitnMberVO">
+	select 	SCHUL_CODE, MBER_ID, CMMN_SCHUL_PSITN_STTUS, CMMN_GRADE, CMMN_EMP_CLSF
+	from 	schul_psitn_mber
+	where 	mber_id = #{mberId}
+	and 	schul_code = #{schulCode}
+</select>
+
+</mapper>

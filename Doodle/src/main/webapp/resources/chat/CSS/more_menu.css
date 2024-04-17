@@ -1,0 +1,151 @@
+/* 카카오톡 채팅리스트 화면(chatting.html)의 특정적인 스타일만 작성 */
+/* 큰 레이아웃은 main-layout.css에 작성되어 있음 */
+
+
+/* 헤더 안의 컨텐츠 스타일 지정 = main-layout.css 참고 */
+
+/* 네비게이션 안의 컨텐츠 스타일 지정 = main-layout.css 참고 */
+
+/* 메인 안의 컨텐츠 스타일 지정 */
+main{
+    /* 큰 flex box 하나 생성 */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* 프로필(이름, 이메일, wallet) 영역 스타일 지정 */
+/* 주석의 픽셀(px)은 웹브라우저의 기본 폰트 크기인 16px 기준으로 해당 rem을 변환한 크기임 */
+.my-profile{
+    /* 작은 flex box 하나 생성 */
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #EEEEEE;
+    background-color: #FAFAFA;
+    border-radius: 0.3125rem; /* 5px */
+    margin-top: 0.9375rem; /* 15px */
+    margin-bottom: 1.875rem; /* 30px */
+}
+
+.icon-shield, .icon-plus{
+    float: right;
+    margin-left: 0.9375rem;
+    margin-right: 0.9375rem;
+    color: rgb(209, 209, 209);
+}
+.name, .email, .wallet > *:last-child{
+    margin-top: 0.625rem; /* 10px */
+    margin-bottom: 0.625rem;
+    margin-left: 0.9375rem;
+    margin-right: 0.9375rem;
+}
+
+.icon-shield{
+    font-size: 1.875rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.icon-plus{
+    font-size: 1rem; /* 16px */
+    margin-top: 0.5625rem; /* 9.5px */
+    margin-bottom: 0.5625rem;
+    
+}
+.name{
+    font-size: 1.125rem; /* 18px */
+}
+.email{
+    font-size: 0.875rem; /* 14px */
+    color: gray;
+}
+.wallet > *:last-child{
+    font-size: 0.875rem;
+}
+.my-info{
+    padding-top: 0.4375rem; /* 7px */
+    padding-bottom: 0.4375rem;
+    
+}
+.my-info::after{
+    clear: both;
+}
+.wallet{
+    border-top: 1px solid #EEEEEE;
+    padding-top: 0.1875rem; /* 3px */
+    padding-bottom: 0.1875rem;  
+}
+.wallet::after{
+    clear: both;
+}
+
+
+/* 아이콘들 스타일 지정 */
+.menu_icons{
+    /* 작은 flex box 하나 생성 */
+    display: grid;
+    grid-template-rows: repeat(auto-fill, auto);
+    grid-template-columns: repeat(4, auto);
+    gap : 0px;
+    grid-auto-flow: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.icon-group{
+    /* 아이콘과 아이콘 이름 세로 정렬 위한 flex */
+    margin-top: 0.9375rem; /* 15px */
+    margin-bottom: 0.9375rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu_icons i{
+    /* 아이콘 스타일 지정 */
+    font-size: 1.5rem; /* 24px */
+    color: rgb(99, 99, 99);
+}
+.icon_name{
+    font-size: 0.8125rem; /* 13px */
+    color: grey;
+    margin-top: 0.5rem; /* 8px */
+}
+
+/* 광고, 공지 문자 스타일 지정 */
+.notice{
+    border-top: 1px solid #EEEEEE;
+}
+.notice span{
+    font-weight: bold;
+    margin-left: 0.9375rem; /* 15px */
+    margin-right: 0.9375rem;
+}
+.notice *{
+    font-size: 0.875rem; /* 14px */
+}
+
+/* 광고 안의 컨텐츠 스타일 지정 = main-layout.css 참고 */
+
+
+
+
+/* 사용하지 않음 */
+/* 
+.menu_icons > div{
+    flex-basis: 25vw;
+    flex-shrink: 1;
+    flex-grow: 1;
+    height: 60px;
+}
+.menu_icons > div:nth-of-type(4n+4){
+    flex-basis: 7vw;
+    flex-grow: 0;
+}
+.menu_icons > div:last-of-type{
+    flex-basis: 32vw;
+ */
+
+

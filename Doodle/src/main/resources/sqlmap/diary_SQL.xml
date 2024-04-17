@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.classroom.mapper.DiaryMapper">
+
+	<!-- 일기장  쓰기에서 날씨를 불러오기위해 학교가 소속된 지역을 가져오는 메서드 -->
+	<select id="getSchulArea" parameterType="String" resultType="String">
+		/* kr.or.ddit.classroom.mapper.DiaryMapper.getSchulArea */
+		SELECT 
+			SUBSTR(SCHUL_ADRES, 1, 3)
+		FROM 
+			SCHUL
+		WHERE 
+			SCHUL_CODE = #{schulCode}
+	</select>
+	
+	<!-- 일기장 등록 -->
+	<update id="addDiaryAct" parameterType="nttVO">
+		/* kr.or.ddit.classroom.mapper.DiaryMapper.addDiaryAct */
+		MERGE INTO
+		    NTT N
+		USING DUAL
+		    ON (N.NTT_CODE = #{nttCode})
+		WHEN MATCHED THEN
+		    UPDATE
+		    SET
+		            N.NTT_NM = #{nttNm}
+		        ,	N.NTT_CN = #{nttCn}
+		        ,	N.NTT_ATCH_FILE_CODE = #{nttAtchFileCode}
+		WHEN NOT MATCHED THEN
+		    INSERT (
+						NTT_CODE			/* 게시물코드 */
+					,	NTT_NM				/* 게시물 제목 */
+					,	NTT_CN				/* 게시물 내용 */
+					,	NTT_WRITNG_DT		/* 게시물 등록일시 */
+					,	NTT_ATCH_FILE_CODE	/* 게시물 첨부파일코드 */
+					,	CMMN_NTT_SE			/* 공통 게시물 구분 (어느 게시판의 게시물인지 구분하는 역할) */
+					,	CLAS_CODE			/* 반 코드 */
+					,	SCHUL_CODE			/* 학교코드 */
+					,	MBER_ID				/* 게시물 작성자 */
+					,	WETHR				/* 날씨 */
+			)
+			VALUES (
+					NTT_CODE_SEQ.NEXTVAL 
+				,	#{nttNm}
+				,	#{nttCn}
+				,	SYSDATE
+				,	#{nttAtchFileCode}
+				,	'A08006'
+				,	#{clasCode}
+				,	#{schulCode}
+				,	#{mberId}
+				,	#{wethr}
+			)
+	</update>
+	
+	<resultMap type="nttVO" id="diaryNttVOMap">
+		<result property="rnum" column="RNUM"/>
+		<result property="nttCode" column="NTT_CODE"/>
+		<result property="nttNm" column="NTT_NM"/>
+		<result property="nttAtchFileCode" column="NTT_ATCH_FILE_CODE"/>
+		<result property="nttWritngDt" column="NTT_WRITNG_DT"/>
+		<result property="strNttWritngDt" column="STR_NTT_WRITNG_DT"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="wethr" column="WETHR"/>
+		<result property="nttCn" column="NTT_CN"/>
+		<collection property="answerVOList" resultMap="answerVOMap"/>
+	</resultMap>
+	
+	<resultMap type="answerVO" id="answerVOMap">
+		<result property="answerCode" column="ANSWER_CODE"/>
+		<result property="answerCn" column="ANSWER_CN"/>
+		<result property="answerWritngDt" column="ANSWER_WRITNG_DT"/>
+		<result property="strAnswerWritngDt" column="STR_ANSWER_WRITNG_DT"/>
+		<result property="answerId" column="ANSWER_ID"/>
+	</resultMap>
+	
+	<!-- 일기장 목록을 불러오는 메서드 -->
+	<select id="getDiaryList" parameterType="diarySearchVO" resultMap="diaryNttVOMap">
+		/* kr.or.ddit.classroom.mapper.DiaryMapper.getDiaryList */
+		WITH T AS (
+		    SELECT 
+		            ROW_NUMBER() OVER (ORDER BY S.NTT_WRITNG_DT DESC) RNUM
+		        ,   S.*
+		    FROM (
+		        SELECT
+				        N.NTT_CODE
+				    ,   N.NTT_NM
+				    ,   N.NTT_ATCH_FILE_CODE
+				    ,   N.NTT_WRITNG_DT
+				    ,   N.MBER_ID
+				    ,   FN_GET_MBER_NM(N.MBER_ID) MBER_NM
+				    ,   N.WETHR
+				    ,   A.ANSWER_CN
+				FROM 
+				    NTT N
+				    LEFT JOIN (
+				        SELECT 
+				                ANSWER_CODE
+				            ,   NTT_CODE
+				            ,   ANSWER_CN
+				        FROM 
+				            ANSWER
+				        WHERE
+				            (NTT_CODE, ANSWER_WRITNG_DT) IN (
+				                SELECT 
+				                        NTT_CODE
+				                    ,   MAX(ANSWER_WRITNG_DT)
+				                FROM 
+				                    ANSWER
+				                GROUP BY 
+				                    NTT_CODE
+				            )
+				    ) A ON N.NTT_CODE = A.NTT_CODE
+		        WHERE
+		            	CMMN_NTT_SE = 'A08006'
+		            AND	N.SCHUL_CODE = #{schulCode}
+		            AND N.CLAS_CODE = #{clasCode}
+            		<if test='!mberId.equals("DOODLE")'>
+		            	AND	N.MBER_ID = #{mberId}
+		            </if>
+		            <if test="(startDate != null &amp;&amp; !startDate.equals('')) || (endDate != null &amp;&amp; !endDate.equals(''))">
+			            <choose>
+			            	<when test="startDate != null &amp;&amp; (endDate == null || endDate == '')">
+			            		AND TO_CHAR(N.NTT_WRITNG_DT, 'YYYY-MM-DD') = #{startDate}
+			            	</when>
+			            	<when test="endDate != null &amp;&amp; (startDate == null || startDate == '')">
+			            		AND TO_CHAR(N.NTT_WRITNG_DT, 'YYYY-MM-DD') = #{endDate}
+			            	</when>
+			            	<otherwise>
+			            		AND TO_CHAR(N.NTT_WRITNG_DT, 'YYYY-MM-DD') BETWEEN #{startDate} AND #{endDate}
+			            	</otherwise>
+			            </choose>
+		            </if>
+		            <if test="keyword != null || keyword != ''">
+				    AND (
+				    	<choose>
+				    		<when test="searchCondition == 'searchTitle'"> N.NTT_NM LIKE '%' || #{keyword} || '%' </when>
+				    		<when test="searchCondition == 'searchWrter'">  FN_GET_MBER_NM(N.MBER_ID) LIKE '%' || #{keyword} || '%' </when>
+				    		<otherwise>
+				    		(
+				    				N.NTT_NM LIKE '%' || #{keyword} || '%'
+				    			OR	FN_GET_MBER_NM(N.MBER_ID) LIKE '%' || #{keyword} || '%'
+				    		)
+				    		</otherwise>
+				    	</choose>
+				    )
+				    </if>
+		    ) S
+		)
+		SELECT T.*
+		FROM T
+		WHERE T.RNUM BETWEEN (#{currentPage}*#{size}) - (#{size}-1) AND (#{currentPage}*#{size})
+	</select>
+	
+	<!-- 일기장 개수 불러오기 -->
+	<select id="getDiaryTotal" parameterType="diarySearchVO" resultType="int">
+		/* kr.or.ddit.classroom.mapper.DiaryMapper.getDiaryTotal */
+        SELECT
+			COUNT(N.NTT_CODE)
+		FROM 
+		    NTT N
+		    LEFT JOIN (
+		        SELECT 
+		                ANSWER_CODE
+		            ,   NTT_CODE
+		            ,   ANSWER_CN
+		        FROM 
+		            ANSWER
+		        WHERE
+		            (NTT_CODE, ANSWER_WRITNG_DT) IN (
+		                SELECT 
+		                        NTT_CODE
+		                    ,   MAX(ANSWER_WRITNG_DT)
+		                FROM 
+		                    ANSWER
+		                GROUP BY 
+		                    NTT_CODE
+		            )
+		    ) A ON N.NTT_CODE = A.NTT_CODE
+		WHERE
+            	CMMN_NTT_SE = 'A08006'
+            AND	N.SCHUL_CODE = #{schulCode}
+            AND N.CLAS_CODE = #{clasCode}
+            <if test='!mberId.equals("DOODLE")'>
+            	AND	N.MBER_ID = #{mberId}
+            </if>
+            <if test="(startDate != null &amp;&amp; !startDate.equals('')) || (endDate != null &amp;&amp; !endDate.equals(''))">
+	            <choose>
+	            	<when test="startDate != null &amp;&amp; (endDate == null || endDate == '')">
+	            		AND TO_CHAR(N.NTT_WRITNG_DT, 'YYYY-MM-DD') = #{startDate}
+	            	</when>
+	            	<when test="endDate != null &amp;&amp; (startDate == null || startDate == '')">
+	            		AND TO_CHAR(N.NTT_WRITNG_DT, 'YYYY-MM-DD') = #{endDate}
+	            	</when>
+	            	<otherwise>
+	            		AND TO_CHAR(N.NTT_WRITNG_DT, 'YYYY-MM-DD') BETWEEN #{startDate} AND #{endDate}
+	            	</otherwise>
+	            </choose>
+            </if>
+            <if test="keyword != null || keyword != ''">
+		    AND (
+		    	<choose>
+		    	
+		    		<when test="searchCondition == 'searchTitle'"> N.NTT_NM LIKE '%' || #{keyword} || '%' </when>
+		    		<when test="searchCondition == 'searchWrter'">  FN_GET_MBER_NM(N.MBER_ID) LIKE '%' || #{keyword} || '%' </when>
+		    		<otherwise>
+		    		(
+		    				N.NTT_NM LIKE '%' || #{keyword} || '%'
+		    			OR	FN_GET_MBER_NM(N.MBER_ID) LIKE '%' || #{keyword} || '%'
+		    		)
+		    		</otherwise>
+		    	</choose>
+		    )
+		    </if>
+	</select>
+	
+	<!-- 선생님 아이디 가져오기 -->
+	<select id="getTeacherId" parameterType="clasVO" resultType="String">
+		/* kr.or.ddit.classroom.mapper.DiaryMapper.getTeacherId */
+		SELECT 
+			MBER_ID
+		FROM
+			HRTCHR
+		WHERE
+				CLAS_CODE = #{clasCode}
+			AND	SCHUL_CODE = #{schulCode}
+	</select>
+	
+	<!-- 일기장 상세보기 정보 가져오기 -->
+	<select id="getDiaryDetail" parameterType="String" resultMap="diaryNttVOMap">
+		/* kr.or.ddit.classroom.mapper.DiaryMapper.getDiaryDetail */
+		SELECT
+		        N.NTT_CODE
+		    ,   N.NTT_NM
+		    ,   N.NTT_ATCH_FILE_CODE
+		    ,   TO_CHAR(N.NTT_WRITNG_DT, 'YYYY"년 "MM"월 "DD"일"') STR_NTT_WRITNG_DT
+		    ,   N.MBER_ID
+		    ,   FN_GET_MBER_NM(N.MBER_ID) MBER_NM
+		    ,   N.WETHR
+		    ,	N.NTT_CN
+		    ,   A.ANSWER_CODE
+		    ,	A.ANSWER_CN
+		    ,	TO_CHAR(A.ANSWER_WRITNG_DT, 'YYYY-MM-DD') STR_ANSWER_WRITNG_DT
+		    ,	A.MBER_ID ANSWER_ID
+		FROM 
+		    NTT N
+		    LEFT OUTER JOIN ANSWER A ON (N.NTT_CODE = A.NTT_CODE)
+		WHERE
+		        N.CMMN_NTT_SE = 'A08006'
+		    AND N.NTT_CODE = #{nttCode}
+	</select>
+	
+	<!-- 댓글 리스트 가져옴 -->
+	<select id="getDiaryReplyList" parameterType="String" resultType="answerVO">
+		/* kr.or.ddit.classroom.mapper.DiaryMapper.getDiaryReplyList */
+		SELECT 
+		        ANSWER_CODE
+		    ,   ANSWER_CN
+		    ,   ANSWER_WRITNG_DT
+		    ,   NTT_CODE
+		    ,   FN_GET_MBER_NM(MBER_ID) MBER_NM
+		FROM ANSWER
+		WHERE
+		    NTT_CODE = #{nttCode}
+		ORDER BY
+			ANSWER_WRITNG_DT DESC
+	</select>
+	
+	<!-- 댓글 상세 정보 가져옴 -->
+	<select id="getDiaryReplyDetail" parameterType="String" resultType="answerVO">
+		/* kr.or.ddit.classroom.mapper.DiaryMapper.getDiaryReplyDetail */
+		SELECT 
+		        ANSWER_CODE
+		    ,   ANSWER_CN
+		    ,   ANSWER_WRITNG_DT
+		    ,   NTT_CODE
+		    ,   FN_GET_MBER_NM(MBER_ID) MBER_NM
+		FROM ANSWER
+		WHERE
+		    ANSWER_CODE = #{answerCode}
+	</select>
+	
+	<!-- 댓글 등록하기 -->
+	<insert id="addReply" parameterType="answerVO">
+		/* kr.or.ddit.classroom.mapper.DiaryMapper.addReply */
+		<selectKey resultType="String" order="BEFORE" keyProperty="answerCode">
+			SELECT ANSWER_CODE_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		
+		INSERT INTO ANSWER 
+		(		
+				ANSWER_CODE
+			,	ANSWER_CN
+			,	ANSWER_WRITNG_DT
+			,	NTT_CODE
+			,	SCHUL_CODE
+			,	MBER_ID
+		)
+		VALUES 
+		(
+				#{answerCode}
+			,	#{answerCn}
+			,	SYSDATE
+			,	#{nttCode}
+			,	#{schulCode}
+			,	#{mberId}
+		) 
+	</insert>
+	
+	<!-- 댓글 수정하기 -->
+	<update id="modDiaryReply" parameterType="answerVO">
+		/* kr.or.ddit.classroom.mapper.DiaryMapper.modDiaryReply */
+		UPDATE 
+			ANSWER
+		SET
+			ANSWER_CN = #{answerCn}
+		WHERE
+			ANSWER_CODE = #{answerCode}
+	</update>
+	
+	<!-- 댓글 삭제하기 -->
+	<delete id="delDiaryReply" parameterType="String">
+		/* kr.or.ddit.classroom.mapper.DiaryMapper.delDiaryReply */
+		DELETE 
+		FROM
+			ANSWER
+		WHERE
+			ANSWER_CODE = #{answerCode}
+	</delete>
+	
+	<!-- 일기 삭제하기 -->
+	<delete id="delDiary" parameterType="String">
+		/* kr.or.ddit.classroom.mapper.DiaryMapper.delDiary */
+		DELETE 
+		FROM
+			NTT
+		WHERE
+			NTT_CODE = #{nttCode}
+	</delete>
+</mapper>

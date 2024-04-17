@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.classroom.mapper.GalleryMapper">
+
+	<!-- ClasAlbumVO -->
+	<resultMap type="clasAlbumVO" id ="clasAlbumMap">
+		<result property="clasAlbumCode" column="CLAS_ALBUM_CODE"/>
+		<result property="albumNm" column="ALBUM_NM"/>
+		<result property="atchFileCode" column="ATCH_FILE_CODE"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="clasStdntCode" column="CLAS_STDNT_CODE"/>
+		<result property="albumDe" column="ALBUM_DE"/>
+		<result property="albumUpdtDe" column="ALBUM_UPDT_DE"/>
+		<result property="albumUpdtDe" column="ALBUM_UPDT_DE"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="atchFileCours" column="ATCH_FILE_COURS"/>
+		<result property="nttSttemntAccmlt" column="NTT_STTEMNT_ACCMLT"/>
+		<result property="nttSttemntSttus" column="NTT_STTEMNT_STTUS"/>
+		<collection property="atchFileVOList" resultMap="atchFileMap"></collection>
+		<collection property="albumTagVOList" resultMap="albumTagMap"></collection>
+	</resultMap>
+	
+	<resultMap type="albumTagVO" id="albumTagMap">
+		<result property="tagCode" column="TAG_CODE"/>
+		<result property="clasAlbumCode" column="CLAS_ALBUM_CODE"/>
+		<result property="tagNm" column="TAG_NM"/>
+	</resultMap>
+
+	<resultMap type="clasVO" id ="clasMap">
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="clasNm" column="CLAS_NM"/>
+		<result property="clasYear" column="CLAS_YEAR"/>
+		<result property="cmmnGrade" column="CMMN_GRADE"/>
+		<result property="cmmnClasSttus" column="CMMN_CLAS_STTUS"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+	</resultMap>
+
+	<resultMap type="atchFileVO" id ="atchFileMap">
+		<result property="atchFileCode" column="ATCH_FILE_CODE"/>
+		<result property="atchFileSn" column="ATCH_FILE_SN"/>
+		<result property="atchFileCours" column="ATCH_FILE_COURS"/>
+		<result property="atchFileNm" column="ATCH_FILE_NM"/>
+		<result property="atchFileTy" column="ATCH_FILE_TY"/>
+		<result property="atchFileDe" column="ATCH_FILE_DE"/>
+		<result property="registId" column="REGIST_ID"/>
+		<result property="updtDe" column="UPDT_DE"/>
+		<result property="updtId" column="UPDT_ID"/>
+	</resultMap>
+	
+	<!-- 앨범 추가 -->
+	<insert id="createAlbum" parameterType="clasAlbumVO">
+		MERGE 
+		 INTO CLAS_ALBUM A
+		USING DUAL
+		   ON (A.CLAS_ALBUM_CODE = #{clasAlbumCode})
+		 WHEN MATCHED THEN
+		      UPDATE
+		         SET A.ALBUM_NM = #{albumNm}, A.ALBUM_DE = SYSDATE
+		 WHEN NOT MATCHED THEN
+		      INSERT (	CLAS_ALBUM_CODE,  
+		      			ALBUM_NM,
+		      			ATCH_FILE_CODE,
+		      			CLAS_CODE,
+		      			CLAS_STDNT_CODE,
+		      			ALBUM_DE,
+		      			NTT_STTEMNT_ACCMLT,
+		      			NTT_STTEMNT_STTUS)
+		      VALUES (	#{clasAlbumCode},
+		      			#{albumNm},
+		      			#{atchFileCode},
+		      			#{clasCode},
+		      			#{clasStdntCode},
+		      			SYSDATE,
+		      			0,
+		      			'A15001')
+	</insert>
+	
+	<!-- 앨범코드 최대값 가져오기 -->
+	<select id ="getMaxAlbumSeq" parameterType="String" resultType="int">
+		SELECT 
+			CASE
+        		WHEN COUNT(*)=0 THEN 0
+        	ELSE MAX(SUBSTR(CLAS_ALBUM_CODE, 14)*1)
+        	END	
+		FROM CLAS_ALBUM
+		WHERE CLAS_CODE = #{clasCode}
+	</select>		
+
+	<insert id="insertAtchFile" parameterType="atchFileVO">
+		insert into ATCH_FILE(ATCH_FILE_CODE, ATCH_FILE_SN, ATCH_FILE_COURS, ATCH_FILE_NM, ATCH_FILE_TY, ATCH_FILE_DE, REGIST_ID)
+		values(#{atchFileCode}, #{atchFileSn}, #{atchFileCours}, #{atchFileNm}, #{atchFileTy}, SYSDATE, #{registId})
+	</insert>
+
+	<!-- 반 앨범 폴더 목록 select -->
+	<select id="clasAlbumList" parameterType="String" resultMap="clasAlbumMap">
+		SELECT
+		    CA.CLAS_ALBUM_CODE,
+		    CA.ALBUM_NM,
+		    CA.ATCH_FILE_CODE,
+		    CA.CLAS_CODE,
+		    CA.CLAS_STDNT_CODE,
+		    CA.ALBUM_DE,
+		    M.MBER_NM
+		FROM
+		    CLAS_ALBUM CA
+		JOIN
+		    CLAS_STDNT CS ON CA.CLAS_CODE = CS.CLAS_CODE
+		    AND CA.CLAS_STDNT_CODE = CS.CLAS_STDNT_CODE
+		JOIN
+		    MEMBER M ON CS.MBER_ID = M.MBER_ID
+		WHERE 1=1
+		    AND CA.CLAS_CODE = #{clasCode}
+		    AND	  CA.NTT_STTEMNT_STTUS != 'A15003'	/* 신고로 정지된 게시물은 조회 제외 */
+		ORDER BY CA.CLAS_ALBUM_CODE DESC    
+		    
+	</select>
+
+	<!-- 선택한 앨범 사진 목록 select 
+	atchFileCode  : OJ20240101ALB00003
+	-->	
+	<select id="galleryDetail" parameterType="String" resultMap="clasAlbumMap">
+		SELECT
+			FN_CLAS_STDNT_CODE_TO_MBER_NM(CA.CLAS_STDNT_CODE) MBER_NM,
+		    CA.CLAS_ALBUM_CODE,
+		    CA.ALBUM_NM,
+		    CA.ATCH_FILE_CODE,
+		    CA.CLAS_CODE,
+		    CA.CLAS_STDNT_CODE,
+		    CA.ALBUM_DE,
+		    CA.ALBUM_UPDT_DE,
+		    AF.ATCH_FILE_SN,
+		    AF.ATCH_FILE_COURS,
+		    AF.ATCH_FILE_NM,
+		    AF.ATCH_FILE_TY,
+		    AF.ATCH_FILE_DE,
+		    AF.REGIST_ID,
+		    AF.UPDT_DE,
+    		AF.UPDT_ID,
+    		AT.TAG_CODE,
+            AT.TAG_NM,
+            M.MBER_ID
+		FROM 
+		    CLAS_ALBUM CA
+		JOIN 
+		    ATCH_FILE AF ON CA.ATCH_FILE_CODE = AF.ATCH_FILE_CODE
+        JOIN
+		    CLAS_STDNT CS ON CA.CLAS_CODE = CS.CLAS_CODE
+		    AND CA.CLAS_STDNT_CODE = CS.CLAS_STDNT_CODE    
+        JOIN
+		    MEMBER M ON CS.MBER_ID = M.MBER_ID    
+        LEFT OUTER JOIN
+        	ALBUM_TAG AT ON CA.CLAS_ALBUM_CODE = AT.CLAS_ALBUM_CODE    
+		WHERE 1=1
+        AND CA.ATCH_FILE_CODE = #{atchFileCode}
+        AND NOT AF.ATCH_FILE_SN = 0    
+	</select>
+	
+	<!-- 사진 삭제 -->
+	<delete id="deleteImage" parameterType="atchFileVO">
+		DELETE FROM ATCH_FILE
+		WHERE 1=1
+		AND ATCH_FILE_CODE = #{atchFileCode}
+		AND ATCH_FILE_SN= #{atchFileSn}
+	</delete>
+	
+	<!-- deleteAlbum 수행시 실행되는 SQL 시작 -->
+	<!-- 앨범 삭제 -->
+	<delete id="deleteAlbum" parameterType="String">
+		DELETE FROM CLAS_ALBUM
+		WHERE ATCH_FILE_CODE = #{atchFileCode}
+	</delete>
+	
+	<!-- 앨범 사진 삭제 -->
+	<delete id="deleteImages" parameterType="String">
+		DELETE FROM ATCH_FILE
+		WHERE ATCH_FILE_CODE = #{atchFileCode}
+	</delete>
+	
+	<!-- 앨범 태그 삭제 -->
+	<delete id="deleteAlbumTag" parameterType="String">
+		DELETE FROM ALBUM_TAG
+		WHERE CLAS_ALBUM_CODE=#{atchFileCode}
+	</delete>
+	<!-- deleteAlbum 수행시 실행되는 SQL 끝 -->
+	
+	<!-- 앨범 일괄 삭제 -->
+	<delete id="deleteImagesAll" parameterType="String">
+		DELETE FROM ATCH_FILE
+		WHERE  ATCH_FILE_CODE LIKE #{atchFileCode} || '%'
+	</delete>
+
+	<!-- 학급앨범 조회 map사용 -->
+	<select id="clasAlbumList2" parameterType="hashMap" resultMap="clasAlbumMap">
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.clasAlbumList2 -->
+	WITH T AS(
+		SELECT 
+		    ROW_NUMBER() OVER(ORDER BY TO_NUMBER(SUBSTR(CA.CLAS_ALBUM_CODE, 14)) DESC) AS RNUM,
+		    CA.CLAS_ALBUM_CODE,		/* 반 앨범 코드 */
+		    CA.ALBUM_NM,			/* 앨범 명 */
+		    CA.ATCH_FILE_CODE,		/* 첨부파일 코드 */
+		    CA.CLAS_CODE,			/* 반 코드*/
+		    CA.CLAS_STDNT_CODE,		/* 회원 아이디 */
+		    CA.ALBUM_DE,			/* 앨범 등록 일자 */
+		    M.MBER_NM,				/* 회원 이름(MEMBER) */
+		    AF.ATCH_FILE_SN,		/* 파일 순번(ATCH_FILE)-썸네일 추출용(0번) */
+		    AF.ATCH_FILE_COURS,		/* 파일 경로(ATCH_FILE)-썸네일 추출용(0번) */
+		    CA.NTT_STTEMNT_ACCMLT,	/* 게시물 신고 누적 */
+		    CA.NTT_STTEMNT_STTUS	/* 게시물 신고 상태 */
+            <if test="keyword!=null and keyword!=''">
+            ,
+            AT.TAG_CODE,        	/* 태그 코드*/
+            AT.TAG_NM           	/* 태그 명 */
+            </if>
+		FROM
+		    CLAS_ALBUM CA
+		JOIN
+		    CLAS_STDNT CS ON CA.CLAS_CODE = CS.CLAS_CODE
+		    AND CA.CLAS_STDNT_CODE = CS.CLAS_STDNT_CODE
+		JOIN
+		    MEMBER M ON CS.MBER_ID = M.MBER_ID
+		JOIN
+		    ATCH_FILE AF ON CA.ATCH_FILE_CODE = AF.ATCH_FILE_CODE
+		<if test="keyword!=null and keyword!=''">    
+        JOIN
+            ALBUM_TAG AT ON CA.CLAS_ALBUM_CODE = AT.CLAS_ALBUM_CODE
+        </if>    
+		WHERE 1=1 
+		AND   CA.CLAS_CODE = #{clasCode}
+		AND   AF.ATCH_FILE_SN =0
+		AND	  CA.NTT_STTEMNT_STTUS != 'A15003'	/* 신고로 정지된 게시물은 조회 제외 */
+		<if test="keyword!=null and keyword!=''">
+	         AND AT.TAG_NM = #{keyword}
+	    </if>
+		ORDER BY CA.CLAS_ALBUM_CODE DESC
+    )
+	SELECT T.* FROM T
+	WHERE T.RNUM BETWEEN (#{currentPage}*8) - (8 - 1) AND (#{currentPage}*8)
+	</select>
+	
+	<select id="getTotalGallery" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM CLAS_ALBUM CA
+		JOIN
+		    CLAS_STDNT CS ON CA.CLAS_CODE = CS.CLAS_CODE
+		    AND CA.CLAS_STDNT_CODE = CS.CLAS_STDNT_CODE
+		JOIN
+		    MEMBER M ON CS.MBER_ID = M.MBER_ID
+		
+		WHERE 1=1
+		AND	  CA.CLAS_CODE = #{clasCode}
+		AND	  CA.NTT_STTEMNT_STTUS != 'A15003'	/* 신고로 정지된 게시물은 조회 제외 */
+	</select>
+	
+	<!-- 앨범태그 insert -->
+	<update id = "insertAlbumTags" parameterType="java.util.List">
+		<foreach collection="list" item="albumTagVO"
+			open="INSERT ALL" close="SELECT * FROM DUAL" separator=" " index="idx">
+				INTO ALBUM_TAG(
+					TAG_CODE,
+					CLAS_ALBUM_CODE,
+					TAG_NM)
+				VALUES(
+				(SELECT NVL(MAX(TAG_CODE),0)+1 FROM ALBUM_TAG WHERE CLAS_ALBUM_CODE = #{albumTagVO.clasAlbumCode})
+				+#{idx},#{albumTagVO.clasAlbumCode},#{albumTagVO.tagNm})
+			</foreach>
+	</update>
+	
+	<!-- 앨범태그 리스트 -->
+	<select id="albumTagList" parameterType="String" resultType="String">
+		SELECT DISTINCT AT.TAG_NM
+		FROM ALBUM_TAG AT
+		JOIN CLAS_ALBUM CA ON CA.CLAS_ALBUM_CODE = AT.CLAS_ALBUM_CODE
+		WHERE 1=1
+		AND CA.CLAS_CODE = #{clasCode}
+	</select>
+	
+	<!-- 신고 후 신고 누적과 게시물 신고 상태 update하는 메서드 -->
+	<update id="modNttSttemnt" parameterType="String">
+		UPDATE 
+			CLAS_ALBUM 
+		SET 
+		        NTT_STTEMNT_ACCMLT = (NTT_STTEMNT_ACCMLT + 1)
+		    ,   NTT_STTEMNT_STTUS = 'A15002'
+		WHERE 
+			ATCH_FILE_CODE = #{atchFileCode} 
+	</update>
+	
+	<!-- 반 앨범에 있는 사진 get -->
+	<select id = "getClasImg" parameterType ="Map" resultType ="atchFileVO">
+		<if test = "size != null">
+		select rownum, sub.*
+		from(	
+		</if>	
+		select 	af.ATCH_FILE_CODE, 
+					af.ATCH_FILE_SN, 
+					af.ATCH_FILE_COURS, 
+					af.ATCH_FILE_NM, 
+					af.ATCH_FILE_TY, 
+					af.ATCH_FILE_DE, 
+					af.REGIST_ID,
+					af.UPDT_DE, 
+					af.UPDT_ID,
+                    ca.CLAS_ALBUM_CODE,
+                    ca.ALBUM_NM
+		from 		atch_file af
+        inner join  clas_album ca
+        on          ca.CLAS_ALBUM_CODE= af.atch_file_code
+		where 		substr(af.atch_file_code, 0, instr(af.atch_file_code, 'ALB')-1) = #{clasCode}
+        and       	ca.NTT_STTEMNT_sttus = 'A15001'
+        AND 		NOT AF.ATCH_FILE_SN = 0
+		order by 	atch_file_de desc,
+	        		ATCH_FILE_SN
+     	<if test = "size != null">
+		) sub
+		where rownum &lt;= #{size}
+		</if>	        		
+	</select>
+	
+</mapper>

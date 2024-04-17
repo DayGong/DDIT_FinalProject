@@ -1,0 +1,851 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.classroom.mapper.ClassroomMapper">
+	<sql id="searchWhere">
+		<if test="keyword != null and keyword != ''">
+			AND(
+					TASK_SJ LIKE '%' || #{keyword} || '%'
+				OR	TASK_CN LIKE '%' || #{keyword} || '%'
+			)     
+		</if>
+	</sql>
+	<!-- 클래스 검색 -->
+	<sql id="classWhere">
+	    <if test="keyword != null and keyword != ''">
+	        AND (
+			(D.CMMN_DETAIL_CODE_NM || '학년 ' = REPLACE(#{keyword},'학년','학년 ') OR A.CLAS_NM = REPLACE(#{keyword},'학년','학년 '))
+			OR(
+			REPLACE(REPLACE(#{keyword},'학년','학년 '),' ','') LIKE D.CMMN_DETAIL_CODE_NM || '학년%'
+			AND REPLACE(REPLACE(#{keyword},'학년','학년 '),' ','') LIKE '%' || A.CLAS_NM
+			) OR (
+                REPLACE(A.CLAS_NM,'반','') = REPLACE(#{keyword},'반','')
+            ))
+	    </if>
+	</sql>
+
+	<resultMap type="taskVO" id="taskMap">
+		<result property="taskCode" column="TASK_CODE"/>
+		<result property="taskSj" column="TASK_SJ"/>
+		<result property="taskCn" column="TASK_CN"/>
+		<result property="taskBeginDt" column="TASK_BEGIN_DT"/>
+		<result property="taskEndDt" column="TASK_END_DT"/>
+		<result property="atchFileCode" column="ATCH_FILE_CODE"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+	</resultMap>
+	
+	<resultMap type="hrtchrVO" id="hrtchrMap">
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+		<association property="clasVO" resultMap="clasMap"></association>
+		<association property="memberVO" resultMap="memberMap"></association>
+	</resultMap>
+	
+	<resultMap type="clasStdntVO" id="stdMap">
+		<result property="clasStdntCode" column="CLAS_STDNT_CODE"/>
+		<result property="clasInNo" column="CLAS_IN_NO"/>
+		<result property="cmmnStdntClsf" column="CMMN_STDNT_CLSF"/>
+		<result property="cmmnClasPsitnSttus" column="CMMN_CLAS_PSITN_STTUS"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="clasStdntJoinDate" column="CLAS_STDNT_JOIN_DATE"/>
+		<result property="clasStdntExitDate" column="CLAS_STDNT_EXIT_DATE"/>
+		<association property="memberVO" resultMap="memberMap"></association>
+	</resultMap>
+	
+	<resultMap type="memberVO" id="memberMap">
+		<result property="mberId" column="MBER_ID"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="ihidnum" column="IHIDNUM"/>
+		<result property="moblphonNo" column="MOBLPHON_NO"/>
+		<result property="mberEmail" column="MBER_EMAIL"/>
+		<result property="zip" column="ZIP"/>
+		<result property="mberAdres" column="MBER_ADRES"/>
+		<result property="mberImage" column="MBER_IMAGE"/>
+		<result property="mberSecsnAt" column="MBER_SECSN_AT"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+		<result property="birthDate" column="BIRTH_DATE"/>
+	</resultMap>
+	
+<!-- 	<resultMap type="schulVO" id="schulMap"> -->
+<!-- 		<result property="schulCode" column="SCHUL_CODE"/> -->
+<!-- 		<result property="schulNm" column="SCHUL_NM"/> -->
+<!-- 		<result property="schulAdres" column="SCHUL_ADRES"/> -->
+<!-- 		<result property="schulTlphonNo" column="SCHUL_TLPHON_NO"/> -->
+<!-- 		<result property="schulAnnvrsry" column="SCHUL_ANNVRSRY"/> -->
+<!-- 	</resultMap> -->
+	
+	<resultMap type="schulPsitnMberVO" id="schulPsitnMberMap">
+		<result property="rnum" column="RNUM"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="cmmnSchulPsitnSttus" column="CMMN_SCHUL_PSITN_STTUS"/>
+		<result property="cmmnGrade" column="CMMN_GRADE"/>
+		<result property="cmmnEmpClsf" column="CMMN_EMP_CLSF"/>
+		<result property="schulNm" column="SCHUL_NM"/>
+		<association property="memberVO" resultMap="memberMap"></association>
+	</resultMap>
+	
+	<resultMap type="clasVO" id="clasMap">
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="clasNm" column="CLAS_NM"/>
+		<result property="clasYear" column="CLAS_YEAR"/>
+		<result property="cmmnGrade" column="CMMN_GRADE"/>
+		<result property="cmmnGradeNm" column="CMMN_GRADE_NM"/>
+		<result property="cmmnClasSttus" column="CMMN_CLAS_STTUS"/>
+		<result property="cmmnClasSttusNm" column="CMMN_CLAS_STTUS_NM"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="schulNm" column="SCHUL_NM"/>
+		<result property="cmmnDetailCodeNm" column="CMMN_DETAIL_CODE_NM"/>
+		<result property="mberNm" column="MBER_NAME"/>
+	</resultMap>
+	
+	<!-- 클래스 메인: 해당 클래스의 담임 교사 정보 -->
+	<select id="clasInfoSelect" parameterType="String" resultMap="hrtchrMap">
+		    SELECT      H.CLAS_CODE, H.SCHUL_CODE, H.MBER_ID,
+		                M.MBER_NM, MOBLPHON_NO, M.MBER_EMAIL, M.MBER_IMAGE,
+		                C.CLAS_NM, C.CMMN_GRADE,
+		                FN_CMMN_CODE_TO_NM(C.CMMN_GRADE) AS CMMN_GRADE_NM,
+		                S.SCHUL_NM
+		      FROM      HRTCHR H
+		INNER JOIN      CLAS C
+		        ON      H.CLAS_CODE = C.CLAS_CODE
+		INNER JOIN      MEMBER M
+		        ON      H.MBER_ID = M.MBER_ID
+		INNER JOIN      SCHUL S
+		        ON      S.SCHUL_CODE = H.SCHUL_CODE
+		       AND      S.SCHUL_CODE = C.SCHUL_CODE
+		     WHERE      H.CLAS_CODE = #{clasCode}
+	</select>
+	
+	<!-- ================================= -->
+	
+	<!-- 학급클래스(반) 전체 글 수 -->
+	<select id="classroomGetTotal" parameterType="hashMap" resultType="int">
+		/* kr.or.ddit.classroom.mapper.ClassroomMapper.classroomGetTotal */
+		SELECT COUNT(*) 
+		FROM (
+		    SELECT  
+		          A.CLAS_CODE, A.CLAS_NM, A.CLAS_YEAR, A.CMMN_GRADE, A.CMMN_CLAS_STTUS, B.SCHUL_NM
+		        , FN_CMMN_CODE_TO_NM(A.CMMN_CLAS_STTUS) CMMN_CLAS_STTUS_NM
+		    FROM CLAS A, SCHUL B
+		    WHERE 1 = 1
+		        AND    A.SCHUL_CODE = B.SCHUL_CODE
+		        AND    (
+		               A.CLAS_NM  LIKE '%' || #{keyword} || '%' 
+		          OR   B.SCHUL_NM LIKE '%' || #{keyword} || '%'
+		        )
+		        AND FN_CMMN_CODE_TO_NM(A.CMMN_CLAS_STTUS) = '운영'
+		)
+	</select>
+	
+	<resultMap type="clasVO" id="clasSearchResultMap">
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="clasNm" column="CLAS_NM"/>
+		<result property="clasYear" column="CLAS_YEAR"/>
+		<result property="cmmnGrade" column="CMMN_GRADE"/>
+		<result property="cmmnGradeNm" column="CMMN_GRADE_NM"/>
+		<result property="cmmnClasSttus" column="CMMN_CLAS_STTUS"/>
+		<result property="cmmnClasSttusNm" column="CMMN_CLAS_STTUS_NM"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="beginTm" column="BEGIN_TM"/>
+		<result property="endTm" column="END_TM"/>
+		<!-- 조인 -->
+		<association property="schulVO" resultMap="clasSearchSchulVOMap"/>
+	</resultMap>
+	
+	<resultMap type="schulVO" id="clasSearchSchulVOMap">
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="schulNm" column="SCHUL_NM"/>
+		<result property="schulAdres" column="SCHUL_ADRES"/>
+		<result property="schulTlphonNo" column="SCHUL_TLPHON_NO"/>
+		<result property="schulAnnvrsry" column="SCHUL_ANNVRSRY"/>
+	</resultMap>
+	
+	<!-- 학급클래스(반) 목록 조회 -->
+	<select id="classroomList" parameterType="hashMap" resultMap="clasSearchResultMap">
+		/* kr.or.ddit.classroom.mapper.ClassroomMapper.classroomList */
+		WITH T AS(
+		    SELECT ROW_NUMBER() OVER (ORDER BY S.CLAS_CODE DESC) RNUM
+		          , S.*
+		    FROM (
+		        SELECT    
+		            		A.CLAS_CODE
+		            	,	A.CLAS_NM
+		            	,	A.CLAS_YEAR
+		            	,	A.CMMN_GRADE
+		            	,	A.CMMN_CLAS_STTUS
+		            	,  	B.SCHUL_CODE
+		            	,	B.SCHUL_NM
+		            	,	B.SCHUL_ADRES
+		            	,	B.SCHUL_TLPHON_NO
+		            	,	B.SCHUL_ANNVRSRY
+		            	,  	FN_CMMN_CODE_TO_NM(A.CMMN_GRADE) CMMN_GRADE_NM
+		            	,  	FN_CMMN_CODE_TO_NM(A.CMMN_CLAS_STTUS) CMMN_CLAS_STTUS_NM
+		            	,	FN_GET_MBER_NM(H.MBER_ID) MBER_NM
+		            	,   A.BEGIN_TM
+                		,   A.END_TM
+		        FROM    CLAS A, SCHUL B, HRTCHR H
+		        WHERE    1=1
+		        	AND		A.SCHUL_CODE = B.SCHUL_CODE
+		        	AND		A.CLAS_CODE = H.CLAS_CODE
+		        	AND		(
+              				A.CLAS_NM  LIKE '%' || #{keyword} || '%' 
+           				OR  B.SCHUL_NM LIKE '%' || #{keyword} || '%'
+           			)
+		        	AND		FN_CMMN_CODE_TO_NM(A.CMMN_CLAS_STTUS) = '운영'
+		        ORDER BY CLAS_CODE ASC
+		    ) S
+		)
+		SELECT T.*
+		FROM   T
+		WHERE  T.RNUM BETWEEN (#{currentPage}*#{size}) - (#{size}-1) AND (#{currentPage}*#{size})
+	</select>
+	
+	<!-- 교사 학교명 가져오기 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.getSchoolNm -->
+	<select id="getSchoolNm" parameterType="String" resultMap="schulPsitnMberMap">
+	SELECT A.SCHUL_CODE 			<!-- 학교 코드 -->
+		, A.MBER_ID					<!-- 회원 아이디 -->
+		, A.CMMN_SCHUL_PSITN_STTUS	<!-- 공통 학교 소속 상태(A02) -->
+		, A.CMMN_GRADE				<!-- 공통 학년(A22) -->
+		, A.CMMN_EMP_CLSF			<!-- 공통 직원 직급(A14) -->
+		, B.SCHUL_NM				<!-- 학교 명 -->
+		FROM SCHUL_PSITN_MBER A
+		JOIN SCHUL B ON A.SCHUL_CODE = B.SCHUL_CODE 
+		AND A.MBER_ID = #{mberId}
+	</select>
+	
+	<!-- 반 생성 (클래스) 전 중복체크 
+	clasNm=12, clasYear=2024, cmmnGrade=A22002, schulCode=7581092
+	-->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classDupCheck -->
+	<select id="classDupCheck" parameterType="clasVO" resultType="int">
+		SELECT COUNT(*) FROM CLAS 
+		WHERE CLAS_YEAR = #{clasYear} AND CMMN_GRADE = #{cmmnGrade} AND REPLACE(CLAS_NM,'반','') = REPLACE(#{clasNm},'반','') AND SCHUL_CODE = #{schulCode}
+	</select>
+	
+	<!-- 반 생성 (클래스) -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classCreateAjax -->
+		<insert id="classCreateAjax" parameterType="clasVO">
+			<selectKey keyProperty="clasCode" resultType="String" order="BEFORE">
+			    SELECT TO_CHAR(SYSDATE, 'RR') || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(CLAS_CODE, 3))), 0) + 1, 6, '0') AS CLAS_CODE
+				FROM CLAS
+				WHERE SUBSTR(CLAS_CODE, 1, 2) = TO_CHAR(SYSDATE, 'RR')
+		    </selectKey>
+			INSERT INTO CLAS(CLAS_CODE 		<!-- 반 코드 -->
+						, CLAS_NM			<!-- 반 명 -->
+						, CLAS_YEAR			<!-- 반 연도 -->
+						, CMMN_GRADE		<!-- 공통학년 (A22) -->
+						, CMMN_CLAS_STTUS	<!-- 공통 반 상태(A16) -->
+						, SCHUL_CODE		<!-- 학교 코드 -->
+						, BEGIN_TM			<!-- 등교 시간 --> 
+						, END_TM			<!-- 하교 시간 -->
+						)
+			VALUES(#{clasCode},		 		
+			 		CASE WHEN SUBSTR(#{clasNm},-1)='반' THEN #{clasNm}
+			 			 ELSE #{clasNm} || '반'
+			 		END		
+				, #{clasYear}, #{cmmnGrade}, #{cmmnClasSttus}, #{schulCode}, #{beginTm}, #{endTm})
+		</insert>
+	
+	<!-- 클래스 담당 교사 자동 등록 -->
+	<insert id="hrtchrCreate" parameterType="hrtchrVO" >
+	INSERT INTO HRTCHR(CLAS_CODE
+	, SCHUL_CODE	<!-- 학교 코드  -->
+	, MBER_ID 		<!-- 회원 아이디  -->
+	)
+	VALUES(#{clasCode}, #{schulCode}, #{mberId})
+	</insert>
+	
+	<!-- 학교 -> 클래스 조회 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classListAjax -->
+	<select id="classListAjax" parameterType="String" resultMap="clasMap">
+	WITH T AS(
+		SELECT 
+		    ROW_NUMBER() OVER(ORDER BY A.CLAS_CODE ASC) AS RNUM <!-- 순번 -->
+		    ,A.CLAS_CODE	<!-- 반 코드 -->
+		    ,A.CLAS_NM		<!-- 반 명 -->
+		    ,A.CLAS_YEAR	<!-- 반 연도 -->
+		    ,A.CMMN_GRADE	<!-- 공통 학년(A22) -->
+		    ,A.CMMN_CLAS_STTUS	<!-- 공통 반 상태(A16) -->
+		    ,A.SCHUL_CODE	<!-- 학교 코드 -->
+		    ,B.SCHUL_NM		<!-- 학교 명 -->
+		    ,C.CMMN_DETAIL_CODE_NM CMMN_CLAS_STTUS_NM	<!-- (공통코드)반 상태 -->
+		    ,D.CMMN_DETAIL_CODE_NM CMMN_GRADE_NM			<!-- (공통코드)학년 명  -->
+		    ,D.CMMN_DETAIL_CODE_NM || '학년 ' || A.CLAS_NM 	<!-- 학년 + 반 -->
+			,FN_GET_MBER_NM(E.MBER_ID) MBER_NAME		<!-- 담임이름 -->
+		FROM 
+		    CLAS A
+		JOIN 
+		    SCHUL B 
+		    ON A.SCHUL_CODE = B.SCHUL_CODE
+		JOIN 
+		    CMMN_DETAIL_CODE C 
+		    ON A.CMMN_CLAS_STTUS = C.CMMN_DETAIL_CODE
+		JOIN 
+		    CMMN_DETAIL_CODE D 
+		    ON A.CMMN_GRADE = D.CMMN_DETAIL_CODE
+		JOIN HRTCHR E
+            ON A.CLAS_CODE = E.CLAS_CODE
+		WHERE 
+		    A.SCHUL_CODE = #{schulCode}
+		  <if test="cmmnClasSttusNm=='전체'">
+			    AND (
+			        C.CMMN_DETAIL_CODE_NM = '운영'
+					OR  C.CMMN_DETAIL_CODE_NM = '중지'
+					OR  C.CMMN_DETAIL_CODE_NM = '종료'
+			    )
+			</if>
+		  <if test="cmmnClasSttusNm=='운영'">
+			    AND (
+			        C.CMMN_DETAIL_CODE_NM = '운영'
+			    )
+			</if>
+		  <if test="cmmnClasSttusNm=='중지'">
+			    AND (
+			        C.CMMN_DETAIL_CODE_NM = '중지'
+			    )
+			</if>
+		  <if test="cmmnClasSttusNm=='종료'">
+			    AND (
+			        C.CMMN_DETAIL_CODE_NM = '종료'
+			    )
+			</if>
+			<include refid="classWhere"></include>
+		) SELECT * FROM T
+		WHERE	T.RNUM BETWEEN (#{currentPage}*#{size}) - (#{size} - 1) AND (#{currentPage}*#{size})
+			
+	</select>
+	
+	<!-- 학교 소속 클래스 총 개수 -->
+	<select id="classListGetTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM 
+		    CLAS A
+		JOIN 
+		    SCHUL B 
+		    ON A.SCHUL_CODE = B.SCHUL_CODE
+		JOIN 
+		    CMMN_DETAIL_CODE C 
+		    ON A.CMMN_CLAS_STTUS = C.CMMN_DETAIL_CODE
+		JOIN 
+		    CMMN_DETAIL_CODE D 
+		    ON A.CMMN_GRADE = D.CMMN_DETAIL_CODE
+		WHERE 
+		    A.SCHUL_CODE = #{schulCode}
+	    	<if test="cmmnClasSttusNm=='전체'">
+			    AND (
+			        C.CMMN_DETAIL_CODE_NM = '운영'
+					OR  C.CMMN_DETAIL_CODE_NM = '중지'
+					OR  C.CMMN_DETAIL_CODE_NM = '종료'
+			    )
+			</if>
+		    <if test="cmmnClasSttusNm=='운영'">
+			    AND (
+			        C.CMMN_DETAIL_CODE_NM = '운영'
+			    )
+			</if>
+		    <if test="cmmnClasSttusNm=='중지'">
+			    AND (
+			        C.CMMN_DETAIL_CODE_NM = '중지'
+			    )
+			</if>
+		    <if test="cmmnClasSttusNm=='종료'">
+			    AND (
+			        C.CMMN_DETAIL_CODE_NM = '종료'
+			    )
+			</if>
+				<include refid="classWhere"></include>
+	</select>
+	
+	<!-- 클래스 가입시 학교 코드 가져오기 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.selectSchulCode -->
+	<select id="selectSchulCode" parameterType="String" resultType="String">
+	SELECT 
+		SCHUL_CODE <!-- 학교 코드 -->
+	FROM CLAS
+	WHERE CLAS_CODE = #{clasCode}
+	</select>
+	
+	<!-- 클래스 가입신청 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classJoinReqAjax -->
+	<insert id="classJoinReqAjax" parameterType="clasStdntVO">
+	<selectKey keyProperty="clasStdntCode" resultType="String" order="BEFORE">
+		SELECT #{clasCode} || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(CLAS_STDNT_CODE, LENGTH(#{clasCode}) + 1))), 0) + 1, 3, '0')
+		FROM CLAS_STDNT
+		WHERE SUBSTR(CLAS_STDNT_CODE, 1, LENGTH(#{clasCode})) = #{clasCode}
+		</selectKey>
+		INSERT INTO CLAS_STDNT
+		(CLAS_STDNT_CODE 	<!-- 반 학생 코드 -->
+		, CLAS_IN_NO		<!-- 학급 내 번호 -->
+		, CMMN_STDNT_CLSF	<!-- 공통 학생 직급(A19) -->
+		, CMMN_CLAS_PSITN_STTUS<!-- 공통 반 소속 상태(A03) -->
+		, CLAS_CODE<!-- 반 코드 -->
+		, SCHUL_CODE<!-- 학교 코드 -->
+		, MBER_ID)<!-- 회원 아이디 -->
+		VALUES(#{clasStdntCode}, #{clasInNo}, 'A19003', 'A03001', #{clasCode}, #{schulCode}, #{mberId})
+	</insert>
+	
+	<!-- 반 가입 학생 -->
+	<resultMap type="ClasStdntVO" id="clasStdntMap">
+		<result property="clasStdntCode" column="CLAS_STDNT_CODE"/>
+		<result property="clasInNo" column="CLAS_IN_NO"/>
+		<result property="cmmnStdntClsf" column="CMMN_STDNT_CLSF"/>
+		<result property="cmmnClasPsitnSttus" column="CMMN_CLAS_PSITN_STTUS"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="rnum" column="RNUM"/>
+		<result property="grade" column="GRADE"/> 		<!-- 학년 명 -->
+		<result property="mberNm" column="MBER_NAME"/>	<!-- 회원 이름 -->
+		<result property="schulNm" column="SCHUL_NM"/>	<!-- 학교 이름 -->
+		<result property="cmmnStdntClsfNm" column="CMMN_STDNT_CLSF_NM"/>	<!-- 공통 학생 직급 명 -->
+		<result property="cmmnClasPsitnSttusNm" column="CMMN_CLAS_PSITN_STTUS_NM"/>	<!-- 공통 반 소속 상태 명 -->
+		<result property="birthDate" column="BIRTH_DATE"/>			<!-- 생일 -->
+		<result property="moblphonNo" column="MOBLPHON_NO"/>			<!-- 전화번호 -->
+		<!-- <collection property="memberVOList" resultMap="memberMap"></collection> -->
+	</resultMap>
+	
+	<!-- 클래스 가입신청 대기목록 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classJoinReqListAjax -->
+	<select id="classJoinReqListAjax" parameterType="hashMap" resultMap="clasStdntMap">
+		WITH T AS(
+			SELECT ROW_NUMBER() OVER (ORDER BY A.CLAS_IN_NO) RNUM			<!-- 순번 -->
+			, A.CLAS_IN_NO, FN_CMMN_CODE_TO_NM(B.CMMN_GRADE)||'학년' GRADE	<!-- 학년명 -->
+			, FN_GET_MBER_NM(A.MBER_ID) MBER_NAME							<!-- 회원이름 -->
+			, C.SCHUL_NM													<!-- 학교이름 -->
+			, A.MBER_ID														<!-- 회원아이디 -->
+			, A.CLAS_STDNT_JOIN_DATE										<!-- 가입일 -->
+			FROM CLAS_STDNT A
+			JOIN SCHUL_PSITN_MBER B ON A.MBER_ID = B.MBER_ID
+			JOIN SCHUL C ON A.SCHUL_CODE = C.SCHUL_CODE
+			WHERE A.SCHUL_CODE = #{schulCode} AND A.CLAS_CODE = #{clasCode}
+			AND A.CMMN_CLAS_PSITN_STTUS = 'A03001'
+			)
+		SELECT T.*
+		FROM   T
+		WHERE  T.RNUM BETWEEN (#{currentPage}*#{size}) - (#{size}-1) AND (#{currentPage}*#{size})
+	</select>
+	
+	<!-- 클래스 가입신청 대기목록 개수  -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classJoinReqGetTotal -->
+	<select id="classJoinReqGetTotal" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM CLAS_STDNT
+		WHERE SCHUL_CODE = #{schulCode} AND CLAS_CODE = #{clasCode}
+		AND CMMN_CLAS_PSITN_STTUS = 'A03001'
+	</select>
+	
+	<!-- 클래스 가입 처리 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classJoinAjax -->
+	<update id="classJoinAjax" parameterType="clasStdntVO">
+		UPDATE CLAS_STDNT 
+		SET CMMN_CLAS_PSITN_STTUS = #{cmmnClasPsitnSttus}
+		 <if test="clasStdntJoinDate != null">
+        , CLAS_STDNT_JOIN_DATE = SYSDATE
+   		 </if>
+		WHERE MBER_ID = #{mberId}
+			AND SCHUL_CODE = #{schulCode}
+			AND CLAS_CODE = #{clasCode}
+	 </update>
+	
+	<!-- 가입신청 중복체크 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classJoinDupCheck -->
+	<select id="classJoinDupCheck" parameterType="clasStdntVO" resultType="int">
+		SELECT COUNT(*)
+		FROM CLAS_STDNT
+		WHERE MBER_ID = #{mberId}
+			AND CLAS_CODE = #{clasCode}
+			AND CMMN_CLAS_PSITN_STTUS = 'A03001' <!-- 가입 대기 중 --> 
+	</select>
+	
+	<!-- 클래스 가입신청 취소 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classJoinReqCancelAajx -->
+	<delete id="classJoinReqCancelAajx" parameterType="clasStdntVO">
+	DELETE FROM CLAS_STDNT
+		WHERE MBER_ID = #{mberId}
+		AND SCHUL_CODE = #{schulCode}
+		AND CLAS_CODE = #{clasCode}
+		AND CMMN_CLAS_PSITN_STTUS = 'A03001' <!-- 가입 대기 중 --> 
+	</delete>
+	<!-- 학부모 목록 -->
+	<resultMap type="chldrnClasVO" id="chldrnClasMap">
+		<result property="rnum" column="RNUM"/>
+		<result property="chldrnClasCode" column="CHLDRN_CLAS_CODE"/> <!-- 자녀 반 코드 -->
+		<result property="clasCode" column="CLAS_CODE"/>		<!-- 반 코드 -->
+		<result property="mberId" column="MBER_ID"/>			<!-- 학부모 아이디 -->
+		<result property="stdntId" column="STDNT_ID"/>			<!-- 학생 아이디 -->
+		<result property="stdntNm" column="STDNT_NM"/>			<!-- 학생명-->
+		<result property="stdnprntNm" column="STDNPRNT_NM"/>			<!-- 학부모명 -->
+		<result property="cmmnDetailNm" column="CMMN_DETAIL_NM"/>			<!-- 가족관계 -->
+		<result property="schulCode" column="SCHUL_CODE"/>			<!-- 학교 코드 -->
+	</resultMap>
+	
+	<!-- 선생님화면)학생 구성원 목록 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classTStudListAjax -->
+	<select id="classTStudListAjax" parameterType="clasStdntVO" resultMap="clasStdntMap">
+		WITH T AS(
+			SELECT ROW_NUMBER() OVER (ORDER BY CLAS_IN_NO) RNUM 		
+			, FN_GET_MBER_NM(A.MBER_ID)	MBER_NAME									<!-- 회원명 -->
+			, A.CLAS_IN_NO															<!-- 학급 내 번호  -->
+			, A.CMMN_STDNT_CLSF														<!-- 직급상태 -->
+			, FN_CMMN_CODE_TO_NM(A.CMMN_STDNT_CLSF) CMMN_STDNT_CLSF_NM				<!-- 학생 직급 명 -->
+			, FN_CMMN_CODE_TO_NM(A.CMMN_CLAS_PSITN_STTUS) CMMN_CLAS_PSITN_STTUS_NM	<!-- 상태 -->
+			, A.CLAS_STDNT_JOIN_DATE 												<!-- 가입일 -->
+			, A.MBER_ID																<!-- 회원아이디  -->
+			, A.CLAS_STDNT_CODE														<!-- 반 학생 코드 -->
+			, A.CLAS_CODE
+			FROM CLAS_STDNT A
+			WHERE CLAS_CODE = #{clasCode}
+				AND SCHUL_CODE =  #{schulCode}
+				AND CMMN_CLAS_PSITN_STTUS IN ('A03101', 'A03102')		<!-- 상태 : 활동, 정지 -->
+				)
+		SELECT T.*
+		FROM   T
+		WHERE  T.RNUM BETWEEN (#{currentPage}*#{size}) - (#{size}-1) AND (#{currentPage}*#{size})
+	</select>
+	
+	<!-- 선생님화면)학부모 구성원 목록 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classTParentListAjax -->
+	<select id="classTParentListAjax" parameterType="chldrnClasVO" resultMap="chldrnClasMap">
+		WITH T AS(
+			SELECT ROW_NUMBER() OVER (ORDER BY FN_GET_MBER_NM(C.STDNT_ID)) RNUM 
+			, A.CHLDRN_CLAS_CODE						<!-- 자녀 반 코드 -->
+			, A.CLAS_CODE									<!-- 반 코드 -->
+			, A.MBER_ID										<!-- 학부모 아이디 -->
+			, C.STDNT_ID STDNT_ID							<!-- 학생 아이디 -->
+			, FN_GET_MBER_NM(C.STDNT_ID) STDNT_NM			<!-- 학생명 -->
+			, FN_GET_MBER_NM(C.STDNPRNT_ID) STDNPRNT_NM		<!-- 학부모명 -->
+			, FN_CMMN_CODE_TO_NM(C.CMMN_DETAIL_CODE) CMMN_DETAIL_NM <!-- 가족관계 -->
+			FROM CHLDRN_CLAS A
+			JOIN MEMBER B ON A.MBER_ID = B.MBER_ID
+			JOIN FAMILY_RELATE C ON A.MBER_ID = C.STDNPRNT_ID
+			WHERE A.CLAS_CODE = #{clasCode}
+			)
+		SELECT T.*
+		FROM   T
+		WHERE  T.RNUM BETWEEN (#{currentPage}*#{size}) - (#{size}-1) AND (#{currentPage}*#{size})
+	</select>
+	
+	
+	<!-- 클래스 구성원  상세정보 -->
+	<select id="classMberDetailAjax" parameterType="clasStdntVO" resultType="memberVO">
+		SELECT MBER_ID				<!-- 회원 아이디 -->
+			, PASSWORD				<!-- 비밀번호 -->
+			, MBER_NM				<!-- 회원명 -->
+			,CASE 
+            WHEN SUBSTR(IHIDNUM, 8, 1) IN ('3', '4') THEN TO_CHAR(TO_DATE('20' || SUBSTR(IHIDNUM, 1, 6), 'YYYYMMDD'), 'YYYY-MM-DD')  
+            WHEN SUBSTR(IHIDNUM, 8, 1) IN ('1', '2') THEN TO_CHAR(TO_DATE('19' || SUBSTR(IHIDNUM, 1, 6), 'YYYYMMDD'), 'YYYY-MM-DD')  
+            ELSE NULL  
+          END BIRTH_DATE    <!-- 생년월일 -->
+			, MOBLPHON_NO			<!-- 핸드폰번호 -->
+			, MBER_EMAIL			<!-- 이메일 -->
+			, ZIP					<!-- 우편번호 -->
+			, MBER_ADRES			<!-- 회원주소 -->
+			, MBER_IMAGE			<!-- 회원이미지 -->
+			, MBER_SECSN_AT			<!-- 탈퇴여부 -->
+			, CMMN_DETAIL_CODE		<!-- 공통회원분류 A01 -->
+			FROM MEMBER
+		WHERE MBER_ID = #{mberId}
+	</select>
+	
+	<!-- 이메일 값 가져오기 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.getEmailByMemberId -->
+	<select id="getEmailByMemberId" parameterType="String" resultMap="memberMap">
+		SELECT A.MBER_EMAIL	<!-- 이메일아이디 -->
+		, A.MBER_ID 		<!-- 멤버 아이디 -->
+		FROM MEMBER A
+		JOIN CLAS_STDNT B ON A.MBER_ID = B.MBER_ID
+		WHERE B.CMMN_CLAS_PSITN_STTUS = 'A03101'
+		AND A.MBER_ID = #{mberId}
+		AND B.CLAS_CODE = #{clasCode}
+	</select>
+	
+	<!-- 학교 소속 회원 테이블 INSERT -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classInvCodeJoin -->
+	<insert id="classInvCodeJoin" parameterType="chldrnClasVO">
+		INSERT INTO SCHUL_PSITN_MBER(SCHUL_CODE, MBER_ID)
+		VALUES(#{schulCode}, #{mberId})
+	</insert>
+	
+	<!-- 학교 소속 중복체크 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.schulPsitnDupCheck -->
+	<select id="schulPsitnDupCheck" resultType="int" parameterType="chldrnClasVO">
+		SELECT COUNT(*) FROM SCHUL_PSITN_MBER
+		WHERE MBER_ID = #{mberId}
+		AND SCHUL_CODE = #{schulCode}
+	</select>
+	
+	<!-- 자녀 반 테이블 INSERT -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.chldrnClasInsert -->
+	<insert id="chldrnClasInsert" parameterType="chldrnClasVO">
+		INSERT INTO CHLDRN_CLAS(CHLDRN_CLAS_CODE, CLAS_CODE, MBER_ID)
+		VALUES(chldrn_clas_code_seq.NEXTVAL, #{clasCode}, #{mberId})
+	</insert>
+
+	<!-- 학부모 클래스 소속 중복체크 -->	
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classDupCnt -->
+	<select id="classDupCnt" parameterType="chldrnClasVO" resultType="int">
+		SELECT COUNT(*) 
+		FROM SCHUL_PSITN_MBER A
+		JOIN CHLDRN_CLAS B ON A.MBER_ID = B.MBER_ID
+		WHERE B.CLAS_CODE = #{clasCode}
+		AND A.MBER_ID = #{mberId}
+	</select>
+	
+	<!-- 학생 구성원 토탈 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classStudGetTotal -->
+	<select id="classStudGetTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*) FROM CLAS_STDNT
+		WHERE CLAS_CODE = #{clasCode}
+			AND SCHUL_CODE =  #{schulCode}
+			AND CMMN_CLAS_PSITN_STTUS IN ('A03101', 'A03102')		<!-- 상태 -->
+	</select>
+	
+	<!-- 학부모 구성원 토탈 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classPrentGetTotal -->
+	<select id="classPrentGetTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*) FROM 
+		SCHUL_PSITN_MBER A
+		JOIN CHLDRN_CLAS B ON A.MBER_ID = B.MBER_ID
+		WHERE B.CLAS_CODE = #{clasCode}
+	</select>
+	
+	<!-- 학생 구성원 수정 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classStudUpdateAjax -->
+	<update id="classStudUpdateAjax" parameterType="clasStdntVO">
+		UPDATE CLAS_STDNT 
+		SET CLAS_IN_NO = #{clasInNo}
+	   		 , CMMN_STDNT_CLSF = #{cmmnStdntClsf}
+	   		 , CMMN_CLAS_PSITN_STTUS = #{cmmnClasPsitnSttus}
+		WHERE MBER_ID = #{mberId} 
+			AND SCHUL_CODE = #{schulCode} 
+			AND CLAS_CODE = #{clasCode}
+	</update>
+	
+	<!-- 학생, 학부모화면) 학생조회 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classStdntListAjax -->
+	<select id="classStdntListAjax" parameterType="hashMap" resultMap="clasStdntMap">
+		WITH T AS(
+			SELECT ROW_NUMBER() OVER (ORDER BY CLAS_IN_NO) RNUM 		
+			, FN_GET_MBER_NM(A.MBER_ID)	MBER_NAME									<!-- 회원명 -->
+			, A.CLAS_IN_NO															<!-- 학급 내 번호  -->
+			, FN_CMMN_CODE_TO_NM(A.CMMN_STDNT_CLSF) CMMN_STDNT_CLSF_NM				<!-- 학생 직급 명 -->
+			, FN_CMMN_CODE_TO_NM(A.CMMN_CLAS_PSITN_STTUS) CMMN_CLAS_PSITN_STTUS_NM	<!-- 상태 -->
+			, A.CLAS_STDNT_JOIN_DATE 												<!-- 가입일 -->
+			, A.MBER_ID																<!-- 회원아이디  -->
+			, A.CLAS_STDNT_CODE														<!-- 반 학생 코드 -->
+			, A.CLAS_CODE
+			, B.MOBLPHON_NO
+	        ,CASE 
+	            WHEN SUBSTR(IHIDNUM, 8, 1) IN ('3', '4') THEN TO_CHAR(TO_DATE('20' || SUBSTR(IHIDNUM, 1, 6), 'YYYYMMDD'), 'YYYY-MM-DD')  
+	            WHEN SUBSTR(IHIDNUM, 8, 1) IN ('1', '2') THEN TO_CHAR(TO_DATE('19' || SUBSTR(IHIDNUM, 1, 6), 'YYYYMMDD'), 'YYYY-MM-DD')  
+	            ELSE NULL  
+	          END BIRTH_DATE
+			FROM CLAS_STDNT A
+			 JOIN MEMBER B ON A.MBER_ID = B.MBER_ID
+			WHERE CLAS_CODE = #{clasCode}
+				AND SCHUL_CODE =  #{schulCode}
+				AND CMMN_CLAS_PSITN_STTUS = 'A03101'		<!-- 상태 : 활동 -->
+				)
+		SELECT T.*
+		FROM   T
+		WHERE  T.RNUM BETWEEN (#{currentPage}*#{size}) - (#{size}-1) AND (#{currentPage}*#{size})
+	</select>
+	
+	<!-- 학생, 학부모화면) 학생조회 총 개수  -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.StdntListGetTotal -->
+	<select id="StdntListGetTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*) FROM CLAS_STDNT
+		WHERE SCHUL_CODE = #{schulCode} AND CLAS_CODE = #{clasCode}
+		AND CMMN_CLAS_PSITN_STTUS = 'A03101'
+	</select>
+	
+	<!-- 학생 리스트 -->
+	<select id ="getStdList" parameterType ="map" resultMap ="stdMap">
+		select 		cs.CLAS_STDNT_CODE,
+		                cs.CLAS_IN_NO,
+		                cs.CMMN_STDNT_CLSF,
+		                cs.CMMN_CLAS_PSITN_STTUS, 
+		                cs.CLAS_STDNT_JOIN_DATE, 
+		                cs.CLAS_STDNT_EXIT_DATE,
+		                m.MBER_ID, 
+		                m.MBER_NM,
+		                case when substr(m.ihidnum, 8,1) in (1,3) then '남' 
+		                when substr(m.ihidnum, 8,1) in (2,4) then '여'
+		                else '불명' end ihidnum,
+		                nvl(m.MOBLPHON_NO, '없음') MOBLPHON_NO, 
+		                m.MBER_EMAIL, 
+		                m.ZIP, 
+		                m.MBER_ADRES, 
+		                m.MBER_IMAGE, 
+		                m.MBER_SECSN_AT, 
+		                m.CMMN_DETAIL_CODE
+		from     		clas_stdnt cs 
+		inner join 		member m
+		on 				m.mber_id = cs.mber_id
+		where 			1=1
+		<if test = "clasCode != null">
+		and				cs.clas_code = #{clasCode}
+		</if>
+		<if test = "schulCode != null">
+		and				cs.schul_code = #{schulCode}
+		</if>
+		order by    	cs.clas_in_no
+	</select>
+	
+	<!-- 반 삭제 -->
+	<update id = "deleteClassroom" parameterType = "String">
+		update clas
+		set cmmn_clas_sttus = 'A16002'
+		where clas_code = #{clasCode}
+	</update>
+	
+	<!-- 클래스 수정 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classUpdateAjax -->
+	<update id="classUpdateAjax" parameterType="clasVO">
+		UPDATE CLAS 
+		SET CMMN_CLAS_STTUS = #{cmmnClasSttus}
+			,BEGIN_TM = #{beginTm}
+			,END_TM = #{endTm}
+		WHERE CLAS_CODE = #{clasCode}
+	</update>
+	
+	<!-- 클래스 삭제 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classDeleteAjax -->
+	<delete id="classDeleteAjax" parameterType="clasVO">
+		DELETE FROM CLAS WHERE CLAS_CODE = #{clasCode}
+	</delete>
+	
+	<!-- 시간표 목록 -->
+	<select id="scheduleList" parameterType="skedVO" resultType="skedVO">
+        SELECT  SKED_CODE,
+                SEMSTR,
+                PERIOD,
+                FN_CMMN_CODE_TO_NM(CMMN_SBJECT) CMMN_SBJECT,
+                FN_CMMN_CODE_TO_NM(CMMN_DAY) CMMN_DAY_NM,
+                CMMN_DAY,
+                CLAS_CODE
+        FROM    SKED
+        WHERE   1=1
+        AND     CLAS_CODE = #{clasCode}
+        
+        <if test = "semstr== 1">
+        AND     SEMSTR = 1	
+        </if>
+        <if test = "semstr== 2 ">
+        AND     SEMSTR = 2	
+        </if>
+	</select>
+
+	<!-- 시간표 등록 -->
+	<update id = "scheduleCreate" parameterType ="java.util.List">
+		<foreach collection="list" item="skedVO"
+			open="INSERT ALL" close="SELECT * FROM DUAL" separator=" " index="idx">
+				INTO SKED(
+					SKED_CODE,
+					SEMSTR,
+					PERIOD,
+					CMMN_SBJECT,
+					CMMN_DAY,
+					CLAS_CODE)
+		        VALUES(	#{skedVO.skedCode},
+		        		#{skedVO.semstr},
+		        		#{skedVO.period},
+		        		#{skedVO.cmmnSbject},
+		        		#{skedVO.cmmnDay},
+		        		#{skedVO.clasCode})
+		</foreach>
+	</update>
+	
+	<!-- 시간표 코드 최대값 가져오기 -->
+	<select id="maxScheduleSeq" parameterType="skedVO" resultType="int">
+		SELECT
+			CASE
+	       		WHEN COUNT(*)=0 THEN 1
+	       		ELSE MAX(SUBSTR(SKED_CODE, 10)*1)
+	       	END
+		FROM SKED
+		WHERE 1=1 
+		AND CLAS_CODE = #{clasCode}
+		AND SEMSTR = #{semstr}
+		
+		
+	</select>	
+
+	<!-- 오늘의 시간표 목록 -->
+	<select id="todaySchedule" parameterType="String" resultType="skedVO">
+		SELECT  SKED_CODE,
+		        SEMSTR,
+		        PERIOD,
+		        FN_CMMN_CODE_TO_NM(CMMN_SBJECT) CMMN_SBJECT,
+		        FN_CMMN_CODE_TO_NM(CMMN_DAY) CMMN_DAY_NM,
+		        CMMN_DAY,
+		        CLAS_CODE
+		FROM    SKED
+		WHERE   1=1
+		AND     CLAS_CODE = #{clasCode}
+		AND     SEMSTR = 1
+		AND     FN_CMMN_CODE_TO_NM(CMMN_DAY)=(SELECT DECODE(TO_CHAR(sysdate, 'd'),
+		                                     1, '일'
+		                                   , 2, '월'
+		                                   , 3, '화'
+		                                   , 4, '수'
+		                                   , 5, '목'
+		                                   , 6, '금'
+		                                   , 7, '토') FROM dual)	
+		AND		NOT FN_CMMN_CODE_TO_NM(CMMN_SBJECT) ='선택'                                   
+	</select>
+	
+	<!-- 시간표 학기 중복 확인 -->
+	<select id = "checkScheduleSemstr" parameterType="skedVO" resultType="int">
+		SELECT COUNT(DISTINCT SEMSTR)
+		FROM SKED
+		WHERE 1=1
+		AND CLAS_CODE = #{clasCode}
+		AND SEMSTR =#{semstr}
+	</select>
+		
+	<!-- 클래스 가입 거절 목록 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classJoinRJListAjax -->
+	<select id="classJoinRJListAjax" parameterType="hashMap" resultMap="clasStdntMap">
+		WITH T AS(
+			SELECT ROW_NUMBER() OVER (ORDER BY A.CLAS_IN_NO) RNUM			<!-- 순번 -->
+			, A.CLAS_IN_NO, FN_CMMN_CODE_TO_NM(B.CMMN_GRADE)||'학년' GRADE	<!-- 학년명 -->
+			, FN_GET_MBER_NM(A.MBER_ID) MBER_NAME							<!-- 회원이름 -->
+			, C.SCHUL_NM													<!-- 학교이름 -->
+			, A.MBER_ID														<!-- 회원아이디 -->
+			, A.CLAS_STDNT_JOIN_DATE										<!-- 가입일 -->
+			FROM CLAS_STDNT A
+			JOIN SCHUL_PSITN_MBER B ON A.MBER_ID = B.MBER_ID
+			JOIN SCHUL C ON A.SCHUL_CODE = C.SCHUL_CODE
+			WHERE A.SCHUL_CODE = #{schulCode} AND A.CLAS_CODE = #{clasCode}
+			AND A.CMMN_CLAS_PSITN_STTUS = 'A03103'
+			)
+		SELECT T.*
+		FROM   T
+		WHERE  T.RNUM BETWEEN (#{currentPage}*#{size}) - (#{size}-1) AND (#{currentPage}*#{size})
+	</select>
+	
+	<!-- 클래스 가입신청 대기목록 개수  -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.classJoinRJGetTotal -->
+	<select id="classJoinRJGetTotal" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM CLAS_STDNT
+		WHERE SCHUL_CODE = #{schulCode} AND CLAS_CODE = #{clasCode}
+		AND CMMN_CLAS_PSITN_STTUS = 'A03103'
+	</select>
+	
+	<!-- 내가 속해있는 클래스 가져오기 -->
+	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.getMberClasCode -->
+	<select id="getMberClasCode" parameterType="String" resultType="clasStdntVO">
+		SELECT CLAS_CODE FROM CLAS_STDNT
+		WHERE MBER_ID = #{mberId}
+	</select>
+	
+
+	
+</mapper>

@@ -1,0 +1,176 @@
+/* 카카오톡 채팅리스트 화면(chatting.html)의 특정적인 스타일만 작성 */
+/* 큰 레이아웃은 main-layout.css에 작성되어 있음 */
+
+
+/* 헤더 안의 컨텐츠 스타일 지정 = main-layout.css 참고 */
+
+/* 네비게이션 안의 컨텐츠 스타일 지정 = main-layout.css 참고 */
+
+/* 메인 안의 컨텐츠 스타일 지정 */
+h4{
+	color: gray;
+}
+
+ul{
+    /* flex box 생성 */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* unordered list 기본 스타일 제거(점, 들여쓰기) */
+    list-style: none;
+    padding-left: 0;
+}
+li{
+    flex-basis:2rem; /*16 브라우저 기준 80px */
+    flex-shrink: 0;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+/*     border-bottom: 1px solid #ddd; */
+    padding-bottom: 15px;
+/*     background-color: #fafafa; */
+/*     padding: 15px; */
+/*     border-radius: 10px; */
+/*     width: 100%; */
+/*     box-shadow: 0px 0px 10px 3px #0c4c9c20, inset 0px 0px 10px 1px #ffffff90; */
+}
+
+li > a{
+    /* 안에 또 다른 flex box 생성 */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0px;
+}
+.profile-img{
+    width: 5.125rem;
+    height: 5.125rem;
+}
+li .talk{
+    /* 프로필 사진과 메시지(채팅) 내용 사이 간격 조절 */
+    margin-left: 0.9375rem; /* 16 브라우저 기준 15px */
+    flex-grow: 1; /* 메시지 내용과 시간 사이에 빈 공간 채우기 위한 flex-grow 설정 */
+}
+.talk > *, time{
+    margin-top: 0.3125rem ; /* 16 브라우저 기준 5px */
+    margin-bottom: 0.3125rem;
+}
+.friend-name{
+    /* 프로필명(이름) 스타일 조정 */
+    font-weight: bold;
+    font-size: 1.25rem; 
+    color: #000000;
+}
+.chat-content{
+    /* 메시지(채팅) 내용 스타일 조정 */
+    color: gray;
+    font-size: 0.75rem; /* 16 브라우저 기준 12px */
+
+}
+.member_cnt{
+    /* 그룹 채팅방 경우, 인원 수 표시 */
+    color: rgb(194, 194, 194);
+    font-size: 0.75rem;
+    margin-left: 0.4375rem; /* 7px (!6폰트 브라우저 기준) */
+}
+.me{
+    display: inline-block;
+    background-image: url(../pic/me_balloon.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding: 0.125rem; /* 16폰트 브라우저 기준 2px */
+    margin-right: 0.125rem;
+
+    vertical-align: middle;
+    font-size: 0.625rem; /* 16 브라우저 기준 10px */
+    color: white;
+}
+
+.chat-status{
+    flex-basis: 4.5rem; /* 72p */
+    flex-shrink: 0; /* 유연하게 사이즈 조절 불가토록 설정 */
+    text-align: right;
+}
+time{
+    display: block;
+    color: rgb(194, 194, 194);
+    font-size: 0.625rem; /* 16 브라우저 기준 10px */
+}
+.chat-balloon{
+    /* 안읽은 메시지 수(count) 표시 스타일 지정 */    
+    display:inline-block;
+    border: 1px solid tomato;
+    background-color: tomato;
+    border-radius: 0.625rem;
+    font-size: 0.3125rem;
+    color: white;
+    font-weight: bold;
+    padding-top: 0.0625rem; /* 16 브라우저 기준 1px */
+    padding-bottom: 0.0625rem;
+    padding-left: 0.25rem; /* 16 브라우저 기준 4px */
+    padding-right:0.25rem;
+}
+
+.myChatrooms{
+	position: fixed;
+    background: #fff;
+    width: 100%;
+    max-height: 750px;
+	overflow: auto;
+}
+
+#chatRoomBodys{
+	padding-top: 60px;
+/* 	max-height: 750px; */
+/* 	overflow: auto; */
+}
+
+img {
+	border-radius: 30%;
+}
+
+.con {
+	overflow: auto;
+	height: 80%;
+}
+
+.con::-webkit-scrollbar {
+	width: 20px;
+	height: 20px;
+}
+
+.con::-webkit-scrollbar-track {
+	width: 20px;
+	background-color: #f7f7f7;
+	border-radius: 5px;
+}
+
+.con::-webkit-scrollbar-thumb {
+	background-color: var(--blue-color);
+	border-radius: 5px;
+	box-shadow: inset 3px 3px 15px 0px #ffffffc0, inset -3px -3px 15px 0px
+		#0c4c9cf0;
+}
+
+.con::-webkit-scrollbar-thumb:hover {
+	background-color: var(--blue-color-dark);
+}
+
+#chatRoomBodys{
+	min-height: 751px
+}
+
+.room-li{
+	border: 1px solid #fafafa;
+	border-radius :10px;
+    padding: 15px;
+    background-color: #fafafa;
+    margin-bottom: 5px;
+}
+/* #chatRoomBody{ */
+/*     height: 750px; */
+/*     overflow: hidden; */
+/* } */

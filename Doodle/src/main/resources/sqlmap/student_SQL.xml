@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.student.mapper.StudentMapper">
+	<resultMap type="memberVO" id="stdMap">
+		<result property="mberId" column="MBER_ID"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="ihidnum" column="IHIDNUM"/>
+		<result property="moblphonNo" column="MOBLPHON_NO"/>
+		<result property="mberEmail" column="MBER_EMAIL"/>
+		<result property="zip" column="ZIP"/>
+		<result property="mberAdres" column="MBER_ADRES"/>
+		<result property="mberImage" column="MBER_IMAGE"/>
+		<result property="mberSecsnAt" column="MBER_SECSN_AT"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+		<result property="mberSortNm" column="MBER_SORT_NM"/>
+		<collection property="schulPsitnMberVOList" resultMap="SchulPsitnMberMap"></collection>
+	</resultMap>
+	
+	<resultMap type="schulPsitnMberVO" id="SchulPsitnMberMap">
+		<result property="cmmnEmpClsf" column="CMMN_EMP_CLSF"/>
+		<result property="cmmnGrade" column="CMMN_GRADE"/>
+		<result property="cmmnSchulPsitnSttus" column="CMMN_SCHUL_PSITN_STTUS"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="grade" column="GRADE"/>
+		<result property="schulPsitnSttusNm" column="SCHUL_PSITN_STTUS_NM"/>
+		<collection property="schulVOList" resultMap="schulMap"></collection>
+	</resultMap>
+	
+	<resultMap type="schulVO" id="schulMap">
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="schulNm" column="SCHUL_NM"/>
+		<result property="schulAdres" column="SCHUL_ADRES"/>
+		<result property="schulTlphonNo" column="SCHUL_TLPHON_NO"/>
+		<result property="schulAnnvrsry" column="SCHUL_ANNVRSRY"/>
+		<collection property="clasVO" resultMap="clasMap"></collection>
+		<collection property="clasStdntVO" resultMap="clasStdntMap"></collection>
+	</resultMap>
+	
+	<resultMap type="clasVO" id="clasMap">
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="clasNm" column="CLAS_NM"/>
+		<result property="clasYear" column="CLAS_YEAR"/>
+		<result property="cmmnGrade" column="CMMN_GRADE"/>
+		<result property="cmmnClasSttus" column="CMMN_CLAS_STTUS"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="cmmnClasSttusNm" column="CMMN_CLAS_STTUS_NM"/>
+	</resultMap>
+	
+	<resultMap type="clasStdntVO" id="clasStdntMap">
+		<result property="clasStdntCode" column="CLAS_STDNT_CODE"/>
+		<result property="clasInNo" column="CLAS_IN_NO"/>
+		<result property="cmmnStdntClsf" column="CMMN_STDNT_CLSF"/>
+		<result property="cmmnClasPsitnSttus" column="CMMN_CLAS_PSITN_STTUS"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="cmmnClasPsitnSttusNm" column="CMMN_CLAS_PSITN_STTUS_NM"/>
+		<result property="cmmnStdntClsfNm" column="CMMN_STDNT_CLSF_NM"/>
+		<collection property="clasVOList" resultMap="clasMap"></collection>	
+	</resultMap>
+	
+	<resultMap type="taskResultVO" id="taskResultMap">
+		<result property="taskResultCode" column="TASK_RESULT_CODE"/>
+		<result property="taskCode" column="TASK_CODE"/>
+		<result property="cn" column="CN"/>
+		<result property="fdbck" column="FDBCK"/>
+		<result property="taskPresentnDate" column="TASK_PRESENTN_DATE"/>
+		<result property="atchFileCode" column="ATCH_FILE_CODE"/>
+		<result property="complimentSticker" column="COMPLIMENT_STICKER"/>
+		<result property="complimentStickerDate" column="COMPLIMENT_STICKER_DATE"/>
+		<result property="clasStdntCode" column="CLAS_STDNT_CODE"/>
+		<association property="taskVO" resultMap="taskMap"></association>
+	</resultMap>
+	
+	<resultMap type="taskVO" id="taskMap">
+		<result property="taskCode" column="TASK_CODE"/>
+		<result property="taskSj" column="TASK_SJ"/>
+		<result property="taskCn" column="TASK_CN"/>
+		<result property="taskBeginDt" column="TASK_BEGIN_DT"/>
+		<result property="taskEndDt" column="TASK_END_DT"/>
+		<result property="taskCnt" column="TASK_CNT"/>
+		<result property="atchFileCode" column="ATCH_FILE_CODE"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+	</resultMap>
+	
+	<!-- 마이 페이지(내 정보) -->
+	<select id="myInfo" parameterType="String" resultType="memberVO">
+		SELECT      A.MBER_ID, A.PASSWORD, A.MBER_NM, A.IHIDNUM, A.MOBLPHON_NO,
+	   		        A.MBER_EMAIL, A.ZIP, A.MBER_ADRES, A.MBER_IMAGE,
+		            FN_CMMN_CODE_TO_NM(SUBSTR(A.CMMN_DETAIL_CODE, 6)) AS MBER_SORT_NM
+		FROM        MEMBER A
+		WHERE       MBER_ID = #{mberId}
+	</select>
+	
+	<!-- 마이 페이지(소속 학교 리스트) -->
+	<select id="mySchulList" parameterType="String" resultMap="SchulPsitnMberMap">
+			SELECT  A.SCHUL_CODE, A.MBER_ID, A.CMMN_SCHUL_PSITN_STTUS,
+		            FN_CMMN_CODE_TO_NM(A.CMMN_SCHUL_PSITN_STTUS) AS SCHUL_PSITN_STTUS_NM,
+		            A.CMMN_GRADE, FN_CMMN_CODE_TO_NM(A.CMMN_GRADE) AS GRADE,
+		            B.SCHUL_CODE, B.SCHUL_NM, B.SCHUL_ADRES, B.SCHUL_TLPHON_NO
+			  FROM  SCHUL_PSITN_MBER A 
+		INNER JOIN  SCHUL B
+		        ON  A.SCHUL_CODE = B.SCHUL_CODE
+			 WHERE  A.MBER_ID = #{mberId}
+	</select>
+	
+	<!-- 마이 페이지(소속 클래스 리스트) -->
+	<select id="myClassList" parameterType="String" resultMap="clasStdntMap">
+			SELECT  A.CLAS_STDNT_CODE, A.CLAS_IN_NO, A.CMMN_STDNT_CLSF,
+		            FN_CMMN_CODE_TO_NM(A.CMMN_STDNT_CLSF) AS CMMN_STDNT_CLSF_NM,
+		            A.CMMN_CLAS_PSITN_STTUS,
+		            FN_CMMN_CODE_TO_NM(A.CMMN_CLAS_PSITN_STTUS) AS CMMN_CLAS_PSITN_STTUS_NM,
+		            A.CLAS_CODE, A.SCHUL_CODE, A.MBER_ID,
+		            B.SCHUL_NM,
+		            C.CLAS_NM, C.CLAS_YEAR, C.CMMN_GRADE, CMMN_CLAS_STTUS
+			  FROM  CLAS_STDNT A
+		INNER JOIN  SCHUL B
+		        ON  A.SCHUL_CODE = B.SCHUL_CODE
+		INNER JOIN  CLAS C
+		        ON  A.CLAS_CODE = C.CLAS_CODE
+			 WHERE  MBER_ID = #{mberId}
+	</select>
+	
+	<!-- 마이 페이지: 프로필 수정 
+	memVO의 mberImage는 null일 땐 MBER_IMAGE는 통과
+	-->
+	<update id="updateProfile" parameterType="memberVO">
+		UPDATE MEMBER
+		SET 
+			<if test="mberImage != null and mberImage != ''">
+            	MBER_IMAGE = #{mberImage},
+        	</if>
+			MBER_NM = #{mberNm},
+			MOBLPHON_NO = #{moblphonNo},
+			MBER_EMAIL = #{mberEmail},
+			MBER_ADRES = #{mberAdres}
+		WHERE MBER_ID = #{mberId}
+	</update>
+	
+	<!-- 칭찬 스티커 수 -->
+	<select id="getComplimentStickerCount" parameterType="String" resultType="int">
+		SELECT  COUNT(*)
+		FROM    TASK_RESULT T, CLAS_STDNT C
+		WHERE   1=1
+		AND     C.MBER_ID = #{mberId}
+		AND     T.CLAS_STDNT_CODE = C.CLAS_STDNT_CODE
+		AND     T.COMPLIMENT_STICKER != 0
+	</select>
+	
+	<!-- 칭찬 스티커 현황 -->
+	<select id="getComplimentStickerStatus" parameterType="String" resultMap="taskResultMap">
+		SELECT  TR.TASK_RESULT_CODE, TR.COMPLIMENT_STICKER_DATE,
+           		T.TASK_CODE, T.TASK_SJ
+		FROM    TASK_RESULT TR, CLAS_STDNT C, TASK T
+		WHERE   1=1
+		AND     C.MBER_ID = #{mberId}
+		AND     TR.CLAS_STDNT_CODE = C.CLAS_STDNT_CODE
+		AND     T.TASK_CODE = TR.TASK_CODE
+		AND     TR.COMPLIMENT_STICKER != 0
+	</select>
+</mapper>

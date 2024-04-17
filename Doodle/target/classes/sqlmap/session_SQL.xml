@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.util.mapper.SessionMapper">
+
+<!-- 입장한 학급클래스 select -->
+<select id ="getEnterClasVO" parameterType ="String" resultType ="clasVO">
+	select 	CLAS_CODE, CLAS_NM, CLAS_YEAR, CMMN_GRADE, CMMN_CLAS_STTUS, SCHUL_CODE, BEGIN_TM, END_TM
+	from 	clas
+	where 	CLAS_CODE = #{clasCode}
+</select>
+
+<!-- 입장한 학교 select -->
+<select id ="getEnterSchoolVO" parameterType ="String" resultType ="schulVO">
+	select 	SCHUL_CODE, SCHUL_NM, SCHUL_ADRES, SCHUL_TLPHON_NO, SCHUL_ANNVRSRY
+	from 	schul
+	where 	schul_code = #{schulCode}
+</select>
+
+<!-- 반학생 정보 get -->
+<select id ="getEnterClasStdntVO" parameterType ="hashMap" resultType ="clasStdntVO">
+	select CLAS_STDNT_CODE, CLAS_IN_NO, CMMN_STDNT_CLSF, CMMN_CLAS_PSITN_STTUS, CLAS_CODE, SCHUL_CODE, MBER_ID, CLAS_STDNT_JOIN_DATE, CLAS_STDNT_EXIT_DATE
+	from clas_stdnt
+	where mber_id = #{mberId}
+	and clas_code = #{clasCode}
+</select>
+
+<!-- 학교소속회원 정보 get -->
+<select id = "getEnterSchulPsitnMberVO" parameterType ="hashMap" resultType ="schulPsitnMberVO">
+	select SCHUL_CODE, MBER_ID, CMMN_SCHUL_PSITN_STTUS, CMMN_GRADE, CMMN_EMP_CLSF, SIGN
+	from schul_psitn_mber
+	where schul_code = #{schulCode}
+	and mber_id = #{mberId}
+</select>
+
+<!-- 담임교사 정보 get -->
+<select id ="getEnterHrtchrVO" parameterType = "hashMap" resultType = "hrtchrVO">
+	select CLAS_CODE, SCHUL_CODE, MBER_ID, CMMN_DETAIL_CODE
+	from hrtchr
+	where mber_id = #{mberId}
+	and clas_code = #{clasCode}
+</select> 
+
+<!-- 로그인한 교사 학교코드 가져오기  -->
+<select id = "getSchulCodeWithTchId" parameterType = "String" resultType ="String">
+	select schul_code
+	from schul_psitn_mber
+	where mber_id = #{mberId}
+</select>
+<!-- 로그인한 반학생 학교코드 가져오기 -->
+<select id = "getSchulCodeWithStdId" parameterType = "String" resultType ="String">
+	select schul_code
+	from schul_psitn_mber
+	where mber_id = #{mberId}
+</select>
+
+</mapper>

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.classroom.mapper.NtcnMapper">
+	<sql id="searchWhere">
+		<if test="keyword != null and keyword != ''">
+			AND(     	
+					N.NTCN_CN LIKE '%' || #{keyword} || '%'
+				OR	N.NTCN_SJ LIKE '%' || #{keyword} || '%'
+			)
+		</if>
+	</sql>
+
+	<resultMap type="ntcnVO" id="ntcnMap">
+		<result property="ntcnCode" column="NTCN_CODE"/>
+		<result property="ntcnWritngDt" column="NTCN_WRITNG_DT"/>
+		<result property="ntcnSj" column="NTCN_SJ"/>
+		<result property="ntcnCn" column="NTCN_CN"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="atchFileCode" column="ATCH_FILE_CODE"/>
+		<result property="ntcnCnt" column="NTCN_CNT"/>
+		<result property="imprtcNtcnAt" column="IMPRTC_NTCN_AT"/>
+		<association property="hrtchrVO" resultMap="hrtchrMap"></association>
+		<collection property="atchFileVO" resultMap="atchFileMap"></collection>
+	</resultMap>
+	
+	<resultMap type="atchFileVO" id="atchFileMap">
+		<result property="atchFileCode" column="ATCH_FILE_CODE"/>
+		<result property="atchFileSn" column="ATCH_FILE_SN"/>
+		<result property="atchFileCours" column="ATCH_FILE_COURS"/>
+		<result property="atchFileNm" column="ATCH_FILE_NM"/>
+		<result property="atchFileTy" column="ATCH_FILE_TY"/>
+		<result property="atchFileDe" column="ATCH_FILE_DE"/>
+		<result property="registId" column="REGIST_ID"/>
+		<result property="updtDe" column="UPDT_DE"/>
+		<result property="updtId" column="UPDT_ID"/>
+	</resultMap>
+	
+	<resultMap type="hrtchrVO" id="hrtchrMap">
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+	</resultMap>
+	
+	<!-- 알림장 리스트 -->
+	<select id="getNoticeList" parameterType="map" resultMap="ntcnMap">
+		WITH T AS(
+			SELECT      ROW_NUMBER() OVER(ORDER BY CASE WHEN N.IMPRTC_NTCN_AT = 1 THEN 0 END, N.NTCN_CODE DESC) RNUM,
+			            N.NTCN_CODE, N.NTCN_WRITNG_DT, N.NTCN_SJ, N.NTCN_CN,
+			            N.CLAS_CODE, N.ATCH_FILE_CODE, N.IMPRTC_NTCN_AT,
+			            H.MBER_ID, FN_GET_MBER_NM(H.MBER_ID) AS MBER_NM
+			FROM        NTCN N
+			JOIN        HRTCHR H
+			ON          N.CLAS_CODE = H.CLAS_CODE
+			WHERE       N.CLAS_CODE = #{clasCode}
+			<include refid="searchWhere"></include>
+		)
+		SELECT  	T.*,
+					U.ATCH_FILE_SN, U.ATCH_FILE_COURS, U.ATCH_FILE_NM, U.ATCH_FILE_TY,
+					U.ATCH_FILE_DE, U.REGIST_ID, U.UPDT_DE, U.UPDT_ID
+		FROM    	T, ATCH_FILE U
+		WHERE   	T.ATCH_FILE_CODE = U.ATCH_FILE_CODE(+)
+		AND  		T.RNUM BETWEEN (#{currentPage}*5) - (5 - 1) AND (#{currentPage}*5)
+		ORDER BY    CASE WHEN T.IMPRTC_NTCN_AT = 1 THEN 0 END, T.NTCN_WRITNG_DT DESC
+	</select>
+	
+	<!-- 알림장 리스트. 간단한 내용만. -->
+	<select id="getNtcnList" parameterType="map" resultType="ntcnVO">
+		<if test ="size != null">
+		select rownum, sub.*
+		from (
+		</if>
+		select NTCN_CODE, 
+		        NTCN_WRITNG_DT, 
+		        NTCN_CN, 
+		        NTCN_SJ, 
+		        IMPRTC_NTCN_AT
+		from  ntcn
+		<if test = "clasCode != null">
+		where ntcn.clas_code = #{clasCode}
+		</if>
+		order by IMPRTC_NTCN_AT desc,
+				 NTCN_WRITNG_DT desc
+		<if test ="size != null">
+		) sub
+		where rownum &lt;= #{size}
+		</if>
+	</select>
+	
+	<!-- 중요 알림(고정) 설정 -->
+	<update id="updateImprtcAt" parameterType="ntcnVO">
+		UPDATE  NTCN
+		SET     IMPRTC_NTCN_AT = #{imprtcNtcnAt}
+		WHERE   NTCN_CODE = #{ntcnCode}
+	</update>
+	
+	<!-- 알림장 총 목록 -->
+	<select id="getTotalNtcn" parameterType="hashMap" resultType="int">
+		SELECT  COUNT(*)
+		FROM    NTCN
+		WHERE   CLAS_CODE = #{clasCode}
+	</select>
+	
+	<!-- 알림장 첨부파일 리스트 -->
+	<select id="atchFileList" parameterType="String" resultType="atchFileVO">
+		SELECT  ATCH_FILE_CODE, ATCH_FILE_COURS
+		FROM    ATCH_FILE
+		WHERE   ATCH_FILE_CODE = #{atchFileCode}
+	</select>
+	
+	<!-- 알림장 게시판 등록 -->
+	<insert id="ntcnInsert" parameterType="ntcnVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="ntcnCode">
+			SELECT 	#{clasCode}||
+					NVL(LPAD(MAX(SUBSTR(NTCN_CODE, -5)) + 1, 5, 0), '00001')
+			FROM 	NTCN
+			WHERE 	CLAS_CODE = #{clasCode}
+		</selectKey>
+		INSERT INTO NTCN
+			(NTCN_CODE, NTCN_WRITNG_DT, NTCN_CN, CLAS_CODE, ATCH_FILE_CODE, NTCN_SJ)
+		VALUES
+			(
+			#{ntcnCode},
+			SYSDATE,
+			#{ntcnCn},
+			#{clasCode},
+			#{atchFileCode},
+			#{ntcnSj}
+			)
+	</insert>
+	
+	<!-- 첨부파일 코드 구하기 -->
+	<select id="getAtchFileCode" parameterType="String" resultType="String">
+		SELECT 	#{clasCode}||
+				'NTC'||
+				NVL(LPAD((SUBSTR(MAX(ATCH_FILE_CODE), -5) + 1), 5, 0), '00001')
+		  FROM 	ATCH_FILE
+		 WHERE 	ATCH_FILE_CODE LIKE #{clasCode}||'NTC'||'%'
+	</select>
+	
+	<!-- 첨부파일 테이블 insert -->
+	<update id="atchFileInsert" parameterType="java.util.List">
+		<foreach collection="list" item="atchFileVO" open="INSERT ALL" close="SELECT * FROM DUAL" separator=" " index="idx">
+			INTO ATCH_FILE
+			(ATCH_FILE_CODE, ATCH_FILE_SN, ATCH_FILE_COURS, ATCH_FILE_NM,
+			 ATCH_FILE_TY, ATCH_FILE_DE, REGIST_ID, UPDT_DE, UPDT_ID)
+			VALUES
+			(#{atchFileVO.atchFileCode}, #{atchFileVO.atchFileSn},
+			 #{atchFileVO.atchFileCours}, #{atchFileVO.atchFileNm},
+			 #{atchFileVO.atchFileTy}, SYSDATE,
+			 #{atchFileVO.registId}, NULL, NULL)
+		</foreach>
+	</update>
+	
+	<!-- 알림장 수정 폼 + 상세 정보 출력 -->
+	<select id="goToUpdateForm" parameterType="String" resultType="ntcnVO">
+		SELECT 	NTCN_CODE, NTCN_CN, CLAS_CODE, ATCH_FILE_CODE, NTCN_SJ
+		FROM 	NTCN
+		WHERE 	NTCN_CODE = #{ntcnCode}
+	</select>
+	
+	<!-- 첨부파일 개별 삭제 -->
+	<delete id="atchFileDeleteOne" parameterType="String">
+		DELETE
+		FROM	ATCH_FILE
+		WHERE	ATCH_FILE_COURS = #{atchFileCours}
+	</delete>
+	
+	<!-- 알림장 수정 -->
+	<update id="ntcnUpdate" parameterType="ntcnVO">
+		UPDATE  NTCN
+		SET     NTCN_CN = #{ntcnCn},
+			    ATCH_FILE_CODE = #{atchFileCode},
+		        NTCN_SJ = #{ntcnSj}
+		WHERE   NTCN_CODE = #{ntcnCode}
+	</update>
+	
+	<!-- 과제 게시글 수정 -> 알림 제목 수정 -->
+	<update id="noticeSjUpdate" parameterType="ntcnVO">
+		UPDATE 	NOTICE
+		SET		NOTICE_SJ = '[알림장] ' || #{ntcnSj}
+		WHERE	NOTICE_CODE LIKE '%' || (#{ntcnCode}||'NTC') || '%'
+	</update>
+	
+	<!-- 순번 구하기 -->
+	<select id="getAtchFileSn" parameterType="String" resultType="int">
+		SELECT  NVL(MAX(ATCH_FILE_SN) + 1, 1)
+		FROM 	ATCH_FILE
+		WHERE 	ATCH_FILE_CODE = #{atchFileCode}
+	</select>
+	
+	<!-- 알림장 삭제 -->
+	<delete id="ntcnDelete" parameterType="String">
+		DELETE
+		FROM	NTCN
+		WHERE	NTCN_CODE = #{ntcnCode}
+	</delete>
+	
+	<!-- 첨부파일 삭제 -->
+	<delete id="atchFileDelete" parameterType="String">
+		DELETE 
+		FROM    ATCH_FILE
+		WHERE   ATCH_FILE_CODE = #{atchFileCode}
+	</delete>
+	
+	<!-- 알림장 삭제 -> 학생/학부모 알림 삭제 -->
+	<delete id="noticeDeleteAll" parameterType="String">
+		DELETE
+		  FROM 	NOTICE
+		 WHERE 	NOTICE_CODE LIKE '%' || #{ntcnCode} || '%'
+	</delete>
+	
+	<!-- 알림장 글 양식 불러오기 -->
+	<select id="getNtcnForm" parameterType="String" resultType="String">
+		SELECT  NTT_CN
+		FROM    NTT
+		WHERE   1=1
+		AND     CMMN_NTT_SE = 'A08001' <!-- 공통 코드: 알림장 -->
+		AND     NTT_NM LIKE '%' || #{nttNm} || '%'
+	</select>
+	
+	<!-- 한 클래스 내 전체 학생 + 학부모 목록 -->
+	<select id="getAllClassMber" parameterType="String" resultType="String">
+		SELECT  MBER_ID
+		FROM    CLAS_STDNT
+		WHERE   CLAS_CODE = #{clasCode}
+		UNION
+		SELECT  F.STDNPRNT_ID
+		FROM    FAMILY_RELATE F, CLAS_STDNT CS 
+		WHERE   1=1
+		AND     F.STDNT_ID = CS.MBER_ID
+		AND     CS.CLAS_CODE = #{clasCode}
+	</select>
+	
+	<!-- 게시글 등록 -> 학생/학부모 전체 알림 -->
+	<update id="noticeInsertAll" parameterType="map">
+	    INSERT ALL
+	    <foreach collection="noticeRcvIdList" item="noticeRcvId" separator=" " index="idx">
+	        INTO NOTICE
+	            (NOTICE_CODE, NOTICE_SJ, NOTICE_CN, CMMN_NOTICE_READNG_AT,
+	            NOTICE_TRNSMIT_DT, NOTICE_SND_ID, NOTICE_RCV_ID, CMMN_BOARD_SE)
+	        VALUES
+	        (
+	            (SELECT #{ntcnCode} || 'NTC' || LPAD((#{idx} + 1), 3, '0') FROM DUAL),
+	            #{noticeSj},
+	            #{noticeCn},
+	            'A13001', 		<!-- 공통 코드: 미열람 -->
+	            SYSDATE,
+	            #{noticeSndId},
+	            #{noticeRcvId},
+	            'A08001'		<!-- 공통 코드: 알림장 -->
+	        )
+	    </foreach>
+	    SELECT * FROM DUAL
+	</update>
+	
+	<!-- (학생) 현재 소속된 클래스 코드 찾기 -->
+	<select id="getStudentClasCode" parameterType="String" resultType="String">
+		    SELECT 	C.CLAS_CODE
+		      FROM  CLAS C
+		INNER JOIN 	CLAS_STDNT CS
+		        ON 	C.CLAS_CODE = CS.CLAS_CODE
+		INNER JOIN 	SCHUL S
+		        ON 	S.SCHUL_CODE = C.SCHUL_CODE
+		INNER JOIN 	SCHUL_PSITN_MBER SPM
+		        ON 	SPM.SCHUL_CODE = S.SCHUL_CODE
+		       AND  SPM.MBER_ID = CS.MBER_ID
+		     WHERE  1=1
+		       AND	CS.MBER_ID = #{mberId}
+		       AND  SPM.CMMN_SCHUL_PSITN_STTUS = 'A02101' <!-- '재학' -->
+	</select>
+</mapper>

@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.school.mapper.AfterSchoolMapper">
+
+	<resultMap type="aschaVO" id="aschaMap">
+		<result property="aschaCode" column="ASCHA_CODE"/>
+		<result property="aschaNm" column="ASCHA_NM"/>
+		<result property="aschaDetailCn" column="ASCHA_DETAIL_CN"/>
+		<result property="aschaAtnlcCt" column="ASCHA_ATNLC_CT"/>
+		<result property="aschaAceptncPsncpa" column="ASCHA_ACEPTNC_PSNCPA"/>
+		<result property="aschaAtnlcBgnde" column="ASCHA_ATNLC_BGNDE"/>
+		<result property="aschaAtnlcEndde" column="ASCHA_ATNLC_ENDDE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+		<result property="cmmnAtnlcNm" column="CMMN_ATNLC_NM"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="moblphonNo" column="MOBLPHON_NO"/>
+		<result property="schulNm" column="SCHUL_NM"/>
+		<result property="schulAdres" column="SCHUL_ADRES"/>
+		<result property="schulTlphonNo" column="SCHUL_TLPHON_NO"/>
+		<result property="cmmnGrade" column="CMMN_GRADE"/>
+		<result property="clasNm" column="CLAS_NM"/>
+		<result property="clasInNo" column="CLASTDNT_STATES_IN_NO"/>
+		<result property="stdntState" column="STDNT_STATE"/>
+		<collection property = "aschaWeekPlanVOList" resultMap = "aschaWeekPlanMap"></collection>
+		<collection property = "atnlcReqstVOList" resultMap = "atnlcReqstMap"></collection>
+
+	</resultMap>
+
+	<resultMap type="aschaWeekPlanVO" id="aschaWeekPlanMap">
+		<result property="aschaWeekPlanCode" column="ASCHA_WEEK_PLAN_CODE"/>
+		<result property="aschaWeek" column="ASCHA_WEEK"/>
+		<result property="aschaWeekPlanCn" column="ASCHA_WEEK_PLAN_CN"/>
+		<result property="aschaCode" column="ASCHA_CODE"/>	
+	</resultMap>
+
+	<resultMap type="atnlcReqstVO" id="atnlcReqstMap">
+		<result property="atnlcReqstCode" column="ATNLC_REQST_CODE"/>
+		<result property="atnlcSetleAmount" column="ATNLC_SETLE_AMOUNT"/>
+		<result property="atnlcSetleDt" column="ATNLC_SETLE_DT"/>
+		<result property="atnlcRefndAcnut" column="ATNLC_REFND_ACNUT"/>
+		<result property="atnlcRefndDt" column="ATNLC_REFND_DT"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+		<result property="aschaCode" column="ASCHA_CODE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="stdntId" column="STDNT_ID"/>
+		<result property="stdnprntId" column="STDNPRNT_ID"/>
+		<collection property="aschaDclzVOList" resultMap = "AschaDclzMap"></collection>
+	</resultMap>
+	
+	<resultMap type="aschaDclzVO" id="AschaDclzMap">
+		<result property="aschaAtendDe" column="ASCHA_ATEND_DE"/>
+		<result property="atnlcReqstCode" column="ATNLC_REQST_CODE"/>
+		<result property="cmmnDetailCode" column="CMMN_ATTEND_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="mberNm" column="MBER_Nm"/>
+		<result property="stdntState" column="STDNT_STATE"/>
+		<result property="aschaNm" column="ASCHA_NM"/>
+	</resultMap>
+	
+	
+	<!-- 방과후학교 전체 리스트 -->
+	<select id="afterSchoolList" parameterType="hashMap" resultType="aschaVO">
+	WITH T AS(
+		SELECT  ROW_NUMBER() OVER(ORDER BY A.CMMN_DETAIL_CODE ASC)AS RNUM, 
+		        A.ASCHA_CODE,
+		        A.ASCHA_NM,
+		        A.ASCHA_DETAIL_CN,
+		        A.ASCHA_ATNLC_CT,
+		        A.ASCHA_ACEPTNC_PSNCPA,
+		        A.ASCHA_ATNLC_BGNDE,
+		        A.ASCHA_ATNLC_ENDDE,
+		        A.SCHUL_CODE,
+		        FN_CMMN_CODE_TO_NM(A.CMMN_DETAIL_CODE) CMMN_ATNLC_NM,
+		        A.MBER_ID,
+		        M.MBER_NM
+		FROM ASCHA A
+		JOIN MEMBER M ON A.MBER_ID = M.MBER_ID
+		WHERE 1=1
+		AND A.CMMN_DETAIL_CODE != 'A10006' /* 폐강강의 출력 X */
+		AND A.SCHUL_CODE =#{schulCode}
+		<if test = "cmmnAtnlcNm=='전체'">
+			AND(
+				A.CMMN_DETAIL_CODE ='A10001'
+				OR 	A.CMMN_DETAIL_CODE ='A10007'
+				OR	A.CMMN_DETAIL_CODE ='A10008'
+			)
+		</if>
+		<if test = "cmmnAtnlcNm=='신청 진행중'">
+			AND(
+				A.CMMN_DETAIL_CODE ='A10001'
+			)
+		</if>
+		<if test = "cmmnAtnlcNm=='수업 진행중'">
+			AND(
+				A.CMMN_DETAIL_CODE ='A10007'
+			)
+		</if>
+		<if test = "cmmnAtnlcNm=='종강'">
+			AND(
+				A.CMMN_DETAIL_CODE ='A10008'
+			)
+		</if>
+	)	
+	SELECT T.* FROM T
+	WHERE T.RNUM BETWEEN (#{currentPage}*10) - (10 - 1)	AND (#{currentPage}*10)
+	</select>
+	
+	
+	<!-- 학교 정보 가져오기 : 카카오페이에 쓰려고함  -->
+	<select id="getSchoolInfo" parameterType="String" resultType="aschaVO">
+		SELECT  SCHUL_NM,
+		        SCHUL_ADRES,
+		        SCHUL_TLPHON_NO
+		FROM    SCHUL 
+		WHERE   SCHUL_CODE = #{schulCode}
+	</select>
+	
+	
+	<!-- 전체 방과후학교 수 -->
+	<select id="getTotalAfterSchool" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM ASCHA
+		WHERE 1=1
+		AND SCHUL_CODE = #{schulCode}
+		AND CMMN_DETAIL_CODE != 'A10006'
+	</select>
+	
+	<!-- 과목당 수강중인 학생수 출력 -->
+	<select id = "getTotalLectureStudent" parameterType ="String" resultType="int">
+		SELECT COUNT(STDNT_ID)
+		FROM ATNLC_REQST
+		WHERE ASCHA_CODE = #{aschaCode}
+	</select>
+	
+	<!-- 방과후학교 상세 -->
+	<select id="afterSchoolDetail" parameterType="aschaVO" resultMap="aschaMap">
+		SELECT  A.ASCHA_CODE,
+		        A.ASCHA_NM,
+		        A.ASCHA_DETAIL_CN,
+		        A.ASCHA_ATNLC_CT,
+		        A.ASCHA_ACEPTNC_PSNCPA,
+		        A.ASCHA_ATNLC_BGNDE,
+		        A.ASCHA_ATNLC_ENDDE,
+		        FN_CMMN_CODE_TO_NM(A.CMMN_DETAIL_CODE) CMMN_ATNLC_NM,
+		        A.SCHUL_CODE,
+		        A.MBER_ID,
+		        M.MBER_NM,
+		        AWP.ASCHA_WEEK_PLAN_CODE,
+                AWP.ASCHA_WEEK,
+                AWP.ASCHA_WEEK_PLAN_CN
+		FROM ASCHA A
+		JOIN MEMBER M ON A.MBER_ID = M.MBER_ID
+		JOIN ASCHA_WEEK_PLAN AWP ON AWP.ASCHA_CODE = A.ASCHA_CODE
+		WHERE 1=1
+		AND A.ASCHA_CODE = #{aschaCode}
+		AND A.SCHUL_CODE = #{schulCode}
+		ORDER BY AWP.ASCHA_WEEK ASC
+		
+	</select>
+	
+	<!-- 방과후학교 생성 -->
+	<insert id="afterSchoolCreate" parameterType="aschaVO">
+		INSERT INTO ASCHA(
+		            ASCHA_CODE,
+		            ASCHA_NM,
+		            ASCHA_DETAIL_CN,
+		            ASCHA_ATNLC_CT,
+		            ASCHA_ACEPTNC_PSNCPA,
+		            ASCHA_ATNLC_BGNDE,
+		            ASCHA_ATNLC_ENDDE,
+		            SCHUL_CODE,
+		            MBER_ID,
+		            CMMN_DETAIL_CODE)
+		            
+		    VALUES(	#{aschaCode},
+		            #{aschaNm},
+		            #{aschaDetailCn},
+		            #{aschaAtnlcCt},
+		            #{aschaAceptncPsncpa},
+		            #{aschaAtnlcBgnde},
+		            #{aschaAtnlcEndde},
+		            #{schulCode},
+		            #{mberId},
+		            'A10001')	
+	</insert>
+	
+	<!-- 방과후학교 주간계획 등록 -->
+	<update id="createWeekPlan" parameterType="java.util.List">
+		<foreach collection="list" item="aschaWeekPlanVO"
+			open="INSERT ALL" close="SELECT * FROM DUAL" separator=" " index="idx">
+				INTO ASCHA_WEEK_PLAN (
+					ASCHA_WEEK_PLAN_CODE,
+					ASCHA_WEEK,
+					ASCHA_WEEK_PLAN_CN,
+					ASCHA_CODE)
+				VALUES(
+					#{aschaWeekPlanVO.aschaWeekPlanCode},
+					#{aschaWeekPlanVO.aschaWeek},
+					#{aschaWeekPlanVO.aschaWeekPlanCn},
+					#{aschaWeekPlanVO.aschaCode})
+		</foreach>
+	</update>
+	
+	<!-- 방과후학교 코드 최대값 가져오기 -->
+	<select id="getMaxAschaSeq" parameterType="String" resultType="int">
+		SELECT CASE
+	        WHEN COUNT(*)=0 THEN 1
+	        ELSE MAX(SUBSTR(ASCHA_CODE, 12)*1)
+	    END 
+		FROM ASCHA
+		WHERE SCHUL_CODE = #{schulCode}
+	</select>
+	
+	<!-- 방과후학교 수정 -->
+	<update id="afterSchoolUpdate" parameterType="aschaVO">
+		UPDATE ASCHA
+		    SET ASCHA_NM = #{aschaNm},
+		        ASCHA_DETAIL_CN = #{aschaDetailCn},
+		        ASCHA_ATNLC_CT 	= #{aschaAtnlcCt},
+		        ASCHA_ACEPTNC_PSNCPA = #{aschaAceptncPsncpa},
+		        ASCHA_ATNLC_BGNDE = #{aschaAtnlcBgnde},
+		        ASCHA_ATNLC_ENDDE = #{aschaAtnlcEndde}
+		    WHERE ASCHA_CODE = #{aschaCode}		
+	</update>
+
+	<!-- 주간계획 삭제 -->
+	<delete id="deleteWeekPlan" parameterType = "aschaVO">
+		DELETE FROM ASCHA_WEEK_PLAN
+		WHERE ASCHA_CODE= #{aschaCode}
+	</delete>
+
+	<!-- 방과후학교 삭제 -->
+	<delete id="afterSchoolDelete" parameterType="aschaVO">
+		DELETE FROM ASCHA
+		WHERE ASCHA_CODE = #{aschaCode}		
+	</delete>
+	
+	<!-- 교사의 방과후화면 개설 목록 -->
+	<select id="afterSchoolTeacherList" parameterType="String" resultType="aschaVO">
+		SELECT  ROW_NUMBER() OVER(ORDER BY CMMN_DETAIL_CODE ASC)AS RNUM,
+		        ASCHA_CODE,
+		        ASCHA_NM,
+		        ASCHA_DETAIL_CN,
+		        ASCHA_ATNLC_CT,
+		        ASCHA_ACEPTNC_PSNCPA,
+		        ASCHA_ATNLC_BGNDE,
+		        ASCHA_ATNLC_ENDDE,
+		        SCHUL_CODE,
+		        MBER_ID,
+		        FN_CMMN_CODE_TO_NM(CMMN_DETAIL_CODE) CMMN_ATNLC_NM
+		FROM ASCHA
+		WHERE MBER_ID= #{mberId}
+		ORDER BY CMMN_DETAIL_CODE ASC
+	</select>
+	
+	<!-- 과목당 수강중인 학생들 -->
+	<select id="lectureStudentList" parameterType="aschaVO" resultMap="aschaMap">
+		SELECT
+			FN_GET_MBER_NM(AR.STDNT_ID) MBER_NM, 				/* 학생 이름 -수강신청 */
+			FN_CMMN_CODE_TO_NM(AR.CMMN_DETAIL_CODE) CMMN_DETAIL_CODE, 	/* 수강 상태 */
+			AR.ATNLC_REQST_CODE,						/* 수강 신청 코드*/
+			AR.STDNPRNT_ID,								/* 학부모 아이디 */ 		
+			A.ASCHA_NM, 								/* 수강과목 */
+			A.ASCHA_ATNLC_CT,							/* 수강 비용 */
+			A.ASCHA_ATNLC_BGNDE,						/* 방과후학교 시작일자 */
+			A.ASCHA_ATNLC_ENDDE,						/* 방과후학교 종료일자 */
+			CS.CLAS_IN_NO, 								/* 학생 번호 */
+			C.CLAS_NM,									/* 학생 반 */
+			FN_CMMN_CODE_TO_NM(C.CMMN_GRADE) CMMN_GRADE,/* 학년 */
+			S.SCHUL_NM, 								/* 학교 이름 */
+			M.MOBLPHON_NO								/* 연락처 - 부모 연락처 */
+            
+		FROM ATNLC_REQST AR
+		
+		JOIN ASCHA A ON A.ASCHA_CODE = AR.ASCHA_CODE
+		JOIN CLAS_STDNT CS ON CS.MBER_ID = AR.STDNT_ID
+		JOIN CLAS C ON C.CLAS_CODE = CS.CLAS_CODE
+		JOIN SCHUL S ON S.SCHUL_CODE = CS.SCHUL_CODE
+		JOIN MEMBER M ON  M.MBER_ID = AR.STDNPRNT_ID
+      
+		WHERE 1=1
+		AND A.ASCHA_CODE = #{aschaCode}
+	</select>
+	
+	<!-- 수강신청 상태 변경 -->
+	<!-- 결제 완료(A10002)시  수업 진행중(A10007)으로 변경 / 수업 진행중(A10007)시 종강(A10008)로 변경 -->
+	<update id="lectureStateUpdate" parameterType="atnlcReqstVO">
+		UPDATE ATNLC_REQST
+	    SET CMMN_DETAIL_CODE =
+        CASE 
+            WHEN CMMN_DETAIL_CODE = 'A10002' THEN 'A10007'
+            WHEN CMMN_DETAIL_CODE = 'A10007' THEN 'A10008'   
+            ELSE CMMN_DETAIL_CODE
+        END
+	    WHERE 1=1
+        AND ATNLC_REQST_CODE= #{atnlcReqstCode}
+	</update>
+	
+	<!-- 학생의 수강신청 리스트 -->
+	<select id="afterSchoolLectureList" parameterType="String" resultType="aschaVO">
+		SELECT  ROW_NUMBER() OVER(ORDER BY A.ASCHA_CODE ASC)AS RNUM,
+		        A.ASCHA_CODE,
+		        A.ASCHA_NM,
+		        A.ASCHA_DETAIL_CN,
+		        A.ASCHA_ATNLC_CT,
+		        A.ASCHA_ACEPTNC_PSNCPA,
+		        A.ASCHA_ATNLC_BGNDE,
+		        A.ASCHA_ATNLC_ENDDE,
+		        A.SCHUL_CODE,
+		        FN_GET_MBER_NM(A.MBER_ID) MBER_NM,
+		        FN_CMMN_CODE_TO_NM(A.CMMN_DETAIL_CODE) CMMN_ATNLC_NM,
+		        FN_CMMN_CODE_TO_NM(AR.CMMN_DETAIL_CODE) STDNT_STATE
+		FROM ASCHA A
+		JOIN ATNLC_REQST AR ON A.ASCHA_CODE = AR.ASCHA_CODE
+		WHERE AR.STDNT_ID= #{mberId}	
+	</select>
+	
+	<!-- 결제시 수강신청 정보 INSERT -->
+	<insert id="afterSchoolPayment" parameterType="atnlcReqstVO">
+	INSERT INTO ATNLC_REQST(
+		    ATNLC_REQST_CODE,
+		    ATNLC_SETLE_AMOUNT,
+		    ATNLC_SETLE_DT,
+		    ATNLC_REFND_ACNUT,
+		    ATNLC_REFND_DT,
+		    CMMN_DETAIL_CODE,
+		    ASCHA_CODE,
+		    SCHUL_CODE,
+		    STDNT_ID,
+		    STDNPRNT_ID)
+	VALUES(	#{atnlcReqstCode},
+		    #{atnlcSetleAmount},
+		    #{atnlcSetleDt},
+		    #{atnlcRefndAcnut},
+		    '',
+		    #{cmmnDetailCode},
+		    #{aschaCode},
+		    #{schulCode},
+		    #{stdntId},
+		    #{stdnprntId})
+	</insert>
+	
+	<!-- 수강신청 코드 최대값 가져오기 -->
+	<select id="getMaxatnlcReqst" parameterType="String" resultType="int">
+		SELECT 
+	    CASE
+	        WHEN COUNT(*)=0 THEN 1
+	        ELSE MAX(SUBSTR(ATNLC_REQST_CODE, 20)*1)
+	    END    
+		FROM ATNLC_REQST
+		WHERE 1=1
+		AND ASCHA_CODE = #{aschaCode}
+		AND ATNLC_REQST_CODE LIKE #{aschaCode} ||  TO_CHAR(SYSDATE,'MMDD') ||'%'
+	</select>
+
+	<!-- 출석부 목록 -->
+	<select id="attendanceList" parameterType="aschaVO" resultMap="aschaMap">
+		SELECT
+			FN_GET_MBER_NM(AR.STDNT_ID) MBER_NM, 				/* 학생 이름 -수강신청 */
+			FN_CMMN_CODE_TO_NM(AR.CMMN_DETAIL_CODE) CMMN_DETAIL_CODE, 	/* 수강 상태 */
+			AR.ATNLC_REQST_CODE,						/* 수강 신청 코드*/
+			AR.STDNT_ID,								/* 학생 아이디 */ 		
+			A.ASCHA_NM, 								/* 수강과목 */
+			A.ASCHA_ATNLC_CT,							/* 수강 비용 */
+			A.ASCHA_ATNLC_BGNDE,						/* 방과후학교 시작일자 */
+			A.ASCHA_ATNLC_ENDDE,						/* 방과후학교 종료일자 */
+			CS.CLAS_IN_NO, 								/* 학생 번호 */
+			C.CLAS_NM,									/* 학생 반 */
+			FN_CMMN_CODE_TO_NM(C.CMMN_GRADE) CMMN_GRADE,/* 학년 */
+			S.SCHUL_NM, 								/* 학교 이름 */
+            AD.ASCHA_ATEND_DE,
+            AD.MBER_ID,
+            FN_CMMN_CODE_TO_NM(AD.CMMN_DETAIL_CODE) CMMN_ATTEND_CODE
+            
+		FROM ATNLC_REQST AR
+		
+		JOIN ASCHA A ON A.ASCHA_CODE = AR.ASCHA_CODE
+		JOIN CLAS_STDNT CS ON CS.MBER_ID = AR.STDNT_ID
+		JOIN CLAS C ON C.CLAS_CODE = CS.CLAS_CODE
+		JOIN SCHUL S ON S.SCHUL_CODE = CS.SCHUL_CODE
+		JOIN MEMBER M ON  M.MBER_ID = AR.STDNPRNT_ID
+        LEFT OUTER JOIN ASCHA_DCLZ AD ON AD.ATNLC_REQST_CODE = AR.ATNLC_REQST_CODE
+      
+		WHERE 1=1
+		AND A.ASCHA_CODE = #{aschaCode}
+	</select>
+
+
+	<!-- 출결정보 등록 -->
+	<insert id="attendanceInsert" parameterType="aschaDclzVO">
+		INSERT INTO ASCHA_DCLZ(
+			ASCHA_ATEND_DE,
+			ATNLC_REQST_CODE,
+			CMMN_DETAIL_CODE,
+			MBER_ID
+			)
+		VALUES(
+			#{aschaAtendDe},
+			#{atnlcReqstCode},
+			#{cmmnDetailCode},
+			#{mberId}
+		)	
+	</insert>
+	
+	<!-- 출결정보 수정 -->
+	<update id="attendanceUpdate" parameterType="aschaDclzVO">
+	    UPDATE ASCHA_DCLZ
+	    	SET CMMN_DETAIL_CODE = #{cmmnDetailCode}
+	    WHERE 1=1
+	    AND ASCHA_ATEND_DE = #{aschaAtendDe}
+	    AND ATNLC_REQST_CODE = #{atnlcReqstCode}
+	</update>
+
+	<!-- 출결정보 삭제 -->
+	<delete id ="attendanceDelete" parameterType="aschaDclzVO">
+		DELETE FROM ASCHA_DCLZ
+		WHERE 1=1
+	    AND ASCHA_ATEND_DE = #{aschaAtendDe}
+	    AND ATNLC_REQST_CODE = #{atnlcReqstCode}
+	</delete>
+
+	<!-- 학생, 학부모 방과후학교 )출석부 목록 -->
+	<select id="studAttendanceList" parameterType="atnlcReqstVO" resultMap="atnlcReqstMap">
+		SELECT 
+		    AD.ASCHA_ATEND_DE,
+		    AD.ATNLC_REQST_CODE,
+		    FN_CMMN_CODE_TO_NM(AD.CMMN_DETAIL_CODE) STDNT_STATE,
+		    FN_GET_MBER_NM(AR.STDNT_ID) MBER_NM,
+		    AR.ASCHA_CODE,
+		    A.ASCHA_NM
+		FROM ASCHA_DCLZ AD
+		JOIN ATNLC_REQST AR ON AD.ATNLC_REQST_CODE = AR.ATNLC_REQST_CODE
+		JOIN ASCHA A ON A.ASCHA_CODE = AR.ASCHA_CODE
+		WHERE 1=1
+		AND AR.ASCHA_CODE = #{aschaCode}
+		AND AR.STDNT_ID = #{stdntId}
+		ORDER BY AD.ASCHA_ATEND_DE ASC
+	</select>
+	
+</mapper>

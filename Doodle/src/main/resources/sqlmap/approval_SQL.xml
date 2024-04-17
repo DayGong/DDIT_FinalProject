@@ -1,0 +1,765 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.approval.mapper.ApprovalMapper"> 
+	 
+	<resultMap type="sanctnDocVO" id="sanctnDocMap">
+		<result property="docCode" column="DOC_CODE"/>
+		<result property="stdntId" column="STDNT_ID"/>
+		<result property="exprnLrnBgnde" column="EXPRN_LRN_BGNDE"/>
+		<result property="lrnStle" column="LRN_STLE"/>
+		<result property="purps" column="PURPS"/>
+		<result property="dstn" column="DSTN"/>
+		<result property="stdnprntId" column="STDNPRNT_ID"/>
+		<result property="docCn" column="DOC_CN"/>
+		<result property="rqstDe" column="RQST_DE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="tcherSanctn" column="TCHER_SANCTN"/>
+		<result property="tcherId" column="TCHER_ID"/>
+		<result property="deputyPrncpalSanctn" column="DEPUTY_PRNCPAL_SANCTN"/>
+		<result property="deputyPrncpalId" column="DEPUTY_PRNCPAL_ID"/>
+		<result property="cmmnDocKnd" column="CMMN_DOC_KND"/>
+		<result property="clasStdntCode" column="CLAS_STDNT_CODE"/>
+		<result property="cmmnProcessSttus" column="CMMN_PROCESS_STTUS"/>
+		<result property="docReject" column="DOC_REJECT"/>
+		<result property="atchFileCode" column="ATCH_FILE_CODE"/>
+		<result property="atchFileSn" column="ATCH_FILE_SN"/>
+		<result property="exprnLrnEndde" column="EXPRN_LRN_ENDDE"/>
+		
+		<association property="clasStdntVO" resultMap="clasStdntMap"></association>
+		<association property="clasVO" resultMap="clasMap"></association>
+		<association property="familyRelateVO" resultMap="familyRelateMap"></association>
+		<association property="teacherVO" resultMap="teacherMap"></association>
+		<association property="deputyVO" resultMap="deputyMap"></association>
+		<association property="schulVO" resultMap="schulMap"></association>
+		<collection property="atchFileVOList" resultMap="atchFileMap"></collection>
+	</resultMap>
+	
+	<resultMap type="clasStdntVO" id="clasStdntMap">
+		<result property="clasStdntCode" column="CLAS_STDNT_CODE"/>
+		<result property="clasInNo" column="CLAS_IN_NO"/>
+		<result property="cmmnStdntClsf" column="CMMN_STDNT_CLSF"/>
+		<result property="cmmnClasPsitnSttus" column="CMMN_CLAS_PSITN_STTUS"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="clasStdntJoinDate" column="CLAS_STDNT_JOIN_DATE"/>
+		<result property="clasStdntExitDate" column="CLAS_STDNT_EXIT_DATE"/>
+	</resultMap>
+	
+	<resultMap type="clasVO" id="clasMap">
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="clasNm" column="CLAS_NM"/>
+		<result property="clasYear" column="CLAS_YEAR"/>
+		<result property="cmmnGrade" column="CMMN_GRADE"/>
+		<result property="cmmnClasSttus" column="CMMN_CLAS_STTUS"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="beginTm" column="BEGIN_TM"/>
+		<result property="endTm" column="END_TM"/><result property="clasCode" column="CLAS_CODE"/>
+		<result property="clasNm" column="CLAS_NM"/>
+		<result property="clasYear" column="CLAS_YEAR"/>
+		<result property="cmmnGrade" column="CMMN_GRADE"/>
+		<result property="cmmnClasSttus" column="CMMN_CLAS_STTUS"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="beginTm" column="BEGIN_TM"/>
+		<result property="endTm" column="END_TM"/>
+	</resultMap>
+	
+	<resultMap type="schulVO" id="schulMap">
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="schulNm" column="SCHUL_NM"/>
+		<result property="schulAdres" column="SCHUL_ADRES"/>
+		<result property="schulTlphonNo" column="SCHUL_TLPHON_NO"/>
+		<result property="schulAnnvrsry" column="SCHUL_ANNVRSRY"/>
+	</resultMap>
+	
+	<resultMap type="familyRelateVO" id="familyRelateMap">
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="stdntId" column="STDNT_ID"/>
+		<result property="stdnprntId" column="STDNPRNT_ID"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+		
+		<association property="stdntVO" resultMap="stdntMap"></association>
+		<association property="parentMemberVO" resultMap="parentMemberMap"></association>
+	</resultMap>
+	
+	<resultMap type="schulPsitnMberVO" id="teacherMap">
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="TCHER_ID"/>
+		<result property="cmmnSchulPsitnSttus" column="CMMN_SCHUL_PSITN_STTUS"/>
+		<result property="cmmnGrade" column="CMMN_GRADE"/>
+		<result property="cmmnEmpClsf" column="CMMN_EMP_CLSF"/>
+	</resultMap>
+	
+	<resultMap type="schulPsitnMberVO" id="deputyMap">
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="DEPUTY_PRNCPAL_ID"/>
+		<result property="cmmnSchulPsitnSttus" column="CMMN_SCHUL_PSITN_STTUS"/>
+		<result property="cmmnGrade" column="CMMN_GRADE"/>
+		<result property="cmmnEmpClsf" column="CMMN_EMP_CLSF"/>
+	</resultMap>
+	
+	<resultMap type="memberVO" id="stdntMap">
+		<result property="mberId" column="STDNT_ID"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="mberNm" column="STDNT_NM"/>
+		<result property="ihidnum" column="IHIDNUM"/>
+		<result property="moblphonNo" column="MOBLPHON_NO"/>
+		<result property="mberEmail" column="MBER_EMAIL"/>
+		<result property="zip" column="ZIP"/>
+		<result property="mberAdres" column="MBER_ADRES"/>
+		<result property="mberImage" column="MBER_IMAGE"/>
+		<result property="mberSecsnAt" column="MBER_SECSN_AT"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+	</resultMap>
+	
+	<resultMap type="memberVO" id="parentMemberMap">
+		<result property="mberId" column="STDNPRNT_ID"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="mberNm" column="STDNPRNT_NM"/>
+		<result property="ihidnum" column="IHIDNUM"/>
+		<result property="moblphonNo" column="MOBLPHON_NO"/>
+		<result property="mberEmail" column="MBER_EMAIL"/>
+		<result property="zip" column="ZIP"/>
+		<result property="mberAdres" column="MBER_ADRES"/>
+		<result property="mberImage" column="MBER_IMAGE"/>
+		<result property="mberSecsnAt" column="MBER_SECSN_AT"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+	</resultMap>
+	
+	<resultMap type="atchFileVO" id="atchFileMap">
+		<result property="atchFileCode" column="ATCH_FILE_CODE"/>
+		<result property="atchFileSn" column="ATCH_FILE_SN"/>
+		<result property="atchFileCours" column="ATCH_FILE_COURS"/>
+		<result property="atchFileNm" column="ATCH_FILE_NM"/>
+		<result property="atchFileTy" column="ATCH_FILE_TY"/>
+		<result property="atchFileDe" column="ATCH_FILE_DE"/>
+		<result property="registId" column="REGIST_ID"/>
+		<result property="updtDe" column="UPDT_DE"/>
+		<result property="updtId" column="UPDT_ID"/>
+	</resultMap>
+	
+	<!-- 교외체험학습 관련 학부모와 학생의 정보 -->
+	<select id="studentInfo" parameterType="vwStdntStdnprntVO" resultType="vwStdntStdnprntVO">
+		/* kr.or.ddit.approval.mapper.studentInfo */
+		SELECT SCHUL_CODE
+		     , SCHUL_NM
+		     , STDNT_ID
+		     , MBER_NM
+		     , CMMN_GRADE
+		     , CLAS_CODE
+		     , CLAS_NM
+		     , CLAS_IN_NO
+		     , STDNPRNT_ID
+		     , STDNPRNT_NM
+		     , MOBLPHON_NO
+		     , FN_CMMN_CODE_TO_NM(CMMN_DETAIL_CODE) CMMN_DETAIL_CODE
+		     , CLAS_STDNT_CODE
+		  FROM VW_STDNT_STDNPRNT
+		 WHERE 1 = 1
+		   AND STDNPRNT_ID = #{stdnprntId}
+<!-- 		   AND CLAS_CODE = #{clasCode} -->
+		   AND CLAS_STDNT_CODE = #{clasStdntCode} 
+	</select>
+	
+	<insert id="insertDoc" parameterType="sanctnDocVO">
+		<selectKey keyProperty="docCode" order="BEFORE" resultType="String">
+			SELECT 'SD'||TRIM(TO_CHAR(NVL(MAX(SUBSTR(DOC_CODE,3)),0)+1,'000000'))
+			FROM SANCTN_DOC
+		</selectKey>
+		
+		INSERT INTO SANCTN_DOC 
+        ( 
+            DOC_CODE
+          , STDNT_ID
+          , EXPRN_LRN_BGNDE
+          , LRN_STLE
+          , PURPS
+          , DSTN
+          , STDNPRNT_ID
+          , DOC_CN
+          , RQST_DE
+          , SCHUL_CODE
+          , TCHER_SANCTN
+          , TCHER_ID
+          , DEPUTY_PRNCPAL_SANCTN
+          , DEPUTY_PRNCPAL_ID
+          , CMMN_DOC_KND
+          , CLAS_STDNT_CODE
+          , CMMN_PROCESS_STTUS
+          , DOC_REJECT
+          , ATCH_FILE_CODE
+          , ATCH_FILE_SN
+          , EXPRN_LRN_ENDDE
+          , CLAS_CODE
+        )
+        VALUES 
+        (
+            #{docCode}
+          , #{stdntId}
+          , #{exprnLrnBgnde}
+          , #{lrnStle}
+          , #{purps}
+          , #{dstn}
+          , #{stdnprntId}
+          , #{docCn}
+          , #{rqstDe}
+          , #{schulCode}
+          , ''
+          , ''
+          , ''
+          , ''
+          , #{cmmnDocKnd}
+          , #{clasStdntCode}
+          , 'A11001'
+          , ''
+          , #{atchFileCode}
+          , #{atchFileSn}
+          , #{exprnLrnEndde}
+          , #{clasCode}
+        )
+	</insert>
+	
+	
+	
+	<!-- 학부모-체험학습 문서 목록 데이터 -->	
+	<select id="loadSanctnDocList" resultType="sanctnDocVO">
+		/* kr.or.ddit.approval.mapper.loadSanctnDocList */
+		WITH T AS(              
+		    SELECT ROW_NUMBER() OVER(ORDER BY DOC_CODE DESC) AS RNUM
+		         , DOC_CODE
+		         , STDNT_ID
+		         , EXPRN_LRN_BGNDE
+		         , LRN_STLE
+		         , PURPS
+		         , DSTN
+		         , STDNPRNT_ID
+		         , DOC_CN
+		         , RQST_DE
+		         , SCHUL_CODE
+		         , TCHER_SANCTN
+		         , TCHER_ID
+		         , DEPUTY_PRNCPAL_SANCTN
+		         , DEPUTY_PRNCPAL_ID
+		         , FN_CMMN_CODE_TO_NM(CMMN_DOC_KND) CMMN_DOC_KND
+		         , CLAS_STDNT_CODE
+		         , FN_CMMN_CODE_TO_NM(CMMN_PROCESS_STTUS) CMMN_PROCESS_STTUS
+		         , DOC_REJECT
+		         , ATCH_FILE_CODE
+		         , ATCH_FILE_SN
+		         , EXPRN_LRN_ENDDE
+		         , CLAS_CODE
+		    FROM SANCTN_DOC
+		    WHERE 1 = 1
+		    AND (
+		    <choose>
+		    	<when test="cmmnDocKnd == 'A25001'">
+	            	CMMN_DOC_KND = 'A25001'
+	            </when>
+		    	<when test="cmmnDocKnd == 'A25002'">
+	            	CMMN_DOC_KND = 'A25002'
+	            </when>
+	            <otherwise>
+	                   CMMN_DOC_KND = 'A25001' 
+	                OR CMMN_DOC_KND = 'A25002'
+	            </otherwise>
+		    </choose>
+		    )
+		    AND(
+		    <choose>
+		    	<!-- 학부모 -->
+		     	<when test="clasStdntCode != null">CLAS_STDNT_CODE = #{clasStdntCode}</when>
+		    	<!-- 담임 -->
+		     	<when test="clasCode != null">CLAS_CODE = #{clasCode}</when>
+		    	<!-- 교감 -->
+		     	<when test="schulCode != null">SCHUL_CODE = #{schulCode}</when>
+		    </choose>
+		    )
+		    <if test="exprnLrnBgndeRb != 'bgndeBeforeAll'">
+			AND (
+				<choose>
+					<when test="exprnLrnBgndeRb == 'bgndeBefore7'">TO_CHAR(EXPRN_LRN_BGNDE, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when>
+					<when test="exprnLrnBgndeRb == 'bgndeBefore30'">TO_CHAR(EXPRN_LRN_BGNDE, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when>
+					<otherwise>TO_CHAR(EXPRN_LRN_BGNDE, 'YYYY-MM-DD') BETWEEN #{bgndeStartDate} AND #{bgndeEndDate}</otherwise>
+				</choose>
+			)
+			</if>
+		    <if test="exprnLrnEnddeRb != 'enddeBeforeAll'">
+			AND (
+				<choose>
+					<when test="exprnLrnEnddeRb == 'enddeBefore7'">TO_CHAR(EXPRN_LRN_ENDDE, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when>
+					<when test="exprnLrnEnddeRb == 'enddeBefore30'">TO_CHAR(EXPRN_LRN_ENDDE, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when>
+					<otherwise>TO_CHAR(EXPRN_LRN_ENDDE, 'YYYY-MM-DD') BETWEEN #{enddeStartDate} AND #{enddeEndDate}</otherwise>
+				</choose>
+			)
+			</if>
+		    <if test="rqstDeRb != 'rqstDeBeforeAll'">
+			AND (
+				<choose>
+					<when test="rqstDeRb == 'rqstDeBefore7'">TO_CHAR(RQST_DE, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when>
+					<when test="rqstDeRb == 'rqstDeBefore30'">TO_CHAR(RQST_DE, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when>
+					<otherwise>TO_CHAR(RQST_DE, 'YYYY-MM-DD') BETWEEN #{rqstDeStartDate} AND #{rqstDeEndDate}</otherwise>
+				</choose>
+			)
+			</if>
+			AND (
+			    <foreach collection="cmmnProcessSttusCB" item="sttus" index="index" separator=" OR ">
+			        <choose>
+			            <when test="sttus == 'sttusSuccess'">
+			                (CMMN_PROCESS_STTUS = 'A11002')
+			            </when>
+			            <when test="sttus == 'sttusWait'">
+			                (CMMN_PROCESS_STTUS = 'A11001')
+			            </when>
+			            <when test="sttus == 'sttusCompensate'">
+			            	(CMMN_PROCESS_STTUS = 'A11003')
+			            </when>
+			            <when test="sttus == 'sttusDeny'">
+			            	(CMMN_PROCESS_STTUS = 'A11004')
+			            </when>
+			            <when test="sttus == 'sttusIng'">
+			            	(CMMN_PROCESS_STTUS = 'A11005')
+			            </when>
+			            <otherwise>
+			                (  CMMN_PROCESS_STTUS = 'A11001' 
+			                OR CMMN_PROCESS_STTUS = 'A11002' 
+			                OR CMMN_PROCESS_STTUS = 'A11003' 
+			                OR CMMN_PROCESS_STTUS = 'A11004' 
+			                OR CMMN_PROCESS_STTUS = 'A11005'
+			                )
+			            </otherwise>
+			        </choose> 
+			    </foreach>
+			)
+		    <if test="keyword != null || keyword == ''">
+		    AND (
+		    	<choose>
+		    		<when test="searchCondition == 'purps'"> PURPS LIKE '%' || #{keyword} || '%' </when>
+		    		<when test="searchCondition == 'dstn'">  DSTN LIKE '%' || #{keyword} || '%' </when>
+		    		<otherwise>
+		    		(
+		    				PURPS LIKE '%' || #{keyword} || '%'
+		    			OR	DSTN LIKE '%' || #{keyword} || '%'
+		    		)
+		    		</otherwise>
+		    	</choose>
+		    )
+		    </if>
+		    ORDER BY RNUM ASC
+		)
+		SELECT T.* FROM T
+		WHERE  T.RNUM BETWEEN (#{currentPage}*10) - (10 - 1) AND (#{currentPage}*10)
+	</select>
+	
+	<!-- 학부모-체험학습 문서 갯수 -->
+	<select id="getApprovalTotal" parameterType="sanctnDocSearchVO" resultType="int">
+		/* kr.or.ddit.approval.mapper.getApprovalTotal */
+		SELECT 
+		    COUNT(DOC_CODE)
+		  FROM
+		    SANCTN_DOC
+		 WHERE 1 = 1
+		   AND (
+		    <choose>
+		    	<when test="cmmnDocKnd == 'A25001'">
+	            	CMMN_DOC_KND = 'A25001'
+	            </when>
+		    	<when test="cmmnDocKnd == 'A25002'">
+	            	CMMN_DOC_KND = 'A25002'
+	            </when>
+	            <otherwise>
+	                   CMMN_DOC_KND = 'A25001' 
+	                OR CMMN_DOC_KND = 'A25002'
+	            </otherwise>
+		    </choose>
+		    )
+		   AND(
+		    <choose>
+		    	<!-- 학부모 -->
+		     	<when test="clasStdntCode != null">CLAS_STDNT_CODE = #{clasStdntCode}</when>
+		    	<!-- 담임 -->
+		     	<when test="clasCode != null">CLAS_CODE = #{clasCode}</when>
+		    	<!-- 교감 -->
+		     	<when test="schulCode != null">SCHUL_CODE = #{schulCode}</when>
+		    </choose>
+		    )
+			<if test="exprnLrnBgndeRb != 'bgndeBeforeAll'">
+			AND (
+				<choose>
+					<when test="exprnLrnBgndeRb == 'bgndeBefore7'">TO_CHAR(EXPRN_LRN_BGNDE, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when>
+					<when test="exprnLrnBgndeRb == 'bgndeBefore30'">TO_CHAR(EXPRN_LRN_BGNDE, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when>
+					<otherwise>TO_CHAR(EXPRN_LRN_BGNDE, 'YYYY-MM-DD') BETWEEN #{bgndeStartDate} AND #{bgndeEndDate}</otherwise>
+				</choose>
+			)
+			</if>
+		    <if test="exprnLrnEnddeRb != 'enddeBeforeAll'">
+			AND (
+				<choose>
+					<when test="exprnLrnEnddeRb == 'enddeBefore7'">TO_CHAR(EXPRN_LRN_ENDDE, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when>
+					<when test="exprnLrnEnddeRb == 'enddeBefore30'">TO_CHAR(EXPRN_LRN_ENDDE, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when>
+					<otherwise>TO_CHAR(EXPRN_LRN_ENDDE, 'YYYY-MM-DD') BETWEEN #{enddeStartDate} AND #{enddeEndDate}</otherwise>
+				</choose>
+			)
+			</if>
+		    <if test="rqstDeRb != 'rqstDeBeforeAll'">
+			AND (
+				<choose>
+					<when test="rqstDeRb == 'rqstDeBefore7'">TO_CHAR(RQST_DE, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when>
+					<when test="rqstDeRb == 'rqstDeBefore30'">TO_CHAR(RQST_DE, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when>
+					<otherwise>TO_CHAR(RQST_DE, 'YYYY-MM-DD') BETWEEN #{rqstDeStartDate} AND #{rqstDeEndDate}</otherwise>
+				</choose>
+			)
+			</if>
+			AND (
+			    <foreach collection="cmmnProcessSttusCB" item="sttus" index="index" separator=" OR ">
+			        <choose>
+			            <when test="sttus == 'sttusSuccess'">
+			                (CMMN_PROCESS_STTUS = 'A11002')
+			            </when>
+			            <when test="sttus == 'sttusWait'">
+			                (CMMN_PROCESS_STTUS = 'A11001')
+			            </when>
+			            <when test="sttus == 'sttusCompensate'">
+			            	(CMMN_PROCESS_STTUS = 'A11003')
+			            </when>
+			            <when test="sttus == 'sttusDeny'">
+			            	(CMMN_PROCESS_STTUS = 'A11004')
+			            </when>
+			            <when test="sttus == 'sttusIng'">
+			            	(CMMN_PROCESS_STTUS = 'A11005')
+			            </when>
+			            <otherwise>
+			                (  CMMN_PROCESS_STTUS = 'A11001' 
+			                OR CMMN_PROCESS_STTUS = 'A11002' 
+			                OR CMMN_PROCESS_STTUS = 'A11003' 
+			                OR CMMN_PROCESS_STTUS = 'A11004' 
+			                OR CMMN_PROCESS_STTUS = 'A11005'
+			                )
+			            </otherwise>
+			        </choose> 
+			    </foreach>
+			)
+		    <if test="keyword != null || keyword == ''">
+		    AND (
+		    	<choose>
+		    		<when test="searchCondition == 'purps'"> PURPS LIKE '%' || #{keyword} || '%' </when>
+		    		<when test="searchCondition == 'dstn'">  DSTN LIKE '%' || #{keyword} || '%' </when>
+		    		<otherwise>
+		    		(
+		    				PURPS LIKE '%' || #{keyword} || '%'
+		    			OR	DSTN LIKE '%' || #{keyword} || '%'
+		    		)
+		    		</otherwise>
+		    	</choose>
+		    )
+		    </if>		  
+	</select>
+	
+	<!-- 학부모-체험학습 문서 상세 -->
+	<select id="approvalDetail" parameterType="String" resultMap="sanctnDocMap">
+		/* kr.or.ddit.approval.mapper.approvalDetail */
+		SELECT S.SCHUL_NM
+		, H.*
+		FROM SCHUL S
+		INNER JOIN
+		    (SELECT G.*
+		    FROM ATCH_FILE AF
+		    RIGHT OUTER JOIN
+		        (SELECT F.*
+		        FROM SCHUL_PSITN_MBER SPM2
+		        RIGHT OUTER JOIN
+		            (SELECT E.*
+		            FROM SCHUL_PSITN_MBER SPM1
+		            RIGHT OUTER JOIN
+		                (SELECT CL.CLAS_NM
+		                        , CL.CMMN_GRADE
+		                        , D.*
+		                    FROM CLAS CL
+		                    INNER JOIN
+		                    (SELECT CS.CLAS_IN_NO
+		                            , C.*
+		                         FROM CLAS_STDNT CS
+		                         INNER JOIN
+		                        (SELECT M2.MBER_NM STDNPRNT_NM
+		                            , M2.MOBLPHON_NO 
+		                            , B.*
+		                        FROM MEMBER M2
+		                        INNER JOIN
+		                            (SELECT M1.MBER_NM STDNT_NM
+		                                 , A.*
+		                            FROM MEMBER M1
+		                            INNER JOIN
+		                                (SELECT SD.DOC_CODE
+		                                         , SD.STDNT_ID
+		                                         , SD.EXPRN_LRN_BGNDE
+		                                         , SD.LRN_STLE
+		                                         , SD.PURPS
+		                                         , SD.DSTN
+		                                         , SD.STDNPRNT_ID
+		                                         , SD.DOC_CN
+		                                         , SD.RQST_DE
+		                                         , SD.SCHUL_CODE
+		                                         , SD.TCHER_SANCTN
+		                                         , SD.TCHER_ID
+		                                         , SD.DEPUTY_PRNCPAL_SANCTN
+		                                         , SD.DEPUTY_PRNCPAL_ID
+		                                         , SD.CMMN_DOC_KND
+		                                         , SD.CLAS_STDNT_CODE
+		                                         , SD.CMMN_PROCESS_STTUS
+		                                         , SD.DOC_REJECT
+		                                         , SD.ATCH_FILE_CODE
+		                                         , SD.ATCH_FILE_SN
+		                                         , SD.EXPRN_LRN_ENDDE
+		                                         , SD.CLAS_CODE
+		                                         , FN_CMMN_CODE_TO_NM(FR.CMMN_DETAIL_CODE) CMMN_DETAIL_CODE
+		                                    FROM SANCTN_DOC SD 
+		                                    INNER JOIN FAMILY_RELATE FR 
+		                                    ON SD.STDNT_ID = FR.STDNT_ID
+		                                    AND SD.STDNPRNT_ID = FR.STDNPRNT_ID
+		                                    AND SD.SCHUL_CODE = FR.SCHUL_CODE
+		                                    WHERE SD.DOC_CODE = #{docCode}) A
+		                            ON M1.MBER_ID = A.STDNT_ID) B
+		                        ON M2.MBER_ID = B.STDNPRNT_ID) C
+		                    ON CS.CLAS_STDNT_CODE = C.CLAS_STDNT_CODE) D
+		                ON CL.CLAS_CODE = D.CLAS_CODE) E
+		            ON E.TCHER_ID = SPM1.MBER_ID) F
+		        ON F.DEPUTY_PRNCPAL_ID = SPM2.MBER_ID) G
+		    ON AF.ATCH_FILE_CODE = G.ATCH_FILE_CODE
+		    AND AF.ATCH_FILE_SN = G.ATCH_FILE_SN) H
+		ON S.SCHUL_CODE = H.SCHUL_CODE
+	</select>
+	
+	<!-- 학부모-체험학습 문서 수정 -->
+	<update id="approvalUpdate" parameterType="sanctnDocVO">
+		/* kr.or.ddit.approval.mapper.approvalUpdate */
+		UPDATE SANCTN_DOC
+		   SET EXPRN_LRN_BGNDE = #{exprnLrnBgnde}
+		     , EXPRN_LRN_ENDDE = #{exprnLrnEndde}
+		     , LRN_STLE = #{lrnStle}
+		     , PURPS = #{purps}
+		     , DSTN = #{dstn}
+		     , DOC_CN = #{docCn}
+		     , RQST_DE = #{rqstDe}
+		 WHERE DOC_CODE = #{docCode}
+	</update>
+	
+	<!-- 학부모-체험학습 문서 삭제 -->
+	<delete id="approvalDelete" parameterType="sanctnDocVO">
+		/* kr.or.ddit.approval.mapper.approvalDelete */
+		DELETE FROM SANCTN_DOC WHERE DOC_CODE = #{docCode}		
+	</delete>
+	
+	<!-- 선생님-체험학습 문서 목록 데이터 -->	
+<!-- 	<select id="loadSanctnDocListT" resultType="sanctnDocVO"> -->
+<!-- 		/* kr.or.ddit.approval.mapper.loadSanctnDocList */ -->
+<!-- 		WITH T AS(               -->
+<!-- 		    SELECT ROW_NUMBER() OVER(ORDER BY DOC_CODE DESC) AS RNUM -->
+<!-- 		         , DOC_CODE -->
+<!-- 		         , STDNT_ID -->
+<!-- 		         , EXPRN_LRN_BGNDE -->
+<!-- 		         , LRN_STLE -->
+<!-- 		         , PURPS -->
+<!-- 		         , DSTN -->
+<!-- 		         , STDNPRNT_ID -->
+<!-- 		         , DOC_CN -->
+<!-- 		         , RQST_DE -->
+<!-- 		         , SCHUL_CODE -->
+<!-- 		         , TCHER_SANCTN -->
+<!-- 		         , TCHER_ID -->
+<!-- 		         , DEPUTY_PRNCPAL_SANCTN -->
+<!-- 		         , DEPUTY_PRNCPAL_ID -->
+<!-- 		         , FN_CMMN_CODE_TO_NM(CMMN_DOC_KND) CMMN_DOC_KND -->
+<!-- 		         , CLAS_STDNT_CODE -->
+<!-- 		         , FN_CMMN_CODE_TO_NM(CMMN_PROCESS_STTUS) CMMN_PROCESS_STTUS -->
+<!-- 		         , DOC_REJECT -->
+<!-- 		         , ATCH_FILE_CODE -->
+<!-- 		         , ATCH_FILE_SN -->
+<!-- 		         , EXPRN_LRN_ENDDE -->
+<!-- 		         , CLAS_CODE -->
+<!-- 		    FROM SANCTN_DOC -->
+<!-- 		    WHERE 1 = 1 -->
+<!-- 		    AND CLAS_CODE = #{clasCode} -->
+<!-- 		    <if test="exprnLrnBgndeRb != 'bgndeBeforeAll'"> -->
+<!-- 			AND ( -->
+<!-- 				<choose> -->
+<!-- 					<when test="exprnLrnBgndeRb == 'bgndeBefore7'">TO_CHAR(EXPRN_LRN_BGNDE, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when> -->
+<!-- 					<when test="exprnLrnBgndeRb == 'bgndeBefore30'">TO_CHAR(EXPRN_LRN_BGNDE, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when> -->
+<!-- 					<otherwise>TO_CHAR(EXPRN_LRN_BGNDE, 'YYYY-MM-DD') BETWEEN #{bgndeStartDate} AND #{bgndeEndDate}</otherwise> -->
+<!-- 				</choose> -->
+<!-- 			) -->
+<!-- 			</if> -->
+<!-- 		    <if test="exprnLrnEnddeRb != 'enddeBeforeAll'"> -->
+<!-- 			AND ( -->
+<!-- 				<choose> -->
+<!-- 					<when test="exprnLrnEnddeRb == 'enddeBefore7'">TO_CHAR(EXPRN_LRN_ENDDE, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when> -->
+<!-- 					<when test="exprnLrnEnddeRb == 'enddeBefore30'">TO_CHAR(EXPRN_LRN_ENDDE, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when> -->
+<!-- 					<otherwise>TO_CHAR(EXPRN_LRN_ENDDE, 'YYYY-MM-DD') BETWEEN #{enddeStartDate} AND #{enddeEndDate}</otherwise> -->
+<!-- 				</choose> -->
+<!-- 			) -->
+<!-- 			</if> -->
+<!-- 		    <if test="rqstDeRb != 'rqstDeBeforeAll'"> -->
+<!-- 			AND ( -->
+<!-- 				<choose> -->
+<!-- 					<when test="rqstDeRb == 'rqstDeBefore7'">TO_CHAR(RQST_DE, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when> -->
+<!-- 					<when test="rqstDeRb == 'rqstDeBefore30'">TO_CHAR(RQST_DE, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when> -->
+<!-- 					<otherwise>TO_CHAR(RQST_DE, 'YYYY-MM-DD') BETWEEN #{rqstDeStartDate} AND #{rqstDeEndDate}</otherwise> -->
+<!-- 				</choose> -->
+<!-- 			) -->
+<!-- 			</if> -->
+<!-- 			AND ( -->
+<!-- 			    <foreach collection="cmmnProcessSttusCB" item="sttus" index="index" separator=" OR "> -->
+<!-- 			        <choose> -->
+<!-- 			            <when test="sttus == 'sttusSuccess'"> -->
+<!-- 			                (CMMN_PROCESS_STTUS = 'A11002') -->
+<!-- 			            </when> -->
+<!-- 			            <when test="sttus == 'sttusWait'"> -->
+<!-- 			                (CMMN_PROCESS_STTUS = 'A11001') -->
+<!-- 			            </when> -->
+<!-- 			            <when test="sttus == 'sttusCompensate'"> -->
+<!-- 			            	(CMMN_PROCESS_STTUS = 'A11003') -->
+<!-- 			            </when> -->
+<!-- 			            <when test="sttus == 'sttusDeny'"> -->
+<!-- 			            	(CMMN_PROCESS_STTUS = 'A11004') -->
+<!-- 			            </when> -->
+<!-- 			            <when test="sttus == 'sttusIng'"> -->
+<!-- 			            	(CMMN_PROCESS_STTUS = 'A11005') -->
+<!-- 			            </when> -->
+<!-- 			            <otherwise> -->
+<!-- 			                (  CMMN_PROCESS_STTUS = 'A11001'  -->
+<!-- 			                OR CMMN_PROCESS_STTUS = 'A11002'  -->
+<!-- 			                OR CMMN_PROCESS_STTUS = 'A11003'  -->
+<!-- 			                OR CMMN_PROCESS_STTUS = 'A11004'  -->
+<!-- 			                OR CMMN_PROCESS_STTUS = 'A11005' -->
+<!-- 			                ) -->
+<!-- 			            </otherwise> -->
+<!-- 			        </choose>  -->
+<!-- 			    </foreach> -->
+<!-- 			) -->
+<!-- 		    <if test="keyword != null || keyword == ''"> -->
+<!-- 		    AND ( -->
+<!-- 		    	<choose> -->
+<!-- 		    		<when test="searchCondition == 'purps'"> PURPS LIKE '%' || #{keyword} || '%' </when> -->
+<!-- 		    		<when test="searchCondition == 'dstn'">  DSTN LIKE '%' || #{keyword} || '%' </when> -->
+<!-- 		    		<otherwise> -->
+<!-- 		    		( -->
+<!-- 		    				PURPS LIKE '%' || #{keyword} || '%' -->
+<!-- 		    			OR	DSTN LIKE '%' || #{keyword} || '%' -->
+<!-- 		    		) -->
+<!-- 		    		</otherwise> -->
+<!-- 		    	</choose> -->
+<!-- 		    ) -->
+<!-- 		    </if> -->
+<!-- 		    ORDER BY RNUM ASC -->
+<!-- 		) -->
+<!-- 		SELECT T.* FROM T -->
+<!-- 		WHERE  T.RNUM BETWEEN (#{currentPage}*10) - (10 - 1) AND (#{currentPage}*10) -->
+<!-- 	</select> -->
+	
+	<!-- 선생님-체험학습 문서 갯수 -->
+<!-- 	<select id="getApprovalTotalT" parameterType="sanctnDocSearchVO" resultType="int"> -->
+<!-- 		/* kr.or.ddit.approval.mapper.getApprovalTotal */ -->
+<!-- 		SELECT  -->
+<!-- 		    COUNT(DOC_CODE) -->
+<!-- 		  FROM -->
+<!-- 		    SANCTN_DOC -->
+<!-- 		 WHERE 1 = 1 -->
+<!-- 		   AND CLAS_CODE = #{clasCode} -->
+<!-- 			<if test="exprnLrnBgndeRb != 'bgndeBeforeAll'"> -->
+<!-- 			AND ( -->
+<!-- 				<choose> -->
+<!-- 					<when test="exprnLrnBgndeRb == 'bgndeBefore7'">TO_CHAR(EXPRN_LRN_BGNDE, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when> -->
+<!-- 					<when test="exprnLrnBgndeRb == 'bgndeBefore30'">TO_CHAR(EXPRN_LRN_BGNDE, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when> -->
+<!-- 					<otherwise>TO_CHAR(EXPRN_LRN_BGNDE, 'YYYY-MM-DD') BETWEEN #{bgndeStartDate} AND #{bgndeEndDate}</otherwise> -->
+<!-- 				</choose> -->
+<!-- 			) -->
+<!-- 			</if> -->
+<!-- 		    <if test="exprnLrnEnddeRb != 'enddeBeforeAll'"> -->
+<!-- 			AND ( -->
+<!-- 				<choose> -->
+<!-- 					<when test="exprnLrnEnddeRb == 'enddeBefore7'">TO_CHAR(EXPRN_LRN_ENDDE, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when> -->
+<!-- 					<when test="exprnLrnEnddeRb == 'enddeBefore30'">TO_CHAR(EXPRN_LRN_ENDDE, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when> -->
+<!-- 					<otherwise>TO_CHAR(EXPRN_LRN_ENDDE, 'YYYY-MM-DD') BETWEEN #{enddeStartDate} AND #{enddeEndDate}</otherwise> -->
+<!-- 				</choose> -->
+<!-- 			) -->
+<!-- 			</if> -->
+<!-- 		    <if test="rqstDeRb != 'rqstDeBeforeAll'"> -->
+<!-- 			AND ( -->
+<!-- 				<choose> -->
+<!-- 					<when test="rqstDeRb == 'rqstDeBefore7'">TO_CHAR(RQST_DE, 'YYYY-MM-DD') BETWEEN SYSDATE-7 AND SYSDATE</when> -->
+<!-- 					<when test="rqstDeRb == 'rqstDeBefore30'">TO_CHAR(RQST_DE, 'YYYY-MM-DD') BETWEEN SYSDATE-30 AND SYSDATE</when> -->
+<!-- 					<otherwise>TO_CHAR(RQST_DE, 'YYYY-MM-DD') BETWEEN #{rqstDeStartDate} AND #{rqstDeEndDate}</otherwise> -->
+<!-- 				</choose> -->
+<!-- 			) -->
+<!-- 			</if> -->
+<!-- 			AND ( -->
+<!-- 			    <foreach collection="cmmnProcessSttusCB" item="sttus" index="index" separator=" OR "> -->
+<!-- 			        <choose> -->
+<!-- 			            <when test="sttus == 'sttusSuccess'"> -->
+<!-- 			                (CMMN_PROCESS_STTUS = 'A11002') -->
+<!-- 			            </when> -->
+<!-- 			            <when test="sttus == 'sttusWait'"> -->
+<!-- 			                (CMMN_PROCESS_STTUS = 'A11001') -->
+<!-- 			            </when> -->
+<!-- 			            <when test="sttus == 'sttusCompensate'"> -->
+<!-- 			            	(CMMN_PROCESS_STTUS = 'A11003') -->
+<!-- 			            </when> -->
+<!-- 			            <when test="sttus == 'sttusDeny'"> -->
+<!-- 			            	(CMMN_PROCESS_STTUS = 'A11004') -->
+<!-- 			            </when> -->
+<!-- 			            <when test="sttus == 'sttusIng'"> -->
+<!-- 			            	(CMMN_PROCESS_STTUS = 'A11005') -->
+<!-- 			            </when> -->
+<!-- 			            <otherwise> -->
+<!-- 			                (  CMMN_PROCESS_STTUS = 'A11001'  -->
+<!-- 			                OR CMMN_PROCESS_STTUS = 'A11002'  -->
+<!-- 			                OR CMMN_PROCESS_STTUS = 'A11003'  -->
+<!-- 			                OR CMMN_PROCESS_STTUS = 'A11004'  -->
+<!-- 			                OR CMMN_PROCESS_STTUS = 'A11005' -->
+<!-- 			                ) -->
+<!-- 			            </otherwise> -->
+<!-- 			        </choose>  -->
+<!-- 			    </foreach> -->
+<!-- 			) -->
+<!-- 		    <if test="keyword != null || keyword == ''"> -->
+<!-- 		    AND ( -->
+<!-- 		    	<choose> -->
+<!-- 		    		<when test="searchCondition == 'purps'"> PURPS LIKE '%' || #{keyword} || '%' </when> -->
+<!-- 		    		<when test="searchCondition == 'dstn'">  DSTN LIKE '%' || #{keyword} || '%' </when> -->
+<!-- 		    		<otherwise> -->
+<!-- 		    		( -->
+<!-- 		    				PURPS LIKE '%' || #{keyword} || '%' -->
+<!-- 		    			OR	DSTN LIKE '%' || #{keyword} || '%' -->
+<!-- 		    		) -->
+<!-- 		    		</otherwise> -->
+<!-- 		    	</choose> -->
+<!-- 		    ) -->
+<!-- 		    </if>		   -->
+<!-- 	</select> -->
+	
+	<!-- 선생님-체험학습 신청 거절 -->
+	<update id="approvalRefuse" parameterType="sanctnDocVO">
+		/* kr.or.ddit.approval.mapper.approvalRefuse */
+		UPDATE SANCTN_DOC
+		   SET CMMN_PROCESS_STTUS = 'A11004'
+		 WHERE DOC_CODE = #{docCode}
+	</update>
+	
+	<!-- 담임 선생님-체험학습신청 결재 -->
+	<update id="approvalSign" parameterType="sanctnDocVO">
+		/* kr.or.ddit.approval.mapper.approvalSign */
+		UPDATE SANCTN_DOC
+		<choose>
+			<when test="tcherSanctn != null">
+				SET TCHER_SANCTN = #{tcherSanctn}
+				  , TCHER_ID = #{tcherId}
+				  , CMMN_PROCESS_STTUS = 'A11005'
+			</when>
+			<when test="deputyPrncpalSanctn != null">
+				SET DEPUTY_PRNCPAL_SANCTN = #{deputyPrncpalSanctn}
+				  , DEPUTY_PRNCPAL_ID = #{deputyPrncpalId}
+				  , CMMN_PROCESS_STTUS = 'A11002'
+			</when>
+		</choose>
+		WHERE DOC_CODE = #{docCode}
+	</update>
+	
+</mapper>

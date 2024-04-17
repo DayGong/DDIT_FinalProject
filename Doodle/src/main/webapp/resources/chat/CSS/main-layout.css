@@ -1,0 +1,152 @@
+/* 카카오톡 메인페이지(친구리스트, 채팅리스트, 설정화면) 레이아웃만 작성 */
+/* 메인페이지 큰 레이아웃은 grid로 구성함 */
+
+body{
+    margin: 0; /* 페이지의 여유공간 없애버림 */
+}
+
+/* grid container 적용 */
+#content{
+    top: 0;
+    left: 0;
+    display: grid;
+/*     grid-template-columns: 5rem 1.25rem auto 1.25rem; 각 grid의 width */
+    grid-template-columns: 0rem 1.25rem auto 1.25rem; /* 각 grid의 width */
+    grid-template-rows: 1.875rem 3.125rem auto 6.25rem; /* 각 grid의 height */
+    gap: 0;
+    align-items: stretch;
+    /* justify-items: stretch; */
+    grid-template-areas:
+        "nav  .  setting  setting "
+        "nav  .   header     .    "
+        "nav  .    main      .    "
+        "ad  ad     ad      ad    ";
+}
+
+/* 설정바 위치 고정하기 위한 스타일 지정 */
+.setting_bar{
+    grid-area: setting;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    /* align-self: stretch = 그리드 안에 공간이 생겨서 백그라운드 컬러 적용 불가 */
+}
+.setting_bar > *{
+    line-height: 1.875rem; /* grid row의 첫번째 크기와 동일 */
+    vertical-align: middle;
+    /* 가운데 정렬 목적 */
+}
+
+/* 헤더(header) 영역 레이아웃 지정 */
+header{
+    grid-area: header;
+    position: sticky;
+    top: 1.875rem; /* grid row의 첫번째 + gap 크기와 동일*/
+    background-color: white;
+}
+header > *{
+    /* 가운데 정렬 */
+    line-height: 3.125rem; /* grid row의 두번째 크기와 동일 */
+    vertical-align: middle;
+}
+/* 헤더 안의 컨텐츠 스타일 지정 */
+/* 친구리스트/채팅리스트의 html 파일에서 동일한 스타일을 갖기 때문에 공통된 스타일로 구분했음 */
+header span{
+    /* 검색, 친구 추가 기능 스타일 지정 */
+    float: right;
+    margin-left: 0.9375rem; /* 16 브라우저 기준 : 15px*/
+    font-size: 1.375rem;
+    color: gray;
+}
+/* 제목 사이즈 재정의 */
+h1{
+    font-size: 1.375rem; /* 16px 브라우저 기준 22px*/
+    font-weight: bold;
+    display: inline;
+}
+
+/* 네비게이션(nav) 영역 레이아웃 지정 */
+nav{
+    grid-area: nav;
+    background-color: rgb(208, 218, 224);
+    align-self: start;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    height: 100vh; /* 뷰포트(전체 화면)의 전체 100% 차지 */
+}
+/* 네비게이션 안의 컨텐츠 스타일 지정 */
+/* 친구리스트/채팅리스트의 html 파일에서 동일한 스타일을 갖기 때문에 공통된 스타일로 구분했음 */
+.main-menu i, .sub-menu i{
+    display: block;
+    font-size: 1.75rem;
+    color: gray;
+    text-align: center;
+    margin-bottom: 1.25rem; /* 16 브라우저 기준 20px */
+}
+
+.main-menu i{
+	font-size: 2.75rem;
+	color: #333;
+}
+.main-menu{
+    margin-top: 2.125rem;  /* 16 브라우저 기준 50px */
+}
+.sub-menu{
+    margin-bottom: 6.25rem; /* 16 브라우저 기준 100px */
+}
+/* 알림 풍선 만들어주기 */
+.main-menu > *:nth-child(2), .main-menu > *:nth-child(3){
+    position: relative;
+}
+.alert-balloon{
+    padding: 0.125rem 0.3125rem 0.125rem 0.3125rem; /* 위.아래 2px, 좌.우 5px */
+    border: 1px solid tomato;
+    background-color: tomato;
+    border-radius: 0.625rem; /* 10px */
+    font-size: 0.3125rem; /* 5px */
+    color: white;
+    position: absolute;
+    top: -0.3125rem; /* -5px */
+    left: 3.125rem; /* 50px */
+}
+
+
+/* 메인(main) 영역 레이아웃 지정 */
+main{
+    /* 친구 리스트를 flex box로 레이아웃 구성 */
+    grid-area: main; 
+    margin-left: 0.125rem; /* 16 브라우저 기준 2px */
+}
+li{
+    transition-property: all;
+    transition-duration: 1ms;
+    transition-timing-function: linear;
+    /* transition-delay: 0; */
+}
+li:hover{
+    background-color: rgb(244, 248, 253);
+}
+li:active{
+    /* transition-delay: 0; */
+    background-color: rgb(207, 226, 250);
+}
+
+/* 광고(aside) 영역 레이아웃 지정 */
+aside{
+	border-top-left-radius:10px;
+	border-top-right-radius:10px;
+    grid-area: ad;
+    position: sticky;
+    bottom: 0;
+    height: 6.25rem; /* grid ad의 row 크기와 동일 */
+    text-align: center;
+    background-color: #FFFFFF;
+}
+/* 광고 안의 컨텐츠 스타일 지정 */
+/* 친구리스트/채팅리스트의 html 파일에서 동일한 스타일을 갖기 때문에 공통된 스타일로 구분했음 */
+aside > img{
+    height: 6.25rem;
+}

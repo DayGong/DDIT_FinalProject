@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.common.mapper.HeaderMapper">
+	<resultMap type="noticeVO" id="noticeMap">
+		<result property="noticeRcvId" column="NOTICE_RCV_ID"/>
+		<result property="noticeSndId" column="NOTICE_SND_ID"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="noticeTrnsmitResveDt" column="NOTICE_TRNSMIT_RESVE_DT"/>
+		<result property="noticeReadngDt" column="NOTICE_READNG_DT"/>
+		<result property="noticeTrnsmitDt" column="NOTICE_TRNSMIT_DT"/>
+		<result property="cmmnNoticeReadngAt" column="CMMN_NOTICE_READNG_AT"/>
+		<result property="noticeCn" column="NOTICE_CN"/>
+		<result property="noticeSj" column="NOTICE_SJ"/>
+		<result property="noticeCode" column="NOTICE_CODE"/>
+		<result property="cmmnBoardSe" column="CMMN_BOARD_SE"/>
+		<association property="taskVO" resultMap="taskMap"></association>
+	</resultMap>
+	
+	<resultMap type="taskVO" id="taskMap">
+		<result property="taskCode" column="TASK_CODE"/>
+		<result property="taskSj" column="TASK_SJ"/>
+		<result property="taskCn" column="TASK_CN"/>
+		<result property="taskBeginDt" column="TASK_BEGIN_DT"/>
+		<result property="taskEndDt" column="TASK_END_DT"/>
+		<result property="taskCnt" column="TASK_CNT"/>
+		<result property="atchFileCode" column="ATCH_FILE_CODE"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+	</resultMap>
+	
+	<resultMap type="familyRelateVO" id="familyRelateMap">
+		<result property="stdntId" column="STDNT_ID"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="stdnprntId" column="STDNPRNT_ID"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+		<result property="familyRelateNm" column="FAMILY_RELATE_NM"/>
+		<collection property="schulVOList" resultMap="schulMap"></collection>
+	</resultMap>
+	
+	<resultMap type="schulPsitnMberVO" id="schulPsitnMberMap">
+		<result property="cmmnEmpClsf" column="CMMN_EMP_CLSF"/>
+		<result property="cmmnGrade" column="CMMN_GRADE"/>
+		<result property="cmmnSchulPsitnSttus" column="CMMN_SCHUL_PSITN_STTUS"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="grade" column="GRADE"/>
+		<result property="schulPsitnSttusNm" column="SCHUL_PSITN_STTUS_NM"/>
+		<association property="memberVO" resultMap="memberMap"></association>
+	</resultMap>
+	
+	<resultMap type="memberVO" id="memberMap">
+		<result property="mberId" column="MBER_ID"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="ihidnum" column="IHIDNUM"/>
+		<result property="moblphonNo" column="MOBLPHON_NO"/>
+		<result property="mberEmail" column="MBER_EMAIL"/>
+		<result property="zip" column="ZIP"/>
+		<result property="mberAdres" column="MBER_ADRES"/>
+		<result property="mberImage" column="MBER_IMAGE"/>
+		<result property="mberSecsnAt" column="MBER_SECSN_AT"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+	</resultMap>
+	
+	<resultMap type="schulVO" id="schulMap">
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="schulNm" column="SCHUL_NM"/>
+		<result property="schulAdres" column="SCHUL_ADRES"/>
+		<result property="schulTlphonNo" column="SCHUL_TLPHON_NO"/>
+		<result property="schulAnnvrsry" column="SCHUL_ANNVRSRY"/>
+		<association property="clasVO" resultMap="clasMap"></association>
+		<association property="schulPsitnMberVO" resultMap="schulPsitnMberMap"></association>
+		<association property="clasStdntVO" resultMap="clasStdntMap"></association>
+	</resultMap>
+	
+	<resultMap type="clasVO" id="clasMap">
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="clasNm" column="CLAS_NM"/>
+		<result property="clasYear" column="CLAS_YEAR"/>
+		<result property="cmmnGrade" column="CMMN_GRADE"/>
+		<result property="cmmnGradeNo" column="CMMN_GRADE_NO"/>
+		<result property="cmmnClasSttus" column="CMMN_CLAS_STTUS"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="cmmnClasSttusNm" column="CMMN_CLAS_STTUS_NM"/>
+	</resultMap>
+	
+	<resultMap type="clasStdntVO" id="clasStdntMap">
+		<result property="clasStdntCode" column="CLAS_STDNT_CODE"/>
+		<result property="clasInNo" column="CLAS_IN_NO"/>
+		<result property="cmmnStdntClsf" column="CMMN_STDNT_CLSF"/>
+		<result property="cmmnClasPsitnSttus" column="CMMN_CLAS_PSITN_STTUS"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="cmmnClasPsitnSttusNm" column="CMMN_CLAS_PSITN_STTUS_NM"/>
+		<result property="cmmnStdntClsfNm" column="CMMN_STDNT_CLSF_NM"/>
+	</resultMap>
+
+	<!-- (학생) 현재 소속된 클래스 코드와 반 소속 상태  찾기 -->
+	<select id="getStudentClasStatus" parameterType="String" resultType="clasStdntVO">
+		    SELECT 	CS.CLAS_CODE, CS.CMMN_CLAS_PSITN_STTUS
+		      FROM  CLAS C
+		INNER JOIN 	CLAS_STDNT CS
+		        ON 	C.CLAS_CODE = CS.CLAS_CODE
+		INNER JOIN 	SCHUL S
+		        ON 	S.SCHUL_CODE = C.SCHUL_CODE
+		INNER JOIN 	SCHUL_PSITN_MBER SPM
+		        ON 	SPM.SCHUL_CODE = S.SCHUL_CODE
+		       AND  SPM.MBER_ID = CS.MBER_ID
+		     WHERE  1=1
+		       AND	CS.MBER_ID = #{mberId}
+		       AND  SPM.CMMN_SCHUL_PSITN_STTUS = 'A02101' <!-- '재학' -->
+	</select>
+	
+	<!-- 현재 소속된 학교 코드 찾기 -->
+	<select id="getSchulCode" parameterType="String" resultType="String">
+		SELECT 
+		    SCHUL_CODE
+		FROM 
+		    SCHUL_PSITN_MBER
+		WHERE 
+		    MBER_ID = #{mberId}
+		ORDER BY 
+		    CASE WHEN FN_CMMN_CODE_TO_NM(CMMN_SCHUL_PSITN_STTUS) = '재직' THEN 1
+		         WHEN FN_CMMN_CODE_TO_NM(CMMN_SCHUL_PSITN_STTUS) = '재학' THEN 1
+		         ELSE 3
+		    END
+	</select>
+	
+	<!-- (교사) 현재 운영 중인 클래스 코드 찾기 -->
+	<select id="getTeacherClasCode" parameterType="String" resultType="String">
+		SELECT  H.CLAS_CODE
+		FROM    HRTCHR H, CLAS C
+		WHERE   1=1
+		AND     H.MBER_ID = #{mberId}
+		AND     H.CLAS_CODE = C.CLAS_CODE
+		AND     FN_CMMN_CODE_TO_NM(C.CMMN_CLAS_STTUS) = '운영'
+	</select>
+	
+	<!-- 로그인 한 아이디의 모든 알림 정보 출력 -->
+	<select id="getAllNotice" parameterType="String" resultType="noticeVO">
+		SELECT      NOTICE_CODE, NOTICE_SJ, NOTICE_CN, CMMN_NOTICE_READNG_AT,
+		            NOTICE_TRNSMIT_DT, NOTICE_READNG_DT,
+		            NOTICE_SND_ID, NOTICE_RCV_ID, CMMN_BOARD_SE
+		FROM        NOTICE
+		WHERE       1=1
+		AND			NOTICE_RCV_ID = #{noticeRcvId}
+		ORDER BY    NOTICE_TRNSMIT_DT DESC
+	</select>
+	
+	<!-- 알림 열람 여부 변경 -->
+	<update id="updateNoticeReadngAt" parameterType="String">
+		UPDATE	NOTICE
+		SET		CMMN_NOTICE_READNG_AT = 'A13002' <!-- '열람' -->
+		WHERE	NOTICE_CODE = #{noticeCode}
+	</update>
+	
+	<!-- 자녀 리스트 -->
+	<select id="childList" parameterType="String" resultMap="familyRelateMap">
+		WITH T AS
+		(
+		    SELECT		SCHUL_CODE, STDNT_ID, STDNPRNT_ID,
+		                FN_CMMN_CODE_TO_NM(CMMN_DETAIL_CODE) AS FAMILY_RELATE_NM
+		      FROM      FAMILY_RELATE
+		     WHERE      STDNPRNT_ID = #{stdnprntId}
+		)
+		SELECT  T.*,
+		        S.SCHUL_NM,
+		        CS.CLAS_STDNT_CODE, CS.CLAS_IN_NO, CS.CLAS_CODE,
+		        C.CLAS_NM, FN_CMMN_CODE_TO_NM(C.CMMN_GRADE) AS CMMN_GRADE_NO,
+		        M.MBER_NM, M.MOBLPHON_NO, M.MBER_EMAIL, M.MBER_IMAGE
+		FROM    T
+		JOIN    SCHUL S
+		ON      T.SCHUL_CODE = S.SCHUL_CODE
+		JOIN    CLAS_STDNT CS
+		ON      T.SCHUL_CODE = CS.SCHUL_CODE
+		AND     T.STDNT_ID = CS.MBER_ID
+		JOIN    CLAS C
+		ON      CS.CLAS_CODE = C.CLAS_CODE
+		JOIN    MEMBER M
+		ON      M.MBER_ID = T.STDNT_ID
+		JOIN    SCHUL_PSITN_MBER SPM
+		ON      SPM.SCHUL_CODE = T.SCHUL_CODE
+		AND     SPM.MBER_ID = T.STDNT_ID
+		WHERE   SPM.CMMN_SCHUL_PSITN_STTUS = 'A02101'
+	</select>
+	
+	<!-- 알림 삭제 -->
+	<delete id="noticeDelete" parameterType="java.util.List">
+		DELETE
+		FROM 	NOTICE
+		WHERE 	NOTICE_CODE
+		IN
+		<foreach collection="list" item="noticeCode" open="(" close=")" separator=",">
+			#{noticeCode}
+		</foreach>
+	</delete>
+	
+	<!-- 회원 프로필 이미지 -->
+	<select id="getMberImage" parameterType="String" resultType="String">
+		SELECT  MBER_IMAGE
+		FROM    MEMBER
+		WHERE  	MBER_ID = #{mberId}
+	</select>
+</mapper>

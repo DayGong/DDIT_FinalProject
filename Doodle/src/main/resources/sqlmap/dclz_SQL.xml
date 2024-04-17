@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.dclz.mapper.DclzMapper">
+
+
+<!-- 일자별 출결 정보 -->
+<resultMap type="dclzVO" id="dayMap">
+	<result property="dtDt" column="DT"/>
+	<collection property="stdList" resultMap="stdMap"></collection>
+</resultMap>
+
+<!-- 학생 -->
+<resultMap type="dclzVO" id="stdMap">
+	<result property="clasStdntCode" column="CLAS_STDNT_CODE"/>
+	<result property="clasInNo" column="CLAS_IN_NO"/>
+	<result property="cmmnClasPsitnSttus" column="CMMN_CLAS_PSITN_STTUS"/>
+	<result property="clasCode" column="CLAS_CODE"/>
+	<result property="mberId" column="MBER_ID"/>
+	<result property="clasStdntJoinDate" column="CLAS_STDNT_JOIN_DATE"/>
+	<result property="clasStdntExitDate" column="CLAS_STDNT_EXIT_DATE"/>
+	<result property="mberNm" column="MBER_NM"/>
+	<result property="dclzCmmnNm" column="DCLZ_CMMN_NM"/>
+	<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+	<collection property="timeList" resultMap="timeMap"></collection>
+	<collection property="sanctnList" resultMap="sanctnMap"></collection>
+</resultMap>
+
+<!-- 시간별 출결 정보 -->
+<resultMap type="dclzVO" id="timeMap">
+	<result property="dclzSn" column="DCLZ_SN"/>
+	<result property="dclzProcessTime" column="DCLZ_PROCESS_TIME"/>
+</resultMap>
+
+<!-- 공결 신청 문서 -->
+<resultMap type="sanctnDocVO" id="sanctnMap">
+	<result property="docCode" column="DOC_CODE"/>
+	<result property="rqstDe" column="RQST_DE"/>
+	<result property="exprnLrnBgnde" column="EXPRN_LRN_BGNDE"/>
+	<result property="exprnLrnEndde" column="EXPRN_LRN_ENDDE"/>
+	<result property="lrnStle" column="LRN_STLE"/>
+	<result property="purps" column="PURPS"/>
+	<result property="docCn" column="DOC_CN"/>
+	<result property="cmmnDocKnd" column="CMMN_DOC_KND"/>
+	<result property="cmmnDocKndNm" column="CMMN_DOC_KND_NM"/>
+	<result property="cmmnProcessSttus" column="CMMN_PROCESS_STTUS"/>
+	<result property="cmmnProcessSttusNm" column="CMMN_PROCESS_STTUS_NM"/>
+</resultMap>
+
+
+<!-- 학생 출석 -->
+<select id = "insertDclz" parameterType = "HashMap" statementType ="CALLABLE" resultType ="hashmap">
+	call proc_dclz_insert(#{clasStdntCode, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}
+					 	 ,#{sysdate, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}
+					 	 ,#{insert_cnt, mode=OUT, jdbcType=DECIMAL, javaType=int})
+</select>
+
+<!-- 마이바티스 프로시저 전용 get sysdate -->
+<select id ="getSysdate" resultType = "String">
+	select sysdate from dual
+</select>
+
+<!-- 출결 정보 get -->
+<select id = "getAllDclz" parameterType ="map" resultMap = "dayMap">
+	select rownum, sub.*
+	from (
+		  select 
+		  	        cs.clas_stdnt_code,
+		  	        cs.clas_in_no,
+		  	        cs.cmmn_clas_psitn_sttus,
+		  	        cs.mber_id,
+		  	        cs.clas_stdnt_join_date,
+		  	        cs.clas_stdnt_exit_date,
+		  	        FN_CLAS_STDNT_CODE_TO_MBER_NM(cs.clas_stdnt_code) mber_nm,
+		  	        dc.atend_de,
+		  	        dc.cmmn_detail_code,
+		  	        FN_CMMN_CODE_TO_NM(dc.cmmn_detail_code) dclz_cmmn_nm,
+		  	        dc.dclz_sn,
+		  	        dc.dclz_process_time,
+		  	        dt.dt,
+		  	        sd.doc_code,
+		  	        sd.rqst_de,
+			        sd.exprn_lrn_bgnde,
+			        sd.exprn_lrn_endde,
+			        sd.lrn_stle,
+			        sd.purps,
+			        sd.doc_cn,
+			        sd.CMMN_DOC_KND,
+			        fn_cmmn_code_to_nm(sd.CMMN_DOC_KND) cmmn_doc_knd_nm,
+			        sd.CMMN_PROCESS_STTUS,
+			        fn_cmmn_code_to_nm(sd.CMMN_PROCESS_STTUS) CMMN_PROCESS_STTUS_NM
+		  from  	clas_stdnt cs
+		  	        right join (select to_char(dt, 'YYYY-MM-DD') dt
+		  	                    from(
+		  	                         select (to_date(st_dt) + level - 1) dt
+		  	                         from (select '2024-03-01' st_dt,
+		  	                                       to_char(sysdate, 'YYYY-MM-DD') end_dt 
+		  	                               from dual)
+		  	                         connect by level &lt; to_date(end_dt) - to_date(st_dt) + 2
+		  	                         )
+		  	                    where to_char(dt, 'd') in ('2', '3', '4', '5', '6')) dt
+		  	        on  1=1
+		  	        left join dclz dc
+		  	        on cs.clas_stdnt_code = dc.clas_stdnt_code
+		  	        and dt.dt = dc.atend_de
+		  	        left join sanctn_doc sd
+			        on sd.clas_stdnt_code = cs.clas_stdnt_code
+			        and to_date(dt.dt) between sd.exprn_lrn_bgnde and sd.exprn_lrn_endde
+		  
+		  where 		1=1
+		  and 		cs.clas_code = #{clasCode}
+		  <if test = "clasStdntCode != null and clasStdntCode != ''">
+		  and 		cs.clas_stdnt_Code = #{clasStdntCode}
+		  </if>
+		  order by
+		              dt.dt desc
+		              ,cs.clas_in_no
+		              ,dc.dclz_sn
+	      ) sub
+	where rownum &lt; 200
+</select>
+
+<select id = "getAllClasStd" parameterType = "String" resultType ="ClasStdntVO">
+	select   cs.CLAS_STDNT_CODE,
+			 cs.CLAS_IN_NO,
+			 cs.CMMN_STDNT_CLSF,
+			 cs.CMMN_CLAS_PSITN_STTUS,
+			 cs.MBER_ID,
+			 cs.CLAS_STDNT_JOIN_DATE,
+			 cs.CLAS_STDNT_EXIT_DATE,
+			 FN_CLAS_STDNT_CODE_TO_MBER_NM(cs.clas_stdnt_code) mberNm
+	from 	 clas_stdnt cs
+	where 	 cs.clas_code = #{clasCode}
+	order by cs.clas_in_no
+</select>
+
+<!-- 출결 처리 상태 목록 get --> 
+<select id = "getDclzCmmn" resultType ="cmmnDetailCodeVO">
+	select  CMMN_DETAIL_CODE,
+			CMMN_CODE,
+			CMMN_DETAIL_CODE_NM
+	from 	CMMN_DETAIL_CODE
+	where	CMMN_CODE = 'A06'
+</select>
+
+<!-- 반학생 정보 get with 반학생코드 -->
+<select id = "getClasStdntVOWithClasStdntCode" parameterType = "String" resultType = "clasStdntVO">
+	select 	CLAS_STDNT_CODE, 
+			CLAS_IN_NO, 
+			CMMN_STDNT_CLSF, 
+			CMMN_CLAS_PSITN_STTUS, 
+			CLAS_CODE, 
+			SCHUL_CODE, 
+			MBER_ID, 
+			CLAS_STDNT_JOIN_DATE, 
+			CLAS_STDNT_EXIT_DATE
+	from 	clas_stdnt
+	where 	clas_stdnt_code = #{clasStdntCode}
+</select> 
+
+<!-- 출결 처리 상태 변경 --> 
+<update id = "updateDclzCmmn" parameterType ="map">
+	merge into dclz
+	using dual
+	      on (ATEND_DE = #{dtDt} and CLAS_STDNT_CODE = #{clasStdntCode})        
+	when  matched then
+	      	update set cmmn_detail_code = #{cmmnDetailCode}
+	when  not matched then
+	      	insert (DCLZ_SN, ATEND_DE, CLAS_STDNT_CODE, CMMN_DETAIL_CODE, DCLZ_PROCESS_TIME)
+	      	values ('1', #{dtDt}, #{clasStdntCode}, #{cmmnDetailCode}, null)
+</update>
+
+
+<select id ="getRecentAtend" parameterType ="map" resultType ="dclzVO">
+	<if test ="size != null">
+	select rownum, sub.*
+	from (
+	</if>
+	select 		d.atend_de,
+	      		m.mber_nm,
+	      		d.dclz_process_time
+	from 		dclz d
+	inner join 	clas_stdnt cs
+	on 			d.clas_stdnt_code = cs.clas_stdnt_code
+	inner join 	member m
+	on 			m.mber_id = cs.mber_id
+	where 		d.dclz_process_time is not null
+	and 		cs.clas_code = #{clasCode}
+	and 		d.atend_de = to_char(sysdate, 'YYYY-MM-DD')
+	order by 	atend_de desc,
+	            dclz_process_time desc
+	<if test ="size != null">
+	) sub
+	where rownum &lt;= #{size}
+	</if>
+</select>
+
+</mapper>

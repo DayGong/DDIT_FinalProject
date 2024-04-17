@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_3_1.xsd">
+
+	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/spring/root-context.xml
+			/WEB-INF/spring/security-context.xml
+		</param-value>
+	</context-param>
+	
+	<!-- Creates the Spring Container shared by all Servlets and Filters -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- Processes application requests -->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+		</init-param>
+		<init-param>
+			<param-name>throwExceptionIfNoHandlerFound</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+		<async-supported>true</async-supported> <!-- : 다수의 client 요청을 처리하기 위함 -->
+
+		<!-- web.xml의 설정은 WAS(Tomcat) 자체 설정일 뿐임. -->
+		<!-- multipart-config : 메모리사이즈, 업로드 파일 저장 위치, 최대 크기 설정 -->
+		<multipart-config>
+			<location>D:\\upload</location><!-- 업로드 되는 파일을 저장할 공간 -->
+			<max-file-size>20971520</max-file-size><!-- 업로드 파일의 최대 크기 1MB * 20 -->
+			<max-request-size>41943040</max-request-size><!-- 한 번에 올릴 수 있는 최대 크기 40MB -->
+			<file-size-threshold>20971520</file-size-threshold><!-- 메모리 사용 크기 20MB -->
+		</multipart-config>		
+	</servlet>
+		
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 한글 처리 -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>
+			org.springframework.web.filter.CharacterEncodingFilter
+		</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<!-- 모든 요청에서 -->
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- multipart filter 추가하기(한글 처리 다음에 넣기!!!) -->
+	<filter>
+		<display-name>springMultipartFilter</display-name>
+		<filter-name>springMultipartFilter</filter-name>
+		<filter-class>org.springframework.web.multipart.support.MultipartFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springMultipartFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- 스프링 시큐리티가 제공하는 서블릿 필터 클래스를 서블릿 컨테이너에 등록함 -->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- url 접근 권한 필터 -->
+	<filter>
+		<filter-name>UrlAccessFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>UrlAccessFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<error-page>
+		<error-code>400</error-code>
+		<location>/error/error400</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error/error404</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error/error500</location>
+	</error-page>
+	<error-page>
+		<exception-type>java.lang.ArithmeticException</exception-type>
+		<location>/error/errorException</location>
+	</error-page>
+	
+	<session-config>
+		<session-timeout>240</session-timeout>
+	</session-config>
+</web-app>

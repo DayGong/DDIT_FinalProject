@@ -1,0 +1,357 @@
+	/* 카카오톡 채팅방(chat-room.html) 레이아웃만 작성 */
+/* 메인페이지 큰 레이아웃은 grid로 구성함 */
+body {
+	margin: 0; /* 페이지의 여유공간 없애버림 */
+	overflow: hidden; /* 윈도우 스크롤 숨기기 */
+}
+
+/* grid container 적용 */
+#chat-body {
+	background-color: white;
+	top: 0;
+	left: 0;
+	display: grid;
+	grid-template-columns: minmax(3.125rem, auto) 6.25rem;
+	grid-template-rows: 2.5rem 2.5rem auto;
+	align-items: stretch;
+	grid-template-areas: " header   setting  " " header  main_menu "
+		"  main     main    ";
+}
+
+/* 배경화면 설정 */
+#chat-body, .setting_bar, .main-menu, header {
+	/*     background-image: url(../pic/talk_background.jpg); */
+	background-repeat: repeat;
+	background-position: top left;
+	background-attachment: fixed;
+	z-index: 98;
+}
+
+/* 설정바 스타일 지정 */
+.setting_bar {
+	grid-area: setting;
+	line-height: 2.5rem;
+	vertical-align: middle;
+	margin-right: 0.625rem;
+	position: sticky;
+	top: 0;
+}
+
+/* 알림, 메뉴 기능 스타일 지정 */
+.main-menu {
+	grid-area: main_menu;
+	text-align: right;
+	font-size: 1rem;
+	color: grey;
+	line-height: 2.5rem;
+	vertical-align: middle;
+	margin-right: 0.625rem;
+	position: sticky;
+	top: 2.5rem;
+}
+
+/* 프로필 사진, 프로필명 등 헤더 스타일 지정 */
+header {
+	grid-area: header;
+	padding-top: 0.9375rem;
+	padding-bottom: 0.9375rem;
+	position: sticky;
+	top: 0;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin-left: 0.625rem;
+}
+
+.profile-col {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: center;
+}
+
+.profile-img {
+	/* 프로필 사진 스타일 */
+	width: 3.125rem;
+	margin-right: 0.625rem;
+	height: 3.125rem;
+    border-radius: 50%;
+}
+
+header * {
+	font-size: 0.8125rem;
+	font-weight: bold;
+	color: grey;
+}
+
+.profile-name {
+	/* 프로필명 폰트 스타일 지정 */
+	font-size: 1.1rem;
+}
+
+.sub-menu>* {
+	/* 프로필명 아래 메뉴들 정렬 */
+	display: inline-block;
+	margin-top: 0.625rem;
+	padding-right: 0.3125rem;
+}
+
+.sub-menu>*:nth-child(n+2) {
+	padding-left: 0.3125rem;
+	border-left: 1px solid rgb(165, 165, 165);
+}
+
+/* main(채팅내용) 스타일 지정 */
+main {
+	/* 채팅내용 영역 전체 flex box 적용 */
+	grid-area: main;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+}
+
+/* main(채팅내용) 여백 지정 */
+.chat-content {
+	margin-left: 0.625rem;
+	margin-right: 0.625rem;
+	max-height: 780px;
+	min-height: 760px;
+/* 	overflow: hidden; */
+}
+
+/* main 중 고정 공지사항 스타일 지정 */
+.notice-bar {
+	padding: 10px;
+	position: sticky;
+	top: 5rem;
+	/* background-color: white; */
+	background-color: rgba(255, 255, 255, 0.95);
+	display: flex;
+	flex-direction: row;
+	z-index: 99;
+	margin-left: 0.625rem;
+	margin-right: 0.625rem;
+}
+
+.notice-bar>* {
+	font-size: 0.875rem;
+	line-height: 1.875rem;
+	vertical-align: middle;
+}
+
+.notice-bar>i {
+	font-size: 1.5rem;
+	color: gray;
+	font-weight: bold;
+}
+
+.notice-bar>span {
+	flex-grow: 1;
+	padding-left: 0.9375rem;
+	padding-right: 0.9375rem;
+}
+
+/* 말풍선 공통 스타일 지정 */
+.friend-chat-col, .me-chat-col {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+}
+
+/* 친구의 채팅 말풍선들 flex 레이아웃 구성 */
+.friend-chat {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: stretch;
+	margin-top: 0.3125rem;
+	margin-bottom: 0.3125rem;
+}
+
+.friend-chat>.profile-img {
+	align-self: flex-start;
+}
+
+.friend-chat-col{
+	width: fit-content;
+}
+
+.friend-chat-col>.balloon {
+	word-wrap: break-word;
+	font-size: 1.2rem;
+	margin-top: 0.3125rem;
+	background-color: #7e7a7a;
+    padding: 15px;
+    width: fit-content;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    border-top-right-radius: 25px;
+    color: white;
+    margin-left: -10px;
+    
+}
+
+/* 나의 채팅 말풍선들 flex 레이아웃 구성 */
+.me-chat {
+	display: flex;
+	flex-direction: row-reverse;
+	justify-content: flex-start;
+	align-items: flex-start;
+	margin-right: 0.625rem;
+	margin-top: 0.3125rem;
+	margin-bottom: 0.3125rem;
+}
+
+.my-profile-name{
+	font-size: 1.1rem;
+	display: flex;
+	flex-direction: row-reverse;
+	margin-right: 10px;
+}
+
+.me-chat>.profile-img {
+	align-self: flex-start;
+}
+
+.me-chat-col{
+	width: fit-content;
+}
+
+.me-chat-col>.balloon {
+	word-wrap: break-word;
+	font-size: 1.2rem;
+	margin-top: 0.3125rem; 
+	background-color: #006DF0;
+	color: #fff;
+	padding: 15px;
+	border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    border-top-left-radius: 25px;
+    width: fit-content;
+
+}
+
+
+/* 채팅 말풍선의 시간(time) 아래로 정렬 (flex item들) */
+.main-chat time {
+	align-self: flex-end;
+	flex-basis: 3.75rem;
+	flex-shrink: 0;
+	margin-left: 0.3125rem;
+	margin-right: 0.3125rem;
+	font-size: 0.75rem;
+	color: rgb(88, 88, 88);
+	text-align: center;
+}
+
+.friend-chat>time {
+	margin-right: 2.5rem;
+}
+
+.me-chat>time {
+	margin-left: 2.5rem;
+}
+
+/* 날짜선(date-line) 스타일 지정 */
+.date-line {
+	/* flex 사용 */
+	display: flex;
+	flex-basis: 100%;
+	align-items: center;
+	color: rgb(88, 88, 88);
+	font-size: 0.875rem;
+}
+
+.date-line::before, .date-line::after {
+	content: "";
+	flex-grow: 1;
+	height: 1px;
+	background-color: rgba(88, 88, 88, 0.3);
+	font-size: 0px;
+	line-height: 0px;
+}
+
+/* 채팅 입력차 스타일 지정 */
+.insert-content {
+	background-color: white;
+	padding: 0.4375rem;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+
+/* 채팅 입력창 flex로 정렬 */
+form[name="chatform"] {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
+form[name="chatform"]>textarea {
+	flex-basis: 100%;
+	flex-grow: 1;
+}
+
+.btn-send:hover, .btn-out:hover {
+	background: #ffd77a;
+	transition: all 1s ease;
+	color:#333;
+}
+
+/* 채팅 입력창 서브 메뉴 스타일 조정 */
+.insert-menu {
+	margin-top: 0.3125rem;
+	margin-bottom: 0.3125rem;
+	font-size: 1.125rem;
+	color: grey;
+}
+
+.insert-menu>*:nth-child(n+1) {
+	padding-right: 0.375rem;
+}
+
+.btn-send{
+	background-color: #006DF0;
+	border-radius: 10px;
+	color:white;
+	width: 60.33px;
+	height: 55px;
+}
+
+#button-auto{
+	vertical-align:middle;
+	display:inline-block;
+	border:none;
+	height: 50px;
+	text-align: center;
+	font-weight:700;
+	width:55px;
+	margin:auto;
+	border-radius: 10px;
+	background: rgba(255, 255, 255, 0.8);
+	color: #333;
+	font-size: 1.2rem;
+}
+
+#button-auto:hover{
+	background: #ffd77a;
+	color:#333;
+	transition:all 1s;
+}
+
+.btn-out {
+	background-color: #333;
+	border-radius: 10px;
+	color:white;
+	width: -webkit-fill-available;
+}
+
+/* .chat-head{ */
+/* 	backdrop-filter: blur(5px); */
+/*     background-color: rgba(255, 255, 255, 1); */
+/*     border-radius: 26px; */
+/*     box-shadow: 0px 35px 68px 0px rgba(145, 192, 255, 0.5) */
+/*     			, inset 0px -8px 16px 0px rgba(145, 192, 255, 0.6) */
+/*     			, inset 0px 11px 28px 0px rgb(255, 255, 255); */
+/* } */

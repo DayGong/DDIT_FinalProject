@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.security.mapper.LoginMapper">
+
+	<!-- 로그인 수를 등록하는 메서드 -->
+	<update id="addLoginCo">
+		/* kr.or.ddit.common.mapper.CommonMapper.addLoginCo */
+		MERGE INTO
+		    HMPG_MANAGE HM
+		USING DUAL
+		    ON (TO_CHAR(HM.HMPG_MANAGE_DE, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD'))
+		WHEN MATCHED THEN
+		    UPDATE
+		    SET 		HM.LOGIN_CO = NVL(HM.LOGIN_CO, 0) + 1
+		WHEN NOT MATCHED THEN
+		    INSERT  (
+		    			HMPG_MANAGE_DE
+		    		,	LOGIN_CO
+		    )
+		    VALUES  (TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 1)
+	</update>
+	
+</mapper>

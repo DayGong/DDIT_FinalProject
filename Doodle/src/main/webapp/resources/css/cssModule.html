@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="commonCss.css">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<button class="d-btn-blue">blue Btn</button>
+<button class="d-btn-yellow">yellow Btn</button>
+<button class="d-btn-black">black Btn</button>
+<button class="d-btn-gray">gray Btn</button>
+<button class="d-btn-red">red Btn</button>
+
+<br><br>
+
+<div class="d-div-blue">blue div</div>
+<div class="d-div-yellow">yellow div</div>
+<div class="d-div-black">black div</div>
+<div class="d-div-gray">gray div</div>
+<div class="d-div-red">red div</div>
+
+<br>
+<!-- 
+사용 방법 : 
+
+<button>, <div>, <tr> 의 클래스와 스타일만 가져다 쓰세요.
+테이블은 부스스트랩 테이블을 사용하세요.
+
+d-btn-blue : 마우스 호버, 클릭시 색상 변경됨.
+d-div-blue : 마우스 호버, 클릭시 색상 변경 없음.
+-->
+<table style="border:1px solid gray; width:500px;"> <!-- 테이블은 부트스트랩 사용 -->
+<tr>
+	<th style ="width:70%;">테이블 행 눌러서 작업</th>
+	<th style ="width:30%; text-align: center;">상태</th>
+</tr>
+<tr class = "d-tr">
+	<td>작업1</td>
+	<td><div class="d-div-yellow">진행중</div></td>
+</tr>
+<tr class = "d-tr">
+	<td>작업2</td>
+	<td><div class="d-div-red">불가</div></td>
+</tr>
+<tr class = "d-tr">
+	<td>작업3</td>
+	<td><div class="d-div-gray">종료</div></td>
+</tr>
+<tr class = "d-tr">
+	<td>작업4</td>
+	<td><div class="d-div-green">완료</div></td>
+</tr>
+</table>
+
+<br>
+
+<table style="border:1px solid gray; width:500px;"> <!-- 테이블은 부트스트랩 사용 -->
+<tr>
+	<th style ="width:70%;">상태 버튼 눌러서 작업</th>
+	<th style ="width:30%; text-align: center;">상태</th>
+</tr>
+<tr>
+	<td>작업1</td>
+	<td><button class="d-btn-blue" style ="width:100%">실행</button></td>
+</tr>
+<tr>
+	<td>작업2</td>
+	<td><button class="d-div-red" style ="width:100%">불가</button></td>
+
+</tr>
+<tr>
+	<td>작업3</td>
+	<td><button class="d-btn-gray" style ="width:100%">종료</button></td>
+
+</tr>
+<tr>
+	<td>작업4</td>
+	<td><button class="d-btn-green" style ="width:100%">완료</button></td>
+</tr>
+</table>
+
+<br>
+
+<table class = "d-tb" style="width:100%;">
+<tr>
+	<th colspan = "100%" style = "text-align: center;">테이블</th>
+</tr>
+<tr>
+	<th>제목1</th>
+	<td>값1</td>
+	<th>제목2</th>
+	<td>값2</td>
+	<th>제목3</th>
+	<td>값3</td>
+</tr>
+<tr>
+	<th>제목1</th>
+	<td>값1</td>
+	<th>제목2</th>
+	<td>값2</td>
+	<th>제목3</th>
+	<td>값3</td>
+	<th>제목4</th>
+	<td>값4</td>
+</tr>
+<tr>
+	<th colspan = "100%" style = "text-align: center;">제목1</th>
+</tr>
+<tr>
+	<th>제목1</th>
+	<td>값1</td>
+	<td>값2</td>
+	<td>값3</td>
+	<td>값4</td>
+	<td>값5</td>
+</tr>
+<tr>
+	<th>제목1</th>
+	<td>값1</td>
+	<td>값2</td>
+	<td>값3</td>
+	<td>값4</td>
+	<td>값5</td>
+</tr>
+
+</table>
+
+<br>
+
+<select class = "d-sel-blue">
+	<option>1</option>
+	<option>2</option>
+	<option>3</option>
+	<option>4</option>
+</select>
+
+</body>
+</html>

@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.task.mapper.TaskMapper">
+	<sql id="searchWhere">
+		<if test="keyword != null and keyword != ''">
+			AND(
+					TASK_SJ LIKE '%' || #{keyword} || '%'
+				OR	TASK_CN LIKE '%' || #{keyword} || '%'
+			)     
+		</if>
+	</sql>
+	
+	<!-- 과제 게시판 조회 -->
+	<resultMap type="taskVO" id="taskMap">
+		<result property="taskCode" column="TASK_CODE"/>
+		<result property="taskSj" column="TASK_SJ"/>
+		<result property="taskCn" column="TASK_CN"/>
+		<result property="taskBeginDt" column="TASK_BEGIN_DT"/>
+		<result property="taskEndDt" column="TASK_END_DT"/>
+		<result property="taskCnt" column="TASK_CNT"/>
+		<result property="atchFileCode" column="ATCH_FILE_CODE"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<association property="hrtchrVO" resultMap="hrtchrMap"></association>
+		<collection property="atchFileVOList" resultMap="atchFileMap"></collection>
+		<collection property="taskResultVO" resultMap="taskResultMap"></collection>
+	</resultMap>
+	
+	<resultMap type="taskResultVO" id="taskResultMap">
+		<result property="taskResultCode" column="TASK_RESULT_CODE"/>
+		<result property="taskCode" column="TASK_CODE"/>
+		<result property="cn" column="CN"/>
+		<result property="fdbck" column="FDBCK"/>
+		<result property="taskPresentnDate" column="TASK_PRESENTN_DATE"/>
+		<result property="atchFileCode" column="ATCH_FILE_CODE"/>
+		<result property="complimentSticker" column="COMPLIMENT_STICKER"/>
+		<result property="complimentStickerDate" column="COMPLIMENT_STICKER_DATE"/>
+		<result property="clasStdntCode" column="CLAS_STDNT_CODE"/>
+		<association property="atchFileVO" resultMap="atchFileMap"></association>
+	</resultMap>
+	
+	<resultMap type="atchFileVO" id="atchFileMap">
+		<result property="atchFileCode" column="ATCH_FILE_CODE"/>
+		<result property="atchFileSn" column="ATCH_FILE_SN"/>
+		<result property="atchFileCours" column="ATCH_FILE_COURS"/>
+		<result property="atchFileNm" column="ATCH_FILE_NM"/>
+		<result property="atchFileTy" column="ATCH_FILE_TY"/>
+		<result property="atchFileDe" column="ATCH_FILE_DE"/>
+		<result property="registId" column="REGIST_ID"/>
+		<result property="updtDe" column="UPDT_DE"/>
+		<result property="updtId" column="UPDT_ID"/>
+	</resultMap>
+	
+	<resultMap type="hrtchrVO" id="hrtchrMap">
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+		<association property="memberVO" resultMap="memberMap"></association>
+	</resultMap>
+	
+	<resultMap type="clasVO" id="clasMap">
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="clasNm" column="CLAS_NM"/>
+		<result property="clasYear" column="CLAS_YEAR"/>
+		<result property="cmmnGrade" column="CMMN_GRADE"/>
+		<result property="cmmnClasSttus" column="CMMN_CLAS_STTUS"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+	</resultMap>
+	
+	<resultMap type="clasStdntVO" id="clasStdntMap">
+		<result property="clasStdntCode" column="CLAS_STDNT_CODE"/>
+		<result property="clasInNo" column="CLAS_IN_NO"/>
+		<result property="cmmnStdntClsf" column="CMMN_STDNT_CLSF"/>
+		<result property="cmmnClasPsitnSttus" column="CMMN_CLAS_PSITN_STTUS"/>
+		<result property="clasCode" column="CLAS_CODE"/>
+		<result property="schulCode" column="SCHUL_CODE"/>
+		<result property="mberId" column="MBER_ID"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="clasStdntJoinDate" column="CLAS_STDNT_JOIN_DATE"/>
+		<result property="clasStdntExitDate" column="CLAS_STDNT_EXIT_DATE"/>
+		<association property="taskVO" resultMap="taskMap"></association>
+	</resultMap>
+	
+	<resultMap type="memberVO" id="memberMap">
+		<result property="mberId" column="MBER_ID"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="mberNm" column="MBER_NM"/>
+		<result property="ihidnum" column="IHIDNUM"/>
+		<result property="moblphonNo" column="MOBLPHON_NO"/>
+		<result property="mberEmail" column="MBER_EMAIL"/>
+		<result property="zip" column="ZIP"/>
+		<result property="mberAdres" column="MBER_ADRES"/>
+		<result property="mberImage" column="MBER_IMAGE"/>
+		<result property="mberSecsnAt" column="MBER_SECSN_AT"/>
+		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
+	</resultMap>
+	
+	<!-- 과제 리스트 -->
+	<select id="taskList" parameterType="hashMap" resultMap="taskMap">
+		WITH T AS(
+		      SELECT  	ROW_NUMBER() OVER(ORDER BY A.TASK_CODE DESC) RNUM,
+		      			A.TASK_CODE, A.TASK_SJ, A.TASK_CN, A.TASK_BEGIN_DT,
+		            	A.TASK_END_DT, A.ATCH_FILE_CODE, A.CLAS_CODE, A.TASK_CNT,
+		            	B.MBER_ID, C.MBER_NM
+		        FROM    TASK A, HRTCHR B, MEMBER C
+		       WHERE   	1=1
+		    	 AND    A.CLAS_CODE = #{clasCode}
+		         AND    A.CLAS_CODE = B.CLAS_CODE
+		         AND    B.MBER_ID = C.MBER_ID
+			<include refid="searchWhere"></include>
+		)
+		SELECT  	T.*
+		FROM		T
+		WHERE		T.RNUM BETWEEN (#{currentPage}*10) - (10 - 1) AND (#{currentPage}*10)
+		ORDER BY	T.TASK_BEGIN_DT DESC
+	</select>
+	
+	<!-- 진행중인 과제 목록 get. 클래스코드 선택적. 사이즈 선택적. -->
+	<select id="getTaskList" parameterType="hashMap" resultType="taskVO">
+		<if test = "size != null">
+		select rownum, sub.*
+		from (
+		</if>       
+		SELECT  	
+	      			A.TASK_CODE, A.TASK_SJ, A.TASK_CN, A.TASK_BEGIN_DT,
+	            	A.TASK_END_DT, A.ATCH_FILE_CODE, A.CLAS_CODE, A.TASK_CNT 
+		FROM    TASK A
+		WHERE   	1=1
+		and 	a.task_end_dt >= sysdate
+		<if test = "clasCode != null">
+		AND    A.CLAS_CODE = #{clasCode}
+		</if>       
+		order by	a.task_end_dt desc
+		<if test = "size != null">
+					) sub
+		where rownum &lt;= #{size}
+		</if>
+	</select>
+	
+	<!-- 과제 게시판 총 목록 -->
+	<select id="getTotalTask" parameterType="map" resultType="int">
+		SELECT  COUNT(*)
+		FROM    TASK
+		WHERE   CLAS_CODE = #{clasCode}
+		<include refid="searchWhere"></include>
+	</select>
+	
+	<!-- 과제 게시글 상세 보기 -->
+	<select id="taskDetail" parameterType="String" resultMap="taskMap">
+		SELECT      A.TASK_CODE, A.TASK_SJ, A.TASK_CN, A.TASK_BEGIN_DT,
+		            A.TASK_END_DT, A.ATCH_FILE_CODE, A.CLAS_CODE, A.TASK_CNT,
+		            B.CLAS_CODE, B.SCHUL_CODE, B.CMMN_DETAIL_CODE, B.MBER_ID,
+		            FN_GET_MBER_NM(B.MBER_ID) AS MBER_NM
+		<if test="atchFileCode != null">
+		          , AF.ATCH_FILE_NM			
+		</if>
+		FROM        TASK A
+		JOIN        HRTCHR B ON A.CLAS_CODE = B.CLAS_CODE
+		<if test="atchFileCode != null">
+		LEFT JOIN   ATCH_FILE AF ON A.ATCH_FILE_CODE = AF.ATCH_FILE_CODE
+		</if>
+		WHERE       1=1
+		AND         A.TASK_CODE = #{taskCode}
+	</select>
+	
+	<!-- 과제 첨부파일 조회 -->
+	<select id="atchFileList" parameterType="hashMap" resultType="atchFileVO">
+		SELECT 	ATCH_FILE_CODE, ATCH_FILE_COURS, ATCH_FILE_SN, ATCH_FILE_NM
+		  FROM 	ATCH_FILE
+	 	 WHERE 	ATCH_FILE_CODE = #{atchFileCode}
+	 	 <if test="atchFileSn!=null and atchFileSn!=''">
+	 	  AND   ATCH_FILE_SN = #{atchFileSn}
+	 	 </if>
+	</select>
+	
+	<!-- 과제 게시글 조회수 증가 -->
+	<update id="updateTaskCnt" parameterType="String">
+		UPDATE 	TASK
+		   SET 	TASK_CNT = TASK_CNT + 1
+		 WHERE 	TASK_CODE = #{taskCode}
+	</update>
+	
+	<!-- 과제 게시글 등록 -->
+	<insert id="taskInsert" parameterType="taskVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="taskCode">
+		    (
+		     SELECT 	#{clasCode}||
+		     			NVL(LPAD(MAX(SUBSTR(TASK_CODE, -5) + 1), 5, 0), '00001')
+		       FROM 	TASK
+			  WHERE 	CLAS_CODE = #{clasCode}
+		     )
+		</selectKey>
+		INSERT INTO TASK
+			(TASK_CODE, TASK_SJ, TASK_CN, TASK_BEGIN_DT, TASK_END_DT,
+			<if test="atchFileCode != '' or atchFileCode != null">
+				ATCH_FILE_CODE, 
+			</if>
+			CLAS_CODE, TASK_CNT)
+		VALUES
+			(
+			#{taskCode},#{taskSj}, #{taskCn}, SYSDATE, #{taskEndDt},
+			<if test="atchFileCode != '' or atchFileCode != null">
+				#{atchFileCode},
+			</if>
+			#{clasCode}, 0
+			)
+	</insert>
+	
+	<!-- 과제 게시글 등록 -> 첨부 파일 등록 -->
+	<update id="atchFileInsert" parameterType="java.util.List">
+		<foreach collection="list" item="atchFileVO" open="INSERT ALL" close="SELECT * FROM DUAL" separator=" " index="idx">
+			INTO ATCH_FILE
+			(ATCH_FILE_CODE, ATCH_FILE_SN, ATCH_FILE_COURS, ATCH_FILE_NM,
+			 ATCH_FILE_TY, ATCH_FILE_DE, REGIST_ID, UPDT_DE, UPDT_ID)
+			VALUES
+			(#{atchFileVO.atchFileCode}, #{atchFileVO.atchFileSn},
+			 #{atchFileVO.atchFileCours}, #{atchFileVO.atchFileNm},
+			 #{atchFileVO.atchFileTy}, SYSDATE,
+			 #{atchFileVO.registId}, NULL, NULL)
+		</foreach>
+	</update>
+	
+	<!-- 게시글 등록 -> 학생/학부모 전체 알림 -->
+	<update id="noticeInsertAll" parameterType="map">
+	    INSERT ALL
+	    <foreach collection="noticeRcvIdList" item="noticeRcvId" separator=" " index="idx">
+	        INTO NOTICE
+	            (NOTICE_CODE, NOTICE_SJ, NOTICE_CN, CMMN_NOTICE_READNG_AT,
+	            NOTICE_TRNSMIT_DT, NOTICE_SND_ID, NOTICE_RCV_ID, CMMN_BOARD_SE)
+	        VALUES
+	        (
+	            (SELECT #{taskCode} || 'TSK' || LPAD((#{idx} + 1), 3, '0') FROM DUAL),
+	            #{noticeSj},
+	            #{noticeCn},
+	            'A13001',
+	            SYSDATE,
+	            #{noticeSndId},
+	            #{noticeRcvId},
+	            'A08005'
+	        )
+	    </foreach>
+	    SELECT * FROM DUAL
+	</update>
+	
+	<!-- ATCH_FILE 테이블의 ATCH_FILE_CODE 가져오기 -->
+	<select id="getAtchFileCode" parameterType="String" resultType="String">
+		SELECT 	#{clasCode}||
+				'TSK'||
+				NVL(LPAD((SUBSTR(MAX(ATCH_FILE_CODE), -5) + 1), 5, 0), '00001')
+		  FROM 	ATCH_FILE
+		 WHERE 	ATCH_FILE_CODE LIKE #{clasCode}||'TSK'||'%'
+	</select>
+	
+	<!-- 과제 게시글 수정  -->
+	<update id="taskUpdate" parameterType="taskVO">
+		UPDATE  TASK
+		   SET  TASK_SJ = #{taskSj},
+		        TASK_CN = #{taskCn},
+		        TASK_END_DT = #{taskEndDt},
+		        ATCH_FILE_CODE = #{atchFileCode}
+		 WHERE  TASK_CODE = #{taskCode}
+	</update>
+	
+	<!-- 과제 게시글 수정 -> 알림 제목 수정 -->
+	<update id="noticeSjUpdate" parameterType="taskVO">
+		UPDATE 	NOTICE
+		SET		NOTICE_SJ = '[과제] ' || #{taskSj}
+		WHERE	NOTICE_CODE LIKE '%' || (#{taskCode}||'TSK') || '%'
+	</update>
+	
+	<!-- 과제 게시글 삭제 -->
+	<delete id="taskDelete" parameterType="String">
+		DELETE
+		  FROM	TASK
+		 WHERE	TASK_CODE = #{taskCode}
+	</delete>
+	
+	<!-- 과제 게시글 삭제 -> 학생/학부모 알림 삭제 -->
+	<delete id="noticeDeleteAll" parameterType="String">
+		DELETE
+		  FROM 	NOTICE
+		 WHERE 	NOTICE_CODE LIKE '%' || (#{taskCode}||'TSK') || '%'
+	</delete>
+	
+	<!-- 과제 게시글 삭제 -> 제출된 과제 삭제 -->
+	<delete id="inputTaskDelete" parameterType="String">
+		DELETE
+		FROM	TASK_RESULT
+		WHERE	TASK_CODE = #{taskCode}
+	</delete>
+	
+	<!-- 과제 게시글 삭제 -> 제출된 과제 첨부 파일 삭제 -->
+	<delete id="inputTaskAtchFileDelete" parameterType="String">
+		DELETE 
+		FROM    ATCH_FILE
+		WHERE   ATCH_FILE_CODE LIKE '%' || (#{taskCode}||'TR') || '%'
+	</delete>
+	
+	<!-- 과제 게시글 첨부 파일 수정 -->
+	<update id="atchFileUpdate" parameterType="atchFileVO">
+		<foreach collection="list" item="atchFileVO" index="idx">
+			UPDATE  ATCH_FILE
+			   SET  ATCH_FILE_SN = #{atchFileVO.atchFileSn},
+			        ATCH_FILE_COURS = #{atchFileVO.atchFileCours},
+			        ATCH_FILE_NM = #{atchFileVO.atchFileNm},
+			        ATCH_FILE_TY = #{atchFileVO.atchFileTy},
+			        UPDT_DE = SYSDATE,
+			        UPDT_ID = #{atchFileVO.updtId}
+			 WHERE  ATCH_FILE_CODE = #{atchFileVO.atchFileCode}
+		 </foreach>
+	</update>
+	
+	<!-- 첨부 파일 삭제(초기화) -->
+	<delete id="atchFileDelete" parameterType="String">
+		DELETE 
+		FROM    ATCH_FILE
+		WHERE   ATCH_FILE_CODE = #{atchFileCode}
+	</delete>
+	
+	<!-- 제출된 과제 리스트 -->
+	<select id="inputTaskList" parameterType="map" resultMap="clasStdntMap">
+		SELECT              C.MBER_ID, FN_GET_MBER_NM(C.MBER_ID) AS MBER_NM, C.CLAS_IN_NO,
+		                    T.TASK_CODE,
+		                    TR.TASK_RESULT_CODE, TR.FDBCK, TR.TASK_PRESENTN_DATE, TR.COMPLIMENT_STICKER,
+		                    A.ATCH_FILE_CODE, A.ATCH_FILE_COURS, A.ATCH_FILE_SN, A.ATCH_FILE_NM
+		FROM                CLAS_STDNT C
+		INNER JOIN          TASK T
+		ON                  C.CLAS_CODE = T.CLAS_CODE
+		LEFT OUTER JOIN     TASK_RESULT TR
+		ON                  T.TASK_CODE = TR.TASK_CODE
+		AND                 TR.CLAS_STDNT_CODE = C.CLAS_STDNT_CODE
+		LEFT OUTER JOIN     ATCH_FILE A
+		ON              	A.ATCH_FILE_CODE = TR.ATCH_FILE_CODE
+		WHERE               1=1
+		AND					T.TASK_CODE = #{taskCode}
+		AND       			C.CMMN_CLAS_PSITN_STTUS = 'A03101' <!-- 반 소속 상태가 '활동'인 학생 -->
+		<if test="childList != null">
+			AND    C.MBER_ID in
+			<foreach collection="childList" item="childId" open="(" close=")" separator=",">
+				#{childId}
+			</foreach>
+		</if>
+		ORDER BY    CASE WHEN C.MBER_ID = #{mberId} THEN 0 ELSE 1 END, C.CLAS_IN_NO ASC
+	</select>
+	
+	<!-- (과제 제출용)로그인 한 학생의 반 학생 코드 가져오기 -->
+	<select id="getClasStdntCode" parameterType="String" resultType="String">
+		SELECT 	CLAS_STDNT_CODE
+		FROM 	CLAS_STDNT
+		WHERE 	MBER_ID = #{mberId}
+	</select>
+	
+	<!-- 과제 제출 -->
+	<insert id="inputTask" parameterType="taskResultVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="taskResultCode">
+			SELECT 	#{taskCode}||
+			        'TR'||
+			        LPAD(NVL(TO_CHAR(TO_NUMBER(SUBSTR(MAX(TASK_RESULT_CODE), -3)) + 1), '001'), 3, '0')
+			  FROM	TASK_RESULT
+			 WHERE  TASK_CODE = #{taskCode}
+		</selectKey>
+		INSERT INTO TASK_RESULT
+			(TASK_RESULT_CODE, TASK_CODE, TASK_PRESENTN_DATE, ATCH_FILE_CODE, CLAS_STDNT_CODE)
+		VALUES
+			(
+			 #{taskResultCode}
+			,#{taskCode}
+			,SYSDATE
+			,#{taskResultCode}
+			,#{clasStdntCode}
+			)
+	</insert>
+	
+	<!-- 과제 제출 수 -->
+	<select id="getInputTaskCount" parameterType="String" resultType="int">
+		SELECT 	COUNT(*)
+		FROM 	TASK_RESULT
+		WHERE 	TASK_CODE = #{taskCode}
+	</select>
+	
+	<!-- 제출 과제 삭제 -->
+	<delete id="myTaskDelete" parameterType="String">
+		DELETE
+		  FROM  TASK_RESULT
+		 WHERE  TASK_RESULT_CODE = #{taskResultCode}
+	</delete>
+	
+	<!-- 과제 피드백 등록/수정 -->
+	<update id="feedbackInsert" parameterType="map">
+		UPDATE  TASK_RESULT
+		SET     FDBCK = #{fdbck}
+		WHERE   1=1
+		AND     TASK_RESULT_CODE = #{taskResultCode}
+	</update>
+	
+	<!-- 피드백 삭제 -> 알림 같이 삭제 -->
+	<delete id="noticeDelete" parameterType="map">
+		DELETE
+		FROM    NOTICE
+		WHERE   NOTICE_CODE =
+				(
+				SELECT  NOTICE_CODE
+				FROM    NOTICE
+				WHERE   1=1
+				AND     NOTICE_CODE LIKE '%' || (#{taskCode}||'F') || '%'
+				AND     NOTICE_RCV_ID = #{noticeRcvId}
+				)
+	</delete>
+	
+	<!-- 피드백 등록 -> 알림 테이블 insert -->
+	<insert id="fdbckNoticeInsert" parameterType="map">
+		<selectKey resultType="String" order="BEFORE" keyProperty="noticeCode">
+			SELECT 	#{taskCode}||'F'||
+					NVL(LPAD(MAX(SUBSTR(NOTICE_CODE, -3)) + 1, 3, 0), '001')
+			FROM 	NOTICE
+			WHERE 	NOTICE_CODE LIKE '%' || (#{taskCode}||'F') || '%'
+		</selectKey>
+		INSERT INTO NOTICE
+			(NOTICE_CODE, NOTICE_SJ, NOTICE_CN, CMMN_NOTICE_READNG_AT,
+			 NOTICE_TRNSMIT_DT, SCHUL_CODE, NOTICE_SND_ID, NOTICE_RCV_ID, CMMN_BOARD_SE)
+		VALUES
+			(
+			#{noticeCode},
+			#{noticeSj},
+			#{noticeCn},
+			'A13001', <!-- 기본값: 알림 안 읽음 상태 -->
+			SYSDATE,
+			#{schulCode},
+			#{noticeSndId},
+			#{noticeRcvId},
+			'A08005'
+			)
+	</insert>
+	
+	<!-- 칭찬 스티커 주기 -->
+	<update id="complimentStickerUpdate" parameterType="String">
+		UPDATE  TASK_RESULT
+		SET     COMPLIMENT_STICKER = 1,
+			    COMPLIMENT_STICKER_DATE = SYSDATE
+		WHERE   TASK_RESULT_CODE = #{taskResultCode}
+	</update>
+	
+	<!-- 한 클래스 내 전체 학생 + 학부모 목록 -->
+	<select id="getAllClassMber" parameterType="String" resultType="String">
+		SELECT  MBER_ID
+		FROM    CLAS_STDNT
+		WHERE   1=1
+		AND     CLAS_CODE = #{clasCode}
+		AND   CMMN_CLAS_PSITN_STTUS = 'A03101'
+		UNION
+		SELECT  F.STDNPRNT_ID
+		FROM    FAMILY_RELATE F, CLAS_STDNT CS 
+		WHERE   1=1
+		AND     F.STDNT_ID = CS.MBER_ID
+		AND     CS.CLAS_CODE = #{clasCode}
+	</select>
+	
+	<!-- 헤더로 보내기 위해 등록한 피드백의 알림 정보를 담음 -->
+	<select id="feedbackToHeader" parameterType="map" resultType="noticeVO">
+		SELECT  NOTICE_CODE, NOTICE_SJ, NOTICE_CN, NOTICE_TRNSMIT_DT
+		FROM    NOTICE
+		WHERE   1=1
+		AND     NOTICE_RCV_ID = #{noticeRcvId}
+		AND     NOTICE_CODE LIKE '%' || (#{taskCode}||'F') || '%'
+	</select>
+	
+	<!-- 자녀 리스트-->
+	<select id="getChildList" parameterType="String" resultType="String">
+		SELECT *
+		FROM(
+		        SELECT 		MBER_ID
+		        FROM 		CLAS_STDNT
+		        WHERE    	MBER_ID IN (SELECT 	STDNT_ID
+	                                    FROM 	FAMILY_RELATE
+	                                    WHERE 	STDNPRNT_ID = #{stdnprntId})
+		        ORDER BY 	CLAS_IN_NO ASC
+		)
+	</select>
+</mapper>
