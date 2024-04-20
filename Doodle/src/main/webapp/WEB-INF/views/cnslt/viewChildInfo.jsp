@@ -265,15 +265,22 @@ const changeSelStd = function(index){
 <div id="StdntDetailContainer">
 	<h3>
 		<img src="/resources/images/consultation/folder.png" style="width:50px; display:inline-block; vertical-align:middel;">
-		학생 상세 정보
+		학생 상세 정보 
 		<img src="/resources/images/consultation/folder2.png" style="width:50px; display:inline-block; vertical-align:middel;">
 	</h3>
 	<table class="d-tb" style="width: 100%;">
 		<tbody>
 			<tr>
 				<td colspan="2" rowspan="4" style="width: 250px; height: 300px;">
-	                <img src="/upload/profile/${clasStdntVO.memberVO.mberImage}" style="width: 100%; height: 100%;" >
-	            </td>
+					<c:choose>
+						<c:when test="${clasStdntVO.memberVO.mberImage eq null}">
+			                <img src="/upload/profile/e9e9ba18-fd5c-491a-95dd-986f2b22225d_루피2.png" style="width: 100%; height: 100%;" >
+						</c:when>
+						<c:otherwise>
+			                <img src="/upload/profile/${clasStdntVO.memberVO.mberImage}" style="width: 100%; height: 100%;" >
+						</c:otherwise>
+					</c:choose>
+	            		</td>
 				<th style="width: 15%;">학생 아이디</th>
 				<td style="width: 20%;">${clasStdntVO.memberVO.mberId}</td>
 				<th style="width: 15%;">학급 번호</th>
