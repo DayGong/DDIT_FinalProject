@@ -85,9 +85,9 @@
 	}
 </style>
 <script>
-	function fn_search(currentPage) {
-		const today = new Date().toISOString().substring(0, 10);
-		
+	const today = new Date().toISOString().substring(0, 10);
+
+	function fn_search(currentPage) {		
 		var currentPage = currentPage;
 		var keyword = "";
 		var size = 10;
