@@ -378,21 +378,23 @@ function fn_getAnswerDetail(nttCode) {
 					answerCn = answerCn.replace(/\n/gi, "<br>");
 					
 					html += `<ul class="replyListAll">
-								<li class="replyListLi">
-									<ul class="replyInfoAll">
-										<li style="display:flex; justify-content: space-between;">
-											<span>
+							<li class="replyListLi">
+								<ul class="replyInfoAll">
+									<li style="display:flex; justify-content: space-between;">
+										<span>
 											<span class="replylistId" style="margin-bottom: 10px; font-weight: 800;">
 												\${res.mberNm} 선생님
 											</span>
 											<span class="replylistDate" style="margin-bottom: 10px; font-weight: 500;">`;
 					html += 					dateFormat(new Date(res.answerWritngDt));
-					html +=					`</span>
+					html +=						`</span>
 										</span>
-										<small>
-											<button type="button" data-answer-code="\${res.answerCode}" class="modReplyBtn">수정</button>
-											<button type="button" data-answer-code="\${res.answerCode}" class="delReplyBtn">삭제</button>
-										</small>
+										<sec:authorize access="hasRole('A01002') or hasRole('A14003')">
+											<small>
+												<button type="button" data-answer-code="\${res.answerCode}" class="modReplyBtn">수정</button>
+												<button type="button" data-answer-code="\${res.answerCode}" class="delReplyBtn">삭제</button>
+											</small>
+										</sec:authorize>
 									</li>
 									<li>
 										<p class="replylistCn " style="margin-bottom: 0px; font-weight: 500;">
