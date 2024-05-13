@@ -71,10 +71,10 @@ public class DiaryServiceImpl implements DiaryService {
 		nttVO.setMberId(clasStdntVO.getMberId());
 		nttVO.setClasCode(clasStdntVO.getClasCode());
 		nttVO.setSchulCode(clasStdntVO.getSchulCode());
+		int result = this.diaryMapper.addDiaryAct(nttVO);	// 게시물만 저장
 		
 		log.debug("addDiaryAct nttVO => " + nttVO);
 		
-		int result = this.diaryMapper.addDiaryAct(nttVO);	// 게시물만 저장
 		return result;
 	}
 
@@ -96,6 +96,8 @@ public class DiaryServiceImpl implements DiaryService {
 		
 		int diaryTotal = this.diaryMapper.getDiaryTotal(diarySearchVO);
 		List<NttVO> nttVOList = this.diaryMapper.getDiaryList(diarySearchVO);
+
+		ArticlePage<NttVO> nttPage = new ArticlePage<NttVO>(currentPage, size, nttVOList, keyword, diaryTotal);
 		
 		log.debug("getDiaryList currentPage => " + currentPage);
 		log.debug("getDiaryList diaryTotal => " + diaryTotal);
@@ -103,7 +105,6 @@ public class DiaryServiceImpl implements DiaryService {
 		log.debug("getDiaryList teacherId => " + teacherId);
 		log.debug("getDiaryList nttVOList => " + nttVOList);
 		 
-		ArticlePage<NttVO> nttPage = new ArticlePage<NttVO>(currentPage, size, nttVOList, keyword, diaryTotal);
 		return nttPage;
 	}
 	
@@ -159,6 +160,7 @@ public class DiaryServiceImpl implements DiaryService {
 		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
 		answerVO.setSchulCode(clasVO.getSchulCode());
 		int result = this.diaryMapper.addReply(answerVO);
+		
 		return result;
 	}
 	
@@ -179,6 +181,7 @@ public class DiaryServiceImpl implements DiaryService {
 	@Override
 	public int delDiaryReply(String answerCode) {
 		int result = this.diaryMapper.delDiaryReply(answerCode);
+		
 		return result;
 	}
 
@@ -186,6 +189,7 @@ public class DiaryServiceImpl implements DiaryService {
 	@Override
 	public int delDiary(String nttCode) {
 		int result = this.diaryMapper.delDiary(nttCode);
+		
 		return result;
 	}
 

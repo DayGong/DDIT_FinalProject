@@ -117,7 +117,4 @@ public interface FreeBoardService {
 	//설문조사 등록 시 엑셀 파일 업로드하면 타게되는 서비스
 	public List<HashMap<Integer, String>> surveyExcelRegistration(MultipartFile upload);
 
-
-
-
 }

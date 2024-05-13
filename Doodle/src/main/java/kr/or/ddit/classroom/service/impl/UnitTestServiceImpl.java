@@ -98,7 +98,6 @@ public class UnitTestServiceImpl implements UnitTestService {
 		return unitTestMapper.makeGc(gcVO);
 	}
 
-
 	// 시험 종료 후 성적표 점수 update 및 학생 답안 insert
 	@Override
 	public int finishGc(HttpServletRequest request, Map<String, Object> map) {
@@ -201,10 +200,10 @@ public class UnitTestServiceImpl implements UnitTestService {
 	// 한명의 학생이 반에 대한 본인의 모든 시험 결과 모두 가져오기
 	@Override
 	public List<UnitEvlScoreVO> getStdGcList(Map<String, Object> map) {
-		log.info("getStdGcList map => " + map);
-
 		List<UnitEvlScoreVO> unitEvlScoreVOList = this.unitTestMapper.getStdGcList(map);
-		log.info("getStdGcList unitEvlScoreVOList => ", unitEvlScoreVOList);
+
+		log.debug("getStdGcList map => " + map);
+		log.debug("getStdGcList unitEvlScoreVOList => ", unitEvlScoreVOList);
 		return unitEvlScoreVOList;
 	}
 	

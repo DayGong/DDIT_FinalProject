@@ -2,7 +2,6 @@ package kr.or.ddit.consultation.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -49,20 +48,18 @@ public class ConsultationServiceImpl implements ConsultationService {
 		JSONObject jsonObj = new JSONObject();
 		JSONArray jsonArr = new JSONArray();
 		Map<String, Object> cnsltSchedulHash = new HashMap<String, Object>();
-		
 		String clasCode = (String) map.get("clasCode");
-		log.info("loadCnsltResveList clasCode => " + clasCode);
-		
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("memberVO => " + memberVO);
-		
 		CnsltVO cnsltVO = new CnsltVO();
 		cnsltVO.setClasCode(clasCode);
 		cnsltVO.setCnsltTrgetId(memberVO.getMberId());
 		cnsltVO.setCnsltTrgetIdNm(memberVO.getMberNm());
 		
 		List<CnsltVO> cnsltVOList = this.consultationMapper.loadCnsltResveList(cnsltVO);
-		log.info("cnsltVOList => " + cnsltVOList);
+		
+		log.debug("loadCnsltResveList clasCode => " + clasCode);
+		log.debug("memberVO => " + memberVO);
+		log.debug("cnsltVOList => " + cnsltVOList);
 		
 		for (CnsltVO cnslt : cnsltVOList) {
 			String trgetIdNm = cnslt.getCnsltTrgetIdNm();	// 상담자 이름 저장
@@ -110,7 +107,7 @@ public class ConsultationServiceImpl implements ConsultationService {
 			jsonArr.add(jsonObj);
 		}
 		
-		log.info("jsonArr => " + jsonArr);
+		log.debug("jsonArr => " + jsonArr);
 		return jsonArr;
 	}
 
@@ -142,20 +139,17 @@ public class ConsultationServiceImpl implements ConsultationService {
 	public List<CnsltVO> loadCnsltResve(CnsltVO cnsltVO, HttpServletRequest request) {
 		Date date;
 		List<CnsltVO> cnsltVOList = null;
-//		String clasCode = (String) request.getSession().getAttribute("CLASS_INFO");
-//		log.info("clasCode test ==> " + clasCode);
 		try {
 			date = getDatePattern(cnsltVO.getCnsltDe());
 			cnsltVO.setCnsltDe(date);
-//			cnsltVO.setClasCode();
-			log.info("loadCnsltTime cnsltVO => " + cnsltVO);
-			log.info("loadCnsltTime date => " + date);
-			
 			cnsltVOList = this.consultationMapper.loadCnsltResve(cnsltVO);
+			
+			log.debug("loadCnsltTime cnsltVO => " + cnsltVO);
+			log.debug("loadCnsltTime date => " + date);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		log.info("loadCnsltTime cnsltVOList => ", cnsltVOList);
+		log.debug("loadCnsltTime cnsltVOList => ", cnsltVOList);
 		
 		return cnsltVOList;
 	}
@@ -168,18 +162,19 @@ public class ConsultationServiceImpl implements ConsultationService {
 		// 학교 코드를 불러오는 메서드
 		String schulCode = this.consultationMapper.getSchulCode(cnsltVO);
 		cnsltVO.setSchulCode(schulCode);
-		log.info("학교 코드 확인 => " + schulCode);
 
 		// 담임선생님 아이디를 불러오는 메서드
 		String cnsltTcherId = this.consultationMapper.getTcherId(cnsltVO);
 		cnsltVO.setCnsltTcherId(cnsltTcherId);
-		log.info("담임선생님 확인 => " + cnsltTcherId);
 
 		// 초기 상담 상태를 대기로 설정
 		cnsltVO.setCmmnCnsltSttus("A09001");
-		log.info("setCnsltRequest cnsltVO => " + cnsltVO);
-
+		
 		int result = this.consultationMapper.setCnsltRequest(cnsltVO);
+		
+		log.debug("학교 코드 확인 => " + schulCode);
+		log.debug("담임선생님 확인 => " + cnsltTcherId);
+		log.debug("setCnsltRequest cnsltVO => " + cnsltVO);
 		
 		if (result == 1) { returnStr = "/cnslt/goToCnsltList"; }
 		
@@ -213,11 +208,11 @@ public class ConsultationServiceImpl implements ConsultationService {
 	// 상담 예약 내역을 수정하는 페이지로 이동하는 메서드
 	public CnsltVO modifyCnsltResve(String cnsltCode) {
 		CnsltVO modCnsltVO = this.consultationMapper.getOneCnsltResve(cnsltCode);
-		log.info("modifyCnsltResve resultCnsltVO => " + modCnsltVO);
+		log.debug("modifyCnsltResve resultCnsltVO => " + modCnsltVO);
 		
 		try {
 			modCnsltVO.setCnsltDe(getDatePattern(modCnsltVO.getCnsltDe()));
-			log.info("modifyCnsltResve cnsltDe => " + modCnsltVO.getCnsltDe());
+			log.debug("modifyCnsltResve cnsltDe => " + modCnsltVO.getCnsltDe());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -231,7 +226,7 @@ public class ConsultationServiceImpl implements ConsultationService {
 		String returnStr = "";
 		
 		int result = this.consultationMapper.modifyCnsltResveAct(cnsltVO);
-		log.info("modifyCnsltResveAct result => " + result);
+		log.debug("modifyCnsltResveAct result => " + result);
 
 		if (result == 1) { returnStr = "/cnslt/goToCnsltList"; }
 		
@@ -246,10 +241,10 @@ public class ConsultationServiceImpl implements ConsultationService {
 		Map<String, Object> cnsltSchedulHash = new HashMap<String, Object>();
 		
 		String clasCode = (String) map.get("clasCode");
-		log.info("loadTeacherCnsltResveList clasCode => " + clasCode);
-		
 		List<CnsltVO> cnsltVOList = this.consultationMapper.loadTeacherCnsltResveList(clasCode);
-		log.info("loadTeacherCnsltResveList cnsltVOList => " + cnsltVOList);
+		
+		log.debug("loadTeacherCnsltResveList clasCode => " + clasCode);
+		log.debug("loadTeacherCnsltResveList cnsltVOList => " + cnsltVOList);
 		
 		for (CnsltVO cnslt : cnsltVOList) {
 			String sttus = cnslt.getCmmnCnsltSttus();
@@ -293,35 +288,32 @@ public class ConsultationServiceImpl implements ConsultationService {
 		String cnsltCode = (String) map.get("cnsltCode");
 		String cmmnCnsltSttus = (String) map.get("sttus");
 		String cnsltDiary = (String) map.get("cnsltDiary");
-		
 		CnsltVO cnsltVO = new CnsltVO();
 		cnsltVO.setCnsltCode(cnsltCode);
 		cnsltVO.setCmmnCnsltSttus(cmmnCnsltSttus);
 		
 		if (cnsltDiary != null) { cnsltVO.setCnsltDiary(cnsltDiary); }
-		log.info("changeSttus cnsltVO => " + cnsltVO);
-		
 		int result = this.consultationMapper.changeSttus(cnsltVO);
+		
+		log.debug("changeSttus cnsltVO => " + cnsltVO);
 		
 		return result;
 	}
 
 	@Override
 	public ArticlePage<CnsltVO> loadCnsltDiaryList(CnsltDiarySearchVO cnsltDiarySearchVO) {
-		log.info("loadCnsltDiaryList cnsltDiarySearchVO => " + cnsltDiarySearchVO);
 		String keyword = cnsltDiarySearchVO.getKeyword();
 		int currentPage = cnsltDiarySearchVO.getCurrentPage();
 		int size = cnsltDiarySearchVO.getSize();
-		
-		log.info("searchCnsltDiaryList cnsltDiarySearchVO => " + cnsltDiarySearchVO);
-		
 		int total = this.consultationMapper.getCnsltDiaryTotal(cnsltDiarySearchVO);
-		log.info("loadCnsltDiaryList total => " + total);
-		
 		List<CnsltVO> cnsltDiaryVOList = this.consultationMapper.loadCnsltDiaryList(cnsltDiarySearchVO);
-		log.info("loadCnsltDiaryList cnsltDiaryVOList => " + cnsltDiaryVOList);
 		
 		ArticlePage<CnsltVO> cnsltPage = new ArticlePage<CnsltVO>(currentPage, size, cnsltDiaryVOList, keyword, total);
+		
+		log.debug("loadCnsltDiaryList cnsltDiarySearchVO => " + cnsltDiarySearchVO);
+		log.debug("searchCnsltDiaryList cnsltDiarySearchVO => " + cnsltDiarySearchVO);
+		log.debug("loadCnsltDiaryList total => " + total);
+		log.debug("loadCnsltDiaryList cnsltDiaryVOList => " + cnsltDiaryVOList);
 
 		return cnsltPage;
 	}
@@ -330,14 +322,13 @@ public class ConsultationServiceImpl implements ConsultationService {
 	@Override
 	public CnsltVO viewCnsltCnDetail(String cnsltCode) {
 		CnsltVO cnsltVO = this.consultationMapper.getOneCnsltDiary(cnsltCode);
-		
 		FamilyRelateVO familyRelateVO = this.consultationMapper.getFamilyRelate(cnsltVO);
-		log.info("viewCnsltCnDetail familyRelateVO => " + familyRelateVO);
-		
 		cnsltVO.setStdntId(familyRelateVO.getStdntId());
 		cnsltVO.setStdntIdNm(familyRelateVO.getStdntIdNm());
 		cnsltVO.setClasInNo(familyRelateVO.getClasInNo());
-		log.info("viewCnsltCnDetail cnsltVO => " + cnsltVO);
+		
+		log.debug("viewCnsltCnDetail familyRelateVO => " + familyRelateVO);
+		log.debug("viewCnsltCnDetail cnsltVO => " + cnsltVO);
 		
 		return cnsltVO;
 	}
@@ -359,15 +350,15 @@ public class ConsultationServiceImpl implements ConsultationService {
 	public ClasStdntVO viewChildInfo(String mberId, HttpServletRequest request) {
 		// 세션에 저장된 클래스 정보 가져오기
 		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
-		log.info("viewChildInfo CLAS_INFO => " + clasVO);
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("mberId", mberId);
 		map.put("clasCode", clasVO.getClasCode());
-		
 		// 학생 정보를 불러오는 메서드
 		ClasStdntVO clasStdntVO = this.consultationMapper.viewChildInfo(map);
-		log.info("viewChildInfo clasStdntVO => " + clasStdntVO);
+		
+		log.debug("viewChildInfo CLAS_INFO => " + clasVO);
+		log.debug("viewChildInfo clasStdntVO => " + clasStdntVO);
 		
 		return clasStdntVO;
 	}

@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import kr.or.ddit.classroom.mapper.ClassroomMainMapper;
 import kr.or.ddit.classroom.mapper.ClassroomMapper;
 import kr.or.ddit.classroom.mapper.GalleryMapper;
 import kr.or.ddit.classroom.mapper.NtcnMapper;
@@ -27,8 +26,6 @@ public class ClassroomMainServiceImpl implements ClassroomMainService {
 
 	@Autowired
 	ClassroomMapper classroomMapper;
-	@Autowired
-	ClassroomMainMapper classroomMainMapper;
 	@Autowired
 	TaskMapper taskMapper;
 	@Autowired
@@ -57,7 +54,6 @@ public class ClassroomMainServiceImpl implements ClassroomMainService {
 	// 반 앨범 이미지 get
 	@Override
 	public List<AtchFileVO> getClasImg(HttpServletRequest request, Map<String, Object> map) {
-		
 		// size는 최대 9
 		int size = Integer.parseInt((String)map.get("size"));
 		if(size > 9) {
@@ -92,6 +88,4 @@ public class ClassroomMainServiceImpl implements ClassroomMainService {
 		
 		return res;
 	}
-	
-	
 }

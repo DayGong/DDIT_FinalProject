@@ -65,7 +65,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 			schulCode = sanctnDocSearchVO.getSchulCode();
 		}
 		
-//		String clasStdntCode = sanctnDocSearchVO.getClasStdntCode();
 		String keyword = sanctnDocSearchVO.getKeyword();
 		int currentPage = sanctnDocSearchVO.getCurrentPage();
 		int size = sanctnDocSearchVO.getSize();
@@ -114,29 +113,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 		return this.approvalMapper.approvalDelete(sanctnDocVO);
 	}
 	
-	//선생님-체험학습 문서 목록 데이터
-//	@Override
-//	public ArticlePage<SanctnDocVO> loadSanctnDocListT(SanctnDocSearchVO sanctnDocSearchVO) {
-//		log.debug("loadSanctnDocList->sanctnDocSearchVO전 : " + sanctnDocSearchVO);
-//		String clasCode = sanctnDocSearchVO.getClasCode();
-//		String keyword = sanctnDocSearchVO.getKeyword();
-//		int currentPage = sanctnDocSearchVO.getCurrentPage();
-//		int size = sanctnDocSearchVO.getSize();
-//		
-//		log.debug("loadSanctnDocListT->sanctnDocSearchVO후 : " + sanctnDocSearchVO);
-//		
-//		//선생님-체험학습 문서 갯수 
-//		int total = this.approvalMapper.getApprovalTotalT(sanctnDocSearchVO);
-//		log.debug("loadSanctnDocListT->total : " + total);
-//		
-//		List<SanctnDocVO> sanctnDocVOList = this.approvalMapper.loadSanctnDocListT(sanctnDocSearchVO);
-//		log.debug("loadSanctnDocListT->sanctnDocVOList : " + sanctnDocVOList);
-//		
-//		ArticlePage<SanctnDocVO> sanctnDocPage = new ArticlePage<SanctnDocVO>(total, currentPage, size, sanctnDocVOList, keyword, clasCode);
-//		log.debug("loadSanctnDocListT->sanctnDocPage : " + sanctnDocPage);
-//		return sanctnDocPage;
-//	}
-	
 	//선생님-체험학습신청 거절
 	@Override
 	public int approvalRefuse(SanctnDocVO sanctnDocVO) {
@@ -150,8 +126,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		
 		//담임이라면
 		if(request.isUserInRole("A14002")){
-			//서명을 새로 등록 했을 때
-			// 파일객체가 있다면 폴더생성
+			//서명을 새로 등록 했을 때 파일객체가 있다면 폴더생성
 			if (uploadFile != null && uploadFile.getSize() > 0) {
 				File fileFolder = new File(uploadFolder + "\\sign\\");
 				fileFolder.mkdirs();
@@ -172,7 +147,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 					int result = this.approvalMapper.approvalSign(sanctnDocVO);
 					log.debug("담임approvalSign->sanctnDocVO! : " + sanctnDocVO);
 					
-//					//학교회원에 서명 추가
+					//학교회원에 서명 추가
 					SchulPsitnMberVO schulPsitnMberVO = (SchulPsitnMberVO)request.getSession().getAttribute("SCHOOL_USER_INFO");
 					schulPsitnMberVO.setSign(sanctnDocVO.getTcherSanctn());
 					log.debug("approvalSign->schulPsitnMberVO : " + schulPsitnMberVO);

@@ -63,6 +63,6 @@ public class HeaderServiceImpl implements HeaderService {
 	@Override
 	public String getMberImage(String mberId) {
 		return this.headerMapper.getMberImage(mberId);
-}
+	}
 
 }

@@ -1,7 +1,5 @@
 package kr.or.ddit.classroom.controller;
 
-import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.classroom.service.UnitTestService;
-import kr.or.ddit.vo.AswperVO;
 import kr.or.ddit.vo.FamilyRelateVO;
-import kr.or.ddit.vo.GcVO;
 import kr.or.ddit.vo.UnitEvlScoreVO;
 import kr.or.ddit.vo.UnitEvlVO;
 import lombok.extern.slf4j.Slf4j;
@@ -38,15 +34,6 @@ public class UnitTestController {
 	public String list() {
 		return "unitTest/unitTestList";
 	}
-	
-	// (교사) 모든 단원평가 리스트 get
-//	@ResponseBody
-//	@PostMapping("/getUnitTestList")
-//	public List<UnitEvlScoreVO> getUnitTestList() {
-//		String clasCode = "CL10000001"; // 원래는 세션에서 읽어옴
-//		List<UnitEvlScoreVO> unitEvlVOList = unitTestService.getUnitTestList(clasCode);
-//		return unitEvlVOList;
-//	}
 	
 	// 단원평가 생성 페이지로 이동
 	@GetMapping("/create")
@@ -78,21 +65,6 @@ public class UnitTestController {
 		return unitEvlVO;
 	}
 
-	// 단원평가 학생 결과 목록 ajax
-//	@ResponseBody
-//	@PostMapping("/getGcList")
-//	public List<GcVO> gcList(@RequestBody String unitEvlCode) {
-//		return unitTestService.getGcList(unitEvlCode);
-//	}
-
-	// 한명의 학생이 하나의 단원평가에 대한 본인의 결과 ajax
-//	@ResponseBody
-//	@PostMapping("/getStdGc")
-//	public List<GcVO> getStdGc(@RequestBody String unitEvlCode, Principal pr) {
-//		String mberId = pr.getName();
-//		return unitTestService.getStdGc(unitEvlCode, mberId);
-//	}
-	
 	// 단원평가 수정
 	@PostMapping("/modify")
 	public String modify(Model model, @RequestParam(value = "unitEvlCode") String unitEvlCode) {
@@ -107,7 +79,6 @@ public class UnitTestController {
 		return unitTestService.deleteUnitTest(unitEvlCode);
 	}
 	
-	
 	// 수정 완료
 	@ResponseBody
 	@PostMapping("/updateUnitTest")
@@ -116,20 +87,14 @@ public class UnitTestController {
 	}
 	
 	// 단원평가 응시 페이지로 이동
-//	@GetMapping("/exam/{unitEvlCode}")
-//	public String exam(Model model, @PathVariable("unitEvlCode") String unitEvlCode) {
-//		UnitEvlVO unitEvlVO = unitTestService.detail(unitEvlCode);
-//		unitEvlVO.setQuesVOList(unitTestService.getQuesList(unitEvlCode));
-//		model.addAttribute("unitEvlVO", unitEvlVO);
-//		return "unitTest/unitTestExam";
-//	}
-	// 단원평가 응시 페이지로 이동
 	@PostMapping("/exam")
 	public String exam(Model model, @RequestParam(value = "unitEvlCode", required = false) String unitEvlCode) {
 		UnitEvlVO unitEvlVO = unitTestService.detail(unitEvlCode);
 		unitEvlVO.setQuesVOList(unitTestService.getQuesList(unitEvlCode));
-		log.info("unitEvlVO:"+unitEvlVO);
 		model.addAttribute("unitEvlVO", unitEvlVO);
+
+		log.debug("unitEvlVO:"+unitEvlVO);
+		
 		return "unitTest/unitTestExam";
 	}
 
@@ -143,19 +108,8 @@ public class UnitTestController {
 	// 시험 종료 후 학생 답안 생성
 	@PostMapping("/finishGc")
 	public int finishGc(HttpServletRequest request, @RequestBody Map<String, Object> map) {
-		// map unitEvlCode, aswperArr["x", "o" ...]
 		return unitTestService.finishGc(request, map);
 	}
-	
-	// 학생 답안 select 
-//	@ResponseBody
-//	@PostMapping("/getAswper")
-//	public List<AswperVO> getAswper(@RequestBody Map<String,Object> map){
-//		AswperVO sendVO = new AswperVO();
-//		sendVO.setUnitEvlCode((String)map.get("unitEvlCode"));
-//		sendVO.setClasStdntCode((String)map.get("clasStdntCode"));
-//		return unitTestService.getAswper(sendVO);
-//	}
 	
 	// 학생 답안 삭제
 	@ResponseBody
@@ -171,13 +125,6 @@ public class UnitTestController {
 	public List<UnitEvlScoreVO> getStdGcList(@RequestBody Map<String, Object> map){
 		return unitTestService.getStdGcList(map);
 	}
-	
-	// 하나의 단원평가에 대한 모든 반학생 성적 get
-//	@ResponseBody
-//	@PostMapping("/getAllStdScoreInOneUnitEvl")
-//	public UnitEvlScoreVO getAllStdScoreInOneUnitEvl(@RequestBody String unitEvlCode){
-//		return unitTestService.getAllStdScoreInOneUnitEvl(unitEvlCode);
-//	}
 	
 	// 하나의 단원평가 정보 + 모든 학생의 답안 정보 + 응시 인원 정보 + 평균 점수
 	@ResponseBody

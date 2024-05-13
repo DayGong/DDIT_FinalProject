@@ -39,12 +39,6 @@ public class CommonServiceImpl implements CommonService {
 	String uploadFolder;
 	//D:\\upload
 
-	// 메인페이지
-	@Override
-	public String main() {
-		return null;
-	}
-
 	// 회원가입
 	@Override
 	@Transactional
@@ -64,7 +58,6 @@ public class CommonServiceImpl implements CommonService {
 			memberVO.setMberImage(uploadFileName);
 
 			String savePath = uploadFolder + "\\profile\\" + uploadFileName;
-								//D:\\upload"\\profile\\이미지이름
 			File file = new File(savePath);
 
 			try {
@@ -73,52 +66,39 @@ public class CommonServiceImpl implements CommonService {
 			} catch (IllegalStateException | IOException e) {
 				e.printStackTrace();
 			}
-
 		}
 
 		//비밀번호 암호화
 		String pw = memberVO.getPassword();
-		log.info("memberVO -> password: " + pw);
-
 		String encodedPw = this.passwordEncode.encode(pw);
-		log.info("encodedPw: " + encodedPw);
-
 		memberVO.setPassword(encodedPw);
-		log.info("updateEncodedPassword -> memVO: " + memberVO);
+		
+		log.debug("memberVO -> password: " + pw);
+		log.debug("encodedPw: " + encodedPw);
+		log.debug("updateEncodedPassword -> memVO: " + memberVO);
 
 		//회원정보 Mapper에 전송
 		int res = commonMapper.signUp(memberVO);
-
-		// 가족관계 insert 결과를 담을 변수
-		int res2 = 0;
-		// 학교소속회원 insert 결과를 담을 변수
-		int res3 = 0;
+		int res2 = 0;	// 가족관계 insert 결과를 담을 변수
+		int res3 = 0;	// 학교소속회원 insert 결과를 담을 변수
 		List<String> schools = new ArrayList<String>();
+		
 		//자녀가 여러명이고 자녀마다 학교코드가 다를 수 있으므로 자녀아이디를 하나씩 검색해서 학교코드를 가져오도록 반복문 돌리기
 		for (int i = 0; i < mberChildIdList.size(); i++) {
 			//(학부모 회원가입시)자녀아이디로 학교 코드 가져오기
 			String getSchulCode = commonMapper.getSchulCode(mberChildIdList.get(i));
 
-			log.info("getSchulCode -> 학교 코드: " + getSchulCode);
-
 			//가족관계 VO호출(학부모 회원가입시 같이 인서트해야함)
 			FamilyRelateVO frlVO  = new FamilyRelateVO();
 
 			//가족관계 데이터 세팅
-			//학교코드
 			frlVO.setSchulCode(getSchulCode);
-			//가족관계
 			frlVO.setCmmnDetailCode(familyChoice);
-			//학생(자녀)아이디
 			frlVO.setStdntId(mberChildIdList.get(i));
-			//학부모 아이디
 			frlVO.setStdnprntId(memberVO.getMberId());
-
-			log.info("frlVO -> 가족관계: " + frlVO);
 
 			//가족관계 Mapper에 전송 성공 했을 때 자녀 수 만큼 값을 리턴함
 			res2 += commonMapper.insertFamilyRelate(frlVO);
-
 
 			// 학교소속회원 insert
 			boolean isDuplicate = false; // 학교 코드 중복
@@ -152,27 +132,6 @@ public class CommonServiceImpl implements CommonService {
 		return result;
 	}
 
-	// 로그인
-	@Override
-	public String loginForm() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	// FAQ 게시판 목록
-	@Override
-	public String faq() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	// 학원 조회
-	@Override
-	public String academy() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	// 중복체크
 	@Override
 	public int idDupChk(MemberVO memberVO) {
@@ -201,7 +160,6 @@ public class CommonServiceImpl implements CommonService {
 	public void addVisitrCo(HttpServletRequest request) {
 		String agent =	request.getHeader("User-Agent").toLowerCase();
 		String browserName = "Unknown";
-		log.info("addVisitrCo agent => " + agent);
 
 		if(agent != null) {
             if(agent.contains("whale")) {
@@ -214,17 +172,19 @@ public class CommonServiceImpl implements CommonService {
             	browserName = "etc";
             }
         }
-		log.info("addVisitrCo browserName => " + browserName);
 
 		int result = this.commonMapper.addVisitrCo(browserName);
-		log.info("addVisitrCo result => " + result);
+		
+		log.debug("addVisitrCo agent => " + agent);
+		log.debug("addVisitrCo browserName => " + browserName);
+		log.debug("addVisitrCo result => " + result);
 	}
 
 	// 로그인 수를 등록하는 메서드
 	@Override
 	public void addLoginCo() {
 		int result = this.commonMapper.addLoginCo();
-		log.info("addVisitrCo result => " + result);
+		log.debug("addVisitrCo result => " + result);
 	}
 
 	// 최초 1회 비밀번호 변경

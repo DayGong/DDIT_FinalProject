@@ -5,19 +5,14 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
-import kr.or.ddit.vo.AtchFileVO;
 import kr.or.ddit.vo.ChldrnClasVO;
-import kr.or.ddit.vo.ClasAlbumVO;
 import kr.or.ddit.vo.ClasStdntVO;
 import kr.or.ddit.vo.ClasVO;
-import kr.or.ddit.vo.GcVO;
 import kr.or.ddit.vo.HrtchrVO;
 import kr.or.ddit.vo.MemberVO;
-import kr.or.ddit.vo.QuesVO;
 import kr.or.ddit.vo.SchulPsitnMberVO;
 import kr.or.ddit.vo.SkedVO;
 import kr.or.ddit.vo.TaskVO;
-import kr.or.ddit.vo.UnitEvlVO;
 
 public interface ClassroomMapper {
 	// 학급 클래스 메인: 해당 클래스의 담임 교사 정보

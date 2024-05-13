@@ -54,12 +54,11 @@ public class AdminServiceImpl implements AdminService {
 	// 신고 내용을 저장하는 메서드
 	@Override
 	public int addComplaint(SttemntVO sttemntVO) {
-		
 		// 신고된 게시물의 정보를 불러오는 메서드
 		ClasAlbumVO clasAlbumVO = this.adminMapper.getClasAlbumInfo(sttemntVO.getNttCode());
 		sttemntVO.setClasCode(clasAlbumVO.getClasCode());		// 반 코드
 		sttemntVO.setWrterId(clasAlbumVO.getMberId());			// 작성자 아이디
-		sttemntVO.setCmmnSttemntProcessSttus("A21001");				// 초기 공통 신고 처리 상태를 미확인으로 설정
+		sttemntVO.setCmmnSttemntProcessSttus("A21001");			// 초기 공통 신고 처리 상태를 미확인으로 설정
 		
 		log.debug("addComplaint clasAlbumVO => " + clasAlbumVO);
 		log.debug("addComplaint sttemntVO => " + sttemntVO);

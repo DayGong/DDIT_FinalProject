@@ -1,7 +1,5 @@
 package kr.or.ddit.approval.service;
 
-
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -30,9 +28,6 @@ public interface ApprovalService {
 	
 	//학부모-체험학습 문서 삭제
 	int approvalDelete(SanctnDocVO sanctnDocVO);
-
-	//선생님-체험학습 문서 목록 데이터
-//	ArticlePage<SanctnDocVO> loadSanctnDocListT(SanctnDocSearchVO sanctnDocSearchVO);
 
 	//선생님-체험학습신청 거절
 	int approvalRefuse(SanctnDocVO sanctnDocVO);

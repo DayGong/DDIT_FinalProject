@@ -50,5 +50,4 @@ public interface DiaryService {
 	// 일기장 이미지 파일업로드
 	public String diaryImgUpload(String imgData);
 
-
 }

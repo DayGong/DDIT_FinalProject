@@ -10,7 +10,6 @@ import kr.or.ddit.vo.ClasStdntVO;
 import kr.or.ddit.vo.CnsltDiarySearchVO;
 import kr.or.ddit.vo.CnsltDiaryVO;
 import kr.or.ddit.vo.CnsltVO;
-import kr.or.ddit.vo.MemberVO;
 
 public interface ConsultationService {
 

@@ -32,11 +32,6 @@ public class ClassroomMainController {
 	@ResponseBody
 	@PostMapping("/getStdList")
 	public List<ClasStdntVO> getStdList(@RequestBody Map<String,Object> map){
-		/*
-		 *  파라미터맵 : clasCode(선택사항)
-		 *			  schulCode(선택사항)
-		 */
-		
 		return classroomMainService.getStdList(map);
 	}
 	
@@ -46,6 +41,7 @@ public class ClassroomMainController {
 	public List<TaskVO> getTaskList(HttpServletRequest request, @RequestBody Map<String,Object> map){
 		String sendClasCode = (String)map.get("clasCode");
 		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
+		
 		// 세션 클래스 코드와 입력 클래스코드가 같지 않음.
 		if(sendClasCode != null && !sendClasCode.equals(clasVO.getClasCode())) {
 			return null;
@@ -64,6 +60,7 @@ public class ClassroomMainController {
 	public List<NtcnVO> getNtcnList(HttpServletRequest request, @RequestBody Map<String,Object> map){
 		String sendClasCode = (String)map.get("clasCode");
 		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
+		
 		// 세션 클래스 코드와 입력 클래스코드가 같지 않음.
 		if(sendClasCode != null && !sendClasCode.equals(clasVO.getClasCode())) {
 			return null;
@@ -76,28 +73,11 @@ public class ClassroomMainController {
 		return classroomMainService.getNtcnList(map);
 	}
 	
-	// 밤 앨범 내 사진 get.
+	// 반 앨범 내 사진 get.
 	@ResponseBody
 	@PostMapping("/getClasImg")
 	public List<AtchFileVO> getClasImg(HttpServletRequest request, @RequestBody Map<String,Object> map){
-		/*
-		 * 파라미터
-		 * size : 출력 사진 갯수
-		 */
 		return classroomMainService.getClasImg(request, map);
 	}
-	
-	// 반 수정.
-	@ResponseBody
-	@PostMapping("/modifyClassroom")
-	public int modifyClassroom(HttpServletRequest request){
-		return 0;
-	}
-	
-	// 반 삭제.
-	@ResponseBody
-	@PostMapping("/deleteClassroom")
-	public int deleteClassroom(HttpServletRequest request){
-		return classroomMainService.deleteClassroom(request);
-	}
+
 }

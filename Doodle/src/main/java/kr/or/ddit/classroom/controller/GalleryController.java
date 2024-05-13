@@ -37,8 +37,9 @@ public class GalleryController {
 	public String albumList(HttpServletRequest request, Model model,
 			@RequestParam(value = "clasCode", required = false, defaultValue = "") String clasCode) {
 		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
-		log.debug("CLASS_INFO >> "+clasVO);
 		model.addAttribute("clasCode", clasVO.getClasCode());
+		
+		log.debug("CLASS_INFO >> "+clasVO);
 		
 		return "gallery/gallery";
 	}
@@ -49,33 +50,25 @@ public class GalleryController {
 	public ArticlePage<ClasAlbumVO> albumListAjax(HttpServletRequest request, Model model,
 			@RequestBody Map<String, Object> map) {
 		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
-		model.addAttribute("clasCode", clasVO.getClasCode());
-		
-		log.debug("map : " + map);
+		int size = 8;
+		int total = this.galleryService.getTotalGallery(map);
+		String keyword = map.get("keyword").toString();
+		String url = "/gallery/gallery"+clasVO.getClasCode();
 
 		// 앨범 리스트
 		List<ClasAlbumVO> clasAlbumVOList = this.galleryService.clasAlbumList2(map);
-		log.debug("list -> clasAlbumVOList :" + clasAlbumVOList);
 
-		int total = this.galleryService.getTotalGallery(map);
-		// list->total : 23
-		log.debug("list->total : " + total);
-		int size = 8;
+		model.addAttribute("clasCode", clasVO.getClasCode());
 
-		String keyword = map.get("keyword").toString();
-		log.debug("albumListAjax->keyword : " + keyword);
-
-		// 페이지네이션
-		// ArticlePage(int total, int currentPage, int size, List<T> content, String
-		// keyword)
-		ArticlePage<ClasAlbumVO> data = new ArticlePage<ClasAlbumVO>(total,
-				Integer.parseInt(map.get("currentPage").toString()), size, clasAlbumVOList, keyword);
-		
-		String url = "/gallery/gallery"+clasVO.getClasCode();
+		// 페이지네이션 ArticlePage(int total, int currentPage, int size, List<T> content, String keyword)
+		ArticlePage<ClasAlbumVO> data = new ArticlePage<ClasAlbumVO>(total,	Integer.parseInt(map.get("currentPage").toString()), size, clasAlbumVOList, keyword);
 		data.setUrl(url);
 		
+		log.debug("map : " + map);
+		log.debug("list -> clasAlbumVOList :" + clasAlbumVOList);
+		log.debug("list->total : " + total);
+		log.debug("albumListAjax->keyword : " + keyword);
 		log.debug("url:"+url);
-
 		log.debug("clasAlbumVOList : " + clasAlbumVOList);
 
 		return data;
@@ -88,20 +81,19 @@ public class GalleryController {
 				ClasAlbumVO clasAlbumVO) {
 
 		ClasStdntVO clasStdntVO = (ClasStdntVO) request.getSession().getAttribute("CLASS_STD_INFO");
-		log.debug("CLASS_STD_INFO >> "+clasStdntVO);
 		model.addAttribute("clasStdntCode", clasStdntVO.getClasStdntCode());
 		model.addAttribute("mberId", clasStdntVO.getMberId());
 		
 		// 세션에서 가지고온 값 clasAlbumVO에 저장
 		clasAlbumVO.setClasStdntCode(clasStdntVO.getClasStdntCode());
 		clasAlbumVO.setMberId(clasStdntVO.getMberId());
-		log.debug("createAlbum -> clasAlbumVO : " + clasAlbumVO);
-
+		
 		int result = this.galleryService.createAlbum(clasAlbumVO);
-		log.debug("createAlbum-> result : " + result);
-
 		List<ClasAlbumVO> clasAlbumVOList = this.galleryService.clasAlbumList(clasAlbumVO.getClasCode());
 
+		log.debug("CLASS_STD_INFO >> "+clasStdntVO);
+		log.debug("createAlbum -> clasAlbumVO : " + clasAlbumVO);
+		log.debug("createAlbum-> result : " + result);
 		log.debug("clasAlbumVOList : " + clasAlbumVOList);
 
 		return clasAlbumVOList;
@@ -112,9 +104,11 @@ public class GalleryController {
 	@PostMapping("/deleteAlbum")
 	public int deleteAlbum(
 			@RequestParam(value = "atchFileCode", required = false, defaultValue = "") String atchFileCode) {
-		log.debug("deleteAlbum-> atchFileCode: " + atchFileCode);
 		int result = galleryService.deleteAlbum(atchFileCode);
+		
+		log.debug("deleteAlbum-> atchFileCode: " + atchFileCode);
 		log.debug("deleteAlbum->result : " + result);
+		
 		return result;
 	}
 
@@ -124,21 +118,18 @@ public class GalleryController {
 	public List<ClasAlbumVO> updateAlbum(HttpServletRequest request, Model model,
 						ClasAlbumVO clasAlbumVO) {
 		ClasStdntVO clasStdntVO = (ClasStdntVO) request.getSession().getAttribute("CLASS_STD_INFO");
-		log.debug("CLASS_STD_INFO >> "+clasStdntVO);
 		
 		// 세션에서 가지고 온 값 clasAlbumVO에 저장
 		model.addAttribute("clasStdntCode", clasStdntVO.getClasStdntCode());
-		
 		clasAlbumVO.setMberId(clasStdntVO.getMberId());
-		log.debug("updateAlbum-> ClasAlbumVO: " + clasAlbumVO);
 
 		int result = galleryService.updateAlbum(clasAlbumVO);
-		log.debug("updateAlbum-> result :" + result);
-
-		// galleryDetailAjax->atchFileCode : OJ20240101ALB00003
-		log.debug("galleryDetailAjax->atchFileCode  : " + clasAlbumVO.getAtchFileCode());
-
 		List<ClasAlbumVO> atchFileVOList = this.galleryService.galleryDetail(clasAlbumVO.getAtchFileCode());
+		
+		log.debug("CLASS_STD_INFO >> "+clasStdntVO);
+		log.debug("updateAlbum-> ClasAlbumVO: " + clasAlbumVO);
+		log.debug("updateAlbum-> result :" + result);
+		log.debug("galleryDetailAjax->atchFileCode  : " + clasAlbumVO.getAtchFileCode());
 		log.debug("atchFileVOList : " + atchFileVOList);
 
 		return atchFileVOList;
@@ -150,12 +141,13 @@ public class GalleryController {
 	public List<String> albumTagList(HttpServletRequest request, Model model,
 			@RequestParam(value = "clasCode", required = false, defaultValue = "") String clasCode) {
 		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
-		log.debug("CLASS_INFO >> "+clasVO);
 		model.addAttribute("clasCode", clasVO.getClasCode());
 		
 		List<String> albumTagVOList = this.galleryService.albumTagList(clasVO.getClasCode());
-//		AlbumTagList =>[고양이, 테스트, 동물]
+		
+		log.debug("CLASS_INFO >> "+clasVO);
 		log.debug("AlbumTagList =>" + albumTagVOList);
+		
 		return albumTagVOList;
 	}
 
@@ -169,12 +161,11 @@ public class GalleryController {
 		
 		// 세션에 저장된 클래스 정보 가져오기
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.debug("galleryDetail USER_INFO => " + memberVO);
+		String viewName = "gallery/galleryDetail";
 		
 		model.addAttribute("mberId", memberVO.getMberId());
 		
-		String viewName = "gallery/galleryDetail";
-		String flag = (!complaint.equals("")) ? "true" : "false";
+		log.debug("galleryDetail USER_INFO => " + memberVO);
 		
 		if(!complaint.equals("")) {
 			viewName = "noTiles/gallery/galleryDetail";
@@ -187,10 +178,9 @@ public class GalleryController {
 	@GetMapping("/galleryDetailAjax")
 	public List<ClasAlbumVO> galleryDetailAjax(
 			@RequestParam(value = "atchFileCode", required = false, defaultValue = "") String atchFileCode) {
-		// galleryDetailAjax->atchFileCode : OJ20240101ALB00003
-		log.debug("galleryDetailAjax->atchFileCode  : " + atchFileCode);
-
 		List<ClasAlbumVO> atchFileVOList = this.galleryService.galleryDetail(atchFileCode);
+		
+		log.debug("galleryDetailAjax->atchFileCode  : " + atchFileCode);
 		log.debug("atchFileVOList : " + atchFileVOList);
 
 		return atchFileVOList;
@@ -200,10 +190,9 @@ public class GalleryController {
 	@ResponseBody
 	@PostMapping("/deleteImage")
 	public int deleteImage(@RequestBody AtchFileVO atchFileVO) {
+		int result = this.galleryService.deleteImage(atchFileVO);
 
 		log.debug("atchFileVO : " + atchFileVO);
-
-		int result = this.galleryService.deleteImage(atchFileVO);
 		log.debug("deleteImage->result : " + result);
 
 		return result;
@@ -213,9 +202,9 @@ public class GalleryController {
 	@ResponseBody
 	@PostMapping("/updateImage")
 	public int updateImage(@RequestBody AtchFileVO atchFileVO) {
-		log.debug("atchFileVO : " + atchFileVO);
-
 		int result = this.galleryService.updateImage(atchFileVO);
+
+		log.debug("atchFileVO : " + atchFileVO);
 		log.debug("updateImage->result : " + result);
 
 		return result;

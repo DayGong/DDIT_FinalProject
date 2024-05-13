@@ -149,13 +149,4 @@ public interface FreeBoardMapper {
 	//댓글 수정 mapper
 	public int updateReply(AnswerVO answerVO);
 
-
-
-
-
-
-
-
-
-
 }

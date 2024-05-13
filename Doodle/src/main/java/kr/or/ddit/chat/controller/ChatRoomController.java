@@ -35,7 +35,6 @@ public class ChatRoomController {
 	// 교직원 목록 조회
 	@GetMapping("/friends")
 	public String friend(@RequestParam(value = "schulCode", required = false) String schulCode) {
-
 		return "/chat/friend";
 	}
 
@@ -49,9 +48,7 @@ public class ChatRoomController {
 		schulPsitnMberVO.setMberId(mberId);
 		log.debug("friendList->schulPsitnMberVO : " + schulPsitnMberVO);
 
-
 		List<SchulPsitnMberVO> schulPsitnMberVOList = this.chatRoomService.friendList(schulPsitnMberVO);
-
 		log.debug("friendList->schulPsitnMberVOList : " + schulPsitnMberVOList);
 
 		return schulPsitnMberVOList;
@@ -89,7 +86,6 @@ public class ChatRoomController {
 
 		return chttRoomVOList;
 	}
-	
 
 	//채팅방 개설
 	@ResponseBody
@@ -108,29 +104,28 @@ public class ChatRoomController {
 	@ResponseBody
 	@PostMapping("/roomCode")
 	public String roomCode(@RequestBody ChttRoomVO chttRoomVO) {
+		String chttRoomCode = this.chatRoomService.roomCode(chttRoomVO);
+		
 		log.debug("roomCode->crtrId : " + chttRoomVO.getCrtrId());
 		log.debug("roomCode->prtcpntId : " + chttRoomVO.getPrtcpntId());
-		
-		String chttRoomCode = this.chatRoomService.roomCode(chttRoomVO);
 		log.debug("roomCode->chttRoomCode : " + chttRoomCode);
 		
 		return chttRoomCode;
 	}
-	
 
 	//채팅방 상세
 	@GetMapping("/chtt")
 	public String chtt(@RequestParam(value = "chttRoomCode") String chttRoomCode, Model model, HttpServletRequest request) {
-		log.debug("chtt->chttRoomCode : " + chttRoomCode);
-		
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.debug("chtt->memberVO : " + memberVO);
-
 		ChttRoomVO chttRoomVO = this.chatRoomService.chtt(chttRoomCode);
-		log.debug("chtt->chttRoomVO : " + chttRoomVO);
 		
+		log.debug("chtt->chttRoomCode : " + chttRoomCode);
+		log.debug("chtt->memberVO : " + memberVO);
+		log.debug("chtt->chttRoomVO : " + chttRoomVO);
+
 		model.addAttribute("memberVO", memberVO);
 		model.addAttribute("chttRoomVO", chttRoomVO);
+		
 		return "/chat/chtt";
 	}
 
@@ -138,14 +133,14 @@ public class ChatRoomController {
 	@ResponseBody
 	@PostMapping("/chtt")
 	public List<ChttVO> chtts(@RequestBody String chttRoomCode) {
-		log.debug("chtts->chttRoomCode :" + chttRoomCode);
 		chttRoomCode = chttRoomCode.substring(0, chttRoomCode.length() - 1);
 		List<ChttVO> chttVOList = this.chatRoomService.chtts(chttRoomCode);
+		
+		log.debug("chtts->chttRoomCode :" + chttRoomCode);
 		log.debug("chtts->chttVOList :" + chttVOList);
 
 		return chttVOList;
 	}
-	
 	
 	//반 소속 학부모 목록
 	@GetMapping("/clasFam")
@@ -159,12 +154,10 @@ public class ChatRoomController {
 		// 로그인한 회원 ID
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
 		String mberId = memberVO.getMberId();
-		
 		clasFamVO.setStdnprntId(mberId);
-		log.debug("clasFamList->clasFamVO : " + clasFamVO);
-		
 		List<ClasFamVO> clasFamVOList = this.chatRoomService.clasFamList(clasFamVO);
-
+		
+		log.debug("clasFamList->clasFamVO : " + clasFamVO);
 		log.debug("clasFamList->clasFamVOList : " + clasFamVOList);
 
 		return clasFamVOList;
@@ -188,19 +181,15 @@ public class ChatRoomController {
 		String prtcpntId = memberVO.getMberId();
 		chttRoomVO.setCrtrId(crtrId);
 		chttRoomVO.setPrtcpntId(prtcpntId);
-
 		String clasCode = chttRoomVO.getClasCode();
+		List<ChttRoomVO> clasFamRoomsList = this.chatRoomService.clasFamRoomsList(chttRoomVO);
 
 		log.debug("clasFamRoomsList->crtrId : " + crtrId);
 		log.debug("clasFamRoomsList->prtcpntId : " + prtcpntId);
 		log.debug("clasFamRoomsList->clasCode : " + clasCode);
-
 		log.debug("clasFamRoomsList->chttRoomVO : " + chttRoomVO);
-
-		List<ChttRoomVO> clasFamRoomsList = this.chatRoomService.clasFamRoomsList(chttRoomVO);
 		log.debug("clasFamRoomsList->clasFamRoomsList : " + clasFamRoomsList);
 
 		return clasFamRoomsList;
 	}
-
 }

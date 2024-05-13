@@ -36,11 +36,11 @@ public class HeaderController {
 	@RequestMapping(value="/getMberImage", method=RequestMethod.GET, produces="application/text;charset=utf-8")
 	public String getMberImage(HttpServletRequest request) {
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("getMberImage -> memberVO: " + memberVO);
+		log.debug("getMberImage -> memberVO: " + memberVO);
 		
 		String mberId = memberVO.getMberId();
 		String mberImage = headerService.getMberImage(mberId);
-		log.info("getMberImage -> mberImage: " + mberImage);
+		log.debug("getMberImage -> mberImage: " + mberImage);
 		
 		return mberImage;
 	}
@@ -50,15 +50,15 @@ public class HeaderController {
 	@PostMapping("/getClasCode")
 	public String getClasCode(HttpServletRequest request) {
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("getClasCode -> memberVO: " + memberVO);
+		log.debug("getClasCode -> memberVO: " + memberVO);
 		
 		String mberId = memberVO.getMberId();
 		String auth = memberVO.getVwMemberAuthVOList().get(0).getCmmnDetailCode();
-		log.info("getClasCode -> auth: " + auth);
+		log.debug("getClasCode -> auth: " + auth);
 		
 		String clasCode = headerService.getTeacherClasCode(mberId);
 		
-		log.info("getClasCode -> clasCode: " + clasCode);
+		log.debug("getClasCode -> clasCode: " + clasCode);
 		
 		return clasCode;
 	}
@@ -68,12 +68,12 @@ public class HeaderController {
 	@PostMapping("/getStudentClasStatus")
 	public ClasStdntVO getStudentClasStatus(HttpServletRequest request) {
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("getStudentClasStatus -> memberVO: " + memberVO);
+		log.debug("getStudentClasStatus -> memberVO: " + memberVO);
 		
 		String mberId = memberVO.getMberId();
 
 		ClasStdntVO clasStdntVO = headerService.getStudentClasStatus(mberId);
-		log.info("getStudentClasStatus -> clasStdntVO: " + clasStdntVO);
+		log.debug("getStudentClasStatus -> clasStdntVO: " + clasStdntVO);
 		
 		return clasStdntVO;
 	}
@@ -83,12 +83,12 @@ public class HeaderController {
 	@PostMapping("/getAllNotice")
 	public List<NoticeVO> getAllNotice(HttpServletRequest request, Model model) {
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("getAllNotice -> loginAccount: " + loginAccount);
+		log.debug("getAllNotice -> loginAccount: " + loginAccount);
 		
 		String mberId = loginAccount.getMberId();
 		
 		List<NoticeVO> noticeVOList = headerService.getAllNotice(mberId);
-		log.info("getAllNotice -> noticeVOList: " + noticeVOList);
+		log.debug("getAllNotice -> noticeVOList: " + noticeVOList);
 		
 		model.addAttribute("noticeVOList", noticeVOList);
 		
@@ -99,10 +99,10 @@ public class HeaderController {
 	@ResponseBody
 	@PostMapping("/updateNoticeReadngAt")
 	public int updateNoticeReadngAt(@RequestParam("noticeCode") String noticeCode) {
-		log.info("updateNoticeReadngAt -> noticeCode: " + noticeCode);
+		log.debug("updateNoticeReadngAt -> noticeCode: " + noticeCode);
 		
 		int result = headerService.updateNoticeReadngAt(noticeCode);
-		log.info("updateNoticeReadngAt -> result: " + result);
+		log.debug("updateNoticeReadngAt -> result: " + result);
 		
 		return result;
 	}
@@ -112,12 +112,12 @@ public class HeaderController {
 	@GetMapping("/childList")
 	public List<FamilyRelateVO> childList(HttpServletRequest request, Model model){
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("childList -> loginAccount: " + loginAccount);
+		log.debug("childList -> loginAccount: " + loginAccount);
 		
 		String mberId = loginAccount.getMberId();
 		
 		List<FamilyRelateVO> childList = headerService.childList(mberId);
-		log.info("childList -> childList: " + childList);
+		log.debug("childList -> childList: " + childList);
 		
 		model.addAttribute("childList", childList);
 		
@@ -128,21 +128,20 @@ public class HeaderController {
 	@ResponseBody
 	@PostMapping("/noticeDelete")
 	public int noticeDelete(String[] noticeCodeArr, HttpServletRequest request) {
-//		log.info("noticeDelete -> noticeCodeArr" + Arrays.toString(noticeCodeArr));
 		
 		// 세션에 저장된 아이디 가져오기
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
 		String mberId = loginAccount.getMberId();
 		
 		List<NoticeVO> noticeVOList = headerService.getAllNotice(mberId);
-		log.info("getAllNotice -> noticeVOList: " + noticeVOList);
+		log.debug("getAllNotice -> noticeVOList: " + noticeVOList);
 		
 		// 받아온 배열을 리스트로 변환
 		List<String> noticeCodeList = Arrays.asList(noticeCodeArr);
-		log.info("getAllNotice -> noticeCodeList: " + noticeCodeList);
+		log.debug("getAllNotice -> noticeCodeList: " + noticeCodeList);
 		
 		int result = headerService.noticeDelete(noticeCodeList);
-		log.info("삭제 후 getAllNotice -> noticeVOList: " + noticeVOList);
+		log.debug("삭제 후 getAllNotice -> noticeVOList: " + noticeVOList);
 		
 		return result;
 	}
@@ -154,7 +153,7 @@ public class HeaderController {
 		// 세션에 저장된 아이디 가져오기
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
 		String password = loginAccount.getPassword();
-		log.info("passwordDecode -> password: " + password);
+		log.debug("passwordDecode -> password: " + password);
 		
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 

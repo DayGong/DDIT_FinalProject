@@ -1,6 +1,5 @@
 package kr.or.ddit.chat.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -42,12 +41,4 @@ public class StompChatController {
 			return;
 		}
 	}
-	
-//	@MessageMapping(value = "/chat/alam")
-//	public void alam(ChttVO message) {
-//
-//		template.convertAndSend("/sub/chat/main/" + message.getChttRoomCode(), message);
-//
-//	}
-	
 }

@@ -46,27 +46,21 @@ public class ClassroomController {
 	public String main(HttpServletRequest request, Model model,
 			@RequestParam(value = "clasCode", required = false) String clasCode,
 			@RequestParam(value = "childId", required = false) String childId) {
-		log.info("main -> clasCode: " + clasCode);
-		log.info("main -> childId: " + childId);
-		
 		// 세션에 저장된 회원의 아이디 가져오기
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("loginAccount -> " + loginAccount);
 		
 		// 학급 클래스 입장 시 클래스 정보 세션에 저장
 		if(childId != null && !childId.equals("")) {
 			sessionService.setClassSession(request, clasCode, childId);
 		}
 
-		// 세션에 저장된 클래스 정보 가져오기
-//		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
-//		log.info("clasVO -> " + clasVO);
-		
 		sessionService.setClassSession(request, clasCode);
 		
 		// 해당 클래스의 담임 교사 정보 가져 오기
 		HrtchrVO hrtchrVO = classroomService.clasInfoSelect(clasCode);
-		log.info("main -> hrtchrVO: " + hrtchrVO);
+		
+		log.debug("loginAccount -> " + loginAccount);
+		log.debug("main -> hrtchrVO: " + hrtchrVO);
 		
 		model.addAttribute("clasCode", clasCode);
 		model.addAttribute("hrtchrVO", hrtchrVO);
@@ -87,7 +81,6 @@ public class ClassroomController {
 		return "class/absentReason";
 	}
 	
-	
 	//자유 게시판 목록 
 	@GetMapping("/freeBoard")
 	public String freeBoard() {
@@ -99,7 +92,6 @@ public class ClassroomController {
 	public String votingSurvey() {
 		return "class/votingSurvey";
 	}
-	
 	
 	//알림장 목록
 	@GetMapping("/notice")
@@ -120,10 +112,11 @@ public class ClassroomController {
 	@PostMapping("/scheduleList")
 	public List<SkedVO> scheduleList(HttpSession session, @RequestBody SkedVO skedVO){
 		ClasVO clasVO = (ClasVO) session.getAttribute("CLASS_INFO");
-		log.debug("skedVO->"+skedVO);
 		skedVO.setClasCode(clasVO.getClasCode());
 		
 		List<SkedVO> scheduleList = this.classroomService.scheduleList(skedVO);
+		
+		log.debug("skedVO->"+skedVO);
 		log.debug("scheduleList -> "+scheduleList);
 		
 		return scheduleList;
@@ -141,12 +134,8 @@ public class ClassroomController {
 	@ResponseBody
 	@PostMapping("/scheduleCreateAjax")
 	public int scheduleCreateAjax(HttpSession session,@RequestBody  List<SkedVO> skedVOList){
-		//ClasVO clasVO = (ClasVO)session.getAttribute("CLASS_INFO");
-		log.debug("skedVO-> {}",skedVOList);
-		
-		//skedVO.setClasCode(clasVO.getClasCode());
-		
 		int result = this.classroomService.scheduleCreate(skedVOList);
+		log.debug("skedVO-> {}",skedVOList);
 		
 		return result;
 	}
@@ -164,10 +153,11 @@ public class ClassroomController {
 	@PostMapping("/todaySchedule")
 	public List<SkedVO> todaySchedule(HttpServletRequest request, SkedVO skedVO){
 		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
-		log.debug("skedVO->"+skedVO);
 		skedVO.setClasCode(clasVO.getClasCode());
 		
 		List<SkedVO> todayScheduleList = this.classroomService.todaySchedule(clasVO.getClasCode());
+		
+		log.debug("skedVO->"+skedVO);
 		log.debug("todayScheduleList -> "+todayScheduleList);
 		
 		return todayScheduleList;
@@ -178,10 +168,11 @@ public class ClassroomController {
 	@PostMapping("/checkScheduleSemstr")
 	public int checkScheduleSemstr(HttpSession session, @RequestBody SkedVO skedVO) {
 		ClasVO clasVO = (ClasVO) session.getAttribute("CLASS_INFO");
-		log.debug("skedVO->"+skedVO);
 		skedVO.setClasCode(clasVO.getClasCode());
 		
 		int result = this.classroomService.checkScheduleSemstr(skedVO);
+		
+		log.debug("skedVO->"+skedVO);
 		log.debug("result ->"+result);
 		
 		return result;
@@ -212,13 +203,9 @@ public class ClassroomController {
 	@GetMapping("/classCreate")
 	public String classCreate(@RequestParam(value="schulCode")String schulCode, Model model, SchulPsitnMberVO schulPsitnMberVO, HttpServletRequest request) {
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		//로그인 한 회원 아이디를 가져옴
-//		schulPsitnMberVO.setMberId(memberVO.getMberId());
-//		schulPsitnMberVO = this.classroomService.getSchoolNm(schulPsitnMberVO);
-//	    log.info("schulPsitnMberVO==>" + schulPsitnMberVO);
-//	    model.addAttribute("schulPsitnMberVO", schulPsitnMberVO);
 		SchulVO schulVO = (SchulVO) request.getSession().getAttribute("SCHOOL_INFO");
 		model.addAttribute("schulVO", schulVO);
+		
 	    return "class/classCreate";
 	}
 	
@@ -226,55 +213,54 @@ public class ClassroomController {
 	@ResponseBody
 	@PostMapping("/classCreateAjax")
 	public int classCreateAjax(@RequestBody ClasVO clasVO, HttpServletRequest request) {
-		log.info("clasVO->:" +clasVO );
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		
-		log.info("clasVOclasVO->:" +clasVO );
 		
 		//클래스 생성 전 중복체크
 		int dupCnt = classroomService.classDupCheck(clasVO);
-		log.info("classCreateAjax->dupCnt:" +dupCnt);
+		
+		log.debug("clasVO->:" +clasVO );
+		log.debug("clasVOclasVO->:" +clasVO );
+		log.debug("classCreateAjax->dupCnt:" +dupCnt);
 		
 		if(dupCnt>0) {//중복됨
 			return 0;//실패
 		}else {//중복안됨
 			int result = this.classroomService.classCreateAjax(clasVO);
-			log.info("인서트 후 ->:" +clasVO );
 			
 			//2) HRTCHR 테이블에 insert
 			HrtchrVO hrtchrVO = new HrtchrVO();
 			hrtchrVO.setSchulCode(clasVO.getSchulCode());
 			hrtchrVO.setClasCode(clasVO.getClasCode());
-			
 			hrtchrVO.setMberId(memberVO.getMberId());
 		
 			clasVO.setHrtchrVO(hrtchrVO);
-			log.info("getMberId->:" +memberVO.getMberId() );			
-			log.info("result : " +result);
+			
 			result += this.classroomService.hrtchrCreate(clasVO);
+			
+			log.debug("인서트 후 ->:" +clasVO );
+			log.debug("getMberId->:" +memberVO.getMberId() );			
+			log.debug("result : " +result);
+			
 			return 1;//성공
 		}
-		
 	}
 
 	//학급클래스 목록
 	@GetMapping("/classList")
 	public String classList(HttpServletRequest request, Model model) {
 		SchulVO schulVO = (SchulVO) request.getSession().getAttribute("SCHOOL_INFO");// 세션에 저장된 클래스 정보 가져오기
-//		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
-//		
-//		model.addAttribute("memberVO", memberVO);
+
 		model.addAttribute("schulVO", schulVO);
 		return "class/classList";
 	}
-	
 	
 	//학급클래스 목록 ajax
 	@ResponseBody
 	@PostMapping("/classListAjax")
 	public ArticlePage<ClasVO> classListAjax(@RequestBody Map<String,Object> map) {
 		ArticlePage<ClasVO> clasVOList = this.classroomService.classListAjax(map);
-      return clasVOList;
+		
+		return clasVOList;
 	}
 	
 	//클래스 가입시 학교 코드 가져오기
@@ -282,7 +268,8 @@ public class ClassroomController {
 	@PostMapping("/selectSchulCode")
 	public String selectSchulCode(@RequestBody ClasVO clasVO) {
 		String schulCode = classroomService.selectSchulCode(clasVO.getClasCode());
-		log.info("schulCode-> " + schulCode);
+		log.debug("schulCode-> " + schulCode);
+		
 		return schulCode;
 	}
 		
@@ -293,7 +280,8 @@ public class ClassroomController {
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
 		clasStdntVO.setMberId(memberVO.getMberId());
 		int result = classroomService.classJoinReqAjax(clasStdntVO);
-		log.info("인서트 후 clasStdntVO-> " + clasStdntVO);
+		log.debug("인서트 후 clasStdntVO-> " + clasStdntVO);
+		
 		return result;
 	}
 	
@@ -305,7 +293,8 @@ public class ClassroomController {
 		clasStdntVO.setMberId(memberVO.getMberId());
 		//가입취소(delete)
 		int result = this.classroomService.classJoinReqCancelAajx(clasStdntVO);
-		log.info("classJoinReqCancelAajx->result"+result);
+		log.debug("classJoinReqCancelAajx->result"+result);
+		
 		return result;
 	}
 	
@@ -314,9 +303,10 @@ public class ClassroomController {
 	public String classJoinReqList(HttpServletRequest request, Model model) {
 		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
 		// 세션에 저장된 클래스 정보 가져오기
-		log.debug("CLAS_INFO >> {}",clasVO);
 		model.addAttribute("clasCode", clasVO.getClasCode());
 		model.addAttribute("schulCode", clasVO.getSchulCode());
+		log.debug("CLAS_INFO >> {}",clasVO);
+		
 		return "class/classJoinReqList";
 	}
 	
@@ -325,6 +315,7 @@ public class ClassroomController {
 	@PostMapping("/classJoinReqListAjax")
 	public  ArticlePage<ClasStdntVO> classJoinReqListAjax(@RequestBody(required=false) Map<String,Object> map) {
 		ArticlePage<ClasStdntVO> ClasStdntVOList = this.classroomService.classJoinReqListAjax(map);
+		
 		return ClasStdntVOList;
 	}
 	
@@ -332,12 +323,13 @@ public class ClassroomController {
 	@ResponseBody
 	@PostMapping("/classJoinAjax")
 	public int classJoinAjax(@RequestBody(required=false) ClasStdntVO clasStdntVO) {
-		log.info("clasStdntVO!"+clasStdntVO);
 		Date clasStdntJoinDate = clasStdntVO.getClasStdntJoinDate();
-		log.info("clasStdntJoinDate~~"+clasStdntJoinDate);
 		int result = classroomService.classJoinAjax(clasStdntVO);
-		log.info("result값"+result);
-		log.info("classJoinAjax->result"+result);
+		
+		log.debug("clasStdntVO!"+clasStdntVO);
+		log.debug("clasStdntJoinDate~~"+clasStdntJoinDate);
+		log.debug("classJoinAjax->result"+result);
+		
 		return result;
 	}
 	
@@ -346,9 +338,11 @@ public class ClassroomController {
 	public String classTStudList(HttpServletRequest request, Model model) {
 		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
 		// 세션에 저장된 클래스 정보 가져오기
-		log.info("CLAS_INFO >> " + clasVO);
 		model.addAttribute("clasCode", clasVO.getClasCode());
 		model.addAttribute("schulCode", clasVO.getSchulCode());
+		
+		log.debug("CLAS_INFO >> " + clasVO);
+		
 		return "class/classTStudList";
 	}
 	
@@ -357,6 +351,7 @@ public class ClassroomController {
 	@PostMapping("/classTStudListAjax")
 	public ArticlePage<ClasStdntVO> classTStudListAjax(@RequestBody Map<String,Object> map) {
 		ArticlePage<ClasStdntVO> ClasStdntVOList = this.classroomService.classTStudListAjax(map);
+		
 		return ClasStdntVOList;
 	}
 	
@@ -365,21 +360,22 @@ public class ClassroomController {
 	public String classTParentList(HttpServletRequest request, Model model) {
 		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
 		// 세션에 저장된 클래스 정보 가져오기
-		log.info("CLAS_INFO >> " + clasVO);
 		model.addAttribute("clasCode", clasVO.getClasCode());
 		model.addAttribute("schulCode", clasVO.getSchulCode());
+		
+		log.debug("CLAS_INFO >> " + clasVO);
+		
 		return "class/classTParentList";
 	}
-	
 	
 	//선생님화면)학부모 구성원 목록
 	@ResponseBody
 	@PostMapping("/classTParentListAjax")
 	public ArticlePage<ClasStdntVO> classTParentListAjax(@RequestBody Map<String,Object> map) {
 		ArticlePage<ClasStdntVO> ClasStdntVOList = this.classroomService.classTParentListAjax(map);
+		
 		return ClasStdntVOList;
 	}
-	
 	
 	//구성원 상세정보
 	@ResponseBody
@@ -387,7 +383,8 @@ public class ClassroomController {
 	public MemberVO classMberDetailAjax(@RequestBody Map<String, String> map) {
 		String mberId = (String)map.get("mberId");
 		MemberVO memberVO = this.classroomService.classMberDetailAjax(mberId);
-		log.info("memberVOList랍니다"+memberVO);
+		log.debug("memberVOList랍니다"+memberVO);
+		
 		return memberVO;
 	}
 	
@@ -396,11 +393,11 @@ public class ClassroomController {
 	@PostMapping("/classMailSend")
 	public String classMailSend(@RequestBody Map<String, Object> memberVO) {
 		//데이터 추출
-		 List<String> mberIds = (List<String>) memberVO.get("mberIds"); // 값을 List형식으로 가져오기
-		 String clasCode = (String) memberVO.get("clasCode"); // 값을 String형식으로 가져오기
+		List<String> mberIds = (List<String>) memberVO.get("mberIds"); // 값을 List형식으로 가져오기
+		String clasCode = (String) memberVO.get("clasCode"); // 값을 String형식으로 가져오기
 		//이메일 값 가져오기
 		List<String> mberEmail = this.classroomService.getEmailByMemberId(mberIds,clasCode);
-		log.info("도착!!->"+mberEmail);
+		
 		return "success";
 	}
 	
@@ -410,10 +407,13 @@ public class ClassroomController {
 	public int classInvCodeJoin(@RequestBody ChldrnClasVO chldrnClasVO, HttpServletRequest request) {
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
 		chldrnClasVO.setMberId(memberVO.getMberId());
-		log.info("chldrnClasVO!!!! {}" , chldrnClasVO);
+		
 		//학부모 클래스 소속 중복체크
 		int classDupCnt = this.classroomService.classDupCnt(chldrnClasVO);
-		log.info("classDupCnt~~ {}", classDupCnt);
+		
+		log.debug("chldrnClasVO!!!! {}" , chldrnClasVO);
+		log.debug("classDupCnt~~ {}", classDupCnt);
+		
 		return classDupCnt;
 	}  
 	
@@ -436,9 +436,11 @@ public class ClassroomController {
 			clasStdntVOList.add(vo); //빈껍데기
 			cnt++;
 		}
-		log.info("clasStdntVOList : " + clasStdntVOList);
 		int result = this.classroomService.classStudUpdateAjax(clasStdntVOList);
-		log.info("resultresult"+result);
+		
+		log.debug("clasStdntVOList : " + clasStdntVOList);
+		log.debug("resultresult"+result);
+		
 		return result;
 	}
 	
@@ -447,9 +449,10 @@ public class ClassroomController {
 	public String classStdntList(HttpServletRequest request, Model model) {
 		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
 		// 세션에 저장된 클래스 정보 가져오기
-		log.info("CLAS_INFO >> " + clasVO);
 		model.addAttribute("clasCode", clasVO.getClasCode());
 		model.addAttribute("schulCode", clasVO.getSchulCode());
+		log.debug("CLAS_INFO >> " + clasVO);
+		
 		return "class/classStdntList";
 	}
 
@@ -458,7 +461,7 @@ public class ClassroomController {
 	@PostMapping("/classStdntListAjax")
 	public ArticlePage<ClasStdntVO> classStdntListAjax(@RequestBody Map<String,Object> map) {
 		ArticlePage<ClasStdntVO> clasStdntVOList = this.classroomService.classStdntListAjax(map);
-		log.info("컨트롤러다옹"+clasStdntVOList);
+		
 		return clasStdntVOList;
 	}
 	
@@ -471,6 +474,7 @@ public class ClassroomController {
 		model.addAttribute("memberVO", memberVO);
 		model.addAttribute("clasVO", clasVO);
 		model.addAttribute("schulVO", schulVO);
+		
 		return "noTiles/class/viewClassMgmt";
 	}
 	
@@ -478,9 +482,10 @@ public class ClassroomController {
 	@ResponseBody
 	@PostMapping("/classUpdateAjax")
 	public int classUpdateAjax(@RequestBody ClasVO clasVO) {
-		log.debug("clsVO->{}",clasVO);
 		//수정
 		int result = classroomService.classUpdateAjax(clasVO);
+		log.debug("clsVO->{}",clasVO);
+		
 		if(result==1) {
 			return result;
 		}else {
@@ -492,10 +497,10 @@ public class ClassroomController {
 	@ResponseBody
 	@PostMapping("/classDeleteAjax")
 	public int classDeleteAjax(@RequestBody ClasVO clasVO) {
-		log.debug("clasCode==>"+clasVO.getClasCode());
 		//삭제
 		int result = classroomService.classDeleteAjax(clasVO);
-		log.info("왔니"+result);
+		log.debug("clasCode==>"+clasVO.getClasCode());
+
 		if(result==1) {
 			return result;
 		}else {
@@ -508,9 +513,10 @@ public class ClassroomController {
 	public String classJoinRJList(HttpServletRequest request, Model model) {
 		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
 		// 세션에 저장된 클래스 정보 가져오기
-		log.debug("CLAS_INFO >> {}",clasVO);
 		model.addAttribute("clasCode", clasVO.getClasCode());
 		model.addAttribute("schulCode", clasVO.getSchulCode());
+		log.debug("CLAS_INFO >> {}",clasVO);
+		
 		return "class/classJoinRJList";
 	}
 	
@@ -518,6 +524,7 @@ public class ClassroomController {
 	@PostMapping("/classJoinRJListAjax")
 	public  ArticlePage<ClasStdntVO> classJoinRJListAjax(@RequestBody(required=false) Map<String,Object> map) {
 		ArticlePage<ClasStdntVO> ClasStdntVOList = this.classroomService.classJoinRJListAjax(map);
+		
 		return ClasStdntVOList;
 	}
 	
@@ -526,8 +533,8 @@ public class ClassroomController {
 	@PostMapping("/getMberClasCode")
 	public List<ClasStdntVO> getMberClasCode(HttpServletRequest request) {
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.debug("왓니??{}",memberVO.getMberId());
 		List<ClasStdntVO> ClasStdntVO = classroomService.getMberClasCode(memberVO.getMberId());
+		
 	    return ClasStdntVO;
 	}
 }

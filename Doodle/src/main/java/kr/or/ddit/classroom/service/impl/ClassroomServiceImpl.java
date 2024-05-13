@@ -38,41 +38,6 @@ public class ClassroomServiceImpl implements ClassroomService{
 		return this.classroomMapper.clasInfoSelect(clasCode);
 	}
 
-	//학급클래스 소속회원 목록
-	@Override
-	public String classMemberList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	// 결석 사유 신청(체험학습도)
-	@Override
-	public String absentReason() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	//자유 게시판 목록
-	@Override
-	public String freeBoard() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	//투표/설문조사 게시판 목록
-	@Override
-	public String votingSurvey() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	//알림장 목록
-	@Override
-	public String notice() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	//과제 게시판 목록
 	@Override
 	public List<TaskVO> taskList(Map<String, Object> map) {
@@ -83,34 +48,6 @@ public class ClassroomServiceImpl implements ClassroomService{
 	@Override
 	public int getTotalTask(String clasCd) {
 		return this.classroomMapper.getTotalTask(clasCd);
-	}
-
-	//단원마무리 게시판 목록
-	@Override
-	public String unitTest() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	//학급 시간표 조회
-	@Override
-	public String schedule() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	//온라인 수업
-	@Override
-	public String onlineClass() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	//생활 기록부 조회
-	@Override
-	public String lifeRecord() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	// 학급클래스(반) 목록 불러오기
@@ -128,15 +65,16 @@ public class ClassroomServiceImpl implements ClassroomService{
 		
 		// 총 데이터 갯수 가져오기
 		int classroomTotal = this.classroomMapper.classroomGetTotal(map);
-		log.info("classroomListAjax -> total : " + classroomTotal);
-		log.info("String.valueOf(total) : "  + String.valueOf(classroomTotal));
 		
 		// 학급클래스(반) 목록 가져오기
 		List<ClasVO> clasVOList = this.classroomMapper.classroomList(map);
-		log.info("clasVOList => "+ clasVOList);
 		
 		// 페이지네이션
 		ArticlePage<ClasVO> data = new ArticlePage<ClasVO>(classroomTotal, currentPage, size, clasVOList, keyword);
+		
+		log.debug("classroomListAjax -> total : " + classroomTotal);
+		log.debug("String.valueOf(total) : "  + String.valueOf(classroomTotal));
+		log.debug("clasVOList => "+ clasVOList);
 				
 		return data;
 	}
@@ -160,7 +98,6 @@ public class ClassroomServiceImpl implements ClassroomService{
 		return this.classroomMapper.hrtchrCreate(hrtchrVO);
 	}
 
-
 	//학교 -> 학급클래스 목록
 	@Override
 	public ArticlePage<ClasVO> classListAjax(Map<String, Object> map) {
@@ -169,11 +106,12 @@ public class ClassroomServiceImpl implements ClassroomService{
 		String currentPage = map.get("currentPage").toString();
 		String size = map.get("size").toString();
 		String keyword = map.get("keyword").toString();
+		String url = "/class/classList";
 	    //총 갯수
 		int total = this.classroomMapper.classListGetTotal(map);
 		ArticlePage<ClasVO> data = new ArticlePage<ClasVO>(total, Integer.parseInt(currentPage), Integer.parseInt(size), clasVOList, keyword, schulCode);
-		String url = "/class/classList";
 		data.setUrl(url);
+		
 		return data;
 	}
 	
@@ -181,7 +119,7 @@ public class ClassroomServiceImpl implements ClassroomService{
 	//클래스 생성 전 중복체크
 	@Override
 	public int classDupCheck(ClasVO clasVO) {
-		log.debug("여기오삼: {}",clasVO);
+		log.debug("classDupCheck: {}",clasVO);
 		return this.classroomMapper.classDupCheck(clasVO);
 	}
 
@@ -206,18 +144,18 @@ public class ClassroomServiceImpl implements ClassroomService{
 	//클래스 가입신청 목록
 	@Override
 	public ArticlePage<ClasStdntVO> classJoinReqListAjax(Map<String, Object> map) {
-		String clasCode = (String)map.get("clasCode");
-		String schulCode = (String)map.get("schulCode");
 		String currentPage = map.get("currentPage").toString();
 		String size = map.get("size").toString();
 		String keyword = "";
+		String url = "/class/classJoinReqList";
 		List<ClasStdntVO> ClasStdntVOList = this.classroomMapper.classJoinReqListAjax(map);
 		int total = this.classroomMapper.classJoinReqGetTotal(map);
-		log.info("가입대기list->total : " + total);
-	    log.info("currentPage{}",currentPage);
 	    ArticlePage<ClasStdntVO> data = new ArticlePage<ClasStdntVO>(total, Integer.parseInt(currentPage), Integer.parseInt(size), ClasStdntVOList, keyword);
-	    String url = "/class/classJoinReqList";
 	    data.setUrl(url);
+	    
+	    log.debug("가입대기list->total : " + total);
+	    log.debug("currentPage{}",currentPage);
+	    
 		return data;
 	}
 
@@ -236,20 +174,18 @@ public class ClassroomServiceImpl implements ClassroomService{
 	//선생님화면)학생 구성원 목록
 	@Override
 	public ArticlePage<ClasStdntVO> classTStudListAjax(Map<String, Object> map) {
-		String schulCode = (String)map.get("schulCode");
-		String clasCode = (String)map.get("clasCode");
 		String currentPage = map.get("currentPage").toString();
 		String size = map.get("size").toString();
-		//int size = Integer.parseInt((String) map.get("size"));
 		String keyword = "";
-		log.info("내가왔다 서비스에! : " + size);
+		String url = "/class/classTStudList";
 		
 		List<ClasStdntVO> ClasStdntVOList = this.classroomMapper.classTStudListAjax(map);
 		int total = this.classroomMapper.classStudGetTotal(map);
-		log.info("구성원학생list->total : " + total);
 		ArticlePage<ClasStdntVO> data = new ArticlePage<ClasStdntVO>(total, Integer.parseInt(currentPage), Integer.parseInt(size), ClasStdntVOList, keyword);
-		String url = "/class/classTStudList";
 		data.setUrl(url);
+		
+		log.debug("구성원학생list->total : " + total);
+		
 		return data;
 	}
 	
@@ -257,17 +193,18 @@ public class ClassroomServiceImpl implements ClassroomService{
 	//학부모 구성원 목록
 	@Override
 	public ArticlePage<ClasStdntVO> classTParentListAjax(Map<String, Object> map) {
-		String schulCode = (String)map.get("schulCode");
-		String clasCode = (String)map.get("clasCode");
 		String currentPage = map.get("currentPage").toString();
 		String size = map.get("size").toString();
 		String keyword = "";
+		String url = "/class/classTParentList";
+		
 		List<ClasStdntVO> ClasStdntVOList = this.classroomMapper.classTParentListAjax(map);
 		int total = this.classroomMapper.classPrentGetTotal(map);
-		log.info("구성원학부모list->total : " + total);
 		ArticlePage<ClasStdntVO> data = new ArticlePage<ClasStdntVO>(total, Integer.parseInt(currentPage), Integer.parseInt(size), ClasStdntVOList, keyword);
-		String url = "/class/classTParentList";
 		data.setUrl(url);
+		
+		log.debug("구성원학부모list->total : " + total);
+		
 		return data;
 	}
 
@@ -281,18 +218,14 @@ public class ClassroomServiceImpl implements ClassroomService{
 	@Override
 	public List<String> getEmailByMemberId(List<String> mberIds, String clasCode) {
 		List<String> mberEmails = new ArrayList<String>();
-		log.info("mberEmail들어왔낭?" + mberEmails);
-		log.info("mberIds들어왔낭?" + mberIds);
-		log.info("clasCode들어왔낭?" + clasCode);
 		for(String mberId : mberIds) {
-			log.info("갔다올게!!! -> " + mberId + "나도 = >" + clasCode);
 			MemberVO memberVO = this.classroomMapper.getEmailByMemberId(mberId, clasCode);
 			if(memberVO != null) {
 				mberEmails.add(memberVO.getMberEmail());
-				log.info(mberEmails + "이메일!무뚝뚝잉!");
 			}
 		}
-				//메일보내긩
+		
+		//메일보내기
 		String contents = "<div style='background-color:#F4F5F7; padding:20px;'>" +
                 "<div style='max-width:600px; margin:0 auto;'>" +
                 "<h1 style='text-align:center; font-size:24px; color:#333; margin-bottom:20px;'>인증번호 발송 안내</h1>" +
@@ -303,22 +236,23 @@ public class ClassroomServiceImpl implements ClassroomService{
                 "</div>" +
                 "</div>";
 
-				//보내는사람 메일
-				String fromMail = "dev_011008@naver.com";
-				String password = "javajava";
-				
-				Map<String, String> mailDTO = new HashMap<String, String>();
-				mailDTO.put("title", "[두들] 클래스 초대코드 발송 안내");
-				mailDTO.put("fromMail", fromMail);
-				mailDTO.put("password", password);
-				mailDTO.put("fromName","Doodle");
-				mailDTO.put("contents",contents);
+		//보내는사람 메일
+		String fromMail = "dev_011008@naver.com";
+		String password = "javajava";
+		
+		Map<String, String> mailDTO = new HashMap<String, String>();
+		mailDTO.put("title", "[두들] 클래스 초대코드 발송 안내");
+		mailDTO.put("fromMail", fromMail);
+		mailDTO.put("password", password);
+		mailDTO.put("fromName","Doodle");
+		mailDTO.put("contents",contents);
 
-				for(String mberEmail : mberEmails) {
-					log.info("mberEmail입니다잉",mberEmail);
-					mailDTO.put("toMail",mberEmail);
-					MailUtil.sendMail(mailDTO);
-				}
+		for(String mberEmail : mberEmails) {
+			mailDTO.put("toMail",mberEmail);
+			MailUtil.sendMail(mailDTO);
+			
+			log.debug("mberEmail입니다",mberEmail);
+		}
 				
 		return mberEmails;
 	}
@@ -344,8 +278,6 @@ public class ClassroomServiceImpl implements ClassroomService{
 	//학부모 클래스 소속 중복체크
 	@Override
 	public int classDupCnt(ChldrnClasVO chldrnClasVO) {
-		log.info("서비스왔닝?{}",chldrnClasVO);
-		
 		//클래스 소속 중복 체크
 		int classDupCnt = this.classroomMapper.classDupCnt(chldrnClasVO);
 		if(classDupCnt > 0) { //중복이면?
@@ -356,14 +288,14 @@ public class ClassroomServiceImpl implements ClassroomService{
 			if(dupCnt > 0) { //중복이면?
 				//자녀 반 테이블 INSERT
 				int cnt = this.classroomMapper.chldrnClasInsert(chldrnClasVO);
-				log.info("학교 소속에 있음" , cnt);
+				log.debug("학교 소속에 있음" , cnt);
 				return 1;
 			}else { //중복아니면
 				//학교 소속 회원 테이블 INSERT
 				int cnt = this.classroomMapper.classInvCodeJoin(chldrnClasVO);
 				//자녀 반 테이블 INSERT
 				cnt += this.classroomMapper.chldrnClasInsert(chldrnClasVO);
-				log.info("학교 소속에 없음" , cnt);
+				log.debug("학교 소속에 없음" , cnt);
 				return 1;
 			}
 		}
@@ -372,35 +304,33 @@ public class ClassroomServiceImpl implements ClassroomService{
 	//학생 구성원 수정
 	@Override
 	public int classStudUpdateAjax(List<ClasStdntVO> clasStdntVOList) {
-		log.info("내가왔다 서비스에{}",clasStdntVOList);
 		int cnt = 0;
 		for(ClasStdntVO clasStdntVO : clasStdntVOList) {
 			cnt += this.classroomMapper.classStudUpdateAjax(clasStdntVO);
-			log.info("cnt는"+clasStdntVO.getMberId());
+			log.debug("cnt는"+clasStdntVO.getMberId());
 		}
-		log.info("cnt지롱"+cnt);
+		log.debug("cnt: "+cnt);
 		return cnt;
 	}
 	
 	//학생, 학부모화면) 학생조회
 	@Override
 	public ArticlePage<ClasStdntVO> classStdntListAjax(Map<String, Object> map) {
-		String clasCode = (String)map.get("clasCode");
-		String schulCode = (String)map.get("schulCode");
 		String currentPage = map.get("currentPage").toString();
 		String size = map.get("size").toString();
 		String keyword = "";
-		//int size = Integer.parseInt((String) map.get("size"));
-		log.info("사이즈!!!!!!!!!!!!!!!!!"+size);
+		String url = "/class/classStdntList";
+
 		List<ClasStdntVO> clasStdntVOList = this.classroomMapper.classStdntListAjax(map);
-		log.info("서비스다옹"+clasStdntVOList);
 		int total = this.classroomMapper.StdntListGetTotal(map);
-		log.info("토탈"+clasStdntVOList);
-	    log.info("list->total : " + total);
-	    log.info("currentPage{}",currentPage);
 	    ArticlePage<ClasStdntVO> data = new ArticlePage<ClasStdntVO>(total, Integer.parseInt(currentPage), Integer.parseInt(size), clasStdntVOList, keyword);
-	    String url = "/class/classStdntList";
 	    data.setUrl(url);
+	    
+	    log.debug("서비스 "+clasStdntVOList);
+	    log.debug("토탈 "+clasStdntVOList);
+	    log.debug("list->total : " + total);
+	    log.debug("currentPage{}",currentPage);
+	    
 		return data;
 	}
 
@@ -431,14 +361,11 @@ public class ClassroomServiceImpl implements ClassroomService{
 	// 학급시간표 등록
 	@Override
 	public int scheduleCreate(List<SkedVO> skedVOList) {
-		
 		int result = 0;
 		int maxScheduleSeq = classroomMapper.maxScheduleSeq(skedVOList.get(0));
 
 		for(SkedVO skedVO : skedVOList) {
 			// 시간표 코드 설정
-			log.debug("maxScheduleSeq -> "+maxScheduleSeq);
-			
 			// 일련번호 생성
 			int nextScheduleSeq = maxScheduleSeq + 1;
 			// 일련번호를 포함한 시간표 코드 생성(학교코드+학기+일련번호)
@@ -450,6 +377,8 @@ public class ClassroomServiceImpl implements ClassroomService{
 	        maxScheduleSeq = nextScheduleSeq;
 		}
 		result += this.classroomMapper.scheduleCreate(skedVOList);
+		
+		log.debug("maxScheduleSeq -> "+maxScheduleSeq);
 		
 		return result;
 	}
@@ -469,27 +398,25 @@ public class ClassroomServiceImpl implements ClassroomService{
 	//클래스 가입 거절 목록
 	@Override
 	public ArticlePage<ClasStdntVO> classJoinRJListAjax(Map<String, Object> map) {
-		String clasCode = (String)map.get("clasCode");
-		String schulCode = (String)map.get("schulCode");
 		String currentPage = map.get("currentPage").toString();
 		String size = map.get("size").toString();
 		String keyword = "";
+		String url = "/class/classJoinRJList";
+		
 		List<ClasStdntVO> ClasStdntVOList = this.classroomMapper.classJoinRJListAjax(map);
 		int total = this.classroomMapper.classJoinRJGetTotal(map);
-		log.info("가입대기list->total : " + total);
-	    log.info("currentPage{}",currentPage);
 	    ArticlePage<ClasStdntVO> data = new ArticlePage<ClasStdntVO>(total, Integer.parseInt(currentPage), Integer.parseInt(size), ClasStdntVOList, keyword);
-	    String url = "/class/classJoinRJList";
 	    data.setUrl(url);
+	    
+	    log.debug("가입대기list->total : " + total);
+	    log.debug("currentPage{}",currentPage);
+	    
 		return data;
 	}
 
 	//내가 속해있는 클래스 가져오기
 	@Override
 	public List<ClasStdntVO> getMberClasCode(String mberId) {
-		log.debug("왓니서비스에???{}",mberId);
 		return classroomMapper.getMberClasCode(mberId);
 	}
-
-
 }

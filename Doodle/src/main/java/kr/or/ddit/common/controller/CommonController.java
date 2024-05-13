@@ -70,7 +70,7 @@ public class CommonController {
 		List<CmmnDetailCodeVO> familyChoiceList = commonService.familyCategory();
 		model.addAttribute("familyChoiceList", familyChoiceList);
 		model.addAttribute("auth", auth);
-		log.info("auth: " + auth);
+		log.debug("auth: " + auth);
 		return "common/signUp";
 	}
 
@@ -78,9 +78,9 @@ public class CommonController {
 	@ResponseBody
 	@PostMapping("/idDupChk")
 	public int idDupChk(@RequestBody MemberVO memberVO){
-		log.info("중복체크 memberVO-> " + memberVO.getMberId());
+		log.debug("중복체크 memberVO-> " + memberVO.getMberId());
 		int res = commonService.idDupChk(memberVO);
-		log.info("DB다녀와서 vo -> " + memberVO);
+		log.debug("DB다녀와서 vo -> " + memberVO);
 
 		return res;
 	}
@@ -89,7 +89,7 @@ public class CommonController {
 	@ResponseBody
 	@PostMapping("/childChk")
 	public List<Integer> childChk(@RequestParam String idList){
-		log.info("중복체크 idList-> " + idList);
+		log.debug("중복체크 idList-> " + idList);
 		String[] array = idList.split(",");
 		List<Integer> resultList = new ArrayList<Integer>();
 		for(String id : array) {
@@ -97,7 +97,7 @@ public class CommonController {
 			memberVO.setMberId(id);
 			resultList.add(commonService.childChk(memberVO));
 		}
-		log.info("DB다녀와서res -> " + resultList);
+		log.debug("DB다녀와서res -> " + resultList);
 		return resultList;
 	}
 
@@ -106,12 +106,12 @@ public class CommonController {
 	@PostMapping("/signUpMember")
 	public int signUpMember(MemberVO memberVO, @RequestParam("upload") MultipartFile uploadFile,
 			@RequestParam("mberChild") List<String> mberChildIdList, @RequestParam("familyChoice") String familyChoice) {
-		log.info("MemberVO의 값 -> " + memberVO);
-		log.info("uploadFile.getSize()의 값 -> " + uploadFile.getSize());
-		log.info("mberChildId의 값 -> " + mberChildIdList.toString());
+		log.debug("MemberVO의 값 -> " + memberVO);
+		log.debug("uploadFile.getSize()의 값 -> " + uploadFile.getSize());
+		log.debug("mberChildId의 값 -> " + mberChildIdList.toString());
 		//자녀 수 만큼 아이디 값을 받아와야하기때문에 List로 받아옴
-		log.info("mberChildId의 값 -> " + mberChildIdList.size());
-		log.info("familyChoice의 값 -> " + familyChoice);
+		log.debug("mberChildId의 값 -> " + mberChildIdList.size());
+		log.debug("familyChoice의 값 -> " + familyChoice);
 		return commonService.signUp(memberVO, uploadFile, mberChildIdList, familyChoice);
 	}
 
@@ -138,22 +138,22 @@ public class CommonController {
 	@ResponseBody
 	@PostMapping("/updatePassword")
 	public int updatePassword(@RequestBody MemberVO memberVO, HttpServletRequest request) {
-		log.info("updatePassword -> memVO: " + memberVO);
+		log.debug("updatePassword -> memVO: " + memberVO);
 		
 		String password = memberVO.getPassword();
-		log.info("mypage -> password: " + password);
+		log.debug("mypage -> password: " + password);
 		
 		// 비밀번호 암호화 작업
 		String encodedPassword = this.passwordEncode.encode(password);
-		log.info("encodedPw: " + encodedPassword);
+		log.debug("encodedPw: " + encodedPassword);
 		
 		// 암호화된 비밀번호를 VO에 넣어줌
 		memberVO.setPassword(encodedPassword);
-		log.info("updateEncodedPassword -> memberVO: " + memberVO);
+		log.debug("updateEncodedPassword -> memberVO: " + memberVO);
 		
 		// 비밀번호 변경
 		int result = this.commonService.updatePassword(memberVO);
-		log.info("updatePassword -> result: " + result);
+		log.debug("updatePassword -> result: " + result);
 		
 		// 변경된 정보를 세션에 다시 넣어줌
 		sessionService.setMemberSession(request);
@@ -169,7 +169,7 @@ public class CommonController {
 
         // 회원 비밀번호를 해싱하여 기본 비밀번호(java)와 비교
         boolean passwordChk =  encoder.matches("java", password);
-        log.info("passwordDecode -> passwordChk: " + passwordChk);
+        log.debug("passwordDecode -> passwordChk: " + passwordChk);
         
         return passwordChk;
 	}
@@ -196,7 +196,7 @@ public class CommonController {
 	@ResponseBody
 	@GetMapping("/getCurrentUrl")
 	public String getCurrentUrl(HttpServletRequest request, String currentUrl) {
-		log.info("currentUrl -> " + currentUrl);
+		log.debug("currentUrl -> " + currentUrl);
 		
 		return currentUrl;
 	}

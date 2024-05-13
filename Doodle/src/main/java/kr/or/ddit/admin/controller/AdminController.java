@@ -85,7 +85,6 @@ public class AdminController {
 	@GetMapping("getComplaintNtt")
 	public int getComplaintNtt() {
 		int result = this.adminService.getComplaintNtt();
-//		log.debug("getComplaintNtt result => " + result);
 		
 		return result;
 	}
@@ -95,7 +94,6 @@ public class AdminController {
 	@GetMapping("/getTodayComplaintNtt")
 	public int getTodayComplaintNtt() {
 		int result = this.adminService.getTodayComplaintNtt();
-//		log.debug("getTodayComplaintNtt result => " + result);
 		
 		return result;
 	}
@@ -105,7 +103,6 @@ public class AdminController {
 	@GetMapping("/getUncnfrmComplaintNtt")
 	public int getUncnfrmComplaintNtt() {
 		int result = this.adminService.getUncnfrmComplaintNtt();
-//		log.debug("getUncnfrmComplaintNtt result => " + result);
 		
 		return result;
 	}
@@ -115,7 +112,6 @@ public class AdminController {
 	@GetMapping("/getNoProblemComplaintNtt")
 	public int getNoProblemComplaintNtt() {
 		int result = this.adminService.getNoProblemComplaintNtt();
-//		log.debug("getNoProblemComplaintNtt result => " + result);
 		
 		return result;
 	}
@@ -125,7 +121,6 @@ public class AdminController {
 	@GetMapping("/getStopComplaintNtt")
 	public int getStopComplaintNtt() {
 		int result = this.adminService.getStopComplaintNtt();
-//		log.debug("getStopComplaintNtt result => " + result);
 		
 		return result;
 	}

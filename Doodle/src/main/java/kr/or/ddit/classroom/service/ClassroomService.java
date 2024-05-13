@@ -4,39 +4,19 @@ import java.util.List;
 import java.util.Map;
 
 import kr.or.ddit.util.ArticlePage;
-import kr.or.ddit.vo.AtchFileVO;
 import kr.or.ddit.vo.ChldrnClasVO;
-import kr.or.ddit.vo.ClasAlbumVO;
 import kr.or.ddit.vo.ClasStdntVO;
 import kr.or.ddit.vo.ClasVO;
-import kr.or.ddit.vo.GcVO;
 import kr.or.ddit.vo.HrtchrVO;
 import kr.or.ddit.vo.MemberVO;
-import kr.or.ddit.vo.QuesVO;
 import kr.or.ddit.vo.SchulPsitnMberVO;
 import kr.or.ddit.vo.SkedVO;
 import kr.or.ddit.vo.TaskVO;
-import kr.or.ddit.vo.UnitEvlVO;
 
 public interface ClassroomService {
 	
 	// 학급 클래스 메인: 해당 클래스의 담임 교사 정보
 	public HrtchrVO clasInfoSelect(String clasCode);
-	
-	//학급클래스 소속회원 목록
-	public String classMemberList();
-	
-	// 결석 사유 신청(체험학습도)
-	public String absentReason();
-	
-	//자유 게시판 목록 
-	public String freeBoard();
-	
-	//투표/설문조사 게시판 목록
-	public String votingSurvey();
-	
-	//알림장 목록
-	public String notice();
 	
 	//과제 게시판 목록
 	public List<TaskVO> taskList(Map<String, Object> map);
@@ -44,26 +24,8 @@ public interface ClassroomService {
 	//과제 게시판 목록 수
 	public int getTotalTask(String clasCd);
 	
-	//단원마무리 게시판 목록
-	public String unitTest();
-	
-	//학급 시간표 조회
-	public String schedule();
-	
-	//온라인 수업
-	public String onlineClass();
-	
-	//생활 기록부 조회
-	public String lifeRecord();
-	
 	// 학급클래스(반) 목록 불러오기
 	public ArticlePage<ClasVO> classroomListAjax(Map<String, Object> map);
-	
-	// 학급클래스(반) 목록 개수 조회
-//	public int classroomGetTotal(Map<String, Object> map);
-
-	// 학급클래스(반) 목록
-//	public List<ClasVO> classroomList(Map<String, Object> map);
 	
 	// 교사 학교명 가져오기 
 	public SchulPsitnMberVO getSchoolNm(SchulPsitnMberVO schulPsitnMberVO);
@@ -134,16 +96,16 @@ public interface ClassroomService {
 	//클래스 삭제
 	public int classDeleteAjax(ClasVO clasVO);
 	
-	// 학급 시간표 목록
+	//학급 시간표 목록
 	public List<SkedVO> scheduleList(SkedVO skedVO);
 
-	// 학급시간표 등록
+	//학급시간표 등록
 	public int scheduleCreate(List<SkedVO> skedVOList);
 	
-	// 오늘의 시간표 목록
+	//오늘의 시간표 목록
 	public List<SkedVO> todaySchedule(String clasCode);
 
-	// 학기 중복 확인
+	//학기 중복 확인
 	public int checkScheduleSemstr(SkedVO skedVO);
 
 	//클래스 가입 거절 목록
@@ -151,6 +113,5 @@ public interface ClassroomService {
 
 	//내가 속해있는 클래스 가져오기
 	public List<ClasStdntVO> getMberClasCode(String mberId);
-
 
 }

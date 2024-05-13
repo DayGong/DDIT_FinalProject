@@ -30,9 +30,6 @@ public interface ApprovalMapper {
 	//학부모-체험학습 문서 삭제
 	int approvalDelete(SanctnDocVO sanctnDocVO);
 
-	//선생님-체험학습 문서 목록 데이터
-//	List<SanctnDocVO> loadSanctnDocListT(SanctnDocSearchVO sanctnDocSearchVO);
-	
 	//선생님-체험학습 문서 갯수 
 	int getApprovalTotalT(SanctnDocSearchVO sanctnDocSearchVO);
 	
@@ -41,6 +38,5 @@ public interface ApprovalMapper {
 
 	//담임 선생님-체험학습신청 결재
 	int approvalSign(SanctnDocVO sanctnDocVO);
-	
 
 }

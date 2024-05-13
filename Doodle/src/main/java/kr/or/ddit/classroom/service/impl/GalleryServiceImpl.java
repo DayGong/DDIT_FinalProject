@@ -48,27 +48,21 @@ public class GalleryServiceImpl implements GalleryService{
 	@Override
 	public int createAlbum(ClasAlbumVO clasAlbumVO) {
 		// 앨범 코드 설정
-		// db에서 가장 큰 일련번호 가지고 옴
-		/*
-		 * clasAlbumVO : ClasAlbumVO(clasAlbumCode=null, albumNm=111, atchFileCode=null,
-		 * clasCode=OJ20240101 , clasStdntCode=null, mberNm=, albumDe=Mon Mar 11
-		 * 00:00:00 KST 2024, albumUpdtDe=null , uploadFile=[파일객체들])
-		 */
-		log.debug("createAlbum service->" + clasAlbumVO);
 		int maxAlbumSeq = galleryMapper.getMaxAlbumSeq(clasAlbumVO.getClasCode());
-		log.debug("maxAlbumSeq -> " + maxAlbumSeq);
 		// 일련번호 생성
 		int nextAlbumSeq = maxAlbumSeq + 1;
 		// 일련번호를 포함한 앨범코드 생성(CLAS_CODE+ALB+일련번호)
 		String nextAlbumCode = clasAlbumVO.getClasCode() + "ALB" + String.format("%05d", nextAlbumSeq);
-
+		
 		// 앨범에 생성된 코드 설정
 		clasAlbumVO.setClasAlbumCode(nextAlbumCode);
 		clasAlbumVO.setAtchFileCode(nextAlbumCode);
 		clasAlbumVO.setClasStdntCode(clasAlbumVO.getClasStdntCode());
-
 		// 앨범 추가
 		int result = this.galleryMapper.createAlbum(clasAlbumVO);
+		
+		log.debug("createAlbum service->" + clasAlbumVO);
+		log.debug("maxAlbumSeq -> " + maxAlbumSeq);
 
 		// 파일 업로드 경로
 		File uploadPath = new File(uploadFolder, getFolder());
@@ -110,7 +104,6 @@ public class GalleryServiceImpl implements GalleryService{
 			firstAtchFileVO.setAtchFileNm(firstFile.getOriginalFilename()); // 파일 이름
 			firstAtchFileVO.setAtchFileDe(firstAtchFileVO.getAtchFileDe());
 			firstAtchFileVO.setAtchFileTy(mime); // 파일 타입
-			// 수정 필요 (아이디 강제로 넣어버림~)
 			firstAtchFileVO.setRegistId(clasAlbumVO.getMberId());
 
 			log.debug("atchFileVO : " + firstAtchFileVO);
@@ -235,19 +228,9 @@ public class GalleryServiceImpl implements GalleryService{
 	@Override
 	public int updateAlbum(ClasAlbumVO clasAlbumVO) {
 
-		// 앨범 코드 설정
-		// db에서 가장 큰 일련번호 가지고 옴
-
-		// DELETE FROM ATCH_FILE
-		// WHERE ATCH_FILE_CODE LIKE 'OJ20240101ALB00007%'
 		// 앨범에 들어있는 이미지 파일들을 한큐에 삭제함
 		int result = this.galleryMapper.deleteImagesAll(clasAlbumVO.getAtchFileCode());
 
-		/*
-		 * clasAlbumVO : ClasAlbumVO(clasAlbumCode=null, albumNm=111, atchFileCode=null,
-		 * clasCode=OJ20240101 , clasStdntCode=null, mberNm=, albumDe=Mon Mar 11
-		 * 00:00:00 KST 2024, albumUpdtDe=null , uploadFile=[파일객체들])
-		 */
 		// 변경 대상 앨범코드
 		String nextAlbumCode = clasAlbumVO.getAtchFileCode();
 
@@ -367,7 +350,6 @@ public class GalleryServiceImpl implements GalleryService{
 	// 태그 리스트
 	@Override
 	public List<String> albumTagList(String clasCode) {
-		// albumTagList ->clasCode : OJ20240101
 		return this.galleryMapper.albumTagList(clasCode);
 	}
 

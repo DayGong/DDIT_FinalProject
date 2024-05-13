@@ -56,8 +56,6 @@ public class NtcnController {
 			,@RequestParam(value="clasCode", required=false) String clasCode
 			,@RequestParam(value="currentPage", required=false) String currentPage
 			,@RequestParam(value="keyword", required=false, defaultValue="") String keyword) {
-		log.info("ntcnList -> clasCode: " + clasCode);
-		
 		// 클래스 세션 처리
 		sessionService.setClassSession(request, clasCode);
 		
@@ -65,14 +63,9 @@ public class NtcnController {
 		map.put("clasCode", clasCode);
 		map.put("currentPage", currentPage);
 		map.put("keyword", keyword);
-		log.info("ntcnList -> map: " + map);
 		
 		List<NtcnVO> ntcnVOList = ntcnService.getNoticeList(map);
-		log.info("ntcnList -> ntcnVOList: " + ntcnVOList);
-		
 		List<AtchFileVO> atchFileList = ntcnService.atchFileList(clasCode);
-		log.info("ntcnList -> atchFileList: " + atchFileList);
-		
 		int total = ntcnService.getTotalNtcn(clasCode);
 		
 		model.addAttribute("clasCode", clasCode);
@@ -80,6 +73,11 @@ public class NtcnController {
 		model.addAttribute("total", total);
 		model.addAttribute("ntcnVOList", ntcnVOList);
 		model.addAttribute("atchFileVOList", atchFileList);
+		
+		log.debug("ntcnList -> clasCode: " + clasCode);
+		log.debug("ntcnList -> map: " + map);
+		log.debug("ntcnList -> ntcnVOList: " + ntcnVOList);
+		log.debug("ntcnList -> atchFileList: " + atchFileList);
 		
 		return "class/ntcn";
 	}
@@ -89,20 +87,16 @@ public class NtcnController {
 	@PostMapping("/ntcnListAjax")
 	public List<NtcnVO> ntcnListAjax(HttpServletRequest request, Model model
 			,@RequestBody(required=false) Map<String,Object> map) {
-		log.info("ntcnListAjax -> map: " + map);
-		
 		String clasCode = (String) map.get("clasCode");
-		
 		map.put("clasCode", clasCode);
 		map.put("currentPage", map.get("currentPage") == null ? "1" : map.get("currentPage"));
 		map.put("keyword", map.get("keyword") == null ? "" : map.get("keyword"));
-		log.info("ntcnListAjax -> map: " + map);
-		
 		List<NtcnVO> ntcnVOList = ntcnService.getNoticeList(map);
-		log.info("ntcnListAjax -> ntcnVOList: " + ntcnVOList);
-		
 		List<AtchFileVO> atchFileList = ntcnService.atchFileList(clasCode);
-		log.info("ntcnListAjax -> atchFileList: " + atchFileList);
+		
+		log.debug("ntcnListAjax -> map: " + map);
+		log.debug("ntcnListAjax -> ntcnVOList: " + ntcnVOList);
+		log.debug("ntcnListAjax -> atchFileList: " + atchFileList);
 		
 		return ntcnVOList;
 	}
@@ -112,10 +106,10 @@ public class NtcnController {
 	@PostMapping("/atchFileList")
 	public List<AtchFileVO> atchFileList(HttpServletRequest request,
 			@RequestParam("atchFileCode") String atchFileCode){
-		log.info("ntcnList -> atchFileCode: " + atchFileCode);
-				
 		List<AtchFileVO> atchFileList = ntcnService.atchFileList(atchFileCode);
-		log.info("ntcnList -> atchFileList: " + atchFileList);
+				
+		log.debug("ntcnList -> atchFileCode: " + atchFileCode);
+		log.debug("ntcnList -> atchFileList: " + atchFileList);
 		
 		return atchFileList;
 	}
@@ -124,10 +118,10 @@ public class NtcnController {
 	@ResponseBody
 	@PostMapping("/updateImprtcAt")
 	public int updateImprtcAt(NtcnVO ntcnVO) {
-		log.info("updateImprtcAt -> ntcnVO: " + ntcnVO);
-		
 		int result = ntcnService.updateImprtcAt(ntcnVO);
-		log.info("updateImprtcAt -> result: " + result);
+		
+		log.debug("updateImprtcAt -> ntcnVO: " + ntcnVO);
+		log.debug("updateImprtcAt -> result: " + result);
 		
 		return result;
 	}
@@ -135,7 +129,7 @@ public class NtcnController {
 	// 알림 등록 폼 출력
 	@GetMapping("/ntcnInsertForm")
 	public String ntcnInsertForm(@RequestParam("clasCode") String clasCode, Model model) {
-		log.info("ntcnInsertForm -> clasCode: " + clasCode);
+		log.debug("ntcnInsertForm -> clasCode: " + clasCode);
 		
 		return "class/ntcnInsertForm";
 	}
@@ -144,8 +138,6 @@ public class NtcnController {
 	@ResponseBody
 	@PostMapping("/ntcnInsert")
 	public String ntcnInsert(HttpServletRequest request, NtcnVO ntcnVO) {
-		log.info("ntcnInsert -> ntcnVO: " + ntcnVO);
-		
 		// insert 결과 담을 변수 선언
 		int result1 = 0;
 		int result2 = 0; 
@@ -156,7 +148,9 @@ public class NtcnController {
 		
 		// 업로드한 파일 가져오기
 		MultipartFile[] multiPartFile = ntcnVO.getUploadFiles();
-		log.info("ntcnInsert -> multiPartFile: " + multiPartFile);
+		
+		log.debug("ntcnInsert -> ntcnVO: " + ntcnVO);
+		log.debug("ntcnInsert -> multiPartFile: " + multiPartFile);
 		
 		// 업로드한 파일이 있는 경우에만 업로드 진행
 		if(multiPartFile != null && multiPartFile.length > 0) {
@@ -168,13 +162,11 @@ public class NtcnController {
 			
 			// 첨부 파일 코드 구해서 VO에 추가
 			String atchFileCode = ntcnService.getAtchFileCode(ntcnVO.getClasCode());
-			log.info("ntcnInsert -> atchFileCode: " + atchFileCode);
 			
 			List<AtchFileVO> atchFileVOList = new ArrayList<AtchFileVO>();
 			int sn = 1; // 순번
 			
 			for (MultipartFile mf : multiPartFile) {
-				
 				// 파일 복사
 				try {
 					UUID uuid = UUID.randomUUID();
@@ -189,32 +181,30 @@ public class NtcnController {
 					atchFileVO.setAtchFileNm(mf.getOriginalFilename());
 					atchFileVO.setAtchFileTy(mf.getContentType());
 					atchFileVO.setRegistId(mberId);
-					log.info("ntcnInsert -> atchFileVO: " + atchFileVO);
 					
 					atchFileVOList.add(atchFileVO);
-					log.info("ntcnInsert -> atchFileVOList: " + atchFileVOList);
 					
 				} catch (IllegalStateException | IOException e) {
 					e.printStackTrace();
 				}
-				
 			}
 			
-			log.info("ntcnInsert -> 최종 atchFileVOList: " + atchFileVOList);
 			
 			// 1. 첨부파일 테이블 insert
 			result1 = ntcnService.atchFileInsert(atchFileVOList);
-			log.info("파일 있 ntcnInsert -> result1: " + result1);
 			
 			// 2. 알림장 테이블 insert
 			ntcnVO.setAtchFileCode(atchFileCode);
 			result2 = ntcnService.ntcnInsert(ntcnVO);
-			log.info("ntcnInsert -> result2: " + result2);
-			log.info("ntcnInsert 후 -> ntcnVO: " + ntcnVO);
+			
+			log.debug("ntcnInsert -> 최종 atchFileVOList: " + atchFileVOList);
+			log.debug("파일 있 ntcnInsert -> result1: " + result1);
+			log.debug("ntcnInsert -> result2: " + result2);
+			log.debug("ntcnInsert 후 -> ntcnVO: " + ntcnVO);
 			
 		}else { // 첨부파일 없는 경우, 알림장 테이블 insert만 진행
 			result1 = ntcnService.ntcnInsert(ntcnVO);
-			log.info("파일 없 ntcnInsert -> result1: " + result1);
+			log.debug("파일 없 ntcnInsert -> result1: " + result1);
 		}
 		
 		return ntcnVO.getNtcnCode();
@@ -223,20 +213,19 @@ public class NtcnController {
 	// 알림장 수정 폼 출력
 	@GetMapping("/ntcnUpdateForm")
 	public String ntcnUpdateForm(String ntcnCode, Model model) {
-		log.info("ntcnUpdateForm -> ntcnCode: " + ntcnCode);
-		
 		NtcnVO ntcnVO = ntcnService.goToUpdateForm(ntcnCode);
-		log.info("ntcnUpdateForm -> ntcnVO: " + ntcnVO);
 		String atchFileCode = ntcnVO.getAtchFileCode();
 		
+		log.debug("ntcnUpdateForm -> ntcnCode: " + ntcnCode);
+		log.debug("ntcnUpdateForm -> ntcnVO: " + ntcnVO);
 		
 		model.addAttribute("ntcnVO", ntcnVO);
 
 		// 첨부 파일 목록 있으면 같이 model에 담음
 		if(atchFileCode != "" || atchFileCode != null) {
 			List<AtchFileVO> atchFileList = ntcnService.atchFileList(ntcnVO.getAtchFileCode());
-			log.info("ntcnList -> atchFileList: " + atchFileList);
 			model.addAttribute("atchFileList", atchFileList);
+			log.debug("ntcnList -> atchFileList: " + atchFileList);
 		}
 		
 		return "class/ntcnUpdateForm";
@@ -246,10 +235,10 @@ public class NtcnController {
 	@ResponseBody
 	@PostMapping("/atchFileDeleteOne")
 	public int atchFileDeleteOne(@RequestParam("atchFileCours") String atchFileCours) {
-		log.info("atchFileDeleteOne -> atchFileCours: " + atchFileCours);
-		
 		int result = ntcnService.atchFileDeleteOne(atchFileCours);
-		log.info("atchFileDeleteOne -> result: " + result);
+		
+		log.debug("atchFileDeleteOne -> atchFileCours: " + atchFileCours);
+		log.debug("atchFileDeleteOne -> result: " + result);
 		
 		return result;
 	}
@@ -258,8 +247,6 @@ public class NtcnController {
 	@ResponseBody
 	@PostMapping("/ntcnUpdate")
 	public String ntcnUpdate(HttpServletRequest request, NtcnVO ntcnVO) {
-		log.info("ntcnUpdate -> ntcnVO: " + ntcnVO);
-		
 		// 결과 담을 변수 선언
 		int result1 = 0;
 		int result2 = 0; 
@@ -274,7 +261,9 @@ public class NtcnController {
 		
 		// 업로드한 파일 가져오기
 		MultipartFile[] multiPartFile = ntcnVO.getUploadFiles();
-		log.info("ntcnInsert -> multiPartFile: " + multiPartFile);
+		
+		log.debug("ntcnUpdate -> ntcnVO: " + ntcnVO);
+		log.debug("ntcnInsert -> multiPartFile: " + multiPartFile);
 		
 		// 업로드한 파일이 있는 경우에만 업로드 진행
 		if(multiPartFile != null && multiPartFile.length > 0) {
@@ -289,12 +278,10 @@ public class NtcnController {
 			// 기존 글에 첨부파일이 없는 경우
 			if(ntcnVO.getAtchFileCode() == "" || ntcnVO.getAtchFileCode() == null || ntcnVO.getAtchFileCode().equals("")) {
 				atchFileCode = ntcnService.getAtchFileCode(clasCode);
-				log.info("ntcnInsert -> atchFileCode: " + atchFileCode);
 			}
 			
 			List<AtchFileVO> atchFileVOList = new ArrayList<AtchFileVO>();
 			int sn = ntcnService.getAtchFileSn(atchFileCode); // 순번 max값 구하기
-			log.info("ntcnInsert -> sn: " + sn);
 			
 			for (MultipartFile mf : multiPartFile) {
 				try {
@@ -310,32 +297,28 @@ public class NtcnController {
 					atchFileVO.setAtchFileNm(mf.getOriginalFilename());
 					atchFileVO.setAtchFileTy(mf.getContentType());
 					atchFileVO.setUpdtId(mberId);
-					log.info("ntcnInsert -> atchFileVO: " + atchFileVO);
 					
 					atchFileVOList.add(atchFileVO);
-					log.info("ntcnInsert -> atchFileVOList: " + atchFileVOList);
 					
 				} catch (IllegalStateException | IOException e) {
 					e.printStackTrace();
 				}
 			}
 			
-			log.info("ntcnInsert -> 최종 atchFileVOList: " + atchFileVOList);
-			
 			// 1. 첨부파일 테이블 처리
 			result1 = ntcnService.atchFileInsert(atchFileVOList);				
-			log.info("파일 있 ntcnUpdate -> result1: " + result1);
-			
 			// 2. 알림장 테이블 처리
 			ntcnVO.setAtchFileCode(atchFileCode);
 			result2 = ntcnService.ntcnUpdate(ntcnVO);
 			
-			log.info("ntcnUpdate -> result2: " + result2);
-			log.info("ntcnUpdate 후 -> ntcnVO: " + ntcnVO);
+			log.debug("ntcnInsert -> 최종 atchFileVOList: " + atchFileVOList);
+			log.debug("파일 있 ntcnUpdate -> result1: " + result1);
+			log.debug("ntcnUpdate -> result2: " + result2);
+			log.debug("ntcnUpdate 후 -> ntcnVO: " + ntcnVO);
 			
 		}else { // 첨부파일 없는 경우, 알림장 테이블 update만 진행
 			result1 = ntcnService.ntcnUpdate(ntcnVO);
-			log.info("파일 없 ntcnInsert -> result1: " + result1);
+			log.debug("파일 없 ntcnInsert -> result1: " + result1);
 		}
 		
 		// 알림장 게시글 제목이 수정된 경우, 알림 제목도 같이 수정
@@ -351,19 +334,19 @@ public class NtcnController {
 	@ResponseBody
 	@PostMapping("/ntcnDelete")
 	public int ntcnDelete(NtcnVO ntcnVO) {
-		log.info("ntcnDelete -> ntcnVO: " + ntcnVO);
-		
 		// 알림장 삭제
 		int result1 = ntcnService.ntcnDelete(ntcnVO.getNtcnCode());
-		log.info("taskDelete -> result1: " + result1);
 		
 		// 첨부파일 삭제
 		int result2 = this.ntcnService.atchFileDelete(ntcnVO.getAtchFileCode());
-		log.info("taskDelete -> result2: " + result2);
 		
 		// 학생/학부모 알림도 같이 삭제
 		int result3 = this.ntcnService.noticeDeleteAll(ntcnVO.getNtcnCode());
-		log.info("taskDelete -> deleteNoticeRes: " + result3);
+		
+		log.debug("ntcnDelete -> ntcnVO: " + ntcnVO);
+		log.debug("taskDelete -> result1: " + result1);
+		log.debug("taskDelete -> result2: " + result2);
+		log.debug("taskDelete -> deleteNoticeRes: " + result3);
 		
 		return result1 + result2 + result3;
 	}
@@ -372,12 +355,12 @@ public class NtcnController {
 	@ResponseBody
 	@RequestMapping(value="/getNtcnForm", method=RequestMethod.POST, produces="application/text;charset=utf-8")
 	public String getNtcnForm(String nttNm, Model model) {
-		log.info("getNtcnForm -> nttNm: " + nttNm);
-		
 		String ntcnForm = ntcnService.getNtcnForm(nttNm);
-		log.info("getNtcnForm -> ntcnForm: " + ntcnForm);
 		
 		model.addAttribute("ntcnForm", ntcnForm);
+		
+		log.debug("getNtcnForm -> nttNm: " + nttNm);
+		log.debug("getNtcnForm -> ntcnForm: " + ntcnForm);
 		
 		return ntcnForm;
 	}
@@ -386,22 +369,17 @@ public class NtcnController {
 	@ResponseBody
 	@PostMapping("/noticeInsertAll")
 	public int noticeInsertAll(@RequestBody Map<String, Object> map, HttpServletRequest request) {
-		log.info("noticeInsertAll -> map: " + map);
-		
-		MemberVO loginAccount =  (MemberVO) request.getSession().getAttribute("USER_INFO");
-		String mberId = loginAccount.getMberId();
-		
 		String clasCode = (String) map.get("clasCode");
 		
 		// 클래스 내 학생/학부모 리스트
 		List<String> noticeRcvIdList = ntcnService.getAllClassMber(clasCode);
-		log.info("noticeInsertAll -> noticeRcvIdList: " + noticeRcvIdList);
 		
-		map.put("noticeRcvIdList", noticeRcvIdList);
-//		log.info("리스트 넣은 후 noticeInsertAll -> map: " + map);
-		
+		map.put("noticeRcvIdList", noticeRcvIdList);		
 		int result = ntcnService.noticeInsertAll(map);
-		log.info("noticeInsertAll -> result: " + result);
+		
+		log.debug("noticeInsertAll -> map: " + map);
+		log.debug("noticeInsertAll -> noticeRcvIdList: " + noticeRcvIdList);
+		log.debug("noticeInsertAll -> result: " + result);
 		
 		return result;
 	}

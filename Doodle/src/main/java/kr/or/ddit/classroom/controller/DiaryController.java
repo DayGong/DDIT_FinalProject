@@ -36,9 +36,9 @@ public class DiaryController {
 	@GetMapping("/goToDiaryList")
 	public String goToDiaryList(HttpServletRequest request, Model model) {
 		MemberVO mberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.debug("goToDiaryList mberVO => " + mberVO);
-		
 		model.addAttribute("mberVO", mberVO);
+		
+		log.debug("goToDiaryList mberVO => " + mberVO);
 		
 		return "class/diaryList";
 	}
@@ -51,7 +51,6 @@ public class DiaryController {
 		
 		log.debug("addDiary mberVO => " + mberVO);
 		
-		
 		return "class/diaryAdd";
 	}
 	
@@ -60,9 +59,10 @@ public class DiaryController {
 	@GetMapping("/getSchulArea")
 	public String getSchulArea(HttpServletRequest request) {
 		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
+		String area = this.diaryService.getSchulArea(clasVO.getSchulCode());
+
 		log.debug("getSchulArea clasVO => " + clasVO);
 		
-		String area = this.diaryService.getSchulArea(clasVO.getSchulCode());
 		return area;
 	}
 	
@@ -193,7 +193,5 @@ public class DiaryController {
 		log.debug("filePath : " + filePath);
 		
 		return filePath;
-//		return "/resources/upload/2024/03/09/32a3a147-667c-4af1-b4dc-fe0edf289253_루돌푸꿈돌.png";
 	}
-	
 }

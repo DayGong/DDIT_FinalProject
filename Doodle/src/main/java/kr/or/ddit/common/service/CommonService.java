@@ -12,15 +12,6 @@ import kr.or.ddit.vo.MemberVO;
 
 public interface CommonService {
 
-	//메인페이지
-	public String main();
-
-	//FAQ 게시판 목록
-	public String faq();
-
-	//학원 조회
-	public String academy();
-
 	//아이디 중복체크
 	public int idDupChk(MemberVO memberVO);
 
@@ -29,10 +20,6 @@ public interface CommonService {
 
 	//학부모 회원가입시 자녀아이디 체크
 	public int childChk(MemberVO memberVO);
-
-	//로그인
-	@GetMapping("/login")
-	public String loginForm();
 
 	//가족 관계 종류 불러오는 리스트 (회원가입에서 띄워야함)
 	public List<CmmnDetailCodeVO> familyCategory();

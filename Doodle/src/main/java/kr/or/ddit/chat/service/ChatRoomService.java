@@ -29,12 +29,6 @@ public interface ChatRoomService {
 	// 채팅내역
 	public List<ChttVO> chtts(String chttRoomCode);
 	
-	// 채팅내역 - 무한스크롤 역순으로 어떻게 해야되나요? ㅠㅠ
-//	public List<ChttVO> chtts(Map<String, Object> map);
-
-	// 이미 생성된 채팅방이 있는지 체크
-//	public int roomChk(ChttRoomVO chttRoomVO);
-	
 	// 채팅방 코드 구하기
 	public String roomCode(ChttRoomVO chttRoomVO);
 	
