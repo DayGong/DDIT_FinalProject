@@ -20,9 +20,6 @@ public interface StudentService {
 	
 	//프로필 수정
 	public int updateProfile(MemberVO memVO);
-	
-	//학부모 인증(학생이)
-	public String parentCertification();
 
 	//칭찬 스티커 수
 	public int getComplimentStickerCount(String mberId);

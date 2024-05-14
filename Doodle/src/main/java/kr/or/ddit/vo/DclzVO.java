@@ -39,10 +39,9 @@ public class DclzVO {
 	// 3depth
 	// dclz
 	private int dclzSn;				//출결 순번
-	private String dclzProcessTime;	//출결 처리 시간
+	private String dclzProcessTime;		//출결 처리 시간
 	
 	// self list
 	List<DclzVO> stdList;
-//	List<DclzVO> dayList;
 	List<DclzVO> timeList;
 }

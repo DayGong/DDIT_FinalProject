@@ -21,7 +21,6 @@ public class AtchFileVO {
 	private Date updtDe;			// 수정 일자
 	private String updtId;			// 수정자 아이디
 
-
 	/* NttVO */
 	private String clasCode;		//반코드
 	/* ClasAlbumVO */

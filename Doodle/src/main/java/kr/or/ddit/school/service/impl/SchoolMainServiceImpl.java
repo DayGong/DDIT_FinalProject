@@ -29,7 +29,8 @@ public class SchoolMainServiceImpl implements SchoolMainService{
 	public List<SchulVO> getSchoolAndChildren(HttpServletRequest request) {
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
 		List<SchulVO> schulVOList = schoolMainMapper.getSchoolAndChildren(memberVO.getMberId());
-		log.info("schulVOList : "+schulVOList.toString());
+		log.debug("schulVOList : "+schulVOList.toString());
+		
 		return schulVOList;
 	}
 	

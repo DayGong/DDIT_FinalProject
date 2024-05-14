@@ -35,12 +35,6 @@ public class StudentServiceImpl implements StudentService {
 	public List<ClasStdntVO> myClassList(String loginId) {
 		return this.studentMapper.myClassList(loginId);
 	}
-
-	//학부모 인증(학생이)
-	@Override
-	public String parentCertification() {
-		return null;
-	}
 	
 	//프로필 수정
 	@Override

@@ -91,7 +91,7 @@
 	width: 260px;
 }
 /* sign */
-<!-- /* Font Definitions */
+/* Font Definitions */
 @font-face {
 	font-family: Batang;
 	panose-1: 2 3 6 0 0 1 1 1 1 1;
@@ -408,7 +408,6 @@ input, textarea{
 	width: 200px;
 	margin: auto;
 	border-radius: 10px;
-	/* 	background: #DF3C3C; */
 	background: #333;
 	color: #fff;
 	font-size: 1.2rem;
@@ -467,7 +466,7 @@ input:hover, textarea:hover {
 }
 
 /* 입력 포커스 시에도 보더를 추가 */
-input:focus, , textarea:focus {
+input:focus, textarea:focus {
 	background: #ffd77a;
 	color: #333;
 	transition: all 1s;
@@ -483,14 +482,11 @@ select {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="/resources/js/jquery.min.js"></script>
 
-
 <script>
 const docCode = '${sanctnDocVO.docCode}';
 const clasStdntCode = '${sanctnDocVO.clasStdntCode}';
 const cmmnGrade = '${sanctnDocVO.clasVO.cmmnGrade}';
-// const exprnLrnBgnde = $("#exprnLrnBgnde");
 const exprnLrnBgndeVal = '${sanctnDocVO.exprnLrnBgnde}';
-
 
 //오늘의 날짜를 가져오는 함수
 function getTodayDate(){
@@ -583,6 +579,7 @@ function resultSAlert(result, actTitle, reloadPage) {
       icon: icon
 	}).then(result => { location.reload(); });
 }
+
 window.onload = function() {
 	
 	$('#app-pdf-btn').click(function(){
@@ -599,7 +596,7 @@ window.onload = function() {
     $("#sign-submit-btn").on("click", function() {
     	//서명이 이미 등록되어 있다면
     	if('${SCHOOL_USER_INFO.sign}' !==''){
-    		 // 담임일 경우
+			// 담임일 경우
             <sec:authorize access = "hasRole('A14002')" >
                 let tcherId = '${CLASS_TCH_INFO.mberId}';
                 let tcherSanctn = '${SCHOOL_USER_INFO.sign}';
@@ -692,7 +689,6 @@ window.onload = function() {
 	        });
     	}
     });
-
 		
     /* 서명모달 닫기 */
     $("#sign-close").on("click", function() {
@@ -782,8 +778,7 @@ window.onload = function() {
         // 모바일 장치에서 선명하게 보이도록 합니다.
         // 이것은 또한 캔버스가 지워지게 합니다.
         function resizeCanvas() {
-            // 아주 이상한 이유로 100% 미만으로 축소하면,
-            // 일부 브라우저는 devicePixelRatio를 1 미만으로 보고합니다.
+            // 아주 이상한 이유로 100% 미만으로 축소하면, 일부 브라우저는 devicePixelRatio를 1 미만으로 보고합니다.
             // 그러면 캔버스의 일부만 지워집니다.
             var ratio = Math.max(
                 window.devicePixelRatio || 1, 1);
@@ -808,50 +803,42 @@ window.onload = function() {
         });
 
         // PNG 형식으로 서명 저장 버튼을 클릭할 때 동작합니다.
-        document.getElementById('save-png').addEventListener(
-            'click',
-            function() {
-                // 서명이 비어있는지 확인합니다.
-                if (signaturePad.isEmpty()) {
-                    return alert("서명을 부탁 드립니다");
-                }
+        document.getElementById('save-png').addEventListener('click', function() {
+			// 서명이 비어있는지 확인합니다.
+			if (signaturePad.isEmpty()) {
+				return alert("서명을 부탁 드립니다");
+			}
 
-                // 서명을 PNG 이미지로 변환합니다.
-                var data = signaturePad.toDataURL('image/png');
+			// 서명을 PNG 이미지로 변환합니다.
+			var data = signaturePad.toDataURL('image/png');
 
-                // 이미지를 미리보기로 표시합니다.
-                $("#img01").attr('src', data);
+			// 이미지를 미리보기로 표시합니다.
+			$("#img01").attr('src', data);
 
-                /* 서명 저장 */
-                var link = document.createElement('a');
-                link.href = data;
-                link.download = "image.png";
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                signaturePad.clear();
-                /* 서명 저장 */
-            });
+			/* 서명 저장 */
+			var link = document.createElement('a');
+			link.href = data;
+			link.download = "image.png";
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+			signaturePad.clear();
+			/* 서명 저장 */
+        });
 
-        document.getElementById('clear').addEventListener(
-            'click',
-            function() {
-                signaturePad.clear(); // 서명 지우기
-            });
+        document.getElementById('clear').addEventListener('click', function() {
+            signaturePad.clear(); // 서명 지우기
+        });
 
-        document.getElementById('draw').addEventListener(
-            'click',
-            function() {
-                var ctx = canvas.getContext('2d');
-                ctx.globalCompositeOperation = 'source-over'; // 기본 그리기 모드로 설정
-            });
+        document.getElementById('draw').addEventListener('click', function() {
+			var ctx = canvas.getContext('2d');
+			ctx.globalCompositeOperation = 'source-over'; // 기본 그리기 모드로 설정
+		});
 
-        document.getElementById('erase').addEventListener(
-            'click',
-            function() {
-                var ctx = canvas.getContext('2d');
-                ctx.globalCompositeOperation = 'destination-out'; // 지우개 모드로 설정
-            });
+        document.getElementById('erase').addEventListener('click', function() {
+			var ctx = canvas.getContext('2d');
+			ctx.globalCompositeOperation = 'destination-out'; // 지우개 모드로 설정
+		});
         /* sign */
     });
 	 
@@ -889,21 +876,21 @@ window.onload = function() {
             success: function(result) {
                 if (result == 1) {
                     alert("게시글이 성공적으로 삭제되었습니다.");
-                    location.href = "/approval/approvalList?clasStdntCode=" +
-                        clasStdntCode; //체험학습 신청 목록으로
+                    location.href = "/approval/approvalList?clasStdntCode=" + clasStdntCode; //체험학습 신청 목록으로
                 } else {
                     alert("게시글 삭제가 실패했습니다.");
                 }
             }
         });
     });
+	
     /* 취소버튼 클릭 */
     $("#cancelBtn").on("click", function() {
         $("#updateDiv").css("display", "block");
         $("#saveDiv").css("display", "none");
-
         $("#exprnLrnBgnde").attr('disabled', true);
         $("#exprnLrnEndde").attr('disabled', true);
+
         //radio버튼 눌림 방지 
         $("input[type='radio']").attr("onclick", "return false;");
         $("#purps").attr('disabled', true);
@@ -911,7 +898,6 @@ window.onload = function() {
         $("#docCn").attr('disabled', true);
         $("#rqstDe").attr('disabled', true);
     });
-
 
     /* 저장버튼 클릭 */
     $("#saveBtn").on("click", function() {
@@ -985,11 +971,7 @@ window.onload = function() {
         fieldStudyApplyFrm.append("stdntId", stdntId);
         fieldStudyApplyFrm.append("exprnLrnBgnde", exprnLrnBgnde);
         fieldStudyApplyFrm.append("exprnLrnEndde", exprnLrnEndde);
-        // 		fieldStudyApplyFrm.append("lrnStle",lrnStle);
-        // 		fieldStudyApplyFrm.append("purps",purps);
-        // 		fieldStudyApplyFrm.append("dstn",dstn);
         fieldStudyApplyFrm.append("stdnprntId", stdnprntId);
-        // 		fieldStudyApplyFrm.append("docCn",docCn);
         fieldStudyApplyFrm.append("rqstDe", rqstDe);
         fieldStudyApplyFrm.append("schulCode", schulCode);
         fieldStudyApplyFrm.append("clasCode", clasCode);
@@ -1003,21 +985,13 @@ window.onload = function() {
             type: "post",
             dataType: "json",
             beforeSend: function(xhr) {
-                xhr.setRequestHeader(
-                    "${_csrf.headerName}",
-                    "${_csrf.token}");
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
             },
             success: function(result) {
-
-                //result : SanctnDocVO
-
-                $("#updateDiv").css("display",
-                    "block");
-                $("#saveDiv")
-                    .css("display", "none");
+                $("#updateDiv").css("display", "block");
+                $("#saveDiv").css("display", "none");
 
                 resultAlert(result, '체험학습신청 수정을', '체험학습 상세 화면으로 이동합니다.');
-
             }
         });
     });
@@ -1028,6 +1002,7 @@ window.onload = function() {
         $("#saveDiv").css("display", "block");
         $("#exprnLrnBgnde").removeAttr('disabled');
         $("#exprnLrnEndde").removeAttr('disabled');
+        
         //radio버튼 눌림 방지 해제
         $("input[type='radio']").attr("onclick", "return true;");
         $("#purps").removeAttr('disabled');
@@ -1035,7 +1010,6 @@ window.onload = function() {
         $("#docCn").removeAttr('disabled');
         $("#rqstDe").removeAttr('disabled');
     });
-
 
     switch (cmmnGrade) {
         case "A22001":
@@ -1119,376 +1093,240 @@ window.onload = function() {
         // 이미지를 td에 추가
         $('#deputyPrncpalSanctnTd').append(img);
     }
-    
 }
 </script>
 
 <div class=WordSection1 id="pdfDiv" style="width: 810px; margin: auto;">
 	<form id="fieldStudyApplyFrm" name="fieldStudyApplyFrm" method="post" style="width: 810px;">
-		<input type="text" id="docCode" name="docCode" style="display: none;"
-			value="${sanctnDocVO.docCode}" disabled> <input type="text"
-			id="cmmnDocKnd" name="cmmnDocKnd" style="display: none;"
-			value="A25001" disabled> <input type="text"
-			id="clasStdntCode" name="clasStdntCode" style="display: none;"
-			value="${sanctnDocVO.clasStdntCode}" disabled> <input
-			type="text" id="clasCode" name="clasCode" style="display: none;"
-			value="${sanctnDocVO.clasCode}" disabled>
-		<p class=a
-			style='margin-left: 10.0pt; text-indent: -10.0pt; line-height: 116%'>
+		<input type="text" id="docCode" name="docCode" style="display: none;" value="${sanctnDocVO.docCode}" disabled> 
+		<input type="text" id="cmmnDocKnd" name="cmmnDocKnd" style="display: none;" value="A25001" disabled> 
+		<input type="text" id="clasStdntCode" name="clasStdntCode" style="display: none;" value="${sanctnDocVO.clasStdntCode}" disabled> 
+		<input type="text" id="clasCode" name="clasCode" style="display: none;" value="${sanctnDocVO.clasCode}" disabled>
+		<p class=a style='margin-left: 10.0pt; text-indent: -10.0pt; line-height: 116%'>
 			<span style='font-size: 12.0pt; line-height: 116%'>&nbsp;</span>
 		</p>
-		<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
-			style='border-collapse: collapse; border: none'>
+		<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 style='border-collapse: collapse; border: none'>
 			<tr style='height: 13.8pt'>
-				<td width=420 colspan=8 rowspan=3
-					style='width: 315.1pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 13.8pt'>
-					<p class=a align=center
-						style='text-align: center; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 20.0pt; line-height: 103%; font-family: "HY울릉도M", serif; color: #353535'>교외체험학습
-							결과 보고서</span>
+				<td width=420 colspan=8 rowspan=3 style='width: 315.1pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 13.8pt'>
+					<p class=a align=center style='text-align: center; word-break: normal'>
+						<span lang=ZH-CN style='font-size: 20.0pt; line-height: 103%; font-family: "HY울릉도M", serif; color: #353535'>교외체험학습 결과 보고서</span>
 					</p>
 				</td>
-				<td width=23 rowspan=3
-					style='width: 16.95pt; border: solid gray 1.0pt; border-left: none; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 13.8pt'>
-					<p class=a align=center
-						style='text-align: center; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 10.5pt; line-height: 103%; font-family: "Gulim", sans-serif; color: #353535'>결</span>
+				<td width=23 rowspan=3 style='width: 16.95pt; border: solid gray 1.0pt; border-left: none; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 13.8pt'>
+					<p class=a align=center style='text-align: center; word-break: normal'>
+						<span lang=ZH-CN style='font-size: 10.5pt; line-height: 103%; font-family: "Gulim", sans-serif; color: #353535'>결</span>
 					</p>
-					<p class=a align=center
-						style='text-align: center; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 10.5pt; line-height: 103%; font-family: "Gulim", sans-serif; color: #353535'>재</span>
+					<p class=a align=center style='text-align: center; word-break: normal'>
+						<span lang=ZH-CN style='font-size: 10.5pt; line-height: 103%; font-family: "Gulim", sans-serif; color: #353535'>재</span>
 					</p>
 				</td>
-				<td width=99 colspan=2
-					style='width: 74.35pt; border: solid gray 1.0pt; border-left: none; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 13.8pt'>
-					<p class=a align=center
-						style='text-align: center; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 10.5pt; line-height: 103%; font-family: "Gulim", sans-serif; color: #353535'>담임</span>
-					</p> <input type="text" id="tcherId" name="tcherId"
-					style="display: block;">
+				<td width=99 colspan=2 style='width: 74.35pt; border: solid gray 1.0pt; border-left: none; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 13.8pt'>
+					<p class=a align=center style='text-align: center; word-break: normal'>
+						<span lang=ZH-CN style='font-size: 10.5pt; line-height: 103%; font-family: "Gulim", sans-serif; color: #353535'>담임</span>
+					</p>
+					<input type="text" id="tcherId" name="tcherId" style="display: block;">
 				</td>
-				<td width=99 colspan=2
-					style='width: 74.35pt; border: solid gray 1.0pt; border-left: none; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 13.8pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
+				<td width=99 colspan=2 style='width: 74.35pt; border: solid gray 1.0pt; border-left: none; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 13.8pt'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
 						<span lang=ZH-CN style='font-size: 11.0pt; font-family: GulimChe'>교감</span>
-					</p> <input type="text" id="deputyPrncpalId" name="tcherId"
-					style="display: block;">
+					</p>
+					<input type="text" id="deputyPrncpalId" name="tcherId" style="display: block;">
 				</td>
 			</tr>
 			<tr style='height: 13.8pt'>
-				<td  id="tcherSanctnTd" width=99 colspan=2 rowspan=2
-					style='width: 74.35pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 65.8pt'>
-				
-				</td>
-				<td id="deputyPrncpalSanctnTd" width=99 colspan=2 rowspan=2
-					style='width: 74.35pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 65.8pt'>
-					
-				</td>
-
-
+				<td  id="tcherSanctnTd" width=99 colspan=2 rowspan=2 style='width: 74.35pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 65.8pt'></td>
+				<td id="deputyPrncpalSanctnTd" width=99 colspan=2 rowspan=2 style='width: 74.35pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 65.8pt'></td>
 			</tr>
-			<tr style='height: 13.8pt'>
-			</tr>
-
+			<tr style='height: 13.8pt'></tr>
 			<tr style='height: 26.15pt'>
-				<td width=70
-					style='width: 52.4pt; border: solid gray 1.0pt; border-top: none; background: #F1F1F1; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 26.15pt'>
-					<input type="text" id="stdntId" name="stdntId"
-					style="display: none;" value="${sanctnDocVO.stdntId}" disabled>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>성명</span>
+				<td width=70 style='width: 52.4pt; border: solid gray 1.0pt; border-top: none; background: #F1F1F1; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 26.15pt'>
+					<input type="text" id="stdntId" name="stdntId" style="display: none;" value="${sanctnDocVO.stdntId}" disabled>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span lang=ZH-CN style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>성명</span>
 					</p>
 				</td>
-				<td width=173 colspan=3
-					style='width: 129.5pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 26.15pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span
-							style='font-size: 11.0pt; font-family: GulimChe; letter-spacing: -.35pt'>${sanctnDocVO.familyRelateVO.stdntVO.mberNm}</span>
+				<td width=173 colspan=3 style='width: 129.5pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 26.15pt'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span style='font-size: 11.0pt; font-family: GulimChe; letter-spacing: -.35pt'>${sanctnDocVO.familyRelateVO.stdntVO.mberNm}</span>
 					</p> 
 				</td>
-				<td width=62 colspan=2
-					style='width: 46.35pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; background: #F1F1F1; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 26.15pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 11.0pt; font-family: "Gulim", sans-serif; color: #1B1760; letter-spacing: -.35pt'>학년
-							반</span>
+				<td width=62 colspan=2 style='width: 46.35pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; background: #F1F1F1; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 26.15pt'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span lang=ZH-CN style='font-size: 11.0pt; font-family: "Gulim", sans-serif; color: #1B1760; letter-spacing: -.35pt'>학년반</span>
 					</p>
 				</td>
-				<td width=337 colspan=7
-					style='width: 252.6pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 26.15pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span
-							style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>    
+				<td width=337 colspan=7 style='width: 252.6pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 26.15pt'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>    
 							<span lang=ZH-CN id="cmmnGrade"></span><span lang=ZH-CN>학년</span> 
-							<input type="text" id="clasCode" name="clasCode"
-							style="display: none"> <span lang=ZH-CN>${sanctnDocVO.clasVO.clasNm}</span>  
+							<input type="text" id="clasCode" name="clasCode" style="display: none">
+							<span lang=ZH-CN>${sanctnDocVO.clasVO.clasNm}</span>  
 							${sanctnDocVO.clasStdntVO.clasInNo}<span lang=ZH-CN>번</span>
 						</span>   
-						
 					</p>
 				</td>
 			</tr>
 			<tr style='height: 21.35pt'>
-				<td width=70 rowspan=1
-					style='width: 52.4pt; border: solid gray 1.0pt; border-top: none; background: #F1F1F1; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 21.35pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>기간</span>
+				<td width=70 rowspan=1 style='width: 52.4pt; border: solid gray 1.0pt; border-top: none; background: #F1F1F1; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 21.35pt'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span lang=ZH-CN style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>기간</span>
 					</p>
 				</td>
-
-				<td width=43 rowspan=1
-					style='width: .45in; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; background: #F2F2F2; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 21.35pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span style='font-size: 10.5pt; font-family: "휴먼명조", serif'>1</span><span
-							lang=ZH-CN style='font-size: 10.5pt'>일</span><span lang=ZH-CN
-							style='font-size: 10.5pt; font-family: "휴먼명조", serif'> </span>
+				<td width=43 rowspan=1 style='width: .45in; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; background: #F2F2F2; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 21.35pt'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span style='font-size: 10.5pt; font-family: "휴먼명조", serif'>1</span>
+						<span lang=ZH-CN style='font-size: 10.5pt'>일</span>
+						<span lang=ZH-CN style='font-size: 10.5pt; font-family: "휴먼명조", serif'> </span>
 					</p>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
 						<span lang=ZH-CN style='font-size: 10.5pt'>단위</span>
 					</p>
 				</td>
-				<td width=129 colspan=2
-					style='width: 97.1pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 21.35pt'>
-					<p class=a align=center
-						style='text-align: center; word-break: normal'>
+				<td width=129 colspan=2 style='width: 97.1pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 21.35pt'>
+					<p class=a align=center style='text-align: center; word-break: normal'>
 						<span lang=ZH-CN>신청 기간</span>(<span lang=ZH-CN>보호자</span>)
 					</p>
 				</td>
-				<td width=399 colspan=9
-					style='width: 298.95pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 21.35pt'>
+				<td width=399 colspan=9 style='width: 298.95pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 21.35pt'>
 					<p class=a style='line-height: normal; text-align: center;'>
-						<span
-							style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>
-							<input type="date" id="exprnLrnBgnde" name="exprnLrnBgnde"
-							value="<fmt:formatDate value="${sanctnDocVO.exprnLrnBgnde}" pattern="yyyy-MM-dd" />"
-							disabled> ~  <input type="date" id="exprnLrnEndde"
-							name="exprnLrnEndde"
-							value="<fmt:formatDate value="${sanctnDocVO.exprnLrnEndde}" pattern="yyyy-MM-dd" />"
-							disabled>
+						<span style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>
+							<input type="date" id="exprnLrnBgnde" name="exprnLrnBgnde" value="<fmt:formatDate value='${sanctnDocVO.exprnLrnBgnde}' pattern='yyyy-MM-dd' />" disabled> ~  
+							<input type="date" id="exprnLrnEndde" name="exprnLrnEndde" value="<fmt:formatDate value='${sanctnDocVO.exprnLrnEndde}' pattern='yyyy-MM-dd' />" disabled>
 						</span>
 					</p>
 				</td>
 			</tr>
 			<tr style='height: 25.25pt'>
-				<td width=70
-					style='width: 52.4pt; border: solid gray 1.0pt; border-top: none; background: #F1F1F1; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>학습형태</span>
+				<td width=70 style='width: 52.4pt; border: solid gray 1.0pt; border-top: none; background: #F1F1F1; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span lang=ZH-CN style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>학습형태</span>
 					</p>
 				</td>
-				<td width=571 colspan=12
-					style='width: 428.45pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span
-							style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'> </span>
-						<input type="radio" id="lrnStle1" name="lrnStle"
-							value="가족행사 참여를 통한 체험학습"> <span lang=ZH-CN
-							style='font-size: 11.0pt; font-family: "휴먼명조", serif; letter-spacing: -.55pt'><label
-							for="lrnStle1">가족행사 참여를 통한 체험학습</label></span><span
-							style='font-size: 10.5pt; font-family: "휴먼명조", serif; color: #353535'>    
-						</span> <input type="radio" id="lrnStle2" name="lrnStle"
-							value="주제가 있는 체험학습"> <span lang=ZH-CN
-							style='font-size: 11.0pt; font-family: "휴먼명조", serif; letter-spacing: -.55pt'><label
-							for="lrnStle2">주제가 있는 체험학습</label></span><span
-							style='font-size: 11.0pt; font-family: "휴먼명조", serif; letter-spacing: -.55pt'>
-							     </span>
+				<td width=571 colspan=12 style='width: 428.45pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'> </span>
+						<input type="radio" id="lrnStle1" name="lrnStle" value="가족행사 참여를 통한 체험학습"> 
+						<span lang=ZH-CN style='font-size: 11.0pt; font-family: "휴먼명조", serif; letter-spacing: -.55pt'><label for="lrnStle1">가족행사 참여를 통한 체험학습</label></span>
+						<span style='font-size: 10.5pt; font-family: "휴먼명조", serif; color: #353535'></span>
+						<input type="radio" id="lrnStle2" name="lrnStle" value="주제가 있는 체험학습">
+						<span lang=ZH-CN style='font-size: 11.0pt; font-family: "휴먼명조", serif; letter-spacing: -.55pt'><label for="lrnStle2">주제가 있는 체험학습</label></span>
+						<span style='font-size: 11.0pt; font-family: "휴먼명조", serif; letter-spacing: -.55pt'> </span>
 					</p>
 				</td>
 			</tr>
 			<tr style='height: 25.1pt'>
-				<td width=70
-					style='width: 52.4pt; border: solid gray 1.0pt; border-top: none; background: #F1F1F1; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.1pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>목적</span>
+				<td width=70 style='width: 52.4pt; border: solid gray 1.0pt; border-top: none; background: #F1F1F1; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.1pt'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span lang=ZH-CN style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>목적</span>
 					</p>
 				</td>
-				<td width=343 colspan=6
-					style='width: 257.05pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.1pt'>
-					<input type="text" id="purps" name="purps"
-					style='text-align: center; font-family: GulimChe; width: 361px;'
-					value="${sanctnDocVO.purps}" disabled>
+				<td width=343 colspan=6 style='width: 257.05pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.1pt'>
+					<input type="text" id="purps" name="purps" style='text-align: center; font-family: GulimChe; width: 361px;' value="${sanctnDocVO.purps}" disabled>
 				</td>
-				<td width=88 colspan=3
-					style='width: 65.85pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; background: #F2F2F2; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.1pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>목적지</span>
+				<td width=88 colspan=3 style='width: 65.85pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; background: #F2F2F2; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.1pt'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span lang=ZH-CN style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>목적지</span>
 					</p>
 				</td>
-				<td width=141 colspan=3
-					style='width: 105.5pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.1pt'>
-					<input type="text" id="dstn" name="dstn"
-					style='text-align: center; font-family: GulimChe; width: 221px;'
-					value="${sanctnDocVO.dstn}" disabled>
+				<td width=141 colspan=3 style='width: 105.5pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.1pt'>
+					<input type="text" id="dstn" name="dstn" style='text-align: center; font-family: GulimChe; width: 221px;' value="${sanctnDocVO.dstn}" disabled>
 				</td>
 			</tr>
 			<tr style='height: 25.25pt'>
-				<td width=70
-					style='width: 52.4pt; border: solid gray 1.0pt; border-top: none; background: #F1F1F1; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
-					<input type="text" id="stdnprntId" name="stdnprntId"
-					style="display: none;" value="${sanctnDocVO.stdnprntId}" disabled>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 11.0pt; font-family: "Gulim", sans-serif; letter-spacing: -.35pt'>보호자명</span>
+				<td width=70 style='width: 52.4pt; border: solid gray 1.0pt; border-top: none; background: #F1F1F1; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
+					<input type="text" id="stdnprntId" name="stdnprntId" style="display: none;" value="${sanctnDocVO.stdnprntId}" disabled>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span lang=ZH-CN style='font-size: 11.0pt; font-family: "Gulim", sans-serif; letter-spacing: -.35pt'>보호자명</span>
 					</p>
 				</td>
-				<td width=137 colspan=2
-					style='width: 102.65pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span
-							style='font-size: 11.0pt; font-family: GulimChe; letter-spacing: -.35pt'>${sanctnDocVO.familyRelateVO.parentMemberVO.mberNm}</span>
+				<td width=137 colspan=2 style='width: 102.65pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span style='font-size: 11.0pt; font-family: GulimChe; letter-spacing: -.35pt'>${sanctnDocVO.familyRelateVO.parentMemberVO.mberNm}</span>
 					</p> 
 				</td>
-				<td width=92 colspan=2
-					style='width: 68.7pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; background: #F2F2F2; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>관계</span>
+				<td width=92 colspan=2 style='width: 68.7pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; background: #F2F2F2; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span lang=ZH-CN style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>관계</span>
 					</p>
 				</td>
-				<td width=114 colspan=2
-					style='width: 85.65pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
+				<td width=114 colspan=2 style='width: 85.65pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
 					<p class=a style='line-height: normal; text-align: center;'>
-						<span
-							style='font-size: 11.0pt; font-family: GulimChe; letter-spacing: -.35pt'>${sanctnDocVO.familyRelateVO.cmmnDetailCode}</span>
+						<span style='font-size: 11.0pt; font-family: GulimChe; letter-spacing: -.35pt'>${sanctnDocVO.familyRelateVO.cmmnDetailCode}</span>
 					</p> 
 				</td>
-				<td width=88 colspan=3
-					style='width: 65.85pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; background: #F2F2F2; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 11.0pt; font-family: "Gulim", sans-serif; letter-spacing: -.35pt'>연락처</span>
+				<td width=88 colspan=3 style='width: 65.85pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; background: #F2F2F2; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span lang=ZH-CN style='font-size: 11.0pt; font-family: "Gulim", sans-serif; letter-spacing: -.35pt'>연락처</span>
 					</p>
 				</td>
-				<td width=141 colspan=3
-					style='width: 105.5pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
+				<td width=141 colspan=3 style='width: 105.5pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 25.25pt'>
 					<p class=a style='line-height: normal; text-align: center;'>
-						<span
-							style='font-size: 11.0pt; font-family: GulimChe; letter-spacing: -.35pt'>${sanctnDocVO.familyRelateVO.parentMemberVO.moblphonNo}</span>
+						<span style='font-size: 11.0pt; font-family: GulimChe; letter-spacing: -.35pt'>${sanctnDocVO.familyRelateVO.parentMemberVO.moblphonNo}</span>
 					</p> 
 				</td>
 			</tr>
 			<tr style='height: 122.75pt'>
-				<td width=70
-					style='width: 52.4pt; border: solid gray 1.0pt; border-top: none; background: #F1F1F1; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 122.75pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>교외체험</span>
+				<td width=70 style='width: 52.4pt; border: solid gray 1.0pt; border-top: none; background: #F1F1F1; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 122.75pt'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span lang=ZH-CN style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>교외체험</span>
 					</p>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>학습내용</span>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span lang=ZH-CN style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>학습내용</span>
 					</p>
 				</td>
-				<td width=571 colspan=12
-					style='width: 428.45pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 122.75pt; text-align: center;'>
-					<textarea id="docCn" name="docCn" style="width: 711px; height: 154px;"
-						disabled>${sanctnDocVO.docCn}</textarea>
+				<td width=571 colspan=12 style='width: 428.45pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 122.75pt; text-align: center;'>
+					<textarea id="docCn" name="docCn" style="width: 711px; height: 154px;" disabled>${sanctnDocVO.docCn}</textarea>
 				</td>
 			</tr>
 			<tr style='height: 88.3pt'>
-				<td width=641 colspan=13
-					style='width: 480.9pt; border-top: none; border-left: solid gray 1.0pt; border-bottom: none; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 88.3pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<b><span lang=ZH-CN>위와</span></b><b><span lang=ZH-CN
-							style='font-family: "휴먼명조", serif'> </span></b><b><span
-							lang=ZH-CN>같이</span></b><b><span lang=ZH-CN
-							style='font-family: "휴먼명조", serif'> </span></b><b><span
-							lang=ZH-CN>교외체험학습</span></b><b><span lang=ZH-CN
-							style='font-family: "휴먼명조", serif'> </span></b><b><span
-							lang=ZH-CN>결과 보고서를 제출합니다</span></b><b><span
-							style='font-family: "휴먼명조", serif'>. </span></b>
+				<td width=641 colspan=13 style='width: 480.9pt; border-top: none; border-left: solid gray 1.0pt; border-bottom: none; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 88.3pt'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<b><span lang=ZH-CN>위와</span></b>
+						<b><span lang=ZH-CN style='font-family: "휴먼명조", serif'> </span></b>
+						<b><span lang=ZH-CN>같이</span></b>
+						<b><span lang=ZH-CN style='font-family: "휴먼명조", serif'> </span></b>
+						<b><span lang=ZH-CN>교외체험학습</span></b>
+						<b><span lang=ZH-CN style='font-family: "휴먼명조", serif'> </span></b>
+						<b><span lang=ZH-CN>결과 보고서를 제출합니다</span></b>
+						<b><span style='font-family: "휴먼명조", serif'>. </span></b>
 					</p>
 					<p class=MsoNormal>
 						<span style='font-size: 1.0pt'>&nbsp;</span>
 					</p>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
+					<p class=a align=center style='text-align: center; line-height: normal; word-break: normal'>
 						<span style='font-size: 10.5pt; font-family: "Gulim", sans-serif'>&nbsp;</span>
 					</p>
 				</td>
 			</tr>
 	
 			<tr>
-				<td width=641 colspan=13
-					style='width: 480.9pt; border: solid gray 1.0pt; border-top: none; padding: 1.4pt 1.4pt 1.4pt 1.4pt'>
-					<p class=a id="rqstDe" align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span
-							style='font-size: 12.0pt; font-family: GulimChe; letter-spacing: -.4pt'> 
+				<td width=641 colspan=13 style='width: 480.9pt; border: solid gray 1.0pt; border-top: none; padding: 1.4pt 1.4pt 1.4pt 1.4pt'>
+					<p class=a id="rqstDe" align=center style='text-align: center; line-height: normal; word-break: normal'>
+						<span style='font-size: 12.0pt; font-family: GulimChe; letter-spacing: -.4pt'> 
 							<fmt:formatDate value="${sanctnDocVO.rqstDe}" pattern="yyyy-MM-dd" />
 						</span>
 					</p>
 					<div style="display: flex; justify-content: flex-end;">
 						<div style="margin-right: 10px;">
-							<div class=a align=right
-								style='text-align: right; line-height: normal; word-break: normal'>
-								<span lang=ZH-CN
-									style='font-size: 13.0pt; font-family: GulimChe; letter-spacing: -.45pt; margin-right: 9px;'>학&nbsp;생</span>
+							<div class=a align=right style='text-align: right; line-height: normal; word-break: normal'>
+								<span lang=ZH-CN style='font-size: 13.0pt; font-family: GulimChe; letter-spacing: -.45pt; margin-right: 9px;'>학&nbsp;생</span>
 							</div>
-							<div class=a align=right
-								style='text-align: right; line-height: normal; word-break: normal'>
-								<span lang=ZH-CN
-									style='font-size: 13.0pt; font-family: GulimChe; letter-spacing: -.45pt; margin-right: 9px;'>가&nbsp;족</span>
+							<div class=a align=right style='text-align: right; line-height: normal; word-break: normal'>
+								<span lang=ZH-CN style='font-size: 13.0pt; font-family: GulimChe; letter-spacing: -.45pt; margin-right: 9px;'>가&nbsp;족</span>
 							</div>
 						</div>
 						<div style="margin-right: 10px;">
-							<div class=a align=right
-								style='text-align: right; line-height: normal; word-break: normal'>
-								<span lang=ZH-CN
-									style='font-size: 13.0pt; font-family: GulimChe; letter-spacing: -.45pt'>${sanctnDocVO.familyRelateVO.stdntVO.mberNm}</span>
+							<div class=a align=right style='text-align: right; line-height: normal; word-break: normal'>
+								<span lang=ZH-CN style='font-size: 13.0pt; font-family: GulimChe; letter-spacing: -.45pt'>${sanctnDocVO.familyRelateVO.stdntVO.mberNm}</span>
 							</div>
-							<div class=a align=right
-								style='text-align: right; line-height: normal; word-break: normal'>
-								<span lang=ZH-CN
-									style='font-size: 13.0pt; font-family: GulimChe; letter-spacing: -.45pt'>${sanctnDocVO.familyRelateVO.parentMemberVO.mberNm}</span>
+							<div class=a align=right style='text-align: right; line-height: normal; word-break: normal'>
+								<span lang=ZH-CN style='font-size: 13.0pt; font-family: GulimChe; letter-spacing: -.45pt'>${sanctnDocVO.familyRelateVO.parentMemberVO.mberNm}</span>
 							</div>
 						</div>
-<!-- 						<div> -->
-<!-- 							<div> -->
-<!-- 								(<span -->
-<!-- 									style='font-size: 11.0pt; font-family: GulimChe; letter-spacing: -.35pt' -->
-<!-- 									lang=ZH-CN>인</span>) -->
-<!-- 							</div> -->
-<!-- 							<div> -->
-<!-- 								(<span -->
-<!-- 									style='font-size: 11.0pt; font-family: GulimChe; letter-spacing: -.35pt' -->
-<!-- 									lang=ZH-CN>인</span>) -->
-<!-- 							</div> -->
-<!-- 						</div> -->
-					</div> <input type="text" id="schulCode" name="schulCode"
-					style="display: none;" value="${sanctnDocVO.schulCode}" disabled>
+					</div>
+					<input type="text" id="schulCode" name="schulCode" style="display: none;" value="${sanctnDocVO.schulCode}" disabled>
 					<p class=a style='line-height: normal'>
-						<span lang=ZH-CN
-							style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>${sanctnDocVO.schulVO.schulNm}장
-							귀하</span>
+						<span lang=ZH-CN style='font-size: 10.5pt; font-family: "Gulim", sans-serif; color: #353535'>${sanctnDocVO.schulVO.schulNm}장 귀하</span>
 					</p>
 				</td>
 			</tr>
@@ -1511,74 +1349,61 @@ window.onload = function() {
 	</form>
 	<div style="width: 798.03px;">
 		<p class=a style='line-height: normal'>
-			<span style='font-family: "휴먼명조", serif'></span><span lang=ZH-CN
-				style='font-size: 11.0pt; font-family: "휴먼명조", serif'>
+			<span style='font-family: "휴먼명조", serif'></span>
+			<span lang=ZH-CN style='font-size: 11.0pt; font-family: "휴먼명조", serif'>
 				※ 교외체험학습 결과 보고서 내용이 많을 경우 별지에 추가 작성<br>
 				※ 사진, 입장권, 참가확인서 등 증빙자료 첨부<br>
 				※ 체험학습 종료 후 7일 이내 제출 (체험학습 보고서를 제출하지 않을 경우 체험학습 기간을 미인정결석으로 처리)
-			</span><span style='font-size: 11.0pt; font-family: "휴먼명조", serif'></span>
+			</span>
+			<span style='font-size: 11.0pt; font-family: "휴먼명조", serif'></span>
 		</p>
-		<span
-			style='font-size: 11.0pt; font-family: "Malgun Gothic", sans-serif'><br
-			clear=all style='page-break-before: always'> </span>
+		<span style='font-size: 11.0pt; font-family: "Malgun Gothic", sans-serif'><br clear=all style='page-break-before: always'> </span>
 	</div>
 </div>
-<c:if
-	test="${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode eq 'ROLE_A01003'}">
-	<c:if
-		test="${sanctnDocVO.cmmnProcessSttus eq 'A11001' || sanctnDocVO.cmmnProcessSttus eq 'A11003'}">
-		<div id="updateDiv"
-			style="width: 1000px; margin: auto; margin-bottom: 15px; text-align: center;">
+<c:if test="${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode eq 'ROLE_A01003'}">
+	<c:if test="${sanctnDocVO.cmmnProcessSttus eq 'A11001' || sanctnDocVO.cmmnProcessSttus eq 'A11003'}">
+		<div id="updateDiv" style="width: 1000px; margin: auto; margin-bottom: 15px; text-align: center;">
 			<button id="updateBtn" type="button" style="padding: 10px 15px; width: 195px;">수정하기</button>
 			<button id="deleteBtn" type="button" style="padding: 10px 15px; width: 195px; margin-left: 40px;">삭제하기</button>
 			<button class="goList" style="padding: 10px 15px; width: 195px; margin-left: 40px;">목록으로</button>
 		</div>
-		<div id="saveDiv"
-			style="width: 435px; margin: auto; margin-bottom: 15px; display: none;">
-			<button id="saveBtn" type="button"
-				style="padding: 10px 15px; width: 195px;">저장하기</button>
-			<button id="cancelBtn" class="cancelBtn" type="button"
-				style="padding: 10px 15px; width: 195px; margin-left: 40px;">취소</button>
+		<div id="saveDiv" style="width: 435px; margin: auto; margin-bottom: 15px; display: none;">
+			<button id="saveBtn" type="button" style="padding: 10px 15px; width: 195px;">저장하기</button>
+			<button id="cancelBtn" class="cancelBtn" type="button" style="padding: 10px 15px; width: 195px; margin-left: 40px;">취소</button>
 		</div>
 	</c:if>
 </c:if>
 
 <!-- 권한이 교감/담임교사일 경우만 보여져야한다 -->
 <!-- 시그니처 패드 -->
-<c:if
-	test="${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode eq 'ROLE_A01002' || USER_INFO.vwMemberAuthVOList[1].cmmnDetailCode eq 'ROLE_A01002'}">
-		<div id="signPlace">
-			<div id="tchrDiv">
-				<!-- 결재/거절 버튼 -->
-				<div id="tchrUpdateDiv"
-					style="width: 1000px; margin: auto; margin-bottom: 15px; text-align: center;">
-						<c:choose>
-							<c:when test="${sanctnDocVO.cmmnProcessSttus eq 'A11001'&& USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode eq 'ROLE_A14002'|| USER_INFO.vwMemberAuthVOList[1].cmmnDetailCode eq 'ROLE_A14002'}">
-								<button id="sign" style="padding: 10px 15px; width: 195px;" data-toggle="modal" data-target="#signPadModal">결재하기</button>
-							</c:when>
-							<c:when test="${sanctnDocVO.cmmnProcessSttus eq 'A11005'&& USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode eq 'ROLE_A14005'|| USER_INFO.vwMemberAuthVOList[1].cmmnDetailCode eq 'ROLE_A14005'}">
-								<button id="sign" style="padding: 10px 15px; width: 195px;" data-toggle="modal" data-target="#signPadModal">결재하기</button>
-							</c:when>
-						</c:choose>
-					<c:if test="${sanctnDocVO.cmmnProcessSttus eq 'A11001' || sanctnDocVO.cmmnProcessSttus eq 'A11003' || sanctnDocVO.cmmnProcessSttus eq 'A11005'}">
-						<button id="refusal"
-							style="padding: 10px 15px; width: 195px; margin-left: 40px;">거절</button>
-				   </c:if>
-				   <sec:authorize access = "hasAnyRole('A14002','A14005')" >
-				   <c:if test="${sanctnDocVO.cmmnProcessSttus eq 'A11002' }">
-					   <button type="button" id="app-pdf-btn"
-					   		style="padding: 10px 15px; width: 195px; margin-left: 40px;"
+<c:if test="${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode eq 'ROLE_A01002' || USER_INFO.vwMemberAuthVOList[1].cmmnDetailCode eq 'ROLE_A01002'}">
+	<div id="signPlace">
+		<div id="tchrDiv">
+			<!-- 결재/거절 버튼 -->
+			<div id="tchrUpdateDiv" style="width: 1000px; margin: auto; margin-bottom: 15px; text-align: center;">
+					<c:choose>
+						<c:when test="${sanctnDocVO.cmmnProcessSttus eq 'A11001'&& USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode eq 'ROLE_A14002'|| USER_INFO.vwMemberAuthVOList[1].cmmnDetailCode eq 'ROLE_A14002'}">
+							<button id="sign" style="padding: 10px 15px; width: 195px;" data-toggle="modal" data-target="#signPadModal">결재하기</button>
+						</c:when>
+						<c:when test="${sanctnDocVO.cmmnProcessSttus eq 'A11005'&& USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode eq 'ROLE_A14005'|| USER_INFO.vwMemberAuthVOList[1].cmmnDetailCode eq 'ROLE_A14005'}">
+							<button id="sign" style="padding: 10px 15px; width: 195px;" data-toggle="modal" data-target="#signPadModal">결재하기</button>
+						</c:when>
+					</c:choose>
+				<c:if test="${sanctnDocVO.cmmnProcessSttus eq 'A11001' || sanctnDocVO.cmmnProcessSttus eq 'A11003' || sanctnDocVO.cmmnProcessSttus eq 'A11005'}">
+					<button id="refusal" style="padding: 10px 15px; width: 195px; margin-left: 40px;">거절</button>
+				</c:if>
+				<sec:authorize access = "hasAnyRole('A14002','A14005')" >
+				<c:if test="${sanctnDocVO.cmmnProcessSttus eq 'A11002' }">
+					<button type="button" id="app-pdf-btn" style="padding: 10px 15px; width: 195px; margin-left: 40px;"
 						>PDF로 다운로드</button>
 					</c:if>
-				   </sec:authorize>
-				   
-					<button class="goList"
-						style="padding: 10px 15px; width: 195px; margin-left: 40px;">목록으로</button>
-				</div>
-				<!-- 결재/거절 버튼 -->
+				</sec:authorize>
+				
+				<button class="goList" style="padding: 10px 15px; width: 195px; margin-left: 40px;">목록으로</button>
 			</div>
+			<!-- 결재/거절 버튼 -->
 		</div>
-	
+	</div>
 </c:if>
 <!-- 서명 모달 창 시작 -->
 <div class="modal" tabindex="-1" id="signPadModal">
@@ -1589,26 +1414,21 @@ window.onload = function() {
 			</div>
 			<div class="modal-body">
 				<div id="signUpContainer">
-					<!-- 					<div>* 서명 이미지를 등록해주세요</div> -->
 					<div id="sign-file-reg-div">
 						<div>
 							<form id="sign-frm">
 								<input type="file" accept="image/*" id="file" name="uploadFile">
 							</form>
-							<div id="sign-file-div" style="text-align: left;"
-								onclick="document.getElementById('file').click()">
-								<span class="material-symbols-outlined">upload</span>이곳을 클릭해서
-								이미지를 등록하세요
+							<div id="sign-file-div" style="text-align: left;" onclick="document.getElementById('file').click()">
+								<span class="material-symbols-outlined">upload</span>이곳을 클릭해서 이미지를 등록하세요
 							</div>
 						</div>
 					</div>
-					<div
-						style="display: flex; justify-content: space-evenly; margin-top: 20px;">
+					<div style="display: flex; justify-content: space-evenly; margin-top: 20px;">
 						<div>
 							<div style="width: 400px;">* 서명 이미지가 없다면 아래에 서명해주세요</div>
 							<div class="wrapper">
-								<canvas id="signature-pad" class="signature-pad" width=400
-									height=200 style="border: 1px solid gray"></canvas>
+								<canvas id="signature-pad" class="signature-pad" width=400 height=200 style="border: 1px solid gray"></canvas>
 							</div>
 							<div>
 								<button id="save-png">서명 저장하기</button>
@@ -1619,23 +1439,16 @@ window.onload = function() {
 						</div>
 						<div style="border: 1px solid gray; width: 220px; height: 220px; border-radius: 10px;">
 							<div style="border-bottom: 1px solid gray; text-align: center;">등록한 서명</div>
-
-							<div id="small-image-show"
-								style="text-align: center; height: 198px;"></div>
+							<div id="small-image-show" style="text-align: center; height: 198px;"></div>
 						</div>
 					</div>
 				</div>
 				<div class="modal-footer" style="border-top: 0px">
 					<button type="button"  id="sign-submit-btn">등록</button>
-					<button type="button"  id="sign-close"
-						data-bs-dismiss="modal" data-toggle="modal" data-target="#signPadModal">취소</button>
+					<button type="button"  id="sign-close" data-bs-dismiss="modal" data-toggle="modal" data-target="#signPadModal">취소</button>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
 <!-- 서명 모달 창 끝 -->
-
-
-
-

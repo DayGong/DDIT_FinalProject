@@ -44,8 +44,6 @@ public interface TeacherMapper {
 	// 생활기록 학생 목록
 	public String lifeRecordList();
 	 
-	// 반 통계?? 뭐에대한 통계인지 모르겠어
-	
 	// 학생 출결 목록
 	public String attendanceList();
 	

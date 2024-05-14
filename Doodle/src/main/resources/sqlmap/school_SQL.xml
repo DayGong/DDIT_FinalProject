@@ -129,7 +129,6 @@
         , NTT_ATCH_FILE_CODE	<!-- 첨부파일 코드  --> 
         , CMMN_NTT_SE			<!-- 공통게시물 -->    
         , CMMN_NTT_STTEMNT		<!-- 게시글 신고상태 -->
-       <!--   , CLAS_CODE 			반 코드  -->
         , SCHUL_CODE 			<!-- 학교 코드 -->    
         ,  MBER_ID				<!-- 작성자 아이디 -->   
         , NTT_RDCNT)			<!-- 조회 수-->  
@@ -198,7 +197,6 @@
 	FROM NTT
 	JOIN MEMBER M ON NTT.MBER_ID = M.MBER_ID
 	WHERE
-	<!-- AND SUBSTR(M.MBER_ID, 8, 1) = '1' -->
 	CMMN_NTT_SE='A08102'
 	AND NTT_CODE = #{nttCode}
 	</select>

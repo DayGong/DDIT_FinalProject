@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ChldrnClasVO {
-	private String chldrnClasCode;  //자녀 반 코드
+	private String chldrnClasCode;	//자녀 반 코드
 	private String clasCode;		//반코드
 	private String mberId;			//회원아이디(학부모)
 	private String stdntId;			//학생아이디

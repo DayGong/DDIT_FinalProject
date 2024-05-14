@@ -162,7 +162,7 @@
 		order by cs.clas_in_no asc
 	</select>
 	
-		<!-- 하나의 학생이 하나의 단원평가에 대한 결과 (목록) -->
+	<!-- 하나의 학생이 하나의 단원평가에 대한 결과 (목록) -->
 	<select id = "getStdGc" parameterType = "map" resultMap ="gcMap">
 		select cs.clas_in_no,
 	           m.mber_nm,
@@ -484,7 +484,6 @@
                  on mins.unit_evl_code = sub1.unit_evl_code
 		where    1 = 1
 		and      sub1.clas_code = #{clasCode}
-<!-- 		and      sub1.clas_stdnt_join_date &lt; sub1.unit_evl_end_dt -->
 		<if test="unitEvlCode != '' and unitEvlCode !=null">
 		and      sub1.unit_evl_code = #{unitEvlCode}
 		</if>

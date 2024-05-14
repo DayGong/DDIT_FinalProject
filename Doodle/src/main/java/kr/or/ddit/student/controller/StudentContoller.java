@@ -43,27 +43,26 @@ public class StudentContoller {
 	@GetMapping("/mypage")
 	public String mypage(Model model, HttpServletRequest request, String mberId) {
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("loginAccount -> " + loginAccount);
 		String loginId = loginAccount.getMberId();
 		MemberVO memVO = new MemberVO();
 		
 		// 내 정보 가져오기
 		memVO = studentService.myInfo(loginId);
-		log.info("mypage -> memVO: " + memVO);
-		
 		// 내 학교 정보 가져오기
 		List<SchulPsitnMberVO> mySchulList = studentService.mySchulList(loginId);
-		log.info("mypage -> mySchulList: " + mySchulList);
-		
 		// 내 클래스 정보 가져오기
 		List<ClasStdntVO> myClassList = studentService.myClassList(loginId);
-		log.info("mypage -> myClassList: " + myClassList);
 		
 		model.addAttribute("memVO", memVO);
 		model.addAttribute("mySchulList", mySchulList);
 		model.addAttribute("myClassList", myClassList);
 		
 		request.setAttribute("memVO", memVO);
+		
+		log.debug("loginAccount -> " + loginAccount);
+		log.debug("mypage -> memVO: " + memVO);
+		log.debug("mypage -> mySchulList: " + mySchulList);
+		log.debug("mypage -> myClassList: " + myClassList);
 		
 		return "student/mypage";
 	}
@@ -74,8 +73,6 @@ public class StudentContoller {
 	public MemberVO updateProfile(MemberVO memVO
 			, MultipartFile uploadFile
 			, MultipartHttpServletRequest request) {
-		log.info("updateProfile -> memVO: " + memVO);
-		log.info("updateProfile -> uploadFile: " + uploadFile);
 		
 		memVO.setMultipartFile(uploadFile);
 		
@@ -90,17 +87,14 @@ public class StudentContoller {
 		if(multipartFile!=null && multipartFile.getOriginalFilename().length()>0) {	
 			UUID uuid = UUID.randomUUID();
 			String uploadFileName = uuid + "_" + multipartFile.getOriginalFilename();
-			
 			memVO.setMberImage(uploadFileName);
 			
 			String savePath = uploadFolder + "\\profile\\" + uploadFileName;
-			
 			File file = new File(savePath);
 			
 			try {
 				//파일업로드
 				multipartFile.transferTo(file);
-				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -111,12 +105,13 @@ public class StudentContoller {
 		  - 파일복사는 통과함
 		  - memVO의 mberImage는 null
 		 */
-		
 		int result = this.studentService.updateProfile(memVO);
-		log.info("updateProfile -> result: " + result);
 		
 		//프로필 이미지가 바뀌든 안바뀌든 회원의 정보를 다시 가져옴
 		memVO = this.studentService.myInfo(memVO.getMberId());
+		
+		log.debug("updateProfile -> uploadFile: " + uploadFile);
+		log.debug("updateProfile -> result: " + result);
 		
 		return memVO;
 	}
@@ -126,7 +121,6 @@ public class StudentContoller {
 	public String complimentSticker(HttpServletRequest request, Model model) {
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
 		String mberId = loginAccount.getMberId();
-		log.info("loginAccount: " + loginAccount);
 		
 		// 칭찬 스티커 수
 		int complimentStickerCount = studentService.getComplimentStickerCount(mberId);
@@ -136,6 +130,8 @@ public class StudentContoller {
 		
 		model.addAttribute("complimentStickerCount", complimentStickerCount);
 		model.addAttribute("taskResultVOList", taskResultVOList);
+		
+		log.debug("loginAccount: " + loginAccount);
 		
 		return "student/complimentSticker";
 	}

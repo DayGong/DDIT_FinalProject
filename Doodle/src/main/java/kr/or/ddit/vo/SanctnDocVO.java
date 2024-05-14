@@ -37,9 +37,7 @@ public class SanctnDocVO {
 	private String schulCode;				//학교 코드		
 	private String stdntId;					//학생 아이디 		
 	private String stdnprntId;				//학부모 아이디 	
-//	private String cmmnGrade;           	//공통 학년(A22)	
 	private String clasCode;       			//반 코드			
-//	private int clasInNo;					//학급 내 번호	
 	
 	private String tcherId;   				//담임 아이디
 	private String deputyPrncpalId;   		//교감 아이디
@@ -58,7 +56,4 @@ public class SanctnDocVO {
 	private SchulPsitnMberVO deputyVO;		//교감
 	private SchulVO schulVO;				//학교
 	
-	
 }	
-
-//필요 테이블 멤버 2번 (학생, 학부모), 가족관계, 반학생, 학교, 반, 학교소속회원, 첨부파일

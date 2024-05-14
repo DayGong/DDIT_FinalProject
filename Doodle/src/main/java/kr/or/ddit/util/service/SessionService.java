@@ -5,12 +5,15 @@ import javax.servlet.http.HttpServletRequest;
 public interface SessionService {
 
 	int setClassSession(HttpServletRequest request, String clasCode, String childId);
+	
 	int setClassSession(HttpServletRequest request, String clasCode);
+	
 	int setClassSession(HttpServletRequest request);
 
 	int deleteClassSession(HttpServletRequest request);
 
 	int setSchoolSession(HttpServletRequest request, String schulCode);
+	
 	int setSchoolSession(HttpServletRequest request);
 	
 	int deleteSchoolSession(HttpServletRequest request);

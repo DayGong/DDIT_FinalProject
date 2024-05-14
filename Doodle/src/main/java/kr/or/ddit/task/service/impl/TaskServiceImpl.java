@@ -11,7 +11,6 @@ import kr.or.ddit.task.service.TaskService;
 import kr.or.ddit.vo.AtchFileVO;
 import kr.or.ddit.vo.ClasStdntVO;
 import kr.or.ddit.vo.HrtchrVO;
-import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.NoticeVO;
 import kr.or.ddit.vo.TaskResultVO;
 import kr.or.ddit.vo.TaskVO;

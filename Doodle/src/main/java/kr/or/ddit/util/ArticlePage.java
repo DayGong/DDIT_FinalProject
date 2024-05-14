@@ -3,7 +3,6 @@ package kr.or.ddit.util;
 import java.util.List;
 
 //페이징 관련 정보 + 게시글 정보
-// new ArticlePage<FreeBoardVO>(total, currentPage, size, content);
 public class ArticlePage<T> {
 	// 전체글 수
 	private int total;
@@ -165,8 +164,6 @@ public class ArticlePage<T> {
 			}
 		}
 
-//		String localUrl = this.url;
-		
 		int pNo = 0;
 		
 		pagingArea += "<div class='col-sm-12 col-md-7' style='width:100%;'>";

@@ -23,8 +23,6 @@ public class DclzServiceImpl implements DclzService {
 	@Autowired
 	DclzMapper dclzMapper;
 	
-	
-	
 	// (학생) 등교 하교 기록
 	@Override
 	public int insertStdDclz(HttpServletRequest request) {
@@ -55,7 +53,6 @@ public class DclzServiceImpl implements DclzService {
 	@Override
 	public List<DclzVO> getAllDclz(HttpServletRequest request) {
 		ClasVO clasVO = (ClasVO) request.getSession().getAttribute("CLASS_INFO");
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		// after page session

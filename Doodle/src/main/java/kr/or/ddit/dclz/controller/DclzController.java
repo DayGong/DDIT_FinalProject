@@ -39,7 +39,8 @@ public class DclzController {
 	@PostMapping("/insertStdDclz")
 	public int insertStdDclz(HttpServletRequest request){
 		int cnt = dclzService.insertStdDclz(request);
-		log.info("cnt : "+cnt);
+		log.debug("cnt : "+cnt);
+		
 		return cnt;
 	}
 
@@ -49,7 +50,8 @@ public class DclzController {
 	public int insertDclz(HttpServletRequest request ,@RequestBody String clasStdntCode){
 		if(!request.isUserInRole("ROLE_A01002")){ return 0; }
 		int cnt = dclzService.insertDclz(clasStdntCode);
-		log.info("cnt : "+cnt);
+		log.debug("cnt : "+cnt);
+		
 		return cnt;
 	}
 
@@ -65,6 +67,7 @@ public class DclzController {
 	@PostMapping("/getAllClasStd")
 	public List<ClasStdntVO> getAllClasStd(HttpServletRequest request){
 		if(!request.isUserInRole("ROLE_A01002")){ return null; }
+		
 		return dclzService.getAllClasStd(request);
 	}
 	
@@ -73,6 +76,7 @@ public class DclzController {
 	@PostMapping("/getDclzCmmn")
 	public List<CmmnDetailCodeVO> getDclzCmmn(HttpServletRequest request){
 		if(!request.isUserInRole("ROLE_A01002")){ return null; }
+		
 		return dclzService.getDclzCmmn();
 	}
 
@@ -81,21 +85,13 @@ public class DclzController {
 	@PostMapping("/updateDclzCmmn")
 	public int updateDclzCmmn(HttpServletRequest request, @RequestBody Map<String, Object> map){
 		if(!request.isUserInRole("ROLE_A01002")){ return 0; }
-		
 		// 잘못된 상태 값
 		String cmmnDetailCode = (String) map.get("cmmnDetailCode");
-		log.info("cmmnDetailCode: " + cmmnDetailCode);
-		log.info("cmmnDetailCode.substring(0,3): " + cmmnDetailCode.substring(0,3));
+		
+		log.debug("cmmnDetailCode: " + cmmnDetailCode);
+		log.debug("cmmnDetailCode.substring(0,3): " + cmmnDetailCode.substring(0,3));
+		
 		if(!cmmnDetailCode.substring(0,3).equals("A06")) { return 0; }
-		
-		// 접속 반 세션과 일치하지 않은 학생일 때 불가
-//		ClasVO clasVO = (ClasVO)request.getSession().getAttribute("CLAS_INFO");
-//		String clasStdntCode = (String) map.get("clasStdntCode");
-//		ClasStdntVO std = dclzService.getClasStdntVOWithClasStdntCode(clasStdntCode);
-//		if(std.getClasCode() != clasVO.getClasCode()) {
-//			return 0;
-//		}
-		
 		return dclzService.updateDclzCmmn(map);
 	}
 	
@@ -113,7 +109,7 @@ public class DclzController {
 		if(sendClasCode == null && !(request.isUserInRole("A14001") || request.isUserInRole("A14003"))){
 			return null;
 		}
-		
+
 		return dclzService.getRecentAtend(map);
 	}
 }

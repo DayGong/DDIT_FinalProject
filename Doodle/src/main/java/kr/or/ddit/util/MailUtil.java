@@ -20,28 +20,19 @@ public class MailUtil {
 	    String fromMail = mailDTO.get("fromMail");
 	    String password = mailDTO.get("password");
 	    String fromName = mailDTO.get("fromName");
-	    
-//	    String toMail = "메렁"; // 콤마(,) 나열 가능
 	    String toMail = mailDTO.get("toMail");
 	    String contents = mailDTO.get("contents");
 
-	    // mail contents
-//	    StringBuffer contents = new StringBuffer();
-//	    contents.append("<h1>인증번호:" + _code +"</h1>\n");
-//	    contents.append("<p>Nice to meet you ~! :)</p><br>");
-
 	    // mail properties
 	    Properties props = new Properties();
-	    props.put("mail.smtp.host", "smtp.naver.com"); // use naver mail
-	    props.put("mail.smtp.port", "465"); // set port
-
+	    props.put("mail.smtp.host", "smtp.naver.com"); 	// use naver mail
+	    props.put("mail.smtp.port", "465"); 			// set port
 	    props.put("mail.smtp.auth", "true");
 	    props.put("mail.smtp.starttls.enable", "true"); // use TLS
 	    props.put("mail.smtps.ssl.checkserveridentity", "true");
 	    props.put("mail.debug", "true");
 	    props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 	    
-
 	    Session mailSession = Session.getInstance(props,
 	            new javax.mail.Authenticator() { // set authenticator
 	                protected PasswordAuthentication getPasswordAuthentication() {
@@ -51,7 +42,7 @@ public class MailUtil {
 
 	    try {
 	        MimeMessage message = new MimeMessage(mailSession);
-
+	        
 	        // B(Base64) or Q(Quoted-Printabl) Encoding
 	        message.setFrom(new InternetAddress(fromMail, MimeUtility.encodeText(fromName, "UTF-8", "B"))); // 한글의 경우 encoding 필요
 	        message.setRecipients(
@@ -66,8 +57,6 @@ public class MailUtil {
 	        t.connect(fromMail, password);
 	        t.sendMessage(message, message.getAllRecipients());
 	        t.close();
-
-	        System.out.println("잘 보내졌어요 ~!");
 
 	    } catch (Exception e) {
 	        e.printStackTrace();

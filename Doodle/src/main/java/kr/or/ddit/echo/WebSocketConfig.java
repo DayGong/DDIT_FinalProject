@@ -11,6 +11,5 @@ public class WebSocketConfig implements WebSocketConfigurer {
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(echoHandler, "/echo");
-		
 	}
 }

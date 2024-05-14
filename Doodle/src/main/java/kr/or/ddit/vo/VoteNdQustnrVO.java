@@ -23,8 +23,8 @@ public class VoteNdQustnrVO {
 	private String schulCode;						//학교 코드
 	private String mberId;							//작성자 아이디
 	@DateTimeFormat(pattern ="yyyy-MM-dd")
-	private Date writngDt;							//투표 설문 게시글 작성날짜
-	private List<VoteQustnrIemVO> voteQustnrIemVOList; //투표 설문 질문 리스트
-	private List<VoteQustnrDetailIemVO>voteQustnrDetailIemVOList;//해당 질문의 보기내용과 순를 담을 변수
+	private Date writngDt;											//투표 설문 게시글 작성날짜
+	private List<VoteQustnrIemVO> voteQustnrIemVOList; 				//투표 설문 질문 리스트
+	private List<VoteQustnrDetailIemVO>voteQustnrDetailIemVOList;	//해당 질문의 보기내용과 순를 담을 변수
 
 }

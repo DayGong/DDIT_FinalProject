@@ -21,10 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class AuthManager {
 	/*
-	 * 개요 :
-	 * controller나 service에서 로그인한 회원의 권한을 알고 싶을 때 사용
-	 * 1차 권한 : 학생, 교직원, 학부모
-	 * 2차 교직원 권한 : 교장, 교사, 행정, 영양사
+		개요 :
+		controller나 service에서 로그인한 회원의 권한을 알고 싶을 때 사용
+		1차 권한 : 학생, 교직원, 학부모
+	 	2차 교직원 권한 : 교장, 교사, 행정, 영양사
 	 */
 	
 	/*  return 권한 목록 : 
@@ -44,40 +44,37 @@ public class AuthManager {
 	 */
 	
 	/*
-	 * 사용 방법 :
-	 * controller나 service에
-	 * @AutoWired
-	 * GetAuth getAuth; 
-	 * 추가
-	 * 
-	 * 체크하고 싶은 위치에서
-	 * String auth = getAuth.get1Auth();
-	 * if(auth.equals("ROLE_A01001"){
-	 *       // 학생일 때 처리할 코드 ...
-	 * }
-	 * else if(auth.equals("ROLE_A01002"){
-	 *       // 교직원일 때 처리할 코드 ...
-	 * }
-	 * else if(auth.equals("ROLE_A01003"){
-	 *       // 학부모일 때 처리할 코드 ...
-	 * }
-	 * 
-	 * 2차 교직원 권한도 메소드명이랑 비교할 문자열값만 바꿔서 똑같이 사용하면 됨.
+		사용 방법 :
+		controller나 service에
+		@AutoWired
+		GetAuth getAuth; 
+		추가
+
+		체크하고 싶은 위치에서
+		String auth = getAuth.get1Auth();
+		if(auth.equals("ROLE_A01001"){
+			// 학생일 때 처리할 코드
+		}
+		else if(auth.equals("ROLE_A01002"){
+			// 교직원일 때 처리할 코드
+		}
+		else if(auth.equals("ROLE_A01003"){
+			// 학부모일 때 처리할 코드
+		}
+
+		2차 교직원 권한도 메소드명이랑 비교할 문자열값만 바꿔서 똑같이 사용하면 됨.
 	 */
 	
-	
-	/*
+	/**
 	 * 1차 권한(학생,학부모,교직원) 얻는 메소드
-	 * 
-	 * return           : ROLE_A01001, ROLE_A01002, ROLE_A01003
-	 * param(memberVO)  : Session에서 꺼낸 르그인한 회원 정보 
+	 * @param memberVO Session에서 꺼낸 르그인한 회원 정보
+	 * @return ROLE_A01001, ROLE_A01002, ROLE_A01003
 	 */
 	public String get1Auth(MemberVO memberVO) {
 		String auth ="";
 		List<VwMemberAuthVO> viewMemberAuthVOList = memberVO.getVwMemberAuthVOList();
 		for(VwMemberAuthVO authVO : viewMemberAuthVOList) {
 			String temp = authVO.getCmmnDetailCode().substring(5, 8);
-			log.info("temp : "+temp);
 			if(temp.equals("A01")) {
 				auth = authVO.getCmmnDetailCode();
 				break;
@@ -109,7 +106,6 @@ public class AuthManager {
 		List<VwMemberAuthVO> viewMemberAuthVOList = memberVO.getVwMemberAuthVOList();
 		for(VwMemberAuthVO authVO : viewMemberAuthVOList) {
 			String temp = authVO.getCmmnDetailCode().substring(5, 8);
-			log.info("temp : "+temp);
 			if(temp.equals("A14")) {
 				auth = authVO.getCmmnDetailCode();
 				break;
@@ -128,15 +124,14 @@ public class AuthManager {
 	}
 	
 	public void consoleLogAllAuth(HttpServletRequest request) {
-		
 		ClasVO clasVOSession = (ClasVO)request.getSession().getAttribute("CLASS_INFO");
 		SchulVO schulVOSession = (SchulVO)request.getSession().getAttribute("SCHOOL_INFO");
 		ClasStdntVO clasStdntVOSession = (ClasStdntVO)request.getSession().getAttribute("CLASS_STD_INFO");
 		HrtchrVO hrtchrVOSession = (HrtchrVO)request.getSession().getAttribute("CLASS_TCH_INFO");
 		
-		log.info("clasVOSession:"+clasVOSession);
-		log.info("schulVOSession:"+schulVOSession);
-		log.info("clasStdntVOSession:"+clasStdntVOSession);
-		log.info("hrtchrVOSession:"+hrtchrVOSession);
+		log.debug("clasVOSession:"+clasVOSession);
+		log.debug("schulVOSession:"+schulVOSession);
+		log.debug("clasStdntVOSession:"+clasStdntVOSession);
+		log.debug("hrtchrVOSession:"+hrtchrVOSession);
 	}
 }

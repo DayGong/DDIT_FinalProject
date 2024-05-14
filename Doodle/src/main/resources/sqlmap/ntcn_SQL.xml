@@ -254,20 +254,4 @@
 	    </foreach>
 	    SELECT * FROM DUAL
 	</update>
-	
-	<!-- (학생) 현재 소속된 클래스 코드 찾기 -->
-	<select id="getStudentClasCode" parameterType="String" resultType="String">
-		    SELECT 	C.CLAS_CODE
-		      FROM  CLAS C
-		INNER JOIN 	CLAS_STDNT CS
-		        ON 	C.CLAS_CODE = CS.CLAS_CODE
-		INNER JOIN 	SCHUL S
-		        ON 	S.SCHUL_CODE = C.SCHUL_CODE
-		INNER JOIN 	SCHUL_PSITN_MBER SPM
-		        ON 	SPM.SCHUL_CODE = S.SCHUL_CODE
-		       AND  SPM.MBER_ID = CS.MBER_ID
-		     WHERE  1=1
-		       AND	CS.MBER_ID = #{mberId}
-		       AND  SPM.CMMN_SCHUL_PSITN_STTUS = 'A02101' <!-- '재학' -->
-	</select>
 </mapper>

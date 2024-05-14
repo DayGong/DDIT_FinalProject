@@ -21,7 +21,6 @@
 		<result property="mberId" column="MBER_ID" />
 		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE" />
 	</resultMap>
-	
 
 	<select id="loginChk" parameterType="String" resultMap="memberMap">
 		SELECT 
@@ -41,11 +40,11 @@
 		WHERE A.MBER_ID = TO_CHAR(#{username})
 	</select>
 
-
 	<!-- 회원가입시 아이디 중복체크 -->
 	<select id="idDupChk" resultType="int" parameterType="memberVO">
 		SELECT COUNT(*) FROM MEMBER WHERE MBER_ID = #{mberId}
 	</select>
+	
 	<!-- 회원가입 -->
 	<insert id="signUp" parameterType="memberVO">
 		INSERT 
@@ -81,20 +80,22 @@
 	<select id="familyCategory" resultType="CmmnDetailCodeVO">
 		SELECT * FROM CMMN_DETAIL_CODE WHERE CMMN_CODE = 'A04'
 	</select>
+	
 	<!-- 학부모 회원가입시 가족관계에 학교코드 데이터를 넣을 수 있도록 학생(자녀)아이디로 학교코드 호출 -->
 	<select id="getSchulCode" resultType="String">
 		SELECT SCHUL_CODE FROM SCHUL_PSITN_MBER WHERE MBER_ID = #{mberChildId}
 	</select>
+	
 	<!-- 학부모 회원가입시 가족관계 테이블에도 insert -->
 	<insert id="insertFamilyRelate" parameterType="familyRelateVO">
 		INSERT INTO FAMILY_RELATE VALUES(#{schulCode},#{stdntId},#{stdnprntId},#{cmmnDetailCode})
 	</insert>
+	
 	<!-- 학부모 회원가입시 학교소속회원 insert -->
 	<insert id="insertSchulPsitnMber" parameterType="schulPsitnMberVO">
 		INSERT INTO schul_psitn_mber(SCHUL_CODE, MBER_ID, CMMN_SCHUL_PSITN_STTUS, CMMN_GRADE, CMMN_EMP_CLSF,SIGN)
 		VALUES(#{schulCode},#{mberId},'A02101',null,null,null)
 	</insert>
-	
 	
 	<!-- 방문자 수와 브라우저를 등록하는 메서드 -->
 	<update id="addVisitrCo" parameterType="String">

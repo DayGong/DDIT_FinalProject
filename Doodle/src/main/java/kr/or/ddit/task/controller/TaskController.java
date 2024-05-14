@@ -58,14 +58,14 @@ public class TaskController {
 	public String taskList(Model model, @RequestParam(value = "clasCode", required = false) String clasCode,
 			@RequestParam(value = "currentPage", required = false, defaultValue = "1") int currentPage,
 			@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword) {
-		log.info("taskList -> clasCode: " + clasCode);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("currentPage", currentPage);
 		map.put("keyword", keyword);
-
 		List<TaskVO> taskVOList = taskService.taskList(map);
-		log.info("taskVOList: " + taskVOList);
+		
+		log.debug("taskList -> clasCode: " + clasCode);
+		log.debug("taskVOList: " + taskVOList);
 
 		return "class/task";
 	}
@@ -74,23 +74,20 @@ public class TaskController {
 	@ResponseBody
 	@RequestMapping(value = "/taskListAjax", method = RequestMethod.POST)
 	public ArticlePage<TaskVO> taskListAjax(@RequestBody Map<String, Object> map) {
-		log.info("taskListAjax -> map: " + map);
-
 		String clasCode = (String) map.get("clasCode");
-		log.info("taskListAjax -> clasCode: " + clasCode);
-
-		List<TaskVO> taskVOList = this.taskService.taskList(map);
-		log.info("taskVOList: " + taskVOList);
-
-		int total = this.taskService.getTotalTask(map);
-		log.info("taskListAjax -> total: " + total);
-
 		String currentPage = map.get("currentPage").toString();
 		String keyword = map.get("keyword").toString();
+		String url = "/class/taskList";
+		int total = this.taskService.getTotalTask(map);
+		List<TaskVO> taskVOList = this.taskService.taskList(map);
 
 		ArticlePage<TaskVO> data = new ArticlePage<TaskVO>(total, Integer.parseInt(currentPage), 10, taskVOList, keyword, clasCode);
-		String url = "/class/taskList";
 		data.setUrl(url);
+		
+		log.debug("taskListAjax -> map: " + map);
+		log.debug("taskListAjax -> clasCode: " + clasCode);
+		log.debug("taskVOList: " + taskVOList);
+		log.debug("taskListAjax -> total: " + total);
 
 		return data;
 	}
@@ -99,10 +96,8 @@ public class TaskController {
 	@GetMapping("/taskDetail")
 	public String taskDetail(Model model, HttpServletRequest request,
 			@RequestParam(value = "taskCode", required = false) String taskCode) {
-		log.info("taskDetail -> taskCode: " + taskCode);
 		
 		TaskVO taskVO = this.taskService.taskDetail(taskCode);
-		log.info("taskDetail -> taskVO(후): " + taskVO);
 		
 		// 클래스 세션 처리
 		sessionService.setClassSession(request, taskVO.getClasCode());
@@ -118,12 +113,10 @@ public class TaskController {
 
 		if (atchFileCode != null && atchFileCode.length() > 0) {
 			atchFileList = this.taskService.atchFileList(map);
-			log.info("taskDetail -> atchFileList: " + atchFileList);
 		}
 
 		// 조회수 업데이트
 		int result = this.taskService.updateTaskCnt(taskCode);
-		log.info("taskDetail -> result: " + result);
 
 		// 과제 제출 수
 		int inputTaskCount = taskService.getInputTaskCount(taskCode);
@@ -134,6 +127,10 @@ public class TaskController {
 		model.addAttribute("atchFileList", atchFileList);
 		model.addAttribute("url", url);
 		model.addAttribute("inputTaskCount", inputTaskCount);
+		
+		log.debug("taskDetail -> taskCode: " + taskCode);
+		log.debug("taskDetail -> taskVO(후): " + taskVO);
+		log.debug("taskDetail -> result: " + result);
 
 		return "class/taskDetail";
 	}
@@ -143,13 +140,10 @@ public class TaskController {
 	public String taskInsertForm(HttpServletRequest request, Model model,
 			@RequestParam(value = "clasCode", required = false) String clasCode,
 			@RequestParam(value = "taskCode", required = false) String taskCode) {
-		log.info("taskInsertForm: " + clasCode);
-
 		// schulCode 가져오기
 		SchulVO schulVO = (SchulVO) request.getSession().getAttribute("SCHOOL_INFO");
 
 		model.addAttribute("schulCode", schulVO.getSchulCode());
-//      model.addAttribute("clasCode", clasCode);
 
 		return "class/taskInsertForm";
 	}
@@ -159,19 +153,15 @@ public class TaskController {
 	@PostMapping("/taskInsert")
 	public String taskInsert(TaskVO taskVO, HttpServletRequest request,
 			@RequestParam(value = "clasCode", required = false) String clasCode) {
-		log.info("taskInsert -> taskVO: " + taskVO);
-		log.info("taskInsert -> clasCode: " + clasCode);
 
 		int result1 = 0;
 		int result2 = 0;
 
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("loginAccount -> " + loginAccount);
 
 		String mberId = loginAccount.getMberId();
 
 		MultipartFile[] multipartFiles = taskVO.getUploadFiles();
-		log.info("taskInsert -> multipartFiles: " + multipartFiles);
 
 		// 업로드한 파일이 있을 때만 업로드 진행
 		if (multipartFiles != null && multipartFiles.length > 0) {
@@ -187,19 +177,15 @@ public class TaskController {
 
 			// ATCH_FILE 테이블의 ATCH_FILE_CODE 가져오기
 			String atchFileCode = this.taskService.getAtchFileCode(taskVO.getClasCode());
-			log.info("taskInsert -> atchFileCode: " + atchFileCode);
 
 			// 파일들을 리스트로 담음
 			List<AtchFileVO> atchFileVOList = new ArrayList<AtchFileVO>();
-			log.info("taskInsert -> atchFileVOList: " + atchFileVOList);
 			int sn = 1;
 
 			for (MultipartFile mf : multipartFiles) {
 
 				try {
 					UUID uuid = UUID.randomUUID();
-
-					log.info("fileName" + uuid.toString() + "_" + mf.getOriginalFilename());
 					File fileName = new File(uploadPath, uuid.toString() + "_" + mf.getOriginalFilename());
 
 					AtchFileVO atchFileVO = new AtchFileVO();
@@ -218,24 +204,16 @@ public class TaskController {
 				}
 			}
 
-			log.info("taskInsert -> atchFileVOList: " + atchFileVOList);
-
 			// 1) 파일 업로드 후 파일테이블에 insert
 			result2 = this.taskService.atchFileInsert(atchFileVOList);
-			log.info("taskInsert -> result2: " + result2);
 
 			// 2) TASK 테이블에 insert
 			taskVO.setAtchFileCode(atchFileCode);
-			log.info("taskInsert -> taskVO(197번재줄): " + taskVO);
 			result1 = this.taskService.taskInsert(taskVO);
-
-			log.info("파일 있 taskInsert -> taskVO(후): " + taskVO);
 
 		} else { // 업로드한 파일이 없을 때
 			taskVO.setAtchFileCode("");
 			result1 = this.taskService.taskInsert(taskVO);
-			log.info("파일 없 taskInsert -> result1: " + result1);
-			log.info("파일 없 taskInsert -> taskVO(후): " + taskVO);
 		}
 
 		return taskVO.getTaskCode();// 지금 요기에 파일객체가 들어있어서, 잭슨이 그걸 JSON으로 바꿀 수가 없음!
@@ -245,29 +223,23 @@ public class TaskController {
 	@ResponseBody
 	@PostMapping("/noticeInsertAll")
 	public int noticeInsertAll(@RequestBody Map<String, Object> map, HttpServletRequest request) {
-		log.info("noticeInsertAll -> map: " + map);
-
 		String clasCode = (String) map.get("clasCode");
-
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("loginAccount -> " + loginAccount);
-
-		String mberId = loginAccount.getMberId();
 
 		// 클래스 내 학생/학부모 리스트
 		List<String> noticeRcvIdList = taskService.getAllClassMber(clasCode);
-		log.info("noticeInsertAll -> noticeRcvIdList: " + noticeRcvIdList);
 		
 		int result = 0;
 		
 		// 알림 보낼 리스트가 있는 경우, 알림 전송
 		if(noticeRcvIdList.size() > 0) {
 			map.put("noticeRcvIdList", noticeRcvIdList);
-			log.info("리스트 넣은 후 noticeInsertAll -> map: " + map);
-			
 			result = taskService.noticeInsertAll(map);
-			log.info("noticeInsertAll -> result: " + result);
 		}
+		
+		log.debug("noticeInsertAll -> map: " + map);
+		log.debug("loginAccount -> " + loginAccount);
+		log.debug("noticeInsertAll -> noticeRcvIdList: " + noticeRcvIdList);
 
 		return result;
 	}
@@ -275,10 +247,7 @@ public class TaskController {
 	// 과제 게시글 수정 폼 띄우기
 	@GetMapping("/taskUpdateForm")
 	public String taskUpdateForm(Model model, @RequestParam(value = "taskCode", required = false) String taskCode) {
-		log.info("taskUpdateForm -> taskCode: " + taskCode);
-
 		TaskVO taskVO = this.taskService.taskDetail(taskCode);
-		log.info("taskUpdateForm -> taskVO: " + taskVO);
 
 		model.addAttribute("taskVO", taskVO);
 
@@ -289,17 +258,12 @@ public class TaskController {
 	@ResponseBody
 	@PostMapping("/taskUpdate")
 	public String taskUpdate(TaskVO taskVO, HttpServletRequest request) {
-		log.info("taskUpdate -> taskVO: " + taskVO);
-
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("loginAccount -> " + loginAccount);
 
 		String mberId = loginAccount.getMberId();
-		log.info("taskUpdate -> mberId: " + mberId);
 
 		String taskCn = taskVO.getTaskCn().trim().replaceAll("\"", "'");
 		taskVO.setTaskCn(taskCn);
-		log.info("taskCn 처리 후 -> taskVO: " + taskVO);
 
 		int result1 = 0;
 		int result2 = 0;
@@ -308,7 +272,6 @@ public class TaskController {
 
 		// 기존 글 첨부 파일 코드 가져오기
 		String atchFileCode = taskVO.getAtchFileCode();
-		log.info("taskUpdate -> atchFileCode: " + atchFileCode);
 
 		// 새로 업로드한 파일이 있을 때(수정 시)만 업로드 진행
 		if (multipartFiles != null && multipartFiles.length > 0) {
@@ -320,9 +283,7 @@ public class TaskController {
 
 			// 기존 글에 첨부 파일이 없는 경우, 첨부 파일 코드 생성하기
 			if (taskVO.getAtchFileCode() == null || taskVO.getAtchFileCode().isEmpty()) {
-				log.info(">>>첨부파일코드가없어용");
 				atchFileCode = this.taskService.getAtchFileCode(taskVO.getClasCode());
-				log.info(">>>첨부파일코드생성해줬어용: " + atchFileCode);
 			}
 
 			// 파일들을 리스트에 담음
@@ -333,8 +294,6 @@ public class TaskController {
 			for (MultipartFile mf : multipartFiles) {
 				try {
 					UUID uuid = UUID.randomUUID();
-
-					log.info("fileName" + uuid.toString() + "_" + mf.getOriginalFilename());
 					File fileName = new File(uploadPath, uuid.toString() + "_" + mf.getOriginalFilename());
 
 					// 파일 서버로 복사
@@ -355,30 +314,21 @@ public class TaskController {
 				}
 			}
 
-			log.info("taskUpdate -> atchFileVOList: " + atchFileVOList);
-
 			// 기존 글에 첨부 파일이 없는 경우, insert 진행
 			if (taskVO.getAtchFileCode() == null || taskVO.getAtchFileCode().isEmpty()) {
 				result2 = this.taskService.atchFileInsert(atchFileVOList);
-				log.info("taskUpdate -> result2: " + result2);
 
 			} else { // 기존 글에 첨부 파일이 있는 경우, 기존 첨부파일을 초기화하고 insert 진행
 				int deleteRes = this.taskService.atchFileDelete(atchFileCode);
-				log.info("taskUpdate -> deleteRes: " + deleteRes);
 				result2 = this.taskService.atchFileInsert(atchFileVOList);
-				log.info("taskUpdate -> result2: " + result2);
 			}
 
 			taskVO.setAtchFileCode(atchFileCode);
-			log.info("taskUpdate -> taskVO(첨부 파일 코드 가져온 후): " + taskVO);
 			result1 = this.taskService.taskUpdate(taskVO);
-
-			log.info("파일 있 taskUpdate -> taskVO(후): " + taskVO);
 
 		} else { // 새로 업로드한 파일이 없을 때
 			taskVO.setAtchFileCode(atchFileCode); // 기존 첨부 파일 코드를 그대로 가져감
 			result1 = this.taskService.taskUpdate(taskVO);
-			log.info("파일 없 taskUpdate -> result1: " + result1);
 		}
 		
 		// 과제 게시글 제목이 수정된 경우, 알림 제목도 같이 수정
@@ -393,20 +343,17 @@ public class TaskController {
 	@ResponseBody
 	@PostMapping("/taskDelete")
 	public int taskDelete(@RequestBody TaskVO taskVO) {
-		log.info("taskDelete -> taskVO: " + taskVO);
-
 		String atchFileCode = taskVO.getAtchFileCode();
 
 		// 첨부 파일 있는 경우
 		if (atchFileCode != "" || atchFileCode != null) {
 			// 첨부 파일 정보 삭제
 			int deleteFileRes = this.taskService.atchFileDelete(atchFileCode);
-			log.info("taskDelete -> deleteRes: " + deleteFileRes);
+			log.debug("taskDelete -> deleteRes: " + deleteFileRes);
 		}
 
 		// 과제 게시글 삭제
 		int deleteTaskRes = this.taskService.taskDelete(taskVO.getTaskCode());
-		log.info("taskDelete -> deleteTaskRes: " + deleteTaskRes);
 		
 		// 과제 게시글 삭제 -> 연관 테이블 데이터 삭제 처리
 		// 학생/학부모 알림 삭제
@@ -417,6 +364,9 @@ public class TaskController {
 		
 		// 제출된 과제의 첨부파일 삭제
 		this.taskService.inputTaskAtchFileDelete(taskVO.getTaskCode());
+		
+		log.debug("taskDelete -> taskVO: " + taskVO);
+		log.debug("taskDelete -> deleteTaskRes: " + deleteTaskRes);
 
 		return deleteTaskRes;
 	}
@@ -427,22 +377,22 @@ public class TaskController {
 	public List<ClasStdntVO> inputTaskList(@RequestBody Map<String, Object> map, HttpServletRequest request) {
 		String taskCode = (String) map.get("taskCode");
 		String mberId = (String) map.get("mberId");
-		log.info("inputTaskList -> taskCode: " + taskCode);
-		log.info("inputTaskList -> mberId: " + mberId);
-
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
 		String role = loginAccount.getVwMemberAuthVOList().get(0).getCmmnDetailCode();
-		log.info("inputTaskList -> role: " + role);
 
 		// 학부모인 경우, 자녀 리스트를 구해서 map에 추가
 		if (role.equals("ROLE_A01003")) {
 			List<String> childList = taskService.getChildList(loginAccount.getMberId());
-			log.info("getChildList -> childList: " + childList);
+			log.debug("getChildList -> childList: " + childList);
 			map.put("childList", childList);
 		}
 
 		List<ClasStdntVO> clasStdntVOList = this.taskService.inputTaskList(map);
-		log.info("inputTaskList -> clasStdntVOList: " + clasStdntVOList);
+		
+		log.debug("inputTaskList -> taskCode: " + taskCode);
+		log.debug("inputTaskList -> mberId: " + mberId);
+		log.debug("inputTaskList -> role: " + role);
+		log.debug("inputTaskList -> clasStdntVOList: " + clasStdntVOList);
 
 		return clasStdntVOList;
 	}
@@ -451,31 +401,21 @@ public class TaskController {
 	@ResponseBody
 	@PostMapping("/inputTask")
 	public int inputTask(TaskResultVO taskResultVO, HttpServletRequest request) {
-		log.info("inputTask -> taskResultVO: " + taskResultVO);
-
 		// 로그인한 학생의 아이디 가져오기
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("loginAccount -> " + loginAccount);
 		String mberId = loginAccount.getMberId();
 
 		// 로그인한 학생의 반 학생 코드 가져오기;
 		String clasStdntCode = this.taskService.getClasStdntCode(mberId);
 		taskResultVO.setClasStdntCode(clasStdntCode);
-		log.info("반 학생 코드 넣은 후 -> taskResultVO: " + taskResultVO);
 
 		// 1) 과제 제출(TASK_RESULT 테이블에 INSERT)
 		int result1 = this.taskService.inputTask(taskResultVO);
-		log.info("inputTask -> inputTaskRes: " + result1);
-		log.info("inputTask 후 -> taskResultVO" + taskResultVO);
-
 		taskResultVO.setAtchFileCode(taskResultVO.getTaskResultCode());
 
 		// 제출한 과제 가져오기
 		MultipartFile multipartFile = taskResultVO.getUploadFile();
-		log.info("inputTask -> multipartFile: " + multipartFile);
-
 		File uploadPath = new File(uploadFolder + "\\task\\result\\");
-
 		if (uploadPath.exists() == false) {
 			uploadPath.mkdirs();
 		}
@@ -485,8 +425,6 @@ public class TaskController {
 
 		try {
 			UUID uuid = UUID.randomUUID();
-
-			log.info("inputTask -> fileName: " + uuid.toString() + "_" + multipartFile.getOriginalFilename());
 			File fileName = new File(uploadPath, uuid.toString() + "_" + multipartFile.getOriginalFilename());
 
 			// 파일 서버로 복사
@@ -500,16 +438,21 @@ public class TaskController {
 			atchFileVO.setRegistId(mberId);
 
 			atchFileVOList.add(atchFileVO);
+			
+			log.debug("inputTask -> fileName: " + uuid.toString() + "_" + multipartFile.getOriginalFilename());
 
 		} catch (IllegalStateException | IOException e) {
 			e.printStackTrace();
 		}
 
-		log.info("inputTask -> atchFileVO: " + atchFileVO);
-
 		// 2) 첨부 파일 업로드(ATCH_FILE 테이블에 INSERT)
 		int result2 = this.taskService.atchFileInsert(atchFileVOList);
-		log.info("inputTask -> result2: " + result2);
+		
+		log.debug("loginAccount -> " + loginAccount);
+		log.debug("inputTask 후 -> taskResultVO" + taskResultVO);
+		log.debug("inputTask -> multipartFile: " + multipartFile);
+		log.debug("inputTask -> atchFileVO: " + atchFileVO);
+		log.debug("inputTask -> result2: " + result2);
 
 		return result1 + result2;
 	}
@@ -518,25 +461,16 @@ public class TaskController {
 	@ResponseBody
 	@PostMapping("/myTaskUpdate")
 	public int myTaskUpdate(TaskResultVO taskResultVO, HttpServletRequest request) {
-		log.info("myTaskUpdate -> taskResultVO: " + taskResultVO);
-
 		// 로그인한 학생의 아이디 가져오기
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("loginAccount -> " + loginAccount);
 		String mberId = loginAccount.getMberId();
-
 		MultipartFile multipartFile = taskResultVO.getUploadFile();
-		log.info("myTaskUpdate -> multipartFile: " + multipartFile);
-
 		File uploadPath = new File(uploadFolder + "\\task\\result\\");
-
 		List<AtchFileVO> atchFileVOList = new ArrayList<AtchFileVO>();
 		AtchFileVO atchFileVO = new AtchFileVO();
 
 		try {
 			UUID uuid = UUID.randomUUID();
-
-			log.info("myTaskUpdate -> fileName: " + uuid.toString() + "_" + multipartFile.getOriginalFilename());
 			File fileName = new File(uploadPath, uuid.toString() + "_" + multipartFile.getOriginalFilename());
 
 			// 파일 서버로 복사
@@ -550,15 +484,20 @@ public class TaskController {
 			atchFileVO.setUpdtId(mberId);
 
 			atchFileVOList.add(atchFileVO);
+			
+			log.debug("myTaskUpdate -> fileName: " + uuid.toString() + "_" + multipartFile.getOriginalFilename());
 
 		} catch (IllegalStateException | IOException e) {
 			e.printStackTrace();
 		}
 
-		log.info("myTaskUpdate -> atchFileVO: " + atchFileVO);
-
 		int result = this.taskService.atchFileUpdate(atchFileVOList);
-		log.info("myTaskUpdate -> result: " + result);
+		
+		log.debug("myTaskUpdate -> taskResultVO: " + taskResultVO);
+		log.debug("loginAccount -> " + loginAccount);
+		log.debug("myTaskUpdate -> multipartFile: " + multipartFile);
+		log.debug("myTaskUpdate -> atchFileVO: " + atchFileVO);
+		log.debug("myTaskUpdate -> result: " + result);
 
 		return result;
 	}
@@ -568,13 +507,13 @@ public class TaskController {
 	@PostMapping("/myTaskDelete")
 	public int myTaskDelete(@RequestBody Map<String, Object> map) {
 		String taskResultCode = (String) map.get("taskResultCode");
-		log.info("myTaskDelete -> taskResultCode: " + taskResultCode);
-
 		int result1 = this.taskService.myTaskDelete(taskResultCode);
-		log.info("myTaskDelete -> result: " + result1);
-
+		
 		// 첨부 파일 테이블에 있는 데이터도 함께 삭제
 		int result2 = this.taskService.atchFileDelete(taskResultCode);
+		
+		log.debug("myTaskDelete -> taskResultCode: " + taskResultCode);
+		log.debug("myTaskDelete -> result: " + result1);
 
 		return result1 + result2;
 	}
@@ -583,10 +522,10 @@ public class TaskController {
 	@ResponseBody
 	@PostMapping("/complimentStickerUpdate")
 	public int complimentStickerUpdate(String taskResultCode) {
-		log.info("complimentStickerUpdate -> taskResultCode: " + taskResultCode);
-		
 		int result = taskService.complimentStickerUpdate(taskResultCode);
-		log.info("complimentStickerUpdate -> result: " + result);
+		
+		log.debug("complimentStickerUpdate -> taskResultCode: " + taskResultCode);
+		log.debug("complimentStickerUpdate -> result: " + result);
 		
 		return result;
 	}
@@ -595,15 +534,11 @@ public class TaskController {
 	@ResponseBody
 	@PostMapping("/feedbackInsert")
 	public NoticeVO feedbackInsert(HttpServletRequest request, Model model, @RequestBody Map<String, Object> map) {
-		log.info("feedbackInsert -> map: " + map);
-
 		// 피드백 테이블 insert
 		int result1 = this.taskService.feedbackInsert(map);
-		log.info("feedbackInsert -> result1: " + result1);
 
 		// 세션에 저장된 로그인 아이디 가져오기
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("loginAccount -> " + loginAccount);
 		String noticeSndId = loginAccount.getMberId();
 
 		map.put("noticeSndId", noticeSndId);
@@ -611,11 +546,15 @@ public class TaskController {
 
 		// 알림 테이블 insert
 		int result2 = taskService.fdbckNoticeInsert(map);
-		log.info("feedbackInsert -> result2: " + result2);
 
 		// 헤더로 보내기 위해 등록한 피드백의 알림 정보를 담음
 		NoticeVO noticeVO = taskService.feedbackToHeader(map);
-		log.info("feedbackInsert -> noticeVO: " + noticeVO);
+		
+		log.debug("feedbackInsert -> map: " + map);
+		log.debug("feedbackInsert -> result1: " + result1);
+		log.debug("loginAccount -> " + loginAccount);
+		log.debug("feedbackInsert -> result2: " + result2);
+		log.debug("feedbackInsert -> noticeVO: " + noticeVO);
 
 		return noticeVO;
 	}
@@ -624,11 +563,11 @@ public class TaskController {
 	@ResponseBody
 	@PostMapping("/feedbackUpdate")
 	public int feedbackUpdate(@RequestBody Map<String, Object> map) {
-		log.info("feedbackUpdate -> map: " + map);
-
 		// 피드백 테이블 update
 		int result = this.taskService.feedbackInsert(map);
-		log.info("feedbackUpdate -> result: " + result);
+		
+		log.debug("feedbackUpdate -> map: " + map);
+		log.debug("feedbackUpdate -> result: " + result);
 
 		return result;
 	}
@@ -637,47 +576,36 @@ public class TaskController {
 	@ResponseBody
 	@PostMapping("/feedbackDelete")
 	public int feedbackDelete(@RequestBody Map<String, Object> map) {
-		log.info("feedbackDelete -> map: " + map);
-
 		// 피드백 테이블 insert
 		int result = this.taskService.feedbackInsert(map);
-		log.info("feedbackDelete -> result: " + result);
 
 		// 피드백 알림도 같이 삭제
 		int result2 = taskService.noticeDelete(map);
-		log.info("feedbackDelete -> result2: " + result2);
+		
+		log.debug("feedbackDelete -> map: " + map);
+		log.debug("feedbackDelete -> result: " + result);
+		log.debug("feedbackDelete -> result2: " + result2);
 
 		return result;
 	}
 
 	// 첨부 파일 열어 보기 + 다운로드
-	// 요청URI : /task/pdfView?atchFileCode=OJ20240101TSK00017&atchFileSn=2
 	@GetMapping("/pdfView")
 	public void pdfView(HttpServletResponse response,
 			@RequestParam(value = "atchFileCode", required = false) String atchFileCode,
 			@RequestParam(value = "atchFileSn", required = false, defaultValue = "1") String atchFileSn)
 			throws IOException {
-		log.info("pdfView -> atchFileCode: " + atchFileCode);
-		log.info("pdfView -> atchFileSn: " + atchFileSn);
-
+		String pdfFilePath = "";
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("atchFileCode", atchFileCode);
 		map.put("atchFileSn", atchFileSn); // 무조건 1은 있음
 
-		log.info("pdfView -> map: " + map);
-
 		List<AtchFileVO> atchFileNameList = this.taskService.atchFileList(map);
-		log.info("pdfView -> atchFileNameList: " + atchFileNameList);
-
 		if (atchFileNameList.isEmpty()) {
 			throw new FileNotFoundException("첨부 파일이 없습니다.");
 		}
 
-		String pdfFilePath = "";
-
 		for (AtchFileVO atchFileVO : atchFileNameList) {
-			log.info("pdfView -> getAtchFileNm: " + atchFileVO.getAtchFileCours());
-
 			// 과제물인지, 과제 제출물인지 구분하여 경로 지정
 			if (atchFileCode.contains("TSK")) {
 				pdfFilePath = uploadFolder + "\\task\\" + atchFileVO.getAtchFileCours(); // PDF 파일의 경로와 파일명을 지정합니다.
@@ -687,7 +615,6 @@ public class TaskController {
 			}
 
 			File pdfFile = new File(pdfFilePath);
-			log.info("pdfView -> pdfFile: " + pdfFile);
 
 			// 파일이 존재하는지 확인
 			if (!pdfFile.exists()) {
@@ -700,18 +627,24 @@ public class TaskController {
 
 			// 파일 읽기 및 전송
 			try (FileInputStream fis = new FileInputStream(pdfFile); OutputStream os = response.getOutputStream()) {
-
 				byte[] buffer = new byte[1024];
 				int bytesRead;
 
 				while ((bytesRead = fis.read(buffer)) != -1) {
 					os.write(buffer, 0, bytesRead);
 				}
-
 				os.flush();
+				
 			} catch (IOException e) {
 				throw new IOException("파일을 읽거나 전송하는 중에 오류가 발생했습니다.", e);
 			}
+			
+			log.debug("pdfView -> atchFileCode: " + atchFileCode);
+			log.debug("pdfView -> atchFileSn: " + atchFileSn);
+			log.debug("pdfView -> map: " + map);
+			log.debug("pdfView -> atchFileNameList: " + atchFileNameList);
+			log.debug("pdfView -> getAtchFileNm: " + atchFileVO.getAtchFileCours());
+			log.debug("pdfView -> pdfFile: " + pdfFile);
 		}
 	}
 }

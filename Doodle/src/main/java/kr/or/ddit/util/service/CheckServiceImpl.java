@@ -34,13 +34,10 @@ public class CheckServiceImpl implements CheckService{
 		ClasStdntVO clasStdntVOTemp = null;
 		HrtchrVO hrtchrVOTemp = null;
 
-		/** 저장된 세션 정보 읽어서 쿼리 파라미터 set */
+		// 저장된 세션 정보 읽어서 쿼리 파라미터 set
 		memberVO = (MemberVO)request.getSession().getAttribute("USER_INFO");
 		map.put("mberId", memberVO.getMberId());
 		map.put("clasCode",clasCode);
-		
-		// log
-		log.info("service memberVO:"+memberVO);
 		
 		// 학생
 		if(request.isUserInRole("A01001")) {
@@ -83,13 +80,10 @@ public class CheckServiceImpl implements CheckService{
 		MemberVO memberVO = null;
 		SchulPsitnMberVO schulPsitnMberVO = null;
 
-		/** 저장된 세션 정보 읽어서 쿼리 파라미터 set */
+		// 저장된 세션 정보 읽어서 쿼리 파라미터 set
 		memberVO = (MemberVO)request.getSession().getAttribute("USER_INFO");
 		map.put("mberId", memberVO.getMberId());
 		map.put("schulCode",schulCode);
-		
-		// log
-		log.info("service memberVO:"+memberVO);
 		
 		schulPsitnMberVO = checkMapper.checkBelongSch(map);
 

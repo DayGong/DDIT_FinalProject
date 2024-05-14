@@ -21,13 +21,12 @@ public class UnitEvlScoreVO {
 	private Date unitEvlEndDt;
 	private String clasCode;
 	
-	// etc..
-	private int yetCnt; 		 // 미응시 인원
-	private int doneCnt; 	     // 응시 완료 인원
-	private int allCnt; 	     // 전체 인원
-	private double avgClasScore; // 반평균
-	private double maxScore; // 반 최고 점수
-	private double minScore; // 반 최저 점수
+	private int yetCnt;			// 미응시 인원
+	private int doneCnt;			// 응시 완료 인원
+	private int allCnt;			// 전체 인원
+	private double avgClasScore;	// 반평균
+	private double maxScore;		// 반 최고 점수
+	private double minScore;		// 반 최저 점수
 	
 	// QUES
 	private int quesNo;

@@ -17,9 +17,9 @@ public class ClasStdntVO {
 	private String schulCode;				//학교 코드
 	private String mberId;					//회원 아이디
 	@DateTimeFormat(pattern ="yyyy-MM-dd")
-	private Date clasStdntJoinDate;		// 가입일
+	private Date clasStdntJoinDate;			// 가입일
 	@DateTimeFormat(pattern ="yyyy-MM-dd")
-	private Date clasStdntExitDate;		// 가입일
+	private Date clasStdntExitDate;			// 가입일
 	
 	private int rnum; 						//순번
 	private String mberNm;					//회원 이름
@@ -29,7 +29,6 @@ public class ClasStdntVO {
 	private String schulNm;					//학교명
 	private String birthDate;				//생일
 	private String moblphonNo;				//전화번호
-
 
 	List<MemberVO> memberVOList;			//회원 정보
 	List<ClasVO> clasVOList;				//소속 클래스 정보

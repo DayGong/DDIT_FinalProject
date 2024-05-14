@@ -2,9 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <style>
-<!--
- /* Font Definitions */
- @font-face
+/* Font Definitions */
+@font-face
 	{font-family:Batang;
 	panose-1:2 3 6 0 0 1 1 1 1 1;}
 @font-face
@@ -164,18 +163,17 @@ p.a0, li.a0, div.a0
 	color:black;}
 .MsoChpDefault
 	{font-family:"Malgun Gothic",sans-serif;}
- /* Page Definitions */
- @page WordSection1
+/* Page Definitions */
+@page WordSection1
 	{size:595.25pt 841.85pt;
 	margin:70.85pt 42.5pt 42.5pt 42.5pt;}
 div.WordSection1
 	{page:WordSection1;}
- /* List Definitions */
- ol
+/* List Definitions */
+ol
 	{margin-bottom:0in;}
 ul
 	{margin-bottom:0in;}
--->
 
 #insertBtn{
 	vertical-align:middle;
@@ -245,7 +243,6 @@ select {
 <script src="/resources/js/html2canvas.min.js"></script>
 <script src="/resources/js/jquery.min.js"></script>
 
-
 <script>
 let user = '${USER_INFO}';
 const parentNm ='${USER_INFO.mberNm}';
@@ -273,9 +270,9 @@ function resultSAlert(result, actTitle, reloadPage) {
 	if (result != 1) { res = "실패"; icon = "error"; }
 	
 	Swal.fire({
-      title: actTitle + " " + res + '하였습니다.',
-      text: reloadPage,
-      icon: icon
+		title: actTitle + " " + res + '하였습니다.',
+		text: reloadPage,
+		icon: icon
 	}).then(result => { location.href="/approval/approvalList?clasStdntCode="+clasStdntCode; });
 }
 
@@ -285,7 +282,6 @@ window.onload = function() {
 	$("#autoBtn").on("click",function(){
 		
 		document.querySelector("#exprnLrnBgnde").value = "2024-04-17";
-		
 		document.querySelector("#exprnLrnEndde").value = "2024-04-17";
 		
 		let lrnStle2 = document.querySelector("#lrnStle2");
@@ -306,26 +302,25 @@ window.onload = function() {
 	});
 	
 	switch (cmmnGrade) {
-	  case "A22001":
-		document.querySelector("#cmmnGrade").innerText = "1";
-	    break;
-	  case "A22002":
-		document.querySelector("#cmmnGrade").innerText = "2";
-	    break;
-	  case "A22003":
-		document.querySelector("#cmmnGrade").innerText = "3";
-	    break;
-	  case "A22004":
-		document.querySelector("#cmmnGrade").innerText = "4";
-	    break;
-	  case "A22005":
-		document.querySelector("#cmmnGrade").innerText = "5";
-	    break;
-	  case "A22006":
-		document.querySelector("#cmmnGrade").innerText = "6";
-	    break;
+		case "A22001":
+			document.querySelector("#cmmnGrade").innerText = "1";
+			break;
+		case "A22002":
+			document.querySelector("#cmmnGrade").innerText = "2";
+			break;
+		case "A22003":
+			document.querySelector("#cmmnGrade").innerText = "3";
+			break;
+		case "A22004":
+			document.querySelector("#cmmnGrade").innerText = "4";
+			break;
+		case "A22005":
+			document.querySelector("#cmmnGrade").innerText = "5";
+			break;
+		case "A22006":
+			document.querySelector("#cmmnGrade").innerText = "6";
+			break;
 	}
-	
 	
 	document.querySelector("#insertBtn").addEventListener("click",function(){
 		
@@ -408,329 +403,204 @@ window.onload = function() {
 				resultSAlert(result,'체험학습 결과 보고 등록을','체험학습 목록으로 이동합니다.');
 			}
 		});
-//     	pdfPrint();
 	});
-	
 }
 </script>
 <div class=WordSection1 id="pdfDiv" style="width: 810px; margin: auto;">
-<form id="fieldStudyReportFrm" method="post" style="width: 810px">
-<input type="text" id="cmmnDocKnd" name="cmmnDocKnd" style="display: none;" value="A25002">
-<input type="text" id="clasStdntCode" name="clasStdntCode" style="display: none;" value="${CLASS_STD_INFO.clasStdntCode}">
-<input type="text" id="clasCode" name="clasCode" style="display: none;" value="${CLASS_INFO.clasCode}">
-<p class=a style='margin-left:10.0pt;text-indent:-10.0pt;line-height:116%'><span
-style='font-size:12.0pt;line-height:116%'>&nbsp;</span></p>
-<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
- style='border-collapse:collapse;border:none'>
- <tr style='height:13.8pt'>
-  <td width=420 colspan=8 rowspan=3 style='width:315.1pt;border-top:none;
-  border-left:none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;
-  padding:1.4pt 1.4pt 1.4pt 1.4pt;height:13.8pt'>
-  <p class=a align=center style='text-align:center;word-break:normal'><span
-  lang=ZH-CN style='font-size:20.0pt;line-height:103%;font-family:"HY울릉도M",serif;
-  color:#353535'>교외체험학습 결과 보고서</span></p>
-  </td>
-  <td width=23 rowspan=3
-					style='width: 16.95pt; border: solid gray 1.0pt; border-left: none; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 13.8pt'>
-					<p class=a align=center
-						style='text-align: center; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 10.5pt; line-height: 103%; font-family: "Gulim", sans-serif; color: #353535'>결</span>
-					</p>
-					<p class=a align=center
-						style='text-align: center; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 10.5pt; line-height: 103%; font-family: "Gulim", sans-serif; color: #353535'>재</span>
-					</p>
+	<form id="fieldStudyReportFrm" method="post" style="width: 810px">
+		<input type="text" id="cmmnDocKnd" name="cmmnDocKnd" style="display: none;" value="A25002">
+		<input type="text" id="clasStdntCode" name="clasStdntCode" style="display: none;" value="${CLASS_STD_INFO.clasStdntCode}">
+		<input type="text" id="clasCode" name="clasCode" style="display: none;" value="${CLASS_INFO.clasCode}">
+		<p class=a style='margin-left:10.0pt;text-indent:-10.0pt;line-height:116%'>
+			<span style='font-size:12.0pt;line-height:116%'>&nbsp;</span>
+		</p>
+		<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none'>
+ 			<tr style='height:13.8pt'>
+  				<td width=420 colspan=8 rowspan=3 style='width:315.1pt;border-top:none; border-left:none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt; padding:1.4pt 1.4pt 1.4pt 1.4pt;height:13.8pt'>
+  					<p class=a align=center style='text-align:center;word-break:normal'><span lang=ZH-CN style='font-size:20.0pt;line-height:103%;font-family:"HY울릉도M",serif; color:#353535'>교외체험학습 결과 보고서</span></p>
+  				</td>
+  				<td width=23 rowspan=3 style='width: 16.95pt; border: solid gray 1.0pt; border-left: none; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 13.8pt'>
+					<p class=a align=center	style='text-align: center; word-break: normal'><span lang=ZH-CN	style='font-size: 10.5pt; line-height: 103%; font-family: "Gulim", sans-serif; color: #353535'>결</span></p>
+					<p class=a align=center	style='text-align: center; word-break: normal'><span lang=ZH-CN	style='font-size: 10.5pt; line-height: 103%; font-family: "Gulim", sans-serif; color: #353535'>재</span></p>
 				</td>
-				<td width=99 colspan=2
-					style='width: 74.35pt; border: solid gray 1.0pt; border-left: none; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 13.8pt'>
-					<p class=a align=center
-						style='text-align: center; word-break: normal'>
-						<span lang=ZH-CN
-							style='font-size: 10.5pt; line-height: 103%; font-family: "Gulim", sans-serif; color: #353535'>담임</span>
-					</p> <input type="text" id="tcherId" name="tcherId"
-					style="display: block;">
+				<td width=99 colspan=2 style='width: 74.35pt; border: solid gray 1.0pt; border-left: none; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 13.8pt'>
+					<p class=a align=center	style='text-align: center; word-break: normal'><span lang=ZH-CN	style='font-size: 10.5pt; line-height: 103%; font-family: "Gulim", sans-serif; color: #353535'>담임</span></p>
+					<input type="text" id="tcherId" name="tcherId" style="display: block;">
 				</td>
-				<td width=99 colspan=2
-					style='width: 74.35pt; border: solid gray 1.0pt; border-left: none; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 13.8pt'>
-					<p class=a align=center
-						style='text-align: center; line-height: normal; word-break: normal'>
-						<span lang=ZH-CN style='font-size: 11.0pt; font-family: GulimChe'>교감</span>
-					</p> <input type="text" id="deputyPrncpalId" name="tcherId"
-					style="display: block;">
+				<td width=99 colspan=2 style='width: 74.35pt; border: solid gray 1.0pt; border-left: none; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 13.8pt'>
+					<p class=a align=center	style='text-align: center; line-height: normal; word-break: normal'><span lang=ZH-CN style='font-size: 11.0pt; font-family: GulimChe'>교감</span></p>
+					<input type="text" id="deputyPrncpalId" name="tcherId" style="display: block;">
 				</td>
 			</tr>
 			<tr style='height: 13.8pt'>
-				<td  id="tcherSanctnTd" width=99 colspan=2 rowspan=2
-					style='width: 74.35pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 65.8pt'>
-				
+				<td  id="tcherSanctnTd" width=99 colspan=2 rowspan=2 style='width: 74.35pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 65.8pt'></td>
+				<td id="deputyPrncpalSanctnTd" width=99 colspan=2 rowspan=2	style='width: 74.35pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 65.8pt'></td>
+ 			</tr>
+ 			<tr style='height:13.8pt'></tr>
+			<tr style='height:26.15pt'>
+				<td width=70 style='width:52.4pt;border:solid gray 1.0pt;border-top:none; background:#F1F1F1;padding:1.4pt 1.4pt 1.4pt 1.4pt;height:26.15pt'>
+					<input type="text" id="stdntId" name="stdntId" style="display: none;" value="${CLASS_STD_INFO.mberId}">
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'>
+						<span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif; color:#353535'>성명</span>
+					</p>
+  				</td>
+  				<td width=173 colspan=3 style='width:129.5pt;border-top:none;border-left: none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding: 1.4pt 1.4pt 1.4pt 1.4pt;height:26.15pt'>
+  					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'>
+						<span style='font-size:11.0pt;font-family:GulimChe; letter-spacing:-.35pt'>${vwStdntStdnprntVO.mberNm}</span>
+					</p>
+  				</td>
+  				<td width=62 colspan=2 style='width:46.35pt;border-top:none;border-left:none; border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;background:#F1F1F1; padding:1.4pt 1.4pt 1.4pt 1.4pt;height:26.15pt'>
+  					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'><span lang=ZH-CN style='font-size:11.0pt;font-family:"Gulim",sans-serif; color:#1B1760;letter-spacing:-.35pt'>학년 반</span></p>
+  				</td>
+  				<td width=337 colspan=7 style='width:252.6pt;border-top:none;border-left: none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding: 1.4pt 1.4pt 1.4pt 1.4pt;height:26.15pt'>
+  					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'>
+						<span style='font-size:10.5pt;font-family:"Gulim",sans-serif; color:#353535'>     
+							<span lang=ZH-CN id="cmmnGrade"></span><span lang=ZH-CN>학년</span> 
+							<span lang=ZH-CN>${vwStdntStdnprntVO.clasNm}</span>
+							  ${CLASS_STD_INFO.clasInNo}<span lang=ZH-CN>번</span>
+						</span>   
+  					</p>
 				</td>
-				<td id="deputyPrncpalSanctnTd" width=99 colspan=2 rowspan=2
-					style='width: 74.35pt; border-top: none; border-left: none; border-bottom: solid gray 1.0pt; border-right: solid gray 1.0pt; padding: 1.4pt 1.4pt 1.4pt 1.4pt; height: 65.8pt'>
-					
+			</tr>
+			<tr style='height:21.35pt'>
+				<td width=70 rowspan=1 style='width:52.4pt;border:solid gray 1.0pt; border-top:none;background:#F1F1F1;padding:1.4pt 1.4pt 1.4pt 1.4pt; height:21.35pt'>
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'><span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif; color:#353535'>기간</span></p>
 				</td>
-  
-  
- </tr>
- <tr style='height:13.8pt'>
- </tr>
- 
- <tr style='height:26.15pt'>
-  <td width=70 style='width:52.4pt;border:solid gray 1.0pt;border-top:none;
-  background:#F1F1F1;padding:1.4pt 1.4pt 1.4pt 1.4pt;height:26.15pt'>
-  <input type="text" id="stdntId" name="stdntId" style="display: none;" value="${CLASS_STD_INFO.mberId}">
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif;
-  color:#353535'>성명</span></p>
-  </td>
-  <td width=173 colspan=3 style='width:129.5pt;border-top:none;border-left:
-  none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding:
-  1.4pt 1.4pt 1.4pt 1.4pt;height:26.15pt'>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span style='font-size:11.0pt;font-family:GulimChe;
-  letter-spacing:-.35pt'>${vwStdntStdnprntVO.mberNm}</span></p>
-  </td>
-  <td width=62 colspan=2 style='width:46.35pt;border-top:none;border-left:none;
-  border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;background:#F1F1F1;
-  padding:1.4pt 1.4pt 1.4pt 1.4pt;height:26.15pt'>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span lang=ZH-CN style='font-size:11.0pt;font-family:"Gulim",sans-serif;
-  color:#1B1760;letter-spacing:-.35pt'>학년 반</span></p>
-  </td>
-  <td width=337 colspan=7 style='width:252.6pt;border-top:none;border-left:
-  none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding:
-  1.4pt 1.4pt 1.4pt 1.4pt;height:26.15pt'>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span style='font-size:10.5pt;font-family:"Gulim",sans-serif;
-  color:#353535'>     
-	<span lang=ZH-CN id="cmmnGrade"></span><span lang=ZH-CN>학년</span> 
-	<span lang=ZH-CN>${vwStdntStdnprntVO.clasNm}</span>  
-	${CLASS_STD_INFO.clasInNo}<span lang=ZH-CN>번</span></span>
-    
-  </p>
-  </td>
- </tr>
- <tr style='height:21.35pt'>
-  <td width=70 rowspan=1 style='width:52.4pt;border:solid gray 1.0pt;
-  border-top:none;background:#F1F1F1;padding:1.4pt 1.4pt 1.4pt 1.4pt;
-  height:21.35pt'>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif;
-  color:#353535'>기간</span></p>
-  </td>
-  <td width=43 rowspan=1 style='width:.45in;border-top:none;border-left:none;
-  border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;background:#F2F2F2;
-  padding:1.4pt 1.4pt 1.4pt 1.4pt;height:21.35pt'>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span style='font-size:10.5pt;font-family:"휴먼명조",serif'>1</span><span
-  lang=ZH-CN style='font-size:10.5pt'>일</span><span lang=ZH-CN
-  style='font-size:10.5pt;font-family:"휴먼명조",serif'> </span></p>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span lang=ZH-CN style='font-size:10.5pt'>단위</span></p>
-  </td>
-  <td width=129 colspan=2 style='width:97.1pt;border-top:none;border-left:none;
-  border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding:1.4pt 1.4pt 1.4pt 1.4pt;
-  height:21.35pt'>
-  <p class=a align=center style='text-align:center;word-break:normal'><span
-  lang=ZH-CN>체험 기간</span>(<span lang=ZH-CN>보호자</span>)</p>
-  </td>
-  <td width=399 colspan=9 style='width:298.95pt;border-top:none;border-left:
-  none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding:
-  1.4pt 1.4pt 1.4pt 1.4pt;height:21.35pt'>
-  <p class=a style='line-height:normal; text-align: center;'><span style='font-size:10.5pt;
-  font-family:"Gulim",sans-serif;color:#353535'>
-  <input type="date" id="exprnLrnBgnde" name="exprnLrnBgnde"> 
-  ~ 
-  <input type="date" id="exprnLrnEndde" name="exprnLrnEndde"></span></p>
-  </td>
- </tr>
- <tr style='height:25.25pt'>
-  <td width=70 style='width:52.4pt;border:solid gray 1.0pt;border-top:none;
-  background:#F1F1F1;padding:1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif;
-  color:#353535'>학습형태</span></p>
-  </td>
-  <td width=571 colspan=12 style='width:428.45pt;border-top:none;border-left:
-  none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding:
-  1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span style='font-size:10.5pt;font-family:"Gulim",sans-serif;
-  color:#353535'> </span>
-  <input type="radio" id="lrnStle1" name="lrnStle" value="가족행사 참여를 통한 체험학습">
-  <span lang=ZH-CN style='font-size:11.0pt;font-family:
-  "휴먼명조",serif;letter-spacing:-.55pt'><label for="lrnStle1">가족행사 참여를 통한 체험학습</label></span><span
-  style='font-size:10.5pt;font-family:"휴먼명조",serif;color:#353535'>      </span>
-  <input type="radio" id="lrnStle2" name="lrnStle" value="주제가 있는 체험학습">
-  <span lang=ZH-CN style='font-size:11.0pt;font-family:"휴먼명조",serif;letter-spacing:
-  -.55pt'><label for="lrnStle2">주제가 있는 체험학습</label></span><span style='font-size:11.0pt;font-family:"휴먼명조",serif;
-  letter-spacing:-.55pt'>       </span></p>
-  </td>
- </tr>
- <tr style='height:25.1pt'>
-  <td width=70 style='width:52.4pt;border:solid gray 1.0pt;border-top:none;
-  background:#F1F1F1;padding:1.4pt 1.4pt 1.4pt 1.4pt;height:25.1pt'>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif;
-  color:#353535'>목적</span></p>
-  </td>
-  <td width=343 colspan=6 style='width:257.05pt;border-top:none;border-left:
-  none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding:
-  1.4pt 1.4pt 1.4pt 1.4pt;height:25.1pt'>
-	<input type="text" id="purps" name="purps" style='text-align:center; font-family:GulimChe; width: 361px;'>
-  </td>
-  <td width=88 colspan=3 style='width:65.85pt;border-top:none;border-left:none;
-  border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;background:#F2F2F2;
-  padding:1.4pt 1.4pt 1.4pt 1.4pt;height:25.1pt'>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif;
-  color:#353535'>목적지</span></p>
-  </td>
-  <td width=141 colspan=3 style='width:105.5pt;border-top:none;border-left:
-  none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding:
-  1.4pt 1.4pt 1.4pt 1.4pt;height:25.1pt'>
-	<input type="text" id="dstn" name="dstn" style='text-align:center; font-family:GulimChe; width: 221px;'>
-  </td>
- </tr>
- <tr style='height:25.25pt'>
-  <td width=70 style='width:52.4pt;border:solid gray 1.0pt;border-top:none;
-  background:#F1F1F1;padding:1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
-  <input type="text" id="stdnprntId" name="stdnprntId" style="display: none;" value="${USER_INFO.mberId}">
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span lang=ZH-CN style='font-size:11.0pt;font-family:"Gulim",sans-serif;
-  letter-spacing:-.35pt'>보호자명</span></p>
-  </td>
-  <td width=137 colspan=2 style='width:102.65pt;border-top:none;border-left:
-  none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding:
-  1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span style='font-size:11.0pt;font-family:GulimChe;
-  letter-spacing:-.35pt'>${vwStdntStdnprntVO.stdnprntNm}</span></p>
-  </td>
-  <td width=92 colspan=2 style='width:68.7pt;border-top:none;border-left:none;
-  border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;background:#F2F2F2;
-  padding:1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif;
-  color:#353535'>관계</span></p>
-  </td>
-  <td width=114 colspan=2 style='width:85.65pt;border-top:none;border-left:
-  none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding:
-  1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
-  <p class=a style='line-height:normal; text-align:center;'><span style='font-size:11.0pt;
-  font-family:GulimChe;letter-spacing:-.35pt'>${vwStdntStdnprntVO.cmmnDetailCode}</span></p>
-  </td>
-  <td width=88 colspan=3 style='width:65.85pt;border-top:none;border-left:none;
-  border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;background:#F2F2F2;
-  padding:1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span lang=ZH-CN style='font-size:11.0pt;font-family:"Gulim",sans-serif;
-  letter-spacing:-.35pt'>연락처</span></p>
-  </td>
-  <td width=141 colspan=3 style='width:105.5pt;border-top:none;border-left:
-  none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding:
-  1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
-  <p class=a style='line-height:normal; text-align:center;'><span style='font-size:11.0pt;
-  font-family:GulimChe;letter-spacing:-.35pt'>${vwStdntStdnprntVO.moblphonNo}</span></p>
-  </td>
- </tr>
- <tr style='height:122.75pt'>
-  <td width=70 style='width:52.4pt;border:solid gray 1.0pt;border-top:none;
-  background:#F1F1F1;padding:1.4pt 1.4pt 1.4pt 1.4pt;height:122.75pt'>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif;
-  color:#353535'>교외체험</span></p>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif;
-  color:#353535'>학습내용</span></p>
-  </td>
-  <td width=571 colspan=12 style='width:428.45pt;border-top:none;border-left:
-  none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding:
-  1.4pt 1.4pt 1.4pt 1.4pt;height:122.75pt; text-align: center;'>
-	<textarea id="docCn" name="docCn" style="width: 711px; height: 154px;"></textarea>
-  </td>
- </tr>
- <tr style='height:88.3pt'>
-  <td width=641 colspan=13 style='width:480.9pt;border-top:none;border-left:
-  solid gray 1.0pt;border-bottom:none;border-right:solid gray 1.0pt;padding:
-  1.4pt 1.4pt 1.4pt 1.4pt;height:88.3pt'>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><b><span lang=ZH-CN>위와</span></b><b><span lang=ZH-CN
-  style='font-family:"휴먼명조",serif'> </span></b><b><span lang=ZH-CN>같이</span></b><b><span
-  lang=ZH-CN style='font-family:"휴먼명조",serif'> </span></b><b><span lang=ZH-CN>교외체험학습</span></b><b><span
-  lang=ZH-CN style='font-family:"휴먼명조",serif'> </span></b><b><span lang=ZH-CN>결과 보고서를 제출합니다</span></b><b><span
-  style='font-family:"휴먼명조",serif'>. </span></b></p>
-  <p class=MsoNormal><span style='font-size:1.0pt'>&nbsp;</span></p>
-  <p class=a align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span style='font-size:10.5pt;font-family:"Gulim",sans-serif'>&nbsp;</span></p>
-  </td>
- </tr>
- 
- <tr>
-  <td width=641 colspan=13 style='width:480.9pt;border:solid gray 1.0pt;
-  border-top:none;padding:1.4pt 1.4pt 1.4pt 1.4pt'>
-  <p class=a id="rqstDe" align=center style='text-align:center;line-height:normal;
-  word-break:normal'><span style='font-size:12.0pt;font-family:GulimChe;
-  letter-spacing:-.4pt'> 
-  </span>
-  </p>
-  <div style="display: flex; justify-content: flex-end;">
-	  <div style="margin-right: 10px;">
-		  <div class=a align=right style='text-align:right;line-height:normal;word-break:
-		  normal'><span lang=ZH-CN style='font-size:13.0pt;font-family:GulimChe;
-		  letter-spacing:-.45pt; margin-right: 9px;'>학&nbsp;생</span></div>
-		  <div class=a align=right style='text-align:right;line-height:normal;word-break:
-		  normal'><span lang=ZH-CN style='font-size:13.0pt;font-family:GulimChe;
-		  letter-spacing:-.45pt; margin-right: 9px;'>가&nbsp;족</span></div>
-	  </div>
-	  <div style="margin-right: 10px;">
-		  <div class=a align=right style='text-align:right;line-height:normal;word-break:
-		  normal'><span lang=ZH-CN style='font-size:13.0pt;font-family:GulimChe;
-		  letter-spacing:-.45pt'>${vwStdntStdnprntVO.mberNm}</span></div>
-		  <div class=a align=right style='text-align:right;line-height:normal;word-break:
-		  normal'><span lang=ZH-CN style='font-size:13.0pt;font-family:GulimChe;
-		  letter-spacing:-.45pt'>${vwStdntStdnprntVO.stdnprntNm}</span></div>
-	  </div>
-<!-- 	  <div> -->
-<!-- 		  <div>(<span style='font-size:11.0pt; font-family:GulimChe; letter-spacing:-.35pt' lang=ZH-CN>인</span>)</div> -->
-<!-- 		  <div>(<span style='font-size:11.0pt; font-family:GulimChe; letter-spacing:-.35pt' lang=ZH-CN>인</span>)</div> -->
-<!-- 	  </div> -->
-  </div>
-  <input type="text" id="schulCode" name="schulCode" style="display: none;" value="${SCHOOL_INFO.schulCode}">
-  <p class=a style='line-height:normal'><span lang=ZH-CN style='font-size:10.5pt;
-  font-family:"Gulim",sans-serif;color:#353535'>${vwStdntStdnprntVO.schulNm}장 귀하</span></p>
-  </td>
- </tr>
- <tr height=0>
-  <td width=70 style='border:none'></td>
-  <td width=43 style='border:none'></td>
-  <td width=94 style='border:none'></td>
-  <td width=36 style='border:none'></td>
-  <td width=56 style='border:none'></td>
-  <td width=6 style='border:none'></td>
-  <td width=108 style='border:none'></td>
-  <td width=8 style='border:none'></td>
-  <td width=23 style='border:none'></td>
-  <td width=58 style='border:none'></td>
-  <td width=41 style='border:none'></td>
-  <td width=38 style='border:none'></td>
-  <td width=62 style='border:none'></td>
- </tr>
-</table>
-</form>
-<div style="width: 798.03px;">
+				<td width=43 rowspan=1 style='width:.45in;border-top:none;border-left:none; border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;background:#F2F2F2; padding:1.4pt 1.4pt 1.4pt 1.4pt;height:21.35pt'>
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'>
+						<span style='font-size:10.5pt;font-family:"휴먼명조",serif'>1</span>
+						<span lang=ZH-CN style='font-size:10.5pt'>일</span>
+						<span lang=ZH-CN style='font-size:10.5pt;font-family:"휴먼명조",serif'> </span>
+					</p>
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'><span lang=ZH-CN style='font-size:10.5pt'>단위</span></p>
+				</td>
+				<td width=129 colspan=2 style='width:97.1pt;border-top:none;border-left:none; border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding:1.4pt 1.4pt 1.4pt 1.4pt; height:21.35pt'>
+					<p class=a align=center style='text-align:center;word-break:normal'><span lang=ZH-CN>체험 기간</span>(<span lang=ZH-CN>보호자</span>)</p>
+				</td>
+				<td width=399 colspan=9 style='width:298.95pt;border-top:none;border-left: none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding: 1.4pt 1.4pt 1.4pt 1.4pt;height:21.35pt'>
+					<p class=a style='line-height:normal; text-align: center;'><span style='font-size:10.5pt; font-family:"Gulim",sans-serif;color:#353535'>
+					<input type="date" id="exprnLrnBgnde" name="exprnLrnBgnde"> ~  <input type="date" id="exprnLrnEndde" name="exprnLrnEndde"></span></p>
+				</td>
+			</tr>
+			<tr style='height:25.25pt'>
+				<td width=70 style='width:52.4pt;border:solid gray 1.0pt;border-top:none; background:#F1F1F1;padding:1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'><span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif; color:#353535'>학습형태</span></p>
+				</td>
+				<td width=571 colspan=12 style='width:428.45pt;border-top:none;border-left: none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding: 1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'><span style='font-size:10.5pt;font-family:"Gulim",sans-serif; color:#353535'> </span>
+					<input type="radio" id="lrnStle1" name="lrnStle" value="가족행사 참여를 통한 체험학습">
+					<span lang=ZH-CN style='font-size:11.0pt;font-family: "휴먼명조",serif;letter-spacing:-.55pt'><label for="lrnStle1">가족행사 참여를 통한 체험학습</label></span>
+					<span style='font-size:10.5pt;font-family:"휴먼명조",serif;color:#353535'>      </span>
+					<input type="radio" id="lrnStle2" name="lrnStle" value="주제가 있는 체험학습">
+					<span lang=ZH-CN style='font-size:11.0pt;font-family:"휴먼명조",serif;letter-spacing: -.55pt'><label for="lrnStle2">주제가 있는 체험학습</label></span>
+					<span style='font-size:11.0pt;font-family:"휴먼명조",serif; letter-spacing:-.55pt'>       </span></p>
+				</td>
+			</tr>
+			<tr style='height:25.1pt'>
+				<td width=70 style='width:52.4pt;border:solid gray 1.0pt;border-top:none; background:#F1F1F1;padding:1.4pt 1.4pt 1.4pt 1.4pt;height:25.1pt'>
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'><span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif; color:#353535'>목적</span></p>
+				</td>
+				<td width=343 colspan=6 style='width:257.05pt;border-top:none;border-left: none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding: 1.4pt 1.4pt 1.4pt 1.4pt;height:25.1pt'>
+					<input type="text" id="purps" name="purps" style='text-align:center; font-family:GulimChe; width: 361px;'>
+				</td>
+				<td width=88 colspan=3 style='width:65.85pt;border-top:none;border-left:none; border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;background:#F2F2F2; padding:1.4pt 1.4pt 1.4pt 1.4pt;height:25.1pt'>
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'><span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif; color:#353535'>목적지</span></p>
+				</td>
+				<td width=141 colspan=3 style='width:105.5pt;border-top:none;border-left: none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding: 1.4pt 1.4pt 1.4pt 1.4pt;height:25.1pt'>
+					<input type="text" id="dstn" name="dstn" style='text-align:center; font-family:GulimChe; width: 221px;'>
+				</td>
+			</tr>
+			<tr style='height:25.25pt'>
+				<td width=70 style='width:52.4pt;border:solid gray 1.0pt;border-top:none; background:#F1F1F1;padding:1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
+					<input type="text" id="stdnprntId" name="stdnprntId" style="display: none;" value="${USER_INFO.mberId}">
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'><span lang=ZH-CN style='font-size:11.0pt;font-family:"Gulim",sans-serif; letter-spacing:-.35pt'>보호자명</span></p>
+				</td>
+				<td width=137 colspan=2 style='width:102.65pt;border-top:none;border-left: none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding: 1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'><span style='font-size:11.0pt;font-family:GulimChe; letter-spacing:-.35pt'>${vwStdntStdnprntVO.stdnprntNm}</span></p>
+				</td>
+				<td width=92 colspan=2 style='width:68.7pt;border-top:none;border-left:none; border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;background:#F2F2F2; padding:1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'><span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif; color:#353535'>관계</span></p>
+				</td>
+				<td width=114 colspan=2 style='width:85.65pt;border-top:none;border-left: none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding: 1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
+					<p class=a style='line-height:normal; text-align:center;'><span style='font-size:11.0pt; font-family:GulimChe;letter-spacing:-.35pt'>${vwStdntStdnprntVO.cmmnDetailCode}</span></p>
+				</td>
+				<td width=88 colspan=3 style='width:65.85pt;border-top:none;border-left:none; border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;background:#F2F2F2; padding:1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'><span lang=ZH-CN style='font-size:11.0pt;font-family:"Gulim",sans-serif; letter-spacing:-.35pt'>연락처</span></p>
+				</td>
+				<td width=141 colspan=3 style='width:105.5pt;border-top:none;border-left: none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding: 1.4pt 1.4pt 1.4pt 1.4pt;height:25.25pt'>
+					<p class=a style='line-height:normal; text-align:center;'><span style='font-size:11.0pt; font-family:GulimChe;letter-spacing:-.35pt'>${vwStdntStdnprntVO.moblphonNo}</span></p>
+				</td>
+			</tr>
+			<tr style='height:122.75pt'>
+				<td width=70 style='width:52.4pt;border:solid gray 1.0pt;border-top:none; background:#F1F1F1;padding:1.4pt 1.4pt 1.4pt 1.4pt;height:122.75pt'>
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'><span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif; color:#353535'>교외체험</span></p>
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'><span lang=ZH-CN style='font-size:10.5pt;font-family:"Gulim",sans-serif; color:#353535'>학습내용</span></p>
+				</td>
+				<td width=571 colspan=12 style='width:428.45pt;border-top:none;border-left: none;border-bottom:solid gray 1.0pt;border-right:solid gray 1.0pt;padding: 1.4pt 1.4pt 1.4pt 1.4pt;height:122.75pt; text-align: center;'>
+					<textarea id="docCn" name="docCn" style="width: 711px; height: 154px;"></textarea>
+				</td>
+			</tr>
+			<tr style='height:88.3pt'>
+				<td width=641 colspan=13 style='width:480.9pt;border-top:none;border-left: solid gray 1.0pt;border-bottom:none;border-right:solid gray 1.0pt;padding: 1.4pt 1.4pt 1.4pt 1.4pt;height:88.3pt'>
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'>
+						<b><span lang=ZH-CN>위와</span></b>
+						<b><span lang=ZH-CN style='font-family:"휴먼명조",serif'> </span></b>
+						<b><span lang=ZH-CN>같이</span></b>
+						<b><span lang=ZH-CN style='font-family:"휴먼명조",serif'> </span></b>
+						<b><span lang=ZH-CN>교외체험학습</span></b>
+						<b><span lang=ZH-CN style='font-family:"휴먼명조",serif'> </span></b>
+						<b><span lang=ZH-CN>결과 보고서를 제출합니다</span></b>
+						<b><span style='font-family:"휴먼명조",serif'>. </span></b>
+					</p>
+					<p class=MsoNormal><span style='font-size:1.0pt'>&nbsp;</span></p>
+					<p class=a align=center style='text-align:center;line-height:normal; word-break:normal'><span style='font-size:10.5pt;font-family:"Gulim",sans-serif'>&nbsp;</span></p>
+				</td>
+			</tr>
+			<tr>
+				<td width=641 colspan=13 style='width:480.9pt;border:solid gray 1.0pt; border-top:none;padding:1.4pt 1.4pt 1.4pt 1.4pt'>
+					<p class=a id="rqstDe" align=center style='text-align:center;line-height:normal; word-break:normal'><span style='font-size:12.0pt;font-family:GulimChe; letter-spacing:-.4pt'>  </span> </p>
+						<div style="display: flex; justify-content: flex-end;">
+							<div style="margin-right: 10px;">
+								<div class=a align=right style='text-align:right;line-height:normal;word-break: normal'><span lang=ZH-CN style='font-size:13.0pt;font-family:GulimChe; letter-spacing:-.45pt; margin-right: 9px;'>학&nbsp;생</span></div>
+								<div class=a align=right style='text-align:right;line-height:normal;word-break: normal'><span lang=ZH-CN style='font-size:13.0pt;font-family:GulimChe; letter-spacing:-.45pt; margin-right: 9px;'>가&nbsp;족</span></div>
+							</div>
+							<div style="margin-right: 10px;">
+								<div class=a align=right style='text-align:right;line-height:normal;word-break: normal'><span lang=ZH-CN style='font-size:13.0pt;font-family:GulimChe; letter-spacing:-.45pt'>${vwStdntStdnprntVO.mberNm}</span></div>
+								<div class=a align=right style='text-align:right;line-height:normal;word-break: normal'><span lang=ZH-CN style='font-size:13.0pt;font-family:GulimChe; letter-spacing:-.45pt'>${vwStdntStdnprntVO.stdnprntNm}</span></div>
+							</div>
+						</div>
+						<input type="text" id="schulCode" name="schulCode" style="display: none;" value="${SCHOOL_INFO.schulCode}">
+						<p class=a style='line-height:normal'><span lang=ZH-CN style='font-size:10.5pt; font-family:"Gulim",sans-serif;color:#353535'>${vwStdntStdnprntVO.schulNm}장 귀하</span></p>
+				</td>
+			</tr>
+			<tr height=0>
+				<td width=70 style='border:none'></td>
+				<td width=43 style='border:none'></td>
+				<td width=94 style='border:none'></td>
+				<td width=36 style='border:none'></td>
+				<td width=56 style='border:none'></td>
+				<td width=6 style='border:none'></td>
+				<td width=108 style='border:none'></td>
+				<td width=8 style='border:none'></td>
+				<td width=23 style='border:none'></td>
+				<td width=58 style='border:none'></td>
+				<td width=41 style='border:none'></td>
+				<td width=38 style='border:none'></td>
+				<td width=62 style='border:none'></td>
+			</tr>
+		</table>
+	</form>
+	<div style="width: 798.03px;">
 		<p class=a style='line-height: normal'>
-			<span style='font-family: "휴먼명조", serif'></span><span lang=ZH-CN
-				style='font-size: 11.0pt; font-family: "휴먼명조", serif'>
+			<span style='font-family: "휴먼명조", serif'></span>
+			<span lang=ZH-CN style='font-size: 11.0pt; font-family: "휴먼명조", serif'>
 				※ 교외체험학습 결과 보고서 내용이 많을 경우 별지에 추가 작성<br>
 				※ 사진, 입장권, 참가확인서 등 증빙자료 첨부<br>
 				※ 체험학습 종료 후 7일 이내 제출 (체험학습 보고서를 제출하지 않을 경우 체험학습 기간을 미인정결석으로 처리)
-			</span><span style='font-size: 11.0pt; font-family: "휴먼명조", serif'></span>
+			</span>
+			<span style='font-size: 11.0pt; font-family: "휴먼명조", serif'></span>
 		</p>
-		<span
-			style='font-size: 11.0pt; font-family: "Malgun Gothic", sans-serif'><br
-			clear=all style='page-break-before: always'> </span>
+		<span style='font-size: 11.0pt; font-family: "Malgun Gothic", sans-serif'><br clear=all style='page-break-before: always'> </span>
 	</div>
 </div>
 

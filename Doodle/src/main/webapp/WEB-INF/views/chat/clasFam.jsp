@@ -22,10 +22,6 @@
 <script type="text/javascript" src="/resources/js/jquery.min.js"></script>
 <!-- sockJS -->
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-<style type="text/css">
-
-
-</style>
 <script>
 // 전역변수 설정
 var socket  = null;
@@ -35,20 +31,16 @@ $(document).ready(function(){
     sock = new SockJS("<c:url value="/echo"/>");
     socket = sock;
 	
-    sock.onopen = function () {
-        
-    };
+    sock.onopen = function () {};
     
  	// 데이터를 전달 받았을때 
     sock.onmessage = onMessage; // toast 생성
-    
 });
 
 // toast생성 및 추가
 function onMessage(evt){
     var data = evt.data;
     
-
     var Toast = Swal.mixin({
 		toast: true,
 		position: 'top-end',
@@ -93,7 +85,6 @@ let clasCode = '${param.clasCode}';
 
 //대화하기
 function openChatting(){
-	console.log("chatting clicked");
 	let friend = $('input[name="friend"]').map(function() {
 	    return this.value;
 	}).get().join(',');
@@ -102,7 +93,7 @@ function openChatting(){
 	let data = {
 		"crtrId":friend,
 		"clasCode":clasCode,
-			"prtcpntId":myId
+        "prtcpntId":myId
 	}
 	
 	
@@ -116,104 +107,93 @@ function openChatting(){
             xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
         },
         success: function (result) {
-       	//result가 있으면 내가 생성한 방이 있으므로 생성된 방으로 이동
-       	if(result !='' && result != null){
-      		location.href = "/chat/chtt?chttRoomCode="+result;
-      	}
-       	 //result가 없으면 내가 초대 받은 방이 있는지확인 
-       	 else{
-       		 let data = {
-     			"crtrId":myId,
-     			"clasCode":clasCode,
-         		"prtcpntId":friend	 
-       		 }
+            //result가 있으면 내가 생성한 방이 있으므로 생성된 방으로 이동
+            if(result !='' && result != null){
+                location.href = "/chat/chtt?chttRoomCode="+result;
+            }
+            //result가 없으면 내가 초대 받은 방이 있는지확인 
+            else{
+                let data = {
+                    "crtrId":myId,
+                    "clasCode":clasCode,
+                    "prtcpntId":friend	 
+                }
        		 
-       		$.ajax({
-      			 url: '/chat/roomCode',
-                   type: 'post',
-                   data: JSON.stringify(data),
-                   contentType: 'application/json;charset=utf-8',
-                   dataType: 'text',
-                   beforeSend: function (xhr) {
-                       xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
-                   },
-                   success: function (result) {
-                  	//result가 있으면 내가 초대 받은 방이 있으므로 초대 받은 방으로 이동
-                    if(result != '' && result != null){
-                   		location.href = "/chat/chtt?chttRoomCode="+result;
-                   	}
-                  	 //result가 0이면 채팅방 생성
-                  	 else{
-                  		let data = {
-                    			"type":"room",
-                    			"clasCode":clasCode,
-                    			"schulCode":"",
-                    			"crtrId":friend,
-                    			"prtcpntId":myId
-                    		}
-                    		
-                    		
-                    		$.ajax({
-                    			 url: '/chat/room',
-                                 type: 'post',
-                                 data: JSON.stringify(data),
-                                 contentType: 'application/json;charset=utf-8',
-                                 dataType: 'json',
-                                 beforeSend: function (xhr) {
-                                     xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
-                                 },
-                                 success: function (result) {
-                                	 
-                                	 $.ajax({
-                              			 url: '/chat/roomCode',
-                                           type: 'post',
-                                           data: JSON.stringify(data),
-                                           contentType: 'application/json;charset=utf-8',
-                                           dataType: 'text',
-                                           beforeSend: function (xhr) {
-                                               xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
-                                           },
-                                           success: function (result) {
-                                        	   //result가 있으면 내가 만든 방이 있으므로 만든 방으로 이동
-                                               if(result != '' && result != null){
-                                              		socket.send("room,"+friend+","+myId+","+result);	
-                                              		location.href = "/chat/chtt?chttRoomCode="+result;
-                                              	}
-                                        	   else{
-                                        		   var Toast = Swal.mixin({
-                                        			   toast: true,
-                                   					   position: 'top-end',
-                                   					   showConfirmButton: true,
-                                   					   timer: 3000
-                                   				   });
-                                   				   Toast.fire({
-                                   					   icon:'error',
-                                   					   title:'채팅방 만들기 실패'
-                                   				   });
-                                        		   return;
-                                        	   }
-                                           },
-                                           error:function(xhr){
-                                           } 
-                                     });
-                                	 
-                                	 
-                                 },
-                                 error:function(xhr){
-                                 }
-                    		});
-                  	 }
-                  	 
-                   },
-                   error:function(xhr){
-                   }
-      			});
-       		 
-       	 }
-       	 
+                $.ajax({
+                    url: '/chat/roomCode',
+                    type: 'post',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: 'text',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
+                    },
+                    success: function (result) {
+                        //result가 있으면 내가 초대 받은 방이 있으므로 초대 받은 방으로 이동
+                        if(result != '' && result != null){
+                            location.href = "/chat/chtt?chttRoomCode="+result;
+                        }
+                        //result가 0이면 채팅방 생성
+                        else{
+                            let data = {
+                                "type":"room",
+                                "clasCode":clasCode,
+                                "schulCode":"",
+                                "crtrId":friend,
+                                "prtcpntId":myId
+                            }
+
+                            $.ajax({
+                                url: '/chat/room',
+                                type: 'post',
+                                data: JSON.stringify(data),
+                                contentType: 'application/json;charset=utf-8',
+                                dataType: 'json',
+                                beforeSend: function (xhr) {
+                                    xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
+                                },
+                                success: function (result) {
+                                    $.ajax({
+                                        url: '/chat/roomCode',
+                                        type: 'post',
+                                        data: JSON.stringify(data),
+                                        contentType: 'application/json;charset=utf-8',
+                                        dataType: 'text',
+                                        beforeSend: function (xhr) {
+                                            xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
+                                        },
+                                        success: function (result) {
+                                            //result가 있으면 내가 만든 방이 있으므로 만든 방으로 이동
+                                            if(result != '' && result != null){
+                                                socket.send("room,"+friend+","+myId+","+result);	
+                                                location.href = "/chat/chtt?chttRoomCode="+result;
+                                            }
+                                            else{
+                                                var Toast = Swal.mixin({
+                                                    toast: true,
+                                                    position: 'top-end',
+                                                    showConfirmButton: true,
+                                                    timer: 3000
+                                                });
+                                                Toast.fire({
+                                                    icon:'error',
+                                                    title:'채팅방 만들기 실패'
+                                                });
+                                                return;
+                                            }
+                                        },
+                                        error:function(xhr){} 
+                                    });
+                                },
+                                error:function(xhr){}
+                            });
+                        }
+                    },
+                    error:function(xhr){}
+                });
+            }
         },
-        error:function(xhr){
-        }
+        error:function(xhr){}
 	});
 }
 
@@ -235,7 +215,6 @@ $(function () {
         },
         success: function (result) {
             /* result : List<clasFamVO> */
-				console.log("111111111");
             let str = '';
             /* 설정바(최소화, 닫기 버튼 등) */
             str += "<div class='setting_bar'>";
@@ -272,7 +251,6 @@ $(function () {
             str += "</div>";
             str += "<ul id='friendBody'>";
             $.each(result, function (idx, clasFamVO) {
-
                 str += "<li class='friend-li' onclick='openModal(this, \"" + clasFamVO.mberNm + "\", \"" + clasFamVO.mberImage + "\",\"" + clasFamVO.stdnprntId + "\", \"" + clasFamVO.stdnprntVO.moblphonNo + "\", \"" + clasFamVO.stdnprntVO.mberEmail + "\", \"" + clasFamVO.stdnprntVO.mberAdres + "\")'>";
                 if(clasFamVO.mberImage==null||clasFamVO.mberImage==''){
                 	str += "<img src='/resources/images/member/profile/user_l.png' alt=''>";
@@ -307,9 +285,7 @@ $(function () {
 </head>
 <body class="sidebar-mini sidebar-closed sidebar-collapse">
 <div id="msgStack"></div>
-<div id="content">
-
-</div>
+<div id="content"></div>
 <div class="modal" tabindex="-1">
 	<div class="modal-dialog">
 		<div class="modal-content" style="border-radius: 26px;">
@@ -336,7 +312,6 @@ $(function () {
 		</div>
 	</div>
 </div>
-
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
 	integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

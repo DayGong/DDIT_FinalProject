@@ -11,8 +11,6 @@
 		<result property="cmmnEmpClsf" column="CMMN_EMP_CLSF"/>
 		
 		<association property="memberVO" resultMap="memberMap"></association>
-		
-<!-- 		<collection property="chttRoomVoList" resultMap="chttRoomMap"></collection> -->
 	</resultMap>
 	
 	<resultMap type="memberVO" id="memberMap">
@@ -209,38 +207,6 @@
 		 ORDER BY A.CHTT_SN
 	</select>
 	
-	<!-- 채팅내역 - 무한스크롤 역순으로 어떻게 해야되나요? ㅠㅠ -->
-<!-- 	<select id="chtts" parameterType="hashMap" resultType="chttVO"> -->
-<!-- 		WITH T AS( -->
-<!-- 		    SELECT  ROW_NUMBER() OVER (ORDER BY S.SCHUL_CODE DESC) RNUM -->
-<!-- 		            , S.* -->
-<!-- 		    FROM ( -->
-<!-- 				SELECT A.CHTT_CODE -->
-<!-- 				     , A.CHTT_DT -->
-<!-- 				     , A.CHTT_CN -->
-<!-- 				     , A.DSPTCH_ID -->
-<!-- 				     , A.CHTT_ROOM_CODE -->
-<!-- 				     , A.CHTT_SN -->
-<!-- 				     , A.DSPTCH_NM -->
-<!-- 				  FROM CHTT A -->
-<!-- 				 WHERE A.CHTT_ROOM_CODE = #{chttRoomCode} -->
-<!-- 				 ORDER BY A.CHTT_SN -->
-<!-- 		     ) S -->
-<!-- 		) -->
-<!-- 		SELECT T.* -->
-<!-- 		FROM   T -->
-<!-- 		WHERE  T.RNUM BETWEEN (#{currentPage}*#{size}) - (#{size}-1) AND (#{currentPage}*#{size}) -->
-<!-- 	</select> -->
-	
-	<!-- 이미 생성된 채팅방이 있는지 체크 -->
-<!-- 	<select id="roomChk" parameterType="chttRoomVO" resultType="int"> -->
-<!-- 		SELECT COUNT (*) -->
-<!-- 		  FROM CHTT_ROOM -->
-<!-- 		 WHERE 1 = 1 -->
-<!-- 		   AND CRTR_ID = #{crtrId}  -->
-<!-- 		   AND PRTCPNT_ID = #{prtcpntId} -->
-<!-- 	</select> -->
-	
 	<!-- 채팅방 코드 구하기 -->
 	<select id="roomCode" parameterType="chttRoomVO" resultType="String">
 		SELECT A.CHTT_ROOM_CODE
@@ -256,7 +222,6 @@
 		  FROM A.CHTT
 		 WHERE A.CHTT_ROOM_CODE = #{chttRoomCode}
 	</select>
-	
 	
 	<resultMap type="clasFamVO" id="clasFamMap">
 		<result property="clasCode" column="CLAS_CODE"/>
@@ -356,15 +321,15 @@
              , C.MBER_ADRES
              , C.MBER_IMAGE PRTCPNT_IMAGE
              , C.CMMN_DETAIL_CODE PRTCPNT_CODE
-		  FROM CHTT_ROOM A , MEMBER B, MEMBER C
-		 WHERE 1 = 1
+		FROM CHTT_ROOM A , MEMBER B, MEMBER C
+		WHERE 1 = 1
            AND A.CRTR_ID = B.MBER_ID
            AND A.PRTCPNT_ID = C.MBER_ID
 		   AND A.CLAS_CODE = #{clasCode}
 		   AND A.CLAS_CODE IS NOT NULL
 		   AND A.SCHUL_CODE IS NULL
 		   AND (A.PRTCPNT_ID = #{prtcpntId}
-		    OR A.CRTR_ID = #{crtrId})
+		   OR A.CRTR_ID = #{crtrId})
 	</select>
 	
 </mapper>

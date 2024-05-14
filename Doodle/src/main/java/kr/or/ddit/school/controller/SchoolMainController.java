@@ -67,9 +67,6 @@ public class SchoolMainController {
 	
 	@GetMapping("/mainParent")
 	public String mainParent(HttpServletRequest request, @RequestParam String schulCode){
-		// 들어온 클래스 코드가 접속 가능한지 확인하는 로직 필요
-		// ...
-		
 		// 반 세션 삭제
 		sessionService.deleteClassSession(request);
 		// 학교 세션 설정
@@ -78,12 +75,9 @@ public class SchoolMainController {
 		return "school/schoolMain";
 	}
 	
-	
-
 	/** 학교 메인 화면으로 이동하는 메서드 */
 	@PostMapping("/goToSchoolMain")
 	public String goToSchoolMain(HttpServletRequest request, Model model, String schulNm, @RequestParam("schulCode") String schulCode){
-		
 		if(request.isUserInRole("A01003")) {
 			return "redirect:/school/mainParent?schulCode="+schulCode;
 		}
@@ -99,9 +93,6 @@ public class SchoolMainController {
 	}
 	
 	// --------------------------학교 메인 페이지 기능--------------------------------
-	
-	
-	
 	// 가입된 클래스 목록 출력
 	@ResponseBody
 	@PostMapping("/myClassList")
@@ -114,8 +105,9 @@ public class SchoolMainController {
 		String auth = authManager.get1Auth(memberVO);
 
 		List<ClasVO> clasVO = schoolMainService.myClassList(request, mberId, auth);
-		log.info("memberVO : "+memberVO);
-		log.info("clasVO : "+clasVO);
+		log.debug("memberVO : "+memberVO);
+		log.debug("clasVO : "+clasVO);
+		
 		return clasVO;
 	}
 
@@ -136,7 +128,7 @@ public class SchoolMainController {
 		String schulCode = schulVO.getSchulCode();
 		
 		List<SchafsSchdulVO> scheduleList = schafsSchedulService.scheduleListMain(schulCode);
-		log.info("scheduleList -> " + scheduleList);
+		log.debug("scheduleList -> " + scheduleList);
 		
 		return scheduleList;
 	}

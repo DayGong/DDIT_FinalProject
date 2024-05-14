@@ -28,17 +28,15 @@ public class NttVO {
 	
 	private MultipartFile[] uploadFile;
 	
-	//NTT : ATCH_FILE = 1 : N
+	// NTT : ATCH_FILE = 1 : N
 	private List<AtchFileVO> atchFileVOList;
 	
-	//Member테이블
+	// Member테이블
 	private MemberVO memberVO;	
-	private String mberNm;           // 게시물 작성자명
+	private String mberNm;           	// 게시물 작성자명
 	
-	// NEY_일기장
+	// 일기장
 	private List<AnswerVO> answerVOList;
 	
-//	private String answerCode;
-//	private String answerCn;
-	private String strNttWritngDt;			// 게시물 등록일시
+	private String strNttWritngDt;		// 게시물 등록일시
 }

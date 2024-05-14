@@ -74,22 +74,17 @@ window.onload = function(){
 	    	</div>`;
 
 		$("#divWeekAdd").html(autoData);
-		
 	});
-	
 	
 	// 방과후학교 주간계획 삭제
 	document.querySelector(".weekMinus").addEventListener("click", function(){
-		console.log("계획추가버튼 삭제함");
-		
 		let len = document.querySelectorAll(".aschaWeek").length;
-		console.log("len : " + len);
 		
 		if(len<2){
 			Swal.fire({
-			      icon: 'warning',
-			      title: '주간계획은 최소 한 개가 있어야 합니다.',
-			      text: '다시 시도해주세요.',
+				icon: 'warning',
+				title: '주간계획은 최소 한 개가 있어야 합니다.',
+				text: '다시 시도해주세요.',
 			})
 		}else{
 			// 마지막 요소 삭제
@@ -101,11 +96,7 @@ window.onload = function(){
 	
 	// 방과후학교 주간계획 추가
 	document.querySelector(".weekAdd").addEventListener("click", function(){
-		console.log("계획추가버튼 클릭함");
-		
 		let len = document.querySelectorAll(".aschaWeek").length;
-		console.log("len : "+len);
-		
 		let str = "";
 	    str += `
 		        <div>
@@ -120,22 +111,11 @@ window.onload = function(){
 		            </div>						
 		        </div>`;
 				
-				console.log("str:",str);
-				
-				const temp = document.querySelector("#divWeekAdd").insertAdjacentHTML(
-					    "beforeend", // HTML 요소가 삽입되는 위치 선언
-					    str // 삽입할 문자열
-				);
-				
-// 				let divWeekAdd = document.getElementById("divWeekAdd");
-// 				divWeekAdd.append(str);
-				
-// 				document.querySelector("#divWeekAdd").append(str);
-// 				$("#divWeekAdd").append(str);
-		
+		const temp = document.querySelector("#divWeekAdd").insertAdjacentHTML(
+			"beforeend",	// HTML 요소가 삽입되는 위치 선언
+			str 			// 삽입할 문자열
+		);
 	}); // 방과후학교 주간계획 추가 끝
-	
-
 	
 	// 방과후학교 추가하기
 	// 등록 버튼 눌렀을 때 실행하기
@@ -169,10 +149,6 @@ window.onload = function(){
 			formData.append("aschaWeekPlanVOList["+idx+"].aschaWeekPlanCn",$(this).val());
 		});
 		
-		for(let key of formData.keys()){
-			console.log(key, ":", formData.get(key));
-		}
-		
 		$.ajax({
 			url: "/afterSchool/afterSchoolCreateAjax",
 			processData:false,
@@ -185,11 +161,11 @@ window.onload = function(){
 			},
 			success: function(result){
 				Swal.fire({
-				      icon: 'success',
-				      title: '방과후학교가 등록되었습니다.',
-				      text: '목록으로 이동합니다.',
-					}).then(function(){
-						location.href = "/afterSchool/afterSchoolMain?mberId="+"${USER_INFO.mberId}"+"&schulCode="+"${SCHOOL_INFO.schulCode}";
+				    icon: 'success',
+				    title: '방과후학교가 등록되었습니다.',
+				    text: '목록으로 이동합니다.',
+				}).then(function(){
+					location.href = "/afterSchool/afterSchoolMain?mberId="+"${USER_INFO.mberId}"+"&schulCode="+"${SCHOOL_INFO.schulCode}";
 				});
 			}
 		});	
@@ -260,7 +236,6 @@ window.onload = function(){
 	color: #fff;
 	background-color: #FCC25B;
 	border-color: #FCC25B;
-	/*     border-color: #e1a130; */
 }
 
 .btn-success:hover {
@@ -431,9 +406,9 @@ label {
 				</div>
 
 				<div class="btn-zone">
-				<i class="fa fa-pencil-square-o" id="btnAuto" aria-hidden="true" style="height:25px; width:25px; margin:5px; margin: 20px 10px 0 10px;"></i>
-					​​​​​​​​<input type="button" value="등록" id="btnCreate" /> ​​​​​​​​<input
-						type="button" value="취소" id="btnDeleteAll" />
+					<i class="fa fa-pencil-square-o" id="btnAuto" aria-hidden="true" style="height:25px; width:25px; margin:5px; margin: 20px 10px 0 10px;"></i>
+					​​​​​​​​<input type="button" value="등록" id="btnCreate" />
+					​​​​​​​​<input type="button" value="취소" id="btnDeleteAll" />
 				</div>
 			</div>
 		</div>

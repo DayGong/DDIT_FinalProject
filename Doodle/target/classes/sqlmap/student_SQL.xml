@@ -123,9 +123,7 @@
 			 WHERE  MBER_ID = #{mberId}
 	</select>
 	
-	<!-- 마이 페이지: 프로필 수정 
-	memVO의 mberImage는 null일 땐 MBER_IMAGE는 통과
-	-->
+	<!-- 마이 페이지: 프로필 수정 -->
 	<update id="updateProfile" parameterType="memberVO">
 		UPDATE MEMBER
 		SET 

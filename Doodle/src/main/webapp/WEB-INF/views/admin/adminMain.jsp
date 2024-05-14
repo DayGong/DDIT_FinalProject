@@ -26,15 +26,15 @@
 		getNttList();			// 게시물 조회수 리스트
 		setVisitrChart().then((data) => drawChart(data));	// 일주일 방문객 수를 불러와 차트 설정
 
-// 		setInterval(() => { 
-// 			complaintTask();
-// 			getHmpgBrwsrCo();
-// 			getTotalVisitrCo();
-// 			getTodayLoginCo();
-// 			getCmprBfeCo();
-// 			getNttList();
-// 			setVisitrChart().then((data) => drawChart(data));
-// 		}, 5000);
+		setInterval(() => { 
+			complaintTask();
+			getHmpgBrwsrCo();
+			getTotalVisitrCo();
+			getTodayLoginCo();
+			getCmprBfeCo();
+			getNttList();
+			setVisitrChart().then((data) => drawChart(data));
+		}, 5000);
 		
 	} // end onload
 	
@@ -179,7 +179,7 @@
 			num = Math.abs(num);	// 음수를 양수로 변환
 			
 			const each = Math.ceil(num/33);	// 입력한 숫자를 33번에 걸쳐 0부터 올림
-			let time = 0
+			let time = 0;
 
 		    for (let i = 0; i <= num; i += each) {
 				setTimeout(() => { $(`\${target}`).html("-" + i); }, 20 * time);
@@ -192,7 +192,7 @@
 			}
 		} else {
 			const each = Math.ceil(num/33);	// 입력한 숫자를 33번에 걸쳐 0부터 올림
-			let time = 0
+			let time = 0;
 
 		    for (let i = 0; i <= num; i += each) {
 				setTimeout(() => { $(`\${target}`).html(i); }, 20 * time);

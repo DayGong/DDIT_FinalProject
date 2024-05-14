@@ -67,7 +67,6 @@
 		<result property="cmmnDetailCode" column="CMMN_DETAIL_CODE"/>
 	</resultMap>
 	
-	
 	<!-- 교직원 리스트 -->
 	<select id="employeeList" parameterType="hashMap" resultMap="schulMap">
 		<!-- kr.or.ddit.school.mapper.SchoolMapper.employeeList -->
@@ -105,7 +104,6 @@
 	</select>
 	
 	<!-- 교직원 수 -->
-	<!-- map : {"schulCode":"7581092","currentPage":3,"keyword":"신용"}  -->
 	<select id="getEmployeeTotal" parameterType="hashMap" resultType="int">
 		<!-- kr.or.ddit.school.mapper.SchoolMapper.getEmployeeTotal -->
 		SELECT  COUNT(*) 
@@ -178,7 +176,7 @@
 				, 	#{zip}				<!-- 회원 우편번호 -->
 				, 	#{mberAdres}		<!-- 회원 주소 -->
 				, 	#{mberImage}		<!-- 회원 사진 -->
-				, 	'0'		<!-- 회원 탈퇴 여부 -->
+				, 	'0'					<!-- 회원 탈퇴 여부 -->
 				, 	#{cmmnDetailCode}	<!-- 공통 회원 분류(A01) -->
 			)
 	</insert>
@@ -259,7 +257,7 @@
 				 ,	B.MBER_SECSN_AT		<!-- 회원 탈퇴 여부 -->
 				 , 	B.CMMN_DETAIL_CODE	<!-- 공통 회원 분류(A01) -->
 				 , 	FN_CMMN_CODE_TO_NM(C.CMMN_SCHUL_PSITN_STTUS) CMMN_SCHUL_PSITN_STTUS <!-- 공통 학교 소속 상태(A02) -->
-				 , 	FN_CMMN_CODE_TO_NM(C.CMMN_GRADE) CMMN_GRADE		<!-- 공통 학년(A22) -->
+				 , 	FN_CMMN_CODE_TO_NM(C.CMMN_GRADE) CMMN_GRADE			<!-- 공통 학년(A22) -->
 				 , 	FN_CMMN_CODE_TO_NM(C.CMMN_EMP_CLSF) CMMN_EMP_CLSF	<!-- 공통 직원 직급(A14) -->
 			        
 			  FROM 	SCHUL A, 
@@ -335,7 +333,7 @@
 				, 	#{mberId}				<!-- 회원 아이디 -->
 				, 	#{cmmnSchulPsitnSttus}	<!-- 공통 학교 소속 상태(a02) -->
 				, 	#{cmmnGrade}			<!-- 공통 학년(a22) -->
-				, 	''			<!-- 공통 직원 직급(A14) -->
+				, 	''						<!-- 공통 직원 직급(A14) -->
 			)
 	</insert>
 	

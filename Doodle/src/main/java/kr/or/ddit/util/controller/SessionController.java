@@ -94,8 +94,8 @@ import kr.or.ddit.util.service.SessionService;
  * 세션명                      	설명					타입
  * USER_INFO        회원(로그인중인)			MemberVO
  * CLASS_STD_INFO   반학생/자녀(접속중인 반의)	ClasStdntVO
- * CLASS_TCH_INFO   담임교사(접속중인 반의)		HrtchrVO
- * CLASS_INFO       반(접속중인)			ClasVO
+ * CLASS_TCH_INFO   담임교사(접속중인 반의)	HrtchrVO
+ * CLASS_INFO       반(접속중인)				ClasVO
  * SCHOOL_INFO      학교(접속중인)			SchulVO
  * SCHOOL_USER_INFO 학교소속회원(접속중인)		SchulPsitnMber
  */

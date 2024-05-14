@@ -43,13 +43,6 @@ public class EmployeeServiceImpl implements EmployeeService{
 	@Autowired
 	String uploadFolder;
 	
-	//직원 마이페이지
-	@Override
-	public String mypage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	// 교직원 리스트
 	@Override
 	public List<SchulVO> employeeList(Map<String, Object> map) {
@@ -71,7 +64,6 @@ public class EmployeeServiceImpl implements EmployeeService{
 	// 멤버 등록
 	@Transactional
 	public int insertMember(MemberVO memberVO, MultipartFile uploadFile) {
-
 		// 파일객체가 있다면 폴더생성
 		if (uploadFile != null && uploadFile.getSize() > 0) {
 			//C:/eGovFrameDev-3.10.0-64bit/workspace/Doodle/src/main/webapp/resources/upload/profile/<-이미지
@@ -86,7 +78,6 @@ public class EmployeeServiceImpl implements EmployeeService{
 			memberVO.setMberImage(uploadFileName);
 
 			String savePath = uploadFolder + "\\profile\\" + uploadFileName;
-
 			File file = new File(savePath);
 
 			try {
@@ -101,17 +92,16 @@ public class EmployeeServiceImpl implements EmployeeService{
 			String profile = "";
 			memberVO.setMberImage(profile);
 		}
+		
 		//비밀번호 암호화
 		String password = memberVO.getPassword();
-		log.debug("memberVO -> password: " + password);
-
 		String encodedPw = this.passwordEncode.encode(password);
-		log.debug("encodedPw: " + encodedPw);
-
 		memberVO.setPassword(encodedPw);
-		log.debug("updateEncodedPassword -> memberVO: " + memberVO);
-		
 		int result = this.employeeMapper.insertMember(memberVO);
+		
+		log.debug("memberVO -> password: " + password);
+		log.debug("encodedPw: " + encodedPw);
+		log.debug("updateEncodedPassword -> memberVO: " + memberVO);
 		
 		return result;
 	}
@@ -129,11 +119,8 @@ public class EmployeeServiceImpl implements EmployeeService{
 	// 멤버 수정
 	@Override
 	public int updateMember(MemberVO memberVO, MultipartFile uploadFile) {
-		
 		//기존 이미지 불러오기
 		String memImage = this.employeeMapper.employeeMemberImage(memberVO);
-		
-		log.debug("updateMember->memImage : " + memImage);
 		
 		// 파일객체가 있다면 폴더생성
 		if (uploadFile != null && uploadFile.getSize() > 0) {
@@ -150,7 +137,6 @@ public class EmployeeServiceImpl implements EmployeeService{
 			memberVO.setMberImage(uploadFileName);
 
 			String savePath = uploadFolder + "\\profile\\" + uploadFileName;
-
 			File file = new File(savePath);
 
 			try {
@@ -164,16 +150,11 @@ public class EmployeeServiceImpl implements EmployeeService{
 			//기존 이미지로 저장
 			memberVO.setMberImage(memImage);
 		}
-		/*
-		MemberVO(mberId=758109299996, password=null, mberNm=123, ihidnum=null, moblphonNo=123
-		, mberEmail=123, zip=123, mberAdres=123 123 1111 aa
-		, mberImage=dc58d6dd-e43c-4e81-9682-f6227c0c4b1b_Anne-Marie(앤마리)-2002.jpg
-		, mberSecsnAt=null, cmmnDetailCode=null, multipartFile=null, schulPsitnMberVO=null
-		, cmmnDetailCodeVOList=null, vwMemberAuthVOList=null)
-		 */
-		log.debug("updateEmployeeMember->memberVO : " + memberVO);
 		
 		int result = this.employeeMapper.updateMember(memberVO);
+		
+		log.debug("updateMember->memImage : " + memImage);
+		log.debug("updateEmployeeMember->memberVO : " + memberVO);
 		
 		return result;
 	}
@@ -227,11 +208,11 @@ public class EmployeeServiceImpl implements EmployeeService{
 	//엑셀 파일 업로드로 등록
 	@Override
 	public List<HashMap<Integer, String>> excelResgistration(MultipartFile upload) {
-		log.debug("엑셀파일 사이즈 ->" + upload.getSize());
-		log.debug("엑셀파일 이름->" + upload.getOriginalFilename());
-
 		HashMap<Integer, String> excelMap = new HashMap<Integer, String>();// 값을 담을 변수
 		List<HashMap<Integer, String>> excelList = new ArrayList<HashMap<Integer,String>>();
+		
+		log.debug("엑셀파일 사이즈 ->" + upload.getSize());
+		log.debug("엑셀파일 이름->" + upload.getOriginalFilename());
 
 		try {
 			int rowIndex = 0;
@@ -286,7 +267,6 @@ public class EmployeeServiceImpl implements EmployeeService{
 					}
 				}
 			}else {//(xlsx인 경우)
-//				FileInputStream file = new FileInputStream(upload.getInputStream().ge);
 				XSSFWorkbook workBook = new XSSFWorkbook(upload.getInputStream());
 				XSSFSheet sheet = workBook.getSheetAt(0);
 				//행의 수 체크
@@ -338,14 +318,11 @@ public class EmployeeServiceImpl implements EmployeeService{
 					}
 				}
 			}
-
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		System.out.println("excelList->"+ excelList);
-
 
 		return excelList;
 	}
@@ -355,12 +332,11 @@ public class EmployeeServiceImpl implements EmployeeService{
 	public String selectMaxId(String cmmnDetailCode) {
 		return this.employeeMapper.selectMaxId(cmmnDetailCode);
 	}
+	
 	//멤버 삭제
 	@Override
 	public int deleteMember(String mberId) {
 		return this.employeeMapper.deleteMember(mberId);
 	}
 
-	
-	
 }

@@ -27,7 +27,7 @@ public class AschaVO {
 	
 	/* MEMBER */
 	private String mberNm;			// 회원 이름
-	private String moblphonNo; 		//핸드폰 번호
+	private String moblphonNo; 		// 핸드폰 번호
 	
 	/* SCHUL */
     private String schulNm;

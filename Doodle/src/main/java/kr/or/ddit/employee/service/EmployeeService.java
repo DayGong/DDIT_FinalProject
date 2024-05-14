@@ -11,9 +11,6 @@ import kr.or.ddit.vo.SchulPsitnMberVO;
 import kr.or.ddit.vo.SchulVO;
 
 public interface EmployeeService {
-
-	//직원 마이페이지
-	public String mypage();
 	
 	//교직원 리스트
 	public List<SchulVO> employeeList(Map<String, Object> map);

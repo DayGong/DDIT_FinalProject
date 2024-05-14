@@ -551,18 +551,18 @@
 		SELECT 
 		        M.MBER_ID
 		    ,   M.MBER_NM
-		    ,   M.IHIDNUM       /* 주민등록번호 */
-		    ,   M.MOBLPHON_NO   /* 핸드폰 번호 */
-		    ,   M.MBER_EMAIL    /* 이메일 */
-		    ,   M.ZIP           /* 우편번호 */
-		    ,   M.MBER_ADRES    /* 주소*/
-		    ,   M.MBER_IMAGE    /* 회원 이미지 */
+		    ,   M.IHIDNUM       	/* 주민등록번호 */
+		    ,   M.MOBLPHON_NO   	/* 핸드폰 번호 */
+		    ,   M.MBER_EMAIL    	/* 이메일 */
+		    ,   M.ZIP           	/* 우편번호 */
+		    ,   M.MBER_ADRES    	/* 주소*/
+		    ,   M.MBER_IMAGE    	/* 회원 이미지 */
 		    ,	CS.CLAS_STDNT_CODE	/* 반 학생 코드 */
-		    ,   CS.CLAS_IN_NO   /* 학급 내 번호 */
-		    ,   FN_CMMN_CODE_TO_NM(CS.CMMN_STDNT_CLSF) CMMN_STDNT_CLSF_NM  /* 공통 반 학생 직급명 */
+		    ,   CS.CLAS_IN_NO   	/* 학급 내 번호 */
+		    ,   FN_CMMN_CODE_TO_NM(CS.CMMN_STDNT_CLSF) CMMN_STDNT_CLSF_NM  				/* 공통 반 학생 직급명 */
 		    ,   FN_CMMN_CODE_TO_NM(CS.CMMN_CLAS_PSITN_STTUS) CMMN_CLAS_PSITN_STTUS_NM   /* 공통 반 소속 상태명 */
-		    ,   CS.CLAS_CODE    /* 반 코드 */
-		    ,   CS.SCHUL_CODE   /* 학교 코드 */
+		    ,   CS.CLAS_CODE    	/* 반 코드 */
+		    ,   CS.SCHUL_CODE   	/* 학교 코드 */
 		FROM CLAS_STDNT CS
 		LEFT JOIN MEMBER M ON (M.MBER_ID = #{mberId} AND CS.CLAS_CODE = #{clasCode})
 		WHERE M.MBER_ID = CS.MBER_ID

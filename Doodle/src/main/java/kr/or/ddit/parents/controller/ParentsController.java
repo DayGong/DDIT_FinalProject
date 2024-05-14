@@ -39,19 +39,14 @@ public class ParentsController {
 	@GetMapping("/mypage")
 	public String mypage(Model model, HttpServletRequest request, String mberId) {
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("loginAccount -> " + loginAccount);
-		
+
 		String loginId = loginAccount.getMberId();
 		MemberVO memVO = new MemberVO();
-		
 		// 내 정보 가져오기
 		memVO = parentsService.myInfo(loginId);
-		log.info("mypage -> memVO: " + memVO);
 		
 		// 자녀 리스트 가져오기
 		List<FamilyRelateVO> childList = parentsService.childList(loginId);
-		log.info("mypage -> childList: " + childList);
-		
 		List<SchulPsitnMberVO> childSchulList = new ArrayList<SchulPsitnMberVO>();
 		List<ClasStdntVO> childClassList = new ArrayList<ClasStdntVO>();
 		
@@ -59,6 +54,10 @@ public class ParentsController {
 		model.addAttribute("childList", childList);
 		model.addAttribute("childSchulList", childSchulList);
 		model.addAttribute("childClassList", childClassList);
+		
+		log.debug("loginAccount -> " + loginAccount);
+		log.debug("mypage -> memVO: " + memVO);
+		log.debug("mypage -> childList: " + childList);
 		
 		return "parents/mypage";
 	}
@@ -68,10 +67,10 @@ public class ParentsController {
 	public List<FamilyRelateVO> getChildList(Principal principal) {
 		//로그인 한 아이디를 가져옴
 		String loginId = principal.getName();
-		
 		// 자녀 리스트 가져오기
 		List<FamilyRelateVO> childList = parentsService.childList(loginId);
-		log.info("getChildList -> childList: " + childList);
+		
+		log.debug("getChildList -> childList: " + childList);
 		
 		return childList;
 	}
@@ -82,11 +81,7 @@ public class ParentsController {
 	public MemberVO updateProfile(MemberVO memVO
 			, MultipartFile uploadFile
 			, MultipartHttpServletRequest request) {
-		log.info("updateProfile -> memVO: " + memVO);
-		log.info("updateProfile -> uploadFile: " + uploadFile);
-		
 		memVO.setMultipartFile(uploadFile);
-		
 		MultipartFile multipartFile = memVO.getMultipartFile();
 		
 		if(multipartFile!=null && multipartFile.getOriginalFilename().length()>0) {	
@@ -108,66 +103,16 @@ public class ParentsController {
 		}
 		
 		int result = this.parentsService.updateProfile(memVO);
-		log.info("updateProfile -> result: " + result);
 		
 		//프로필 이미지가 바뀌든 안바뀌든 회원의 정보를 다시 가져옴
 		memVO = this.parentsService.myInfo(memVO.getMberId());
 		
+		log.debug("updateProfile -> memVO: " + memVO);
+		log.debug("updateProfile -> uploadFile: " + uploadFile);
+		log.debug("updateProfile -> result: " + result);
+		
 		return memVO;
 	}
-	
-	// 자녀의 학교 정보 리스트
-//	@ResponseBody
-//	@PostMapping("/getChildSchulList")
-//	public List<SchulPsitnMberVO> getChildSchulList(Principal principal) {
-//		//로그인 한 아이디를 가져옴
-//		String loginId = principal.getName();
-//		
-//		// 자녀 리스트 가져오기
-//		List<FamilyRelateVO> childList = parentsService.childList(loginId);
-//		log.info("getChildSchulList -> childList: " + childList);
-//		
-//		int childListSize = childList.get(0).getSchulPsitnMberVO().size();
-//		
-//		List<SchulPsitnMberVO> childSchulList = new ArrayList<SchulPsitnMberVO>();		
-//		// 자녀 학교 정보 가져오기
-//		for (int i = 0; i < childListSize; i++) {
-//			childSchulList.addAll(parentsService.childSchulList(
-//					childList.get(0).getSchulPsitnMberVOList().get(i).getMberId()));
-//		}
-//		
-//		log.info("getChildSchulList -> childSchulList: " + childSchulList);
-//		
-//		return childSchulList;
-//	}
-	
-	// 자녀의 클래스 정보 리스트
-	@ResponseBody
-	@PostMapping("/getChildClassList")
-//	public List<ClasStdntVO> getChildClassList(Principal principal) {
-//		//로그인 한 아이디를 가져옴
-//		String loginId = principal.getName();
-//		
-//		// 자녀 리스트 가져오기
-//		List<FamilyRelateVO> childList = parentsService.childList(loginId);
-//		log.info("getChildList -> childList: " + childList);
-//		
-//		int childListSize = childList.get(0).getSchulPsitnMberVOList().size();
-//		
-//		List<ClasStdntVO> childClassList = new ArrayList<ClasStdntVO>();
-//		
-//		// 자녀 클래스 정보 가져오기
-//		for (int i = 0; i < childListSize; i++) {
-//			List<ClasStdntVO> tempList = parentsService.childClassList(
-//					childList.get(0).getSchulPsitnMberVOList().get(i).getMberId());
-//			
-//			childClassList.addAll(tempList);
-//			
-//			log.info("getChildClassList -> childClassList: " + childClassList);
-//		}
-//		
-//		return childClassList;
-//	}
 	
 	//학부모 인증 신청(학생에게)
 	@GetMapping("/parentCertification")

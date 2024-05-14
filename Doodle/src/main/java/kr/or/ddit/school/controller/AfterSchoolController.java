@@ -44,50 +44,38 @@ public class AfterSchoolController {
 		if (request.isUserInRole("ROLE_A01003")) {
 			ClasStdntVO clasStdntVO = (ClasStdntVO) request.getSession().getAttribute("CLASS_STD_INFO") ;
 			model.addAttribute("schulCode", clasStdntVO.getMberId());
-			log.debug("CLASS_STD_INFO >> " + clasStdntVO);
 		// 교사, 학생일때	
 		} else {
 			MemberVO memberVO = (MemberVO)request.getSession().getAttribute("USER_INFO");
-			log.debug("USER_INFO >> " + memberVO);
 			model.addAttribute("mberId", memberVO.getMberId());
 		}
 
-//		afterSchool->schulCode : 7581092
-		log.debug("SCHOOL_INFO >> " + schulVO);
 		model.addAttribute("schulCode", schulVO.getSchulCode());
 		
 		return "afterSchool/afterSchoolList";
 	}
 	
 	// 방과후학교 목록 ajax
-	// /afterSchool?currentPage=2&keyword=
 	@ResponseBody
 	@PostMapping("/afterSchoolList")
 	public ArticlePage<AschaVO> afterSchoolListAjax(@RequestBody Map<String, Object> map) {
-		//map : {currentPage=2, keyword=, schulCode=7581092}
-		log.info("afterSchoolListAjax->map : "+map);
-		
 		// 방과후학교 리스트
 		List<AschaVO> aschaVOList = this.afterSchoolService.afterSchoolList(map);
-		log.info("afterSchoolList -> aschaVOList : " + aschaVOList);
-		
 		// 전체 방과후학교 수
 		int total = this.afterSchoolService.getTotalAfterSchool(map);
-		//afterSchoolList -> total : 18
-		log.info("afterSchoolList -> total : " + total);
 		int size = 10;
-		
 		String keyword = map.get("keyword").toString();
-		log.info("afterSchoolList ->keyword : "+keyword);
+		String url = "/afterSchool/afterSchoolList";
 		
 		// 페이지네이션
-		ArticlePage<AschaVO> data = new ArticlePage<AschaVO>(total,
-				Integer.parseInt(map.get("currentPage").toString()), size, aschaVOList, keyword, map.get("schulCode").toString(), map.get("schulCode").toString());
-		
-		String url = "/afterSchool/afterSchoolList";
+		ArticlePage<AschaVO> data = new ArticlePage<AschaVO>(total, Integer.parseInt(map.get("currentPage").toString()), size, aschaVOList, keyword, map.get("schulCode").toString(), map.get("schulCode").toString());
 		data.setUrl(url);
 		
-		log.info("aschaVOList : "+aschaVOList);
+		log.debug("afterSchoolListAjax->map : "+map);
+		log.debug("afterSchoolList -> aschaVOList : " + aschaVOList);
+		log.debug("afterSchoolList -> total : " + total);
+		log.debug("afterSchoolList ->keyword : "+keyword);
+		log.debug("aschaVOList : "+aschaVOList);
 		
 		return data;
 	}
@@ -96,15 +84,14 @@ public class AfterSchoolController {
 	@ResponseBody
 	@PostMapping("/afterSchoolDetail")
 	public List<AschaVO> afterSchoolDetail(@RequestBody AschaVO aschaVO) {
-		log.info("detail->aschaVO : "+aschaVO);
-		
 		// ajax에서 보낸 데이터
 		aschaVO.getSchulCode();
 		aschaVO.getAschaCode();
 		
 		List<AschaVO> aschaVOList = this.afterSchoolService.afterSchoolDetail(aschaVO);
 		
-		log.info("detail->aschaVOList : "+aschaVOList);
+		log.debug("detail->aschaVO : "+aschaVO);
+		log.debug("detail->aschaVOList : "+aschaVOList);
 		
 		return aschaVOList;
 	}
@@ -112,7 +99,6 @@ public class AfterSchoolController {
 	// 방과후학교 생성
 	@GetMapping("/afterSchoolCreate")
 	public String afterSchoolCreate(@RequestParam(value="schulCode") String schulCode) {
-		
 		return "afterSchool/afterSchoolCreate";
 	}
 	
@@ -122,14 +108,14 @@ public class AfterSchoolController {
 	public int afterSchoolCreateAjax(HttpServletRequest request, Model model,
 				AschaVO aschaVO) {
 		MemberVO memberVO = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("loginAccount -> " + memberVO);
 		model.addAttribute("mberId", memberVO.getMberId());
 		aschaVO.setMberId(memberVO.getMberId());
-		
-		log.info("afterSchoolCreateAjax -> aschaVO : "+ aschaVO);
-		
+
 		int result = this.afterSchoolService.afterSchoolCreate(aschaVO);
-		log.info("afterSchoolCreateAjax -> result :" +result);
+		
+		log.debug("loginAccount -> " + memberVO);
+		log.debug("afterSchoolCreateAjax -> aschaVO : "+ aschaVO);
+		log.debug("afterSchoolCreateAjax -> result :" +result);
 		
 		return result;
 	}
@@ -145,10 +131,10 @@ public class AfterSchoolController {
 	@ResponseBody
 	@PostMapping("/afterSchoolUpdateAjax")
 	public int afterSchoolUpdateAjax(AschaVO aschaVO) {
-		log.info("afterSchoolUpdateAjax -> aschaVO : "+aschaVO);
-		
 		int result = this.afterSchoolService.afterSchoolUpdate(aschaVO);
-		log.info("afterSchoolUpdateAjax -> aschaVO" + aschaVO);
+		
+		log.debug("afterSchoolUpdateAjax -> aschaVO : "+aschaVO);
+		log.debug("afterSchoolUpdateAjax -> aschaVO" + aschaVO);
 		
 		return result;
 	}
@@ -157,11 +143,11 @@ public class AfterSchoolController {
 	@ResponseBody
 	@PostMapping("/afterSchoolDelete")
 	public int afterSchoolDelete(@RequestBody AschaVO aschaVO) {
-		log.info("afterSchoolDelete -> aschaVO :" +aschaVO);
 		aschaVO.getAschaCode();
-		
 		int result = this.afterSchoolService.afterSchoolDelete(aschaVO);
-		log.info("afterSchoolDelete -> aschaCode! "+aschaVO);
+		
+		log.debug("afterSchoolDelete -> aschaVO :" +aschaVO);
+		log.debug("afterSchoolDelete -> aschaCode! "+aschaVO);
 		
 		return result;
 	}
@@ -173,10 +159,10 @@ public class AfterSchoolController {
 					@RequestParam(value="schulCode") String schulCode) {
 		
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("loginAccount -> " + loginAccount);
-		
 		SchulVO schulVO = (SchulVO) request.getSession().getAttribute("SCHOOL_INFO");
 		model.addAttribute("schulCode", schulVO.getSchulCode());
+		
+		log.debug("loginAccount -> " + loginAccount);
 		
 		return "afterSchool/afterSchoolMain";
 	}
@@ -185,9 +171,9 @@ public class AfterSchoolController {
 	@ResponseBody
 	@GetMapping("/afterSchoolTeacherList")
 	public List<AschaVO> afterSchoolTeacherList(@RequestParam(value = "mberId") String mberId) {
-		log.info("afterSchoolTeacherList -> mberId :" + mberId);
 		List<AschaVO> aschaVOList = this.afterSchoolService.afterSchoolTeacherList(mberId);
-		log.info("aschaVOList :" + aschaVOList);
+		log.debug("afterSchoolTeacherList -> mberId :" + mberId);
+		log.debug("aschaVOList :" + aschaVOList);
 
 		return aschaVOList;
 	}
@@ -196,10 +182,10 @@ public class AfterSchoolController {
 	@ResponseBody
 	@PostMapping("/lectureStudentList")
 	public List<AschaVO> lectureStudentList(@RequestBody AschaVO aschaVO){
-		log.info("lectureStudentList -> aschaVO : "+aschaVO);
-		
 		List<AschaVO> atnlcReqstVOList=this.afterSchoolService.lectureStudentList(aschaVO);
-		log.info("atnlcReqstVOList : "+atnlcReqstVOList);
+		
+		log.debug("lectureStudentList -> aschaVO : "+aschaVO);
+		log.debug("atnlcReqstVOList : "+atnlcReqstVOList);
 		
 		return atnlcReqstVOList;
 	}
@@ -208,9 +194,8 @@ public class AfterSchoolController {
 	@ResponseBody
 	@PostMapping("/lectureStateUpdate")
 	public int lectureStateUpdate(@RequestBody AtnlcReqstVO atnlcReqstVO) {
-		log.info("lectureStateUpdate -> aschaVO : "+atnlcReqstVO);
-		
 		int result = this.afterSchoolService.lectureStateUpdate(atnlcReqstVO);
+		log.debug("lectureStateUpdate -> aschaVO : "+atnlcReqstVO);
 		
 		return result;
 	}
@@ -226,12 +211,10 @@ public class AfterSchoolController {
 		if (request.isUserInRole("ROLE_A01003")) {
 			ClasStdntVO clasStdntVO = (ClasStdntVO) request.getSession().getAttribute("CLASS_STD_INFO") ;
 			model.addAttribute("schulCode", clasStdntVO.getMberId());
-			log.debug("CLASS_STD_INFO >> " + clasStdntVO);
 		// 학생일때	
 		} else {
 			MemberVO memberVO = (MemberVO)request.getSession().getAttribute("USER_INFO");
 			model.addAttribute("mberId", memberVO.getMberId());
-			log.debug("USER_INFO >> " + memberVO);
 		}
 
 		return "afterSchool/afterSchoolStdntMain";
@@ -241,9 +224,10 @@ public class AfterSchoolController {
 	@ResponseBody
 	@GetMapping("/afterSchoolLectureList")
 	public List<AschaVO> afterSchoolLectureList(@RequestParam(value="mberId") String mberId){
-		log.info("afterSchoolLectureList -> mberId : "+ mberId);
 		List<AschaVO> aschaVOList = this.afterSchoolService.afterSchoolLectureList(mberId);
-		log.info("aschaVOList :" + aschaVOList);
+		
+		log.debug("afterSchoolLectureList -> mberId : "+ mberId);
+		log.debug("aschaVOList :" + aschaVOList);
 		
 		return aschaVOList;
 	}
@@ -252,10 +236,10 @@ public class AfterSchoolController {
 	@ResponseBody
 	@PostMapping("/afterSchoolPayment")
 	public int afterSchoolPayment(@RequestBody AtnlcReqstVO atnlcReqstVO) {
-		log.info("atnlcReqstVO :" +atnlcReqstVO);
-		
 		int result = this.afterSchoolService.afterSchoolPayment(atnlcReqstVO);
-		log.info("afterSchoolPayment-> result : "+ result);
+		
+		log.debug("atnlcReqstVO :" +atnlcReqstVO);
+		log.debug("afterSchoolPayment-> result : "+ result);
 		
 		return result;
 	}
@@ -264,8 +248,8 @@ public class AfterSchoolController {
 	@ResponseBody
 	@PostMapping("/attendanceList")
 	public List<AschaVO> attendanceList(@RequestBody AschaVO aschaVO){
-		log.info("attendanceList -> aschaVO : "+aschaVO);
 		List<AschaVO> atnlcReqstVOList=this.afterSchoolService.attendanceList(aschaVO);
+		log.debug("attendanceList -> aschaVO : "+aschaVO);
 		
 		return atnlcReqstVOList;
 	}
@@ -274,8 +258,8 @@ public class AfterSchoolController {
 	@ResponseBody
 	@PostMapping("/attendanceInsert")
 	public int attendanceInsert(@RequestBody AschaDclzVO aschaDclzVO) {
-		log.info("attendanceInsert -> aschaDclzVO : "+aschaDclzVO);
 		int result = this.afterSchoolService.attendanceInsert(aschaDclzVO);
+		log.debug("attendanceInsert -> aschaDclzVO : "+aschaDclzVO);
 		
 		return result;
 	}
@@ -284,8 +268,8 @@ public class AfterSchoolController {
 	@ResponseBody
 	@PostMapping("/attendanceUpdate")
 	public int attendanceUpdate(@RequestBody AschaDclzVO aschaDclzVO) {
-		log.info("attendanceUpdate -> aschaDclzVO:"+aschaDclzVO);
 		int result = this.afterSchoolService.attendanceUpdate(aschaDclzVO);
+		log.debug("attendanceUpdate -> aschaDclzVO:"+aschaDclzVO);
 		
 		return result;
 	}
@@ -294,8 +278,8 @@ public class AfterSchoolController {
 	@ResponseBody
 	@PostMapping("/attendanceDelete")
 	public int attendanceDelete(@RequestBody AschaDclzVO aschaDclzVO) {
-		log.info("attendanceDelete -> aschaDclzVO :" +aschaDclzVO);
 		int result = this.afterSchoolService.attendanceDelete(aschaDclzVO);
+		log.debug("attendanceDelete -> aschaDclzVO :" +aschaDclzVO);
 		
 		return result;
 	}
@@ -304,9 +288,9 @@ public class AfterSchoolController {
 	@ResponseBody
 	@PostMapping("/studAttendanceList")
 	public List<AtnlcReqstVO> studAttendanceList(@RequestBody AtnlcReqstVO atnlcReqstVO){
-		log.debug("attendanceList -> aschaVO : "+atnlcReqstVO);
-
 		List<AtnlcReqstVO> aschaDclzVOList=this.afterSchoolService.studAttendanceList(atnlcReqstVO);
+
+		log.debug("attendanceList -> aschaVO : "+atnlcReqstVO);
 		log.debug("aschaDclzVOList -> :"+aschaDclzVOList);
 		
 		return aschaDclzVOList;

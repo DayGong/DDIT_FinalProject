@@ -23,94 +23,96 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class SessionServiceImpl implements SessionService {
 
-	/*
-	 * 세션을 관리하는 컨트롤러/서비스
-	 * 반/학교 관련 페이지에 접근 및 퇴장했을 때 반/학교 관련 세션을 관리한다.
-	 * 
-	 * 컨트롤러 함수 목록 :
-	 * enterClassPageAjax  : 반 관련 페이지에 접속했을 때 반/반학생or담임교사or자녀정보 정보를 세션에 저장한다.
-	 * enterSchoolPageAjax : 학교 관련 페이지에 접속했을 때 학교/학교소속회원 정보를 세션에 저장한다.
-	 * quitClassPageAjax   : 반 관련 페이지에서 벗어났을 때  반/반학생or담임교사or자녀정보 정보를 세션에서 삭제한다.
-	 * quitSchoolPageAjax  : 학교 관련 페이지에서 벗어났을 때  학교/학교소속회원 정보를 세션에서 삭제한다.
-	 * 
-	 * 서비스 함수 목록 :
-	 * setClassSession     : 반 관련 페이지에 접속했을 때 반/반학생or담임교사or자녀정보 정보를 세션에 저장한다.
-	 * deleteClassSession  : 학교 관련 페이지에 접속했을 때 학교/학교소속회원 정보를 세션에 저장한다.
-	 * setSchoolSession    : 반 관련 페이지에서 벗어났을 때  반/반학생or담임교사or자녀정보 정보를 세션에서 삭제한다.
-	 * deleteSchoolSession : 학교 관련 페이지에서 벗어났을 때  학교/학교소속회원 정보를 세션에서 삭제한다.
-	 * 
-	 * 사용 방법 :
-	 * 1. jsp에서 세션 처리할 때
-	 * 1-1. 반 페이지 입장
-	 *      let insertData = 'CL10000001';                            // 입장할 반의 반코드 필요
-	 *      $.ajax({
-	 *         url:"/session/enterClassPageAjax",                     // 세션컨트롤러의 url로 설정  
-	 *         data:insertData,                                       // 컨트롤러에게 반코드 전달
-	 *         ...                          
-	 *      })
-	 * 1-2. 반 페이지 퇴장
-	 *      $.ajax({
-	 *         url:"/session/quitClassPageAjax",                      // 세션컨트롤러의 url로 설정
-	 *         ...                                                      
-	 *      })
-	 * 1-3. 학교 페이지 입장
-	 *      let insertData = '7581092';                               // 입장할 학교의 학교코드 필요
-	 *      $.ajax({
-	 *         url:"/session/enterSchoolPageAjax",                    // 세션컨트롤러의 url로 설정
-	 *         data:insertData,                                       // 컨트롤러에게 학교코드 전달  
-	 *         ...                
-	 *      })
-	 * 1-4. 학교 페이지 퇴장
-	 *      $.ajax({
-	 *         url:"/session/quitSchoolPageAjax",                    // 세션컨트롤러의 url로 설정
-	 *         ...                                                    
-	 *      })
-	 * 
-	 * 
-	 * 2. 컨트롤러에서 세션 처리할 때
-	 * 2-1. 반 페이지 입장
-	 *    @Autowired
-	 *    SessionService sessionService;                             // 세션서비스 추가
-	 *    
-	 *    public void 진행중인메소드(HttpServletRequest request, ...){   // 매개변수에 http서블릿리퀘스트 추가
-	 *       sessionService.setClassSession(request, clasCode);      // 매개변수에 request와 클래스코드를 넘겨준다.
-	 *       ...
-	 *    }
-	 * 2-2. 반 페이지 퇴장
-	 *    @Autowired
-	 *    SessionService sessionService;                             // 세션서비스 추가
-	 *    
-	 *    public void 진행중인메소드(HttpServletRequest request, ...){   // 매개변수에 http서블릿리퀘스트 추가
-	 *       sessionService.deleteClassSession(request);             // 매개변수에 request를 넘겨준다.
-	 *       ...
-	 *    }
-	 * 2-3. 학교 페이지 입장
-	 *    @Autowired
-	 *    SessionService sessionService;                             // 세션서비스 추가
-	 *    
-	 *    public void 진행중인메소드(HttpServletRequest request, ...){   // 매개변수에 http서블릿리퀘스트 추가
-	 *       sessionService.setSchoolSession(request, schulCode);    // 매개변수에 request와 학교코드를 넘겨준다.
-	 *       ...
-	 *    }
-	 * 2-4. 학교 페이지 퇴장
-	 *    @Autowired
-	 *    SessionService sessionService;                             // 세션서비스 추가
-	 *    
-	 *    public void 진행중인메소드(HttpServletRequest request, ...){   // 매개변수에 http서블릿리퀘스트 추가
-	 *       sessionService.deleteSchoolSession(request, clasCode);  // 매개변수에 request를 넘겨준다.
-	 *       ...
-	 *    }
-	 */
+/*
+	세션을 관리하는 컨트롤러/서비스
+	반/학교 관련 페이지에 접근 및 퇴장했을 때 반/학교 관련 세션을 관리한다.
 
-	/*
-	 * 세션명                      설명					타입
-	 * USER_INFO        회원(로그인중인)		MemberVO
-	 * CLASS_STD_INFO   반학생/자녀(접속중인 반의)	ClasStdntVO
-	 * CLASS_TCH_INFO   담임교사(접속중인 반의)	HrtchrVO
-	 * CLASS_INFO       반(접속중인)			ClasVO
-	 * SCHOOL_INFO      학교(접속중인)			SchulVO
-	 * SCHOOL_USER_INFO 학교소속회원(접속중인)	SchulPsitnMber
-	 */
+	컨트롤러 함수 목록 :
+	enterClassPageAjax  : 반 관련 페이지에 접속했을 때 반/반학생or담임교사or자녀정보 정보를 세션에 저장한다.
+	enterSchoolPageAjax : 학교 관련 페이지에 접속했을 때 학교/학교소속회원 정보를 세션에 저장한다.
+	quitClassPageAjax   : 반 관련 페이지에서 벗어났을 때  반/반학생or담임교사or자녀정보 정보를 세션에서 삭제한다.
+	quitSchoolPageAjax  : 학교 관련 페이지에서 벗어났을 때  학교/학교소속회원 정보를 세션에서 삭제한다.
+
+	서비스 함수 목록 :
+	setClassSession     : 반 관련 페이지에 접속했을 때 반/반학생or담임교사or자녀정보 정보를 세션에 저장한다.
+	deleteClassSession  : 학교 관련 페이지에 접속했을 때 학교/학교소속회원 정보를 세션에 저장한다.
+	setSchoolSession    : 반 관련 페이지에서 벗어났을 때  반/반학생or담임교사or자녀정보 정보를 세션에서 삭제한다.
+	deleteSchoolSession : 학교 관련 페이지에서 벗어났을 때  학교/학교소속회원 정보를 세션에서 삭제한다.
+*/
+	
+/* 
+	사용 방법 :
+	1. jsp에서 세션 처리할 때
+		1-1. 반 페이지 입장
+			let insertData = 'CL10000001';							   // 입장할 반의 반코드 필요
+			$.ajax({
+				url:"/session/enterClassPageAjax",                     // 세션컨트롤러의 url로 설정  
+				data:insertData,                                       // 컨트롤러에게 반코드 전달
+				...                          
+			})
+		1-2. 반 페이지 퇴장
+			$.ajax({
+				url:"/session/quitClassPageAjax",                      // 세션컨트롤러의 url로 설정
+				...                                                      
+			})
+		1-3. 학교 페이지 입장
+			let insertData = '7581092';                                // 입장할 학교의 학교코드 필요
+			$.ajax({
+				url:"/session/enterSchoolPageAjax",                    // 세션컨트롤러의 url로 설정
+				data:insertData,                                       // 컨트롤러에게 학교코드 전달  
+				...                
+			})
+		1-4. 학교 페이지 퇴장
+			$.ajax({
+				url:"/session/quitSchoolPageAjax",                     // 세션컨트롤러의 url로 설정
+				...                                                    
+			})
+
+
+	2. 컨트롤러에서 세션 처리할 때
+		2-1. 반 페이지 입장
+			@Autowired
+			SessionService sessionService;                             	 // 세션서비스 추가
+
+			public void 진행중인메소드(HttpServletRequest request, ...){   // 매개변수에 http서블릿리퀘스트 추가
+				sessionService.setClassSession(request, clasCode);       // 매개변수에 request와 클래스코드를 넘겨준다.
+				...
+			}
+		2-2. 반 페이지 퇴장
+			@Autowired
+			SessionService sessionService;                               // 세션서비스 추가
+
+			public void 진행중인메소드(HttpServletRequest request, ...){   // 매개변수에 http서블릿리퀘스트 추가
+				sessionService.deleteClassSession(request);              // 매개변수에 request를 넘겨준다.
+				...
+			}
+		2-3. 학교 페이지 입장
+			@Autowired
+			SessionService sessionService;                               // 세션서비스 추가
+	
+			public void 진행중인메소드(HttpServletRequest request, ...){   // 매개변수에 http서블릿리퀘스트 추가
+				sessionService.setSchoolSession(request, schulCode);     // 매개변수에 request와 학교코드를 넘겨준다.
+				...
+			}
+		2-4. 학교 페이지 퇴장
+			@Autowired
+			SessionService sessionService;                               // 세션서비스 추가
+
+			public void 진행중인메소드(HttpServletRequest request, ...){   // 매개변수에 http서블릿리퀘스트 추가
+				sessionService.deleteSchoolSession(request, clasCode);   // 매개변수에 request를 넘겨준다.
+				...
+			}
+*/
+
+/*
+	세션명                      설명					타입
+	USER_INFO        회원(로그인중인)			MemberVO
+	CLASS_STD_INFO   반학생/자녀(접속중인 반의)	ClasStdntVO
+	CLASS_TCH_INFO   담임교사(접속중인 반의)	HrtchrVO
+	CLASS_INFO       반(접속중인)				ClasVO
+	SCHOOL_INFO      학교(접속중인)			SchulVO
+	SCHOOL_USER_INFO 학교소속회원(접속중인)	SchulPsitnMber
+ */
 	
 	@Autowired
 	SessionMapper sessionMapper;
@@ -143,12 +145,8 @@ public class SessionServiceImpl implements SessionService {
 		}
 		map.put("clasCode",clasVO.getClasCode());
 
-		log.info("childId:"+childId);
-		log.info("map mberId :"+map.get("mberId"));
-		
 		// 반학생 정보 session에 저장
 		if(auth.equals("ROLE_A01001") || auth.equals("ROLE_A01003")) {
-			log.info("setClassSession 학생 or 학부모");
 			ClasStdntVO ClasStdntVO = sessionMapper.getEnterClasStdntVO(map);
 			if(ClasStdntVO!=null) {
 				request.getSession().setAttribute("CLASS_STD_INFO", ClasStdntVO); // ClasStdntVO
@@ -156,7 +154,6 @@ public class SessionServiceImpl implements SessionService {
 		}
 		// 담임교사 정보 session에 저장
 		else if(auth.equals("ROLE_A01002")) {
-			log.info("교직원");
 			HrtchrVO hrtchrVO = sessionMapper.getEnterHrtchrVO(map);
 			if(hrtchrVO!=null) {
 				request.getSession().setAttribute("CLASS_TCH_INFO", hrtchrVO);    // HrtchrVO

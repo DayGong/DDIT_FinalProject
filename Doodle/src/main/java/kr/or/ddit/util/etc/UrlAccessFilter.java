@@ -36,7 +36,7 @@ public class UrlAccessFilter implements Filter {
 	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		log.info("UrlAccessFilter init");
+		log.debug("UrlAccessFilter init");
 	}
 
 	@Override
@@ -46,12 +46,7 @@ public class UrlAccessFilter implements Filter {
 		String clasCode = httpReq.getParameter("clasCode");
 		String schulCode = httpReq.getParameter("schulCode");
 		HttpServletResponse httpRes = (HttpServletResponse) response;
-//
-//		// uri 에 따라 확인하는 절차
-//		log.info("========== doFilter uri:"+uri);
-//		log.info("========== doFilter clasCode:"+clasCode);
-//		log.info("========== doFilter schulCode:"+schulCode);
-//
+		
 		// 로그인 확인
 		if(!PatternMatchUtils.simpleMatch(whiteList, uri)) {
 			if(!isAuthenticated()) {
@@ -60,36 +55,13 @@ public class UrlAccessFilter implements Filter {
 				return;
 			}
 		}; 
-//
-//		// 반코드 검사
-//		if(clasCode != null && !clasCode.equals("")) {
-//			// true = 1, false = 0
-//			boolean isBelongCl = checkService.checkBelongCl(httpReq, clasCode);
-//			if(!isBelongCl) {
-//				log.info("비정상적인 반코드 파라미터");
-//				httpRes.sendRedirect("/error/errorUriAccess");
-//				return;
-//			}
-//		}
-//		
-//		// 학교코드 검사
-//		if(schulCode != null && !schulCode.equals("")) {
-//			// true = 1, false = 0
-//			boolean isBelongSch = checkService.checkBelongSch(httpReq, schulCode);
-//			if(!isBelongSch) {
-//				log.info("비정상적인 학교코드 파라미터");
-//				httpRes.sendRedirect("/error/errorUriAccess");
-//				return;
-//			}
-//		}
 		
 		chain.doFilter(request, response);
 	}
 
 	@Override
 	public void destroy() {
-		log.info("UrlAccessFilter destroy");
-		
+		log.debug("UrlAccessFilter destroy");
 	}
 	
 	// 로그인 했는지 확인

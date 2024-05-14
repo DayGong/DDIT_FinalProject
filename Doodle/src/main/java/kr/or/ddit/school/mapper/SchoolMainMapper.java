@@ -14,8 +14,10 @@ public interface SchoolMainMapper {
 	
 	// 가입된 학급클래스 목록(학생)
 	public List<ClasVO> myClassListStd(Map<String, Object> map);
+	
 	// 가입된 학급클래스 목록(교직원)
 	public List<ClasVO> myClassListTch(Map<String, Object> map);
+	
 	// 가입된 학급클래스 목록(학부모)
 	public List<ClasVO> myClassListPrn(Map<String, Object> map);
 

@@ -13,9 +13,10 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 
 import lombok.extern.slf4j.Slf4j;
 
-/*   /notice/register -> loginForm -> 로그인 -> CustomLoginSuccessHandler(성공)
- 			-> 사용자 작업.. -> /notice/register 로 리다이렉트 해줌
- (스프링 시큐리티에서 기본적으로 사용되는 구현 클래스)
+/*
+/notice/register -> loginForm -> 로그인 -> CustomLoginSuccessHandler(성공)
+-> 사용자 작업 -> /notice/register 로 리다이렉트 해줌
+(스프링 시큐리티에서 기본적으로 사용되는 구현 클래스)
 */
 
 @Slf4j
@@ -33,8 +34,8 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 		CustomUser customUser = (CustomUser) auth.getPrincipal();
 		
 		// 사용자 아이디를 리턴
-		log.info("username : " + customUser.getUsername());
-		log.info("memberVO : " + customUser.getMemberVO());
+		log.debug("username : " + customUser.getUsername());
+		log.debug("memberVO : " + customUser.getMemberVO());
 		
 		String cmmnDetailCode = customUser.getMemberVO().getVwMemberAuthVOList().get(0).getCmmnDetailCode();
 		String loginAuth = request.getParameter("auth");
@@ -73,8 +74,6 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 			}else {
 				authCheck = false;
 			}
-				
-			log.info("선생님 authCheck->" + authCheck);
 		}
 		
 		if(authCheck) {
@@ -84,7 +83,7 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 			request.getSession().setAttribute("USER_INFO", customUser.getMemberVO());
 
 			// 관리자인 경우 관리자 페이지로 이동
-			log.info("유저 권한 확인 =>> " + auth.getAuthorities());
+			log.debug("유저 권한 확인 =>> " + auth.getAuthorities());
 			if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_A01000"))) {
 				response.sendRedirect("/admin/adminMain");
 			} else {

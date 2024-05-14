@@ -18,6 +18,6 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public void addLoginCo() {
 		int result = this.loginMapper.addLoginCo();
-		log.info("addLoginCo result => " + result);
+		log.debug("addLoginCo result => " + result);
 	}
 }

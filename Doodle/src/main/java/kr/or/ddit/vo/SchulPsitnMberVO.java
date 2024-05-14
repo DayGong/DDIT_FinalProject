@@ -21,7 +21,6 @@ public class SchulPsitnMberVO {
 	
 	private List<SchulVO> schulVOList;		//학교 정보
 	private List<MemberVO> memberVOList;	//학생 정보
-//	private List<ChttRoomVO> chttRoomVoList;//채팅방 목록
 	private MemberVO memberVO;				//유저 정보
 	
 	private String schulNm;      //학교 명

@@ -58,10 +58,10 @@ public class AfterSchoolServiceImpl implements AfterSchoolService {
 		// 과목당 수강중인 학생수 출력
 		for (AschaVO aschaVO2 : aschaVOList) {
 			int stdntCount= this.afterSchoolMapper.getTotalLectureStudent(aschaVO2.getAschaCode());
-			log.info("aschaVO.getAschaCode() :" +aschaVO2.getAschaCode());
 			aschaVO2.setTotalStdnt(stdntCount);
-			log.info("stdntCount : " + stdntCount);
 			
+			log.debug("aschaVO.getAschaCode() :" +aschaVO2.getAschaCode());
+			log.debug("stdntCount : " + stdntCount);
 		}
 		return aschaVOList;
 	}
@@ -70,30 +70,11 @@ public class AfterSchoolServiceImpl implements AfterSchoolService {
 	@Override
 	public int afterSchoolCreate(AschaVO aschaVO) {
 		// 방과후학교 코드 설정
-		// db에서 가장 큰 코드 가지고 오기
-		/*
-		AschaVO(aschaCode=null, aschaNm=테스트임니다, aschaDetailCn=1, aschaAtnlcCt=2, aschaAceptncPsncpa=3, aschaAtnlcBgnde=Sat Mar 09 00:00:00 KST 2024, aschaAtnlcEndde=Fri Mar 22 00:00:00 KST 2024, schulCode=7581092, mberId=null, cmmnDetailCode=null, cmmnAtnlcNm=null, mberNm=null, schulNm=null, cmmnGrade=null, clasNm=null, clasInNo=null, 
-		aschaWeekPlanVOList=[
-			AschaWeekPlanVO(aschaWeekPlanCode=null, aschaWeek=1주, aschaWeekPlanCn=a, aschaCode=null), 
-			AschaWeekPlanVO(aschaWeekPlanCode=null, aschaWeek=2주, aschaWeekPlanCn=b, aschaCode=null), 
-			AschaWeekPlanVO(aschaWeekPlanCode=null, aschaWeek=3주, aschaWeekPlanCn=c, aschaCode=null), 
-			AschaWeekPlanVO(aschaWeekPlanCode=null, aschaWeek=4주, aschaWeekPlanCn=d, aschaCode=null)], 
-		atnlcReqstVOList=null)
-		 */
-		log.info("afterSchoolCreate(serviceImpl) -> aschaVO : " + aschaVO);
-		
 		int maxAschaSeq = afterSchoolMapper.getMaxAschaSeq(aschaVO.getSchulCode());
-		//maxSeq ->18
-		log.info("maxSeq ->" +maxAschaSeq);
-		
 		// 일련번호 생성
 		int nextAschaSeq = maxAschaSeq +1;
-		
 		// 현재연도 추출
 		LocalDate now = LocalDate.now();
-		//nowTime : 2024
-		log.info("nowTime : "+now.getYear());
-		
 		// 일련번호를 포함한 방과후학교 코드 설정(SCHUL_CODE+생성연도+일련번호)
 	 	String nextAschaCode = aschaVO.getSchulCode() + now.getYear() +String.format("%04d", nextAschaSeq);
 		
@@ -103,7 +84,6 @@ public class AfterSchoolServiceImpl implements AfterSchoolService {
 		aschaVO.setCmmnDetailCode("A10001");	// 신청진행중 코드로 고정함.
 		
 		int result = this.afterSchoolMapper.afterSchoolCreate(aschaVO);
-		log.info("afterSchoolCreate->result : " + result);
 		
 		// ASCHA_WEEK_PLAN 테이블에 insert
 		List<AschaWeekPlanVO> aschaWeekPlanVOList = aschaVO.getAschaWeekPlanVOList();
@@ -117,27 +97,23 @@ public class AfterSchoolServiceImpl implements AfterSchoolService {
 			// 방과후코드 1씩 증가
 			code++;
 			String codeNum = aschaVO.getAschaCode() + String.format("%02d", code);
-			//codeNum : 75810922024001902
-			log.info("codeNum : "+codeNum);
 			
 			// 생성한 일련번호 등록
 			aschaWeekPlanVO.setAschaWeekPlanCode(codeNum);
-			//aschaWeekPlanVO ->aschaWeekPlanVO :AschaWeekPlanVO(
-			//			aschaWeekPlanCode=75810922024001902, aschaWeek=1주, aschaWeekPlanCn=a, aschaCode=758109220240019)
-			log.info("aschaWeekPlanVO ->aschaWeekPlanVO :" + aschaWeekPlanVO);
+			
+			log.debug("codeNum : "+codeNum);
+			log.debug("aschaWeekPlanVO ->aschaWeekPlanVO :" + aschaWeekPlanVO);
 			
 			aschaWeekPlanVOList2.add(aschaWeekPlanVO);
 		}
-		/*
-		 aschaWeekPlanVO -> aschaWeekPlanVOList2 : [
-		 	AschaWeekPlanVO(aschaWeekPlanCode=75810922024001902, aschaWeek=1주, aschaWeekPlanCn=a, aschaCode=758109220240019), 
-		 	AschaWeekPlanVO(aschaWeekPlanCode=75810922024001903, aschaWeek=2주, aschaWeekPlanCn=b, aschaCode=758109220240019), 
-		 	AschaWeekPlanVO(aschaWeekPlanCode=75810922024001904, aschaWeek=3주, aschaWeekPlanCn=c, aschaCode=758109220240019), 
-		 	AschaWeekPlanVO(aschaWeekPlanCode=75810922024001905, aschaWeek=4주, aschaWeekPlanCn=d, aschaCode=758109220240019)]
-		 */
-		log.info("aschaWeekPlanVO -> aschaWeekPlanVOList2 : "+aschaWeekPlanVOList2);
 		
 		result += this.afterSchoolMapper.createWeekPlan(aschaWeekPlanVOList2);
+		
+		log.debug("afterSchoolCreate(serviceImpl) -> aschaVO : " + aschaVO);
+		log.debug("maxSeq ->" +maxAschaSeq);
+		log.debug("nowTime : "+now.getYear());
+		log.debug("afterSchoolCreate->result : " + result);
+		log.debug("aschaWeekPlanVO -> aschaWeekPlanVOList2 : "+aschaWeekPlanVOList2);
 		
 		return result;
 	}
@@ -154,29 +130,24 @@ public class AfterSchoolServiceImpl implements AfterSchoolService {
 		// 삭제후 ASCHA_WEEK_PLAN 테이블에 insert
 		List<AschaWeekPlanVO> aschaWeekPlanVOList = aschaVO.getAschaWeekPlanVOList();
 		List<AschaWeekPlanVO> aschaWeekPlanVOList2 = new ArrayList<AschaWeekPlanVO>();
-
+		
 		// 일련번호 생성(방과후학교코드 + 01)
 		int code = 0;
-		
+				
 		for(AschaWeekPlanVO aschaWeekPlanVO : aschaWeekPlanVOList) {
 			aschaWeekPlanVO.setAschaCode(aschaVO.getAschaCode());
 			// 방과후코드 1씩 증가
 			code++;
 			String codeNum = aschaVO.getAschaCode() + String.format("%02d", code);
-			//codeNum : 75810922024001902
-			log.info("codeNum : "+codeNum);
-			
+
 			// 생성한 일련번호 등록
 			aschaWeekPlanVO.setAschaWeekPlanCode(codeNum);
-			//aschaWeekPlanVO ->aschaWeekPlanVO :AschaWeekPlanVO(
-			//			aschaWeekPlanCode=75810922024001902, aschaWeek=1주, aschaWeekPlanCn=a, aschaCode=758109220240019)
-			log.info("aschaWeekPlanVO ->aschaWeekPlanVO :" + aschaWeekPlanVO);
-			
 			aschaWeekPlanVOList2.add(aschaWeekPlanVO);
 		}
-		log.info("aschaWeekPlanVO -> aschaWeekPlanVOList2 : "+aschaWeekPlanVOList2);
 		
 		result += this.afterSchoolMapper.createWeekPlan(aschaWeekPlanVOList2);
+		
+		log.debug("aschaWeekPlanVO -> aschaWeekPlanVOList2 : "+aschaWeekPlanVOList2);
 		
 		return result;
 	}
@@ -223,23 +194,20 @@ public class AfterSchoolServiceImpl implements AfterSchoolService {
 		if(atnlcReqstVO.getAtnlcReqstCode() == null) {
 			// 방과후학교의 수강코드 최대값 가져오기
 			int maxatnlcReqstSeq = afterSchoolMapper.getMaxatnlcReqst(atnlcReqstVO.getAschaCode());
-			log.info("maxatnlcReqstSeq :" +maxatnlcReqstSeq);
-			
 			// 일련번호 생성
 			int nextAtnlcReqstSeq = maxatnlcReqstSeq +1;
-			
 			// 현재날짜(월/일) 추출
 			LocalDate now = LocalDate.now();
-			log.info("nowdate : "+now.getMonthValue()+now.getDayOfMonth());
-			
 			// 일련번호를 포함한 수강신청 코드 설정(ASCHA_CODE+월/일+일련번호)
 			String nextAtnlcReqstCode = atnlcReqstVO.getAschaCode() + String.format("%02d",now.getMonthValue())
 						+ String.format("%02d", now.getDayOfMonth()) + String.format("%03d", nextAtnlcReqstSeq); 
 			
 			// 생성한 방과후학교 코드 등록
-			log.info("nextAtnlcReqstCode :"+nextAtnlcReqstCode);
-			
 			atnlcReqstVO.setAtnlcReqstCode(nextAtnlcReqstCode);
+			
+			log.debug("maxatnlcReqstSeq :" +maxatnlcReqstSeq);
+			log.debug("nowdate : "+now.getMonthValue()+now.getDayOfMonth());
+			log.debug("nextAtnlcReqstCode :"+nextAtnlcReqstCode);
 		}
 		
 		return this.afterSchoolMapper.afterSchoolPayment(atnlcReqstVO);

@@ -20,18 +20,13 @@
 	<definition name="noTiles-layout" template="/WEB-INF/views/tiles/noTiles.jsp">
 		<put-attribute name="body" value="" />	
 	</definition>
-	
-	<!-- name의 */*은 body의 value에서 1과 2에 해당
-		controller에서 forwarding 시 return "1/2";
-		return "book/list";
-	 -->
 	 
 	<!-- aside바가 없는 화면에 사용 --> 
 	<definition name="empty/*/*" extends="empty-layout">
 		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
 	</definition>
 	
-	<!-- aside와 header 둘 다 없는 화면 -->
+	<!-- aside와 header 둘 다 없는 화면에 사용 -->
 	<definition name="noTiles/*/*" extends="noTiles-layout">
 		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
 	</definition>

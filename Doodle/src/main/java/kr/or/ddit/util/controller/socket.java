@@ -28,13 +28,12 @@ public class socket extends TextWebSocketHandler {
 		sessions.add(session);
 		
 		//연결하려는 클라이언트의 세션에서 id값을 불러와 map에 id값으로 세션을 담는다
-//		Map<String, Object> sessionGet = session.getAttributes();
 		String sessionId = getMemberId(session);
 		userSessionsMap.put(sessionId, session);
 		
 		//소켓 연결 시 저장된 세션 확인
-		log.info("session -> " + sessions);
-		log.info("userSessionsMap -> " + userSessionsMap);
+		log.debug("session -> " + sessions);
+		log.debug("userSessionsMap -> " + userSessionsMap);
 	}
 	
 	//소켓연결 해제
@@ -49,15 +48,14 @@ public class socket extends TextWebSocketHandler {
 		userSessionsMap.remove(sessionId,session);
 		
 		//소켓 연결 해제 시 저장된 세션 확인
-		log.info("session -> " + sessions);
-		log.info("userSessionsMap -> " + userSessionsMap);
+		log.debug("session -> " + sessions);
+		log.debug("userSessionsMap -> " + userSessionsMap);
 	}
 	
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		//받은 메시지를 String 값으로 받는다
 		String msg = message.getPayload();
-		log.info("msg 잘 들어 왔니? -> " + msg);
 		
 		//메시지를 ','로 나눠준다
 		String[] msgs = msg.split(",");
@@ -65,10 +63,8 @@ public class socket extends TextWebSocketHandler {
 		// 한 클래스 내 학생/학부모에게 알림 전송
 		if(msgs!=null && msgs.length == 2) {
 			if(msgs[1].equals("toAll")) {
-				log.info("들어왔니?????????????????????????????");
 				String notice = msgs[0];	// 알림 내용
 				String sendmsg = notice;
-				log.info("sendmsg -> " + sendmsg);
 				
 				for(int i=0; i<sessions.size(); i++) {
 					TextMessage tmsg = new TextMessage(sendmsg);
@@ -82,15 +78,15 @@ public class socket extends TextWebSocketHandler {
 			if(msgs[2].equals("toStdnt")) {
 				String notice = msgs[0];	// 알림 내용
 				String stdntId = msgs[1];	// 알림 대상
-				log.info(msgs[0] + " <- notice 좀 확인하자");
-				log.info(msgs[1] + " <- stdntId 좀 확인하자");
+				String sendmsg = notice;
 				
 				WebSocketSession targetSession = userSessionsMap.get(stdntId);
 				
-				String sendmsg = notice;
-				
 				TextMessage tmsg = new TextMessage(sendmsg);
 				targetSession.sendMessage(tmsg);
+				
+				log.debug(msgs[0] + " <- notice 확인");
+				log.debug(msgs[1] + " <- stdntId 확인");
 			}
 		}
 	}

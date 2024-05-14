@@ -8,15 +8,15 @@ import lombok.Data;
 public class ClasVO {
 	private String clasCode;       		// 반 코드
 	private String clasNm;         		// 반 명
-	private int clasYear;          		// 반 연도
+	private int clasYear;          	// 반 연도
 	private String cmmnGrade;      		// 공통 학년(A22)
 	private String cmmnGradeNm;			// (공통코드)학년 명 가져오는 컬럼
 	private String cmmnClasSttus;  		// 공통 반 상태(A16)
 	private String cmmnClasSttusNm;		// (공통코드)반 상태 가져오는 컬럼
 	private String schulCode;			// 학교 코드
-	private String beginTm;			// 등교 시간
-	private String endTm;			// 하교 시간
-	private int rnum; 				// 순번
+	private String beginTm;				// 등교 시간
+	private String endTm;				// 하교 시간
+	private int rnum; 					// 순번
 	private String mberNm;				// 회원이름
 	
 	// 학교/학급클래스 검색할 때 사용하는 JOIN

@@ -116,9 +116,7 @@
 		    
 	</select>
 
-	<!-- 선택한 앨범 사진 목록 select 
-	atchFileCode  : OJ20240101ALB00003
-	-->	
+	<!-- 선택한 앨범 사진 목록 select -->	
 	<select id="galleryDetail" parameterType="String" resultMap="clasAlbumMap">
 		SELECT
 			FN_CLAS_STDNT_CODE_TO_MBER_NM(CA.CLAS_STDNT_CODE) MBER_NM,
@@ -192,50 +190,50 @@
 
 	<!-- 학급앨범 조회 map사용 -->
 	<select id="clasAlbumList2" parameterType="hashMap" resultMap="clasAlbumMap">
-	<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.clasAlbumList2 -->
-	WITH T AS(
-		SELECT 
-		    ROW_NUMBER() OVER(ORDER BY TO_NUMBER(SUBSTR(CA.CLAS_ALBUM_CODE, 14)) DESC) AS RNUM,
-		    CA.CLAS_ALBUM_CODE,		/* 반 앨범 코드 */
-		    CA.ALBUM_NM,			/* 앨범 명 */
-		    CA.ATCH_FILE_CODE,		/* 첨부파일 코드 */
-		    CA.CLAS_CODE,			/* 반 코드*/
-		    CA.CLAS_STDNT_CODE,		/* 회원 아이디 */
-		    CA.ALBUM_DE,			/* 앨범 등록 일자 */
-		    M.MBER_NM,				/* 회원 이름(MEMBER) */
-		    AF.ATCH_FILE_SN,		/* 파일 순번(ATCH_FILE)-썸네일 추출용(0번) */
-		    AF.ATCH_FILE_COURS,		/* 파일 경로(ATCH_FILE)-썸네일 추출용(0번) */
-		    CA.NTT_STTEMNT_ACCMLT,	/* 게시물 신고 누적 */
-		    CA.NTT_STTEMNT_STTUS	/* 게시물 신고 상태 */
-            <if test="keyword!=null and keyword!=''">
-            ,
-            AT.TAG_CODE,        	/* 태그 코드*/
-            AT.TAG_NM           	/* 태그 명 */
-            </if>
-		FROM
-		    CLAS_ALBUM CA
-		JOIN
-		    CLAS_STDNT CS ON CA.CLAS_CODE = CS.CLAS_CODE
-		    AND CA.CLAS_STDNT_CODE = CS.CLAS_STDNT_CODE
-		JOIN
-		    MEMBER M ON CS.MBER_ID = M.MBER_ID
-		JOIN
-		    ATCH_FILE AF ON CA.ATCH_FILE_CODE = AF.ATCH_FILE_CODE
-		<if test="keyword!=null and keyword!=''">    
-        JOIN
-            ALBUM_TAG AT ON CA.CLAS_ALBUM_CODE = AT.CLAS_ALBUM_CODE
-        </if>    
-		WHERE 1=1 
-		AND   CA.CLAS_CODE = #{clasCode}
-		AND   AF.ATCH_FILE_SN =0
-		AND	  CA.NTT_STTEMNT_STTUS != 'A15003'	/* 신고로 정지된 게시물은 조회 제외 */
-		<if test="keyword!=null and keyword!=''">
-	         AND AT.TAG_NM = #{keyword}
-	    </if>
-		ORDER BY CA.CLAS_ALBUM_CODE DESC
-    )
-	SELECT T.* FROM T
-	WHERE T.RNUM BETWEEN (#{currentPage}*8) - (8 - 1) AND (#{currentPage}*8)
+		<!-- kr.or.ddit.classroom.mapper.ClassroomMapper.clasAlbumList2 -->
+		WITH T AS(
+			SELECT 
+			    ROW_NUMBER() OVER(ORDER BY TO_NUMBER(SUBSTR(CA.CLAS_ALBUM_CODE, 14)) DESC) AS RNUM,
+			    CA.CLAS_ALBUM_CODE,		/* 반 앨범 코드 */
+			    CA.ALBUM_NM,			/* 앨범 명 */
+			    CA.ATCH_FILE_CODE,		/* 첨부파일 코드 */
+			    CA.CLAS_CODE,			/* 반 코드*/
+			    CA.CLAS_STDNT_CODE,		/* 회원 아이디 */
+			    CA.ALBUM_DE,			/* 앨범 등록 일자 */
+			    M.MBER_NM,				/* 회원 이름(MEMBER) */
+			    AF.ATCH_FILE_SN,		/* 파일 순번(ATCH_FILE)-썸네일 추출용(0번) */
+			    AF.ATCH_FILE_COURS,		/* 파일 경로(ATCH_FILE)-썸네일 추출용(0번) */
+			    CA.NTT_STTEMNT_ACCMLT,	/* 게시물 신고 누적 */
+			    CA.NTT_STTEMNT_STTUS	/* 게시물 신고 상태 */
+	            <if test="keyword!=null and keyword!=''">
+	            ,
+	            AT.TAG_CODE,        	/* 태그 코드*/
+	            AT.TAG_NM           	/* 태그 명 */
+	            </if>
+			FROM
+			    CLAS_ALBUM CA
+			JOIN
+			    CLAS_STDNT CS ON CA.CLAS_CODE = CS.CLAS_CODE
+			    AND CA.CLAS_STDNT_CODE = CS.CLAS_STDNT_CODE
+			JOIN
+			    MEMBER M ON CS.MBER_ID = M.MBER_ID
+			JOIN
+			    ATCH_FILE AF ON CA.ATCH_FILE_CODE = AF.ATCH_FILE_CODE
+			<if test="keyword!=null and keyword!=''">    
+	        JOIN
+	            ALBUM_TAG AT ON CA.CLAS_ALBUM_CODE = AT.CLAS_ALBUM_CODE
+	        </if>    
+			WHERE 1=1 
+			AND   CA.CLAS_CODE = #{clasCode}
+			AND   AF.ATCH_FILE_SN =0
+			AND	  CA.NTT_STTEMNT_STTUS != 'A15003'	/* 신고로 정지된 게시물은 조회 제외 */
+			<if test="keyword!=null and keyword!=''">
+		         AND AT.TAG_NM = #{keyword}
+		    </if>
+			ORDER BY CA.CLAS_ALBUM_CODE DESC
+	    )
+		SELECT T.* FROM T
+		WHERE T.RNUM BETWEEN (#{currentPage}*8) - (8 - 1) AND (#{currentPage}*8)
 	</select>
 	
 	<select id="getTotalGallery" parameterType="hashMap" resultType="int">

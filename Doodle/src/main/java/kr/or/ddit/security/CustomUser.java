@@ -14,16 +14,9 @@ import kr.or.ddit.vo.MemberVO;
 //CustomUser의 객체 = principal
 @SuppressWarnings("serial")
 public class CustomUser extends User {
-	/*
-	private String password;
-	private final String username;
-	private final Set<GrantedAuthority> authorities;
-	private final boolean accountNonExpired;
-	private final boolean accountNonLocked;
-	private final boolean credentialsNonExpired;
-	private final boolean enabled;
-	 */
+	
 	private MemberVO memberVO;
+	
 	//USER의 생성자를 처리해주는 생성자임
 	public CustomUser(String username, String password
 				, Collection<? extends GrantedAuthority> authorities) {
@@ -32,9 +25,10 @@ public class CustomUser extends User {
 
 	//생성자.return memberVO == null?null:new CustomUser(memberVO);
 	public CustomUser(MemberVO memberVO) {
-		//사용자가 정의한 (select한) MemberVO 타입의 객체 memberVO를
-		//스프링 시큐리티에서 제공해주고 있는 UsersDetails 타입으로 변환
-		//회원정보를 보내줄테니 이제부터 프링이 너가 관리해줘
+		/*
+			사용자가 정의한 (select한) MemberVO 타입의 객체 memberVO를
+			스프링 시큐리티에서 제공해주고 있는 UsersDetails 타입으로 변환
+		*/
 		super(memberVO.getMberId() +"",memberVO.getPassword(),
 				memberVO.getVwMemberAuthVOList().stream()
 			.map(auth->new SimpleGrantedAuthority(auth.getCmmnDetailCode()))

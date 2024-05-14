@@ -41,27 +41,25 @@ public class TeacherController {
 	@GetMapping("/mypage")
 	public String mypage(Model model, HttpServletRequest request, String mberId) {
 		MemberVO loginAccount = (MemberVO) request.getSession().getAttribute("USER_INFO");
-		log.info("loginAccount -> " + loginAccount);
 		String loginId = loginAccount.getMberId();
 		MemberVO memVO = new MemberVO();
-		
 		// 내 정보 가져오기
 		memVO = teacherService.myInfo(loginAccount.getMberId());
-		log.info("stdVO: " + memVO);
-		
 		// 내 학교 정보 가져오기
 		List<SchulPsitnMberVO> mySchulList = teacherService.mySchulList(loginId);
-		log.info("mypage -> mySchulList: " + mySchulList);
-		
 		// 내 클래스 정보 가져오기
 		List<HrtchrVO> myClassList = teacherService.myClassList(loginId);
-		log.info("mypage -> myClassList: " + myClassList);
 		
 		model.addAttribute("memVO", memVO);
 		model.addAttribute("mySchulList", mySchulList);
 		model.addAttribute("myClassList", myClassList);
 		
 		request.setAttribute("memVO", memVO);
+		
+		log.debug("loginAccount -> " + loginAccount);
+		log.debug("stdVO: " + memVO);
+		log.debug("mypage -> mySchulList: " + mySchulList);
+		log.debug("mypage -> myClassList: " + myClassList);
 		
 		return "teacher/mypage";
 	}
@@ -72,8 +70,6 @@ public class TeacherController {
 	public MemberVO updateProfile(MemberVO memVO
 			, MultipartFile uploadFile
 			, MultipartHttpServletRequest request) {
-		log.info("updateProfile -> memVO: " + memVO);
-		log.info("updateProfile -> uploadFile: " + uploadFile);
 		
 		memVO.setMultipartFile(uploadFile);
 		
@@ -88,11 +84,10 @@ public class TeacherController {
 		if(multipartFile!=null && multipartFile.getOriginalFilename().length()>0) {	
 			UUID uuid = UUID.randomUUID();
 			String uploadFileName = uuid + "_" + multipartFile.getOriginalFilename();
-			
+
 			memVO.setMberImage(uploadFileName);
 			
 			String savePath = uploadFolder + "\\profile\\" + uploadFileName;
-			
 			File file = new File(savePath);
 			
 			try {
@@ -110,10 +105,13 @@ public class TeacherController {
 		  - memVO의 mberImage는 null
 		 */
 		int result = this.teacherService.updateProfile(memVO);
-		log.info("updateProfile -> result: " + result);
 		
 		//프로필 이미지가 바뀌든 안바뀌든 회원의 정보를 다시 가져옴
 		memVO = this.teacherService.myInfo(memVO.getMberId());
+		
+		log.debug("updateProfile -> memVO: " + memVO);
+		log.debug("updateProfile -> uploadFile: " + uploadFile);
+		log.debug("updateProfile -> result: " + result);
 		
 		return memVO;
 	}
@@ -160,15 +158,12 @@ public class TeacherController {
 		return "teacher/gradeList";
 	}
 	
-	
 	//생활기록 학생 목록
 	@GetMapping("/lifeRecordList")
 	public String lifeRecordList() {
 		return "teacher/lifeRecordList";
 	}
 	 
-	//반 통계?? 뭐에대한 통계인지 모르겠어
-	
 	//학생 출결 목록
 	@GetMapping("/attendanceList")
 	public String attendanceList() {

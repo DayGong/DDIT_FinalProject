@@ -17,9 +17,7 @@
 <link rel="stylesheet" href="/resources/chat/CSS/general.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="preconnect" href="https://fonts.gstatic.com">
-<link
-	href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap"
-	rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/resources/css/sweetalert2.min.css">
 <script src="/resources/css/sweetalert2.min.js"></script>
 <script type="text/javascript" src="/resources/js/jquery.min.js"></script>
@@ -32,7 +30,6 @@ const mberId = '${USER_INFO.mberId}';
 const mberNm = '${USER_INFO.mberNm}';
 
 $(function(){
-	
 	//나의 채팅방 목록
 	var data = {
 		"schulCode":schulCode,
@@ -40,51 +37,51 @@ $(function(){
 	};
 	
 	$.ajax({
-		   url:"/chat/rooms",
-		   type:"post",
-		   data:JSON.stringify(data),
-		   contentType:"application/json;charset=utf-8",
-		   dataType:"json",
-		   beforeSend:function(xhr){
-		      xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-		   },
-		   success:function(result){
-		      /* result : List<ChttRoomVO> */
-		      
-		      let str = "";
-		      
-		      $.each(result,function(idx,chttRoomVO){
-		    	  let crtrImage = chttRoomVO.crtrVO.mberImage;
-		    	  let prtcpntImage = chttRoomVO.prtcpntVO.mberImage;
-			      
-		    	  str += "<li class='room-li'>";
-		    	  str += "<a href='/chat/chtt?chttRoomCode=" + chttRoomVO.chttRoomCode + "'> ";
-		    	  // if문으로 chttRoomVO.crtrId 일때와 chttRoomVO.prtcpntId 일때 구분 필요
-		    	  if(mberNm === chttRoomVO.crtrId){
-		    		  if(prtcpntImage==null||prtcpntImage==''){
-		              	str += "<img src='/resources/images/member/profile/user_l.png' class='profile-img' alt='친구1프로필사진'>";
-					  }else{
-						str += "<img src='/upload/profile/" + prtcpntImage + "' class='profile-img' alt='친구1프로필사진'>";
-					  }
-			    	  str += "<div class='talk'>";
-		    		  str += "<p class='friend-name'>"+chttRoomVO.prtcpntId+"</p>";
-		    	  }else{
-		    		  if(crtrImage==null||crtrImage==''){
-		              	str += "<img src='/resources/images/member/profile/user_l.png' class='profile-img' alt='친구1프로필사진'>";
-					  }else{
-						str += "<img src='/upload/profile/" + crtrImage + "' class='profile-img' alt='친구1프로필사진'>";
-					  }
-			    	  str += "<div class='talk'>";
-		    		  str += "<p class='friend-name'>"+chttRoomVO.crtrId+"</p>";
-		    	  }
-		    	  str += "</div>";
-		    	  str += "<div class='chat-status'>";
-		    	  str += "</div>";
-		    	  str += "</a>";
-		    	  str += "</li>";
-		      });
-		   	  $("#chatRoomBody").html(str);
-			}
+		url:"/chat/rooms",
+		type:"post",
+		data:JSON.stringify(data),
+		contentType:"application/json;charset=utf-8",
+		dataType:"json",
+		beforeSend:function(xhr){
+			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+		},
+		success:function(result){
+			/* result : List<ChttRoomVO> */
+			
+			let str = "";
+			
+			$.each(result,function(idx,chttRoomVO){
+				let crtrImage = chttRoomVO.crtrVO.mberImage;
+				let prtcpntImage = chttRoomVO.prtcpntVO.mberImage;
+				
+				str += "<li class='room-li'>";
+				str += "<a href='/chat/chtt?chttRoomCode=" + chttRoomVO.chttRoomCode + "'> ";
+				// if문으로 chttRoomVO.crtrId 일때와 chttRoomVO.prtcpntId 일때 구분 필요
+				if(mberNm === chttRoomVO.crtrId){
+					if(prtcpntImage==null||prtcpntImage==''){
+					str += "<img src='/resources/images/member/profile/user_l.png' class='profile-img' alt='친구1프로필사진'>";
+					}else{
+					str += "<img src='/upload/profile/" + prtcpntImage + "' class='profile-img' alt='친구1프로필사진'>";
+					}
+					str += "<div class='talk'>";
+					str += "<p class='friend-name'>"+chttRoomVO.prtcpntId+"</p>";
+				}else{
+					if(crtrImage==null||crtrImage==''){
+					str += "<img src='/resources/images/member/profile/user_l.png' class='profile-img' alt='친구1프로필사진'>";
+					}else{
+					str += "<img src='/upload/profile/" + crtrImage + "' class='profile-img' alt='친구1프로필사진'>";
+					}
+					str += "<div class='talk'>";
+					str += "<p class='friend-name'>"+chttRoomVO.crtrId+"</p>";
+				}
+				str += "</div>";
+				str += "<div class='chat-status'>";
+				str += "</div>";
+				str += "</a>";
+				str += "</li>";
+			});
+			$("#chatRoomBody").html(str);
+		}
 	});
 })
 </script>
@@ -97,19 +94,15 @@ $(document).ready(function(){
     sock = new SockJS("<c:url value="/echo"/>");
     socket = sock;
 	
-    sock.onopen = function () {
-        
-    };
+    sock.onopen = function () {};
     
  	// 데이터를 전달 받았을때 
     sock.onmessage = onMessage; // toast 생성
-    
 });
 
 // toast생성 및 추가
 function onMessage(evt){
     var data = evt.data;
-    
 
     var Toast = Swal.mixin({
 		toast: true,
@@ -121,26 +114,21 @@ function onMessage(evt){
 		icon:'info',
 		title: data
 	});
-    
 };	
 </script>
-
 </head>
 <body  class="sidebar-mini sidebar-closed sidebar-collapse">
-<%-- <p>${USER_INFO}</p> --%>
 	<div id="content">
 		<!-- 설정바(최소화, 닫기 버튼 등) -->
-		<div class="setting_bar">
-		</div>
+		<div class="setting_bar"></div>
 		<!-- 헤더: 제목, 친구 찾기 버튼, 친구 추가 버튼 -->
 		<header>
 			<div style="display: flex; justify-content: space-between;">
-			<div>
-				<h1>채팅</h1>
-				<i class="fa-solid fa-caret-down"></i>
-			</div>
-			<div>
-			</div>
+				<div>
+					<h1>채팅</h1>
+					<i class="fa-solid fa-caret-down"></i>
+				</div>
+				<div></div>
 			</div>
 		</header>
        
@@ -149,11 +137,8 @@ function onMessage(evt){
 			<div class="myChatrooms">
 				<h4>교직원 채팅방</h4>
 			</div>
-			
 			<div id="chatRoomBodys">
-				<ul id="chatRoomBody">
-				
-				</ul>
+				<ul id="chatRoomBody"></ul>
 			</div>
 		</main>
 		<aside>

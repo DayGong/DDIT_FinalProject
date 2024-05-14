@@ -1,6 +1,5 @@
 package kr.or.ddit.util.controller;
 
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.util.service.CheckService;
-import lombok.extern.slf4j.Slf4j;
 
 @RequestMapping("/check")
 @Controller
@@ -21,9 +19,6 @@ public class CheckController {
 	@Autowired
 	CheckService checkService;
 	
-	/*
-	 * ajax(post)
-	 */
 	@ResponseBody
 	@PostMapping("/checkBelongCl")
 	public int checkBelongCl(HttpServletRequest request, @RequestParam("clasCode") String clasCode) {

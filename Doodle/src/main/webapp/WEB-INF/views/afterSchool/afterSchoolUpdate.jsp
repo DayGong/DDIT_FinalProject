@@ -11,8 +11,6 @@ const schulCode = "${param.schulCode}";
 const aschaCode = "${param.aschaCode}";
 
 window.onload = function(){
-	console.log("방과후학교 수정 실행되었습니다~")
-	
 	//날짜 포맷 생성  함수
 	function dateFormat(date) {
 		let dateFormat2 = date.getFullYear() +
@@ -24,12 +22,10 @@ window.onload = function(){
 	document.querySelector("#btnList").addEventListener("click",function(){
 		location.href = location.href = "/afterSchool?schulCode="+encodeURIComponent(schulCode);
 	});
+
 	// 방과후학교 주간계획 삭제
 	document.querySelector(".weekMinus").addEventListener("click", function(){
-		console.log("계획추가버튼 삭제함");
-		
 		let len = document.querySelectorAll(".aschaWeek").length;
-		console.log("len : " + len);
 		
 		if(len<2){
 			Swal.fire({
@@ -47,10 +43,7 @@ window.onload = function(){
 	
 	// 방과후학교 주간계획 추가
 	document.querySelector(".weekAdd").addEventListener("click", function(){
-		console.log("계획추가버튼 클릭함");
-		
 		let len = document.querySelectorAll(".aschaWeek").length;
-		console.log("len : "+len);
 		
 		let str = "";
 	    str += `
@@ -66,12 +59,10 @@ window.onload = function(){
 		            </div>						
 		        </div>`;
 				
-				console.log("str:",str);
-				
-				const temp = document.querySelector("#divWeekAdd").insertAdjacentHTML(
-					    "beforeend", // HTML 요소가 삽입되는 위치 선언
-					    str // 삽입할 문자열
-				);
+		const temp = document.querySelector("#divWeekAdd").insertAdjacentHTML(
+			"beforeend", // HTML 요소가 삽입되는 위치 선언
+			str // 삽입할 문자열
+		);
 		
 	}); // 방과후학교 주간계획 추가 끝	
 	
@@ -83,8 +74,6 @@ window.onload = function(){
 			"aschaCode"	: aschaCode	
 		}
 		
-		console.log("data : ", data);
-		
 		$.ajax({
 			url:"/afterSchool/afterSchoolDelete",
 			contentType : "application/json; charset=utf-8",
@@ -95,7 +84,6 @@ window.onload = function(){
 				xhr.setRequestHeader(header, token);
 			},
 			success:function(result){
-				console.log("result : ", result);
 			    Swal.fire({
 			        title: '방과후학교를 삭제하시겠습니까?',
 			        text: "삭제 후에 다시 되돌릴 수 없습니다.",
@@ -107,17 +95,17 @@ window.onload = function(){
 			        cancelButtonText: '취소',
 			        reverseButtons: false, // 버튼 순서 거꾸로
 			        
-			      }).then((result) => {
-			        if (result.isConfirmed) {
-			          Swal.fire(
-			            '방과후학교가 삭제 되었습니다.',
-			            '목록으로 이동합니다.',
-			            'success'
-			          ).then(function(){
+				}).then((result) => {
+					if (result.isConfirmed) {
+						Swal.fire(
+							'방과후학교가 삭제 되었습니다.',
+							'목록으로 이동합니다.',
+							'success'
+						).then(function(){
 							location.href = "/afterSchool?schulCode="+encodeURIComponent(schulCode);
 						});
-			        }
-			     });
+					}
+				});
 			},
 			error: function(xhr, status, error){
 				Swal.fire({
@@ -161,10 +149,6 @@ window.onload = function(){
 			formData.append("aschaWeekPlanVOList["+idx+"].aschaWeekPlanCn",$(this).val());
 		}); 
 		
-		for(let key of formData.keys()){
-			console.log(key, ":", formData.get(key));
-		}
-		
 		$.ajax({
 			url:"/afterSchool/afterSchoolUpdateAjax",
 			processData:false,
@@ -187,17 +171,17 @@ window.onload = function(){
 			        cancelButtonText: '아니오',
 			        reverseButtons: false, // 버튼 순서 거꾸로
 			        
-			      }).then((result) => {
-			        if (result.isConfirmed) {
-			          Swal.fire(
-			            '방과후학교가 수정 되었습니다.',
-			            '목록으로 이동합니다.',
-			            'success'
-			          ).then(function(){
+				}).then((result) => {
+					if (result.isConfirmed) {
+						Swal.fire(
+							'방과후학교가 수정 되었습니다.',
+							'목록으로 이동합니다.',
+							'success'
+						).then(function(){
 							location.href = "/afterSchool?schulCode="+encodeURIComponent(schulCode);
 						});
-			        }
-			     });
+					}
+				});
 			},
 			error: function(xhr, status, error){
 				Swal.fire({
@@ -210,62 +194,54 @@ window.onload = function(){
 	});
 	
 	// 수정 할 방과후학교 불러오기
-		let data ={
-			"schulCode" : schulCode,
-			"aschaCode" : aschaCode
-		}
-		console.log("data: ",data);
-		
-		$.ajax({
-			url: "/afterSchool/afterSchoolDetail",
-			contentType: "application/json; charset= utf-8",
-			data: JSON.stringify(data),
-			type: "post",
-			dataType: "json",
-			beforeSend: function(xhr){
-				xhr.setRequestHeader(header, token);
-			},
-			success: function(result){
-				console.log("result : ", result);
+	let data ={
+		"schulCode" : schulCode,
+		"aschaCode" : aschaCode
+	}
+	
+	$.ajax({
+		url: "/afterSchool/afterSchoolDetail",
+		contentType: "application/json; charset= utf-8",
+		data: JSON.stringify(data),
+		type: "post",
+		dataType: "json",
+		beforeSend: function(xhr){
+			xhr.setRequestHeader(header, token);
+		},
+		success: function(result){
+			if(result.length>0){
 				
-				if(result.length>0){
-					
-					let aschaAtnlcBgnde = dateFormat(new Date(result[0].aschaAtnlcBgnde));
-					let aschaAtnlcEndde = dateFormat(new Date(result[0].aschaAtnlcEndde));
-					
-					document.querySelector("#aschaNm").value = result[0].aschaNm;						// 방과후학교 명
-					document.querySelector("#aschaDetailCn").value = result[0].aschaDetailCn;			// 강의 설명
-					document.querySelector("#aschaAtnlcCt").value = result[0].aschaAtnlcCt;			// 수강 비용
-					document.querySelector("#aschaAceptncPsncpa").value = result[0].aschaAceptncPsncpa;// 수강 정원
-					document.querySelector("#aschaAtnlcBgnde").value = aschaAtnlcBgnde;				// 수강 시작 일자
-					document.querySelector("#aschaAtnlcEndde").value = aschaAtnlcEndde;				// 수강 종료 일자
-					
-					let str = "";
-					result.forEach(function(aschaVO, idx){
-						aschaVO.aschaWeekPlanVOList.forEach(function(aschaWeekPlanVO,index){
-							str +=`
-								<div>
-									<div style="width:10%;float:left;">
-										<input type="text" class="form-control aschaWeek"
-											name="aschaWeekPlanVOList[\${index}].aschaWeek" id="aschaWeek\${index+1}" value="\${index+1}주" />
-									</div>
-									<div style="width:90%;float:left;">
-										<input type="text" class="form-control aschaWeekPlanCn"
-											name="aschaWeekPlanVOList[\${index}].aschaWeekPlanCn" id="aschaWeekPlanCn\${index+1}"
-											placeholder="주간계획 입력" value="\${aschaWeekPlanVO.aschaWeekPlanCn}"/>
-									</div>						
-								</div>`;
-						});
-						
+				let aschaAtnlcBgnde = dateFormat(new Date(result[0].aschaAtnlcBgnde));
+				let aschaAtnlcEndde = dateFormat(new Date(result[0].aschaAtnlcEndde));
+				
+				document.querySelector("#aschaNm").value = result[0].aschaNm;						// 방과후학교 명
+				document.querySelector("#aschaDetailCn").value = result[0].aschaDetailCn;			// 강의 설명
+				document.querySelector("#aschaAtnlcCt").value = result[0].aschaAtnlcCt;				// 수강 비용
+				document.querySelector("#aschaAceptncPsncpa").value = result[0].aschaAceptncPsncpa;	// 수강 정원
+				document.querySelector("#aschaAtnlcBgnde").value = aschaAtnlcBgnde;					// 수강 시작 일자
+				document.querySelector("#aschaAtnlcEndde").value = aschaAtnlcEndde;					// 수강 종료 일자
+				
+				let str = "";
+				result.forEach(function(aschaVO, idx){
+					aschaVO.aschaWeekPlanVOList.forEach(function(aschaWeekPlanVO,index){
+						str +=`
+							<div>
+								<div style="width:10%;float:left;">
+									<input type="text" class="form-control aschaWeek"
+										name="aschaWeekPlanVOList[\${index}].aschaWeek" id="aschaWeek\${index+1}" value="\${index+1}주" />
+								</div>
+								<div style="width:90%;float:left;">
+									<input type="text" class="form-control aschaWeekPlanCn"
+										name="aschaWeekPlanVOList[\${index}].aschaWeekPlanCn" id="aschaWeekPlanCn\${index+1}"
+										placeholder="주간계획 입력" value="\${aschaWeekPlanVO.aschaWeekPlanCn}"/>
+								</div>						
+							</div>`;
 					});
-					console.log("str : ", str);
-					document.querySelector("#divWeekAdd").innerHTML = str;
-					
-					
-				}
+				});
+				document.querySelector("#divWeekAdd").innerHTML = str;
 			}
-		});	
-
+		}
+	});	
 }
 
 </script>
@@ -314,11 +290,13 @@ window.onload = function(){
 #AfterSchoolContainer .custom-pagination .pagination {
 	width: max-content;
 }
+
 .btn-primary {
     color: #fff;
     background-color: #006DF0;
     border-color: #005Dd0;
 }
+
 .AfterSchoolAll, .replyContainer {
 	width: 1400px;
 	margin: auto;
@@ -402,65 +380,52 @@ label {
 <div id="AfterSchoolContainer">
 	<div class="review-content-section">
 		<h3>
-			<img src="/resources/images/school/aftSchool/aftSchoolIcon1.png"
-				style="width: 50px; display: inline-block; vertical-align: middel;">
-			<span id="schoolNm"></span> <span>&nbsp;방과후학교 관리</span> <img
-				src="/resources/images/school/aftSchool/aftSchoolIcon2.png"
-				style="width: 50px; display: inline-block; vertical-align: middel;">
+			<img src="/resources/images/school/aftSchool/aftSchoolIcon1.png" style="width: 50px; display: inline-block; vertical-align: middel;">
+			<span id="schoolNm"></span> <span>&nbsp;방과후학교 관리</span>
+			<img src="/resources/images/school/aftSchool/aftSchoolIcon2.png" style="width: 50px; display: inline-block; vertical-align: middel;">
 		</h3>
-		<div class="AfterSchoolAll"
-			style="width: 1400px; margin: auto; margin-bottom: 50px; min-height: 820px; padding: 50px 80px;">
+		<div class="AfterSchoolAll" style="width: 1400px; margin: auto; margin-bottom: 50px; min-height: 820px; padding: 50px 80px;">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="devit-card-custom">
 					<div class="form-group">
-						<label>방과후학교 명</label> <input type="text" class="form-control"
-							id="aschaNm" name="aschaNm">
+						<label>방과후학교 명</label> <input type="text" class="form-control" id="aschaNm" name="aschaNm">
 					</div>
 					<div class="form-group">
 						<label>강의 설명</label>
-						<textarea class="form-control" id="aschaDetailCn"
-							name="aschaDetailCn"></textarea>
+						<textarea class="form-control" id="aschaDetailCn" name="aschaDetailCn"></textarea>
 					</div>
 					<div class="form-group">
-						<label>수강 비용</label> <input type="number" class="form-control"
-							id="aschaAtnlcCt" name="aschaAtnlcCt" value="0"
-							placeholder="원 단위로 입력하세요">
+						<label>수강 비용</label>
+						<input type="number" class="form-control" id="aschaAtnlcCt" name="aschaAtnlcCt" value="0" placeholder="원 단위로 입력하세요">
 					</div>
 					<div class="form-group">
-						<label>수용 정원</label> <input type="number" class="form-control"
-							id="aschaAceptncPsncpa" name="aschaAceptncPsncpa" value="0"
-							placeholder="명 단위로 입력하세요">
+						<label>수용 정원</label>
+						<input type="number" class="form-control" id="aschaAceptncPsncpa" name="aschaAceptncPsncpa" value="0" placeholder="명 단위로 입력하세요">
 					</div>
 					<div class="form-group">
-						<label>수강 시작 일자</label> <input type="date" class="form-control"
-							id="aschaAtnlcBgnde" name="aschaAtnlcBgnde" value="0">
+						<label>수강 시작 일자</label>
+						<input type="date" class="form-control" id="aschaAtnlcBgnde" name="aschaAtnlcBgnde" value="0">
 					</div>
 					<div class="form-group">
-						<label>수강 종료 일자</label> <input type="date" class="form-control"
-							id="aschaAtnlcEndde" name="aschaAtnlcEndde" value="0">
+						<label>수강 종료 일자</label>
+						<input type="date" class="form-control" id="aschaAtnlcEndde" name="aschaAtnlcEndde" value="0">
 					</div>
 
 					<!-- 주간계획 -->
 					<div class="form-group">
 						<label for="">주간계획 등록</label>
 						<div>
-							<button type="button"
-								class="btn btn-custon-rounded-two btn-primary weekAdd">추가</button>
-							<button type="button"
-								class="btn btn-custon-rounded-two btn-danger weekMinus">삭제</button>
+							<button type="button" class="btn btn-custon-rounded-two btn-primary weekAdd">추가</button>
+							<button type="button" class="btn btn-custon-rounded-two btn-danger weekMinus">삭제</button>
 						</div>
 						<div class="form-group" id="divWeekAdd">
 							<div>
 								<!-- 주간계획 입력하기 -->
 								<div style="width: 10%; float: left;">
-									<input type="text" class="form-control aschaWeek"
-										name="aschaWeekPlanVOList[0].aschaWeek" id="aschaWeek1"
-										value="1주" />
+									<input type="text" class="form-control aschaWeek" name="aschaWeekPlanVOList[0].aschaWeek" id="aschaWeek1" value="1주" />
 								</div>
 								<div style="width: 90%; float: left;">
-									<input type="text" class="form-control aschaWeekPlanCn"
-										name="aschaWeekPlanVOList[0].aschaWeekPlanCn"
-										id="aschaWeekPlanCn1" placeholder="주간계획 입력" />
+									<input type="text" class="form-control aschaWeekPlanCn" name="aschaWeekPlanVOList[0].aschaWeekPlanCn" id="aschaWeekPlanCn1" placeholder="주간계획 입력" />
 								</div>
 							</div>
 						</div>
@@ -468,12 +433,9 @@ label {
 
 					<div class="btn-zone">
 						<!-- 클릭시 alert창 띄우면서 목록으로 돌아가기 -->
-						<button type="button" id="btnUpdate"
-							class="btn btn-custon-rounded-two btn-primary">수정</button>
-						<button type="button" id="btnDelete"
-							class="btn btn-custon-rounded-two btn-danger">삭제</button>
-						<button type="button" id="btnList"
-							class="btn btn-custon-rounded-two btn-default">목록</button>
+						<button type="button" id="btnUpdate" class="btn btn-custon-rounded-two btn-primary">수정</button>
+						<button type="button" id="btnDelete" class="btn btn-custon-rounded-two btn-danger">삭제</button>
+						<button type="button" id="btnList" class="btn btn-custon-rounded-two btn-default">목록</button>
 					</div>
 				</div>
 			</div>
