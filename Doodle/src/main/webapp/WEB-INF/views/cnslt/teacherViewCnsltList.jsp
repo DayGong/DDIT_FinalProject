@@ -161,7 +161,6 @@ $(function() {
 					}, // end eventDidMount
 					// 캘린더에서 일정을 클릭했을 때 실행되는 함수
 					eventClick: function(info) {
-						console.log("info ==> ", info);
 						let cnsltCode = info.event.id;										// 상담 코드
 						let cnsltTitle = info.event.title;									// [예약 상태 명] 상담 대상 이름
 						let cnsltTrgetIdNm = info.event.extendedProps.cnsltTrgetIdNm;		// 상담 대상 아이디
@@ -177,14 +176,8 @@ $(function() {
 						
 						let cnsltVO = { "cnsltCode" : cnsltCode };
 						sessionStorage.setItem("cnsltVO", JSON.stringify(cnsltVO));			// 상담 코드를 클라이언트측 세션에 저장
-						
-// 						if (classNames !== null || classNames !== "") {
-// 				            event.preventDefault();	// 이벤트의 기본 동작(구글 캘린더로의 이동)을 막음
-//                     		return;
-// 						}
 
 						$("#cnsltDetailModal").modal("show");								// 상담 내역 상세보기 모달창 열기
-						
 						$("#cnsltSttus").html(sttus);										// 상담 상태 값 넣기
 						$("#modalCnsltTrgetId").html(cnsltTrgetId);							// 상담 대상 아이디 값 넣기
 						$("#modalCnsltTrgetIdNm").html(cnsltTrgetIdNm.trim());				// 상담 대상 이름 값 넣기

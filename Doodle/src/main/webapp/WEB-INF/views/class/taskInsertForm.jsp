@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-   pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <style>
 #TaskContainer h3{
@@ -80,9 +79,7 @@
   display: flex;
   align-items: center;
 }
-.prepend-big-btn {
-  position: ;
-}
+
 .icon-right {
   margin-right: 10px;
 }
@@ -93,8 +90,6 @@
   cursor: pointer;
   padding: 0px 15px 0px 7px;
   border-bottom: 1px solid #d7d7d7;
-/*   border-radius: 5px; */
-  
 }
 .file-button input {
   display: none;
@@ -116,7 +111,6 @@
 .input-file-button{
   background-color:#fff;
   border-radius: 4px;
-/*   color: white; */
   cursor: pointer;
 }
 
@@ -165,11 +159,11 @@ $(function() {
 	    //SmartEditor2Skin.html 파일이 존재하는 경로
 	    sSkinURI : '<c:url value="/resources/se2/SmartEditor2Skin.html"/>',
 	    htParams : {
-	    bUseToolbar : true,          // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
-	    bUseVerticalResizer : true,  // 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
-	    bUseModeChanger : true,      // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
-	    bSkipXssFilter : true,       // client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
-	 	fCreator: "createSEditor2"
+			bUseToolbar : true,          // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+			bUseVerticalResizer : true,  // 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+			bUseModeChanger : true,      // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+			bSkipXssFilter : true,       // client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
+			fCreator: "createSEditor2"
 	    }
 	});
 });
@@ -230,10 +224,7 @@ $(function(){
         
         // 업로드한 파일 가져오기
         var files = $("#inputTask")[0].files;
-        console.log("files", files);
-        
         var formData = new FormData();
-        
         formData.append("clasCode", clasCode);
         formData.append("taskSj", taskSj);
         formData.append("taskCn", taskCn);
@@ -254,8 +245,6 @@ $(function(){
 				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 	        },
            	success: function(taskCode){
-	            console.log("taskInsert", taskCode);
-	            
 				taskSj = "[과제] " + taskSj;
 				var noticeCn = "새 과제가 등록되었습니다.";
 				

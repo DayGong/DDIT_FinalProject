@@ -8,16 +8,13 @@ const token ="${_csrf.token}";
 window.onload = function(){
 	
 	document.getElementById("semstr").addEventListener("change", function() {
-		
 		const clasCode = "${CLASS_INFO.clasCode}";
 	    var selectedValue = this.value;
-	    console.log("선택된 값: " + selectedValue);
 
 	    let data ={
 	    	"clasCode": clasCode,
 	    	"semstr": selectedValue 
 	    }
-	    console.log("data : ",data);
 	    
 		// 학기 중복 확인
 		$.ajax({
@@ -30,7 +27,6 @@ window.onload = function(){
 		        xhr.setRequestHeader(header, token);
 		    },
 		    success: function(result){
-		    	console.log("result:", result);
 		    	if(result===1){
 		    		Swal.fire({
 		    		    icon: 'warning',
@@ -45,28 +41,11 @@ window.onload = function(){
 		}) // end ajax
 	});
 	
-	
-	
 	// 자동 등록
 	$("#btnAuto").on("click",function(){
 		// 학기 선택
 		$("#semstr").val("1");
 		
-// 	    // 첫 번째 td에 "국어" 값을 설정
-// 	    $(".periodList:nth-child(1) #scheduleAdd .selectTr1 select").val("A07001");
-	    
-// 	    // 두 번째 td에 "영어" 값을 설정
-// 	    $(".periodList:nth-child(2) .selectTr select").val("A07002");
-
-// 	    // 세 번째 td에 "수학" 값을 설정
-// 	    $(".periodList:nth-child(3) .selectTr select").val("A07003");
-
-// 	    // 네 번째 td에 "과학" 값을 설정
-// 	    $(".periodList:nth-child(4) .selectTr select").val("A07004");
-
-// 	    // 다섯 번째 td에 "사회" 값을 설정
-// 	    $(".periodList:nth-child(5) .selectTr select").val("A07005");
-
 		// 1교시
 		$(".periodList:nth-child(1) .selectTr.1 select").val("A07001");
 		$(".periodList:nth-child(1) .selectTr.2 select").val("A07003");
@@ -100,7 +79,6 @@ window.onload = function(){
 	document.querySelector(".scheduleAdd").addEventListener("click", function(){
 		
 		let len = document.querySelectorAll(".periodList").length;
-		console.log("len : "+len);
 		let str = "";
 		
 		if(len>7){
@@ -120,11 +98,10 @@ window.onload = function(){
 					<td class = "selectTr 5" data-cmmn-day = "A18005" data-period="\${len+1}"></td>
 				</tr>`;
 		}
-		console.log("str : ",str);
 		
 		const temp = document.querySelector("#listBody").insertAdjacentHTML(
-			    "beforeend", // HTML 요소가 삽입되는 위치 선언
-			    str // 삽입할 문자열		
+			"beforeend",	// HTML 요소가 삽입되는 위치 선언
+			str 			// 삽입할 문자열		
 		);
 		// select 넣음
 		insertSelectEl(); 
@@ -134,13 +111,12 @@ window.onload = function(){
 	// 시간표 교시 삭제하기
 	document.querySelector(".scheduleMinus").addEventListener("click", function(){
 		let len = document.querySelectorAll(".periodList").length;
-		console.log("len : "+len);
 		
 		if(len<5){
 			Swal.fire({
-			      icon: 'warning',
-			      title: '최소 4교시 이상 있어야 합니다.',
-			      text: '다시 시도해주세요.',
+				icon: 'warning',
+				title: '최소 4교시 이상 있어야 합니다.',
+				text: '다시 시도해주세요.',
 			})			
 		}else{
 			let temp = document.querySelector("#listBody");
@@ -185,17 +161,13 @@ window.onload = function(){
 	// 시간표 추가하기
 	// 등록 버튼 눌렀을 때 실행하기
 	document.querySelector("#insertBtn").addEventListener("click",function(){
-		
 		const semstr = document.querySelector("#semstr").value;
 		const clasCode = "${CLASS_INFO.clasCode}";
-		
-		// let formData = new FormData(); // 파일이 없으면 절대 필요없음!!!!!
-
 		const skedVOList = [];
 
 		// select된 교시, 요일, 과목데이터 배열에 넣기
 		$(".selectTr").each(function(idx, subject){
-			
+
 			let skedVO = {
 				semstr,
 				clasCode,
@@ -205,10 +177,7 @@ window.onload = function(){
 			}
 
 			skedVOList.push(skedVO);
-
 		});
-		console.log("보내는 값 항상 체크:",skedVOList);
-	    console.log(header,token);
 		$.ajax({
 			type:"post",
 			url : "/class/scheduleCreateAjax",
@@ -219,23 +188,18 @@ window.onload = function(){
 				xhr.setRequestHeader(header, token);
 			},
 			success: function(result){
-				console.log("항상 돌아온 값 체킁",result);
 				Swal.fire({
-				      icon: 'success',
-				      title: '시간표가 등록되었습니다.',
-				      text: '목록으로 이동합니다.',
-					}).then(function(){
-						location.href = "/class/schedule?clasCode="+encodeURIComponent(clasCode);
+					icon: 'success',
+					title: '시간표가 등록되었습니다.',
+					text: '목록으로 이동합니다.',
+				}).then(function(){
+					location.href = "/class/schedule?clasCode="+encodeURIComponent(clasCode);
 				});
 			}
 		});
 	});
 }
-		
-
-
 </script>
-
 <style>
 #ScheduleContainer h3 {
 	font-size: 2.2rem;
@@ -275,13 +239,11 @@ window.onload = function(){
 	padding: 50px 80px;
 }
 
-
 .ScheduleAll .FreeTit {
 	display: flex;
 	justify-content: space-between;
 	position:relative;
 }
-
 
 .ScheduleAll .title{
 	font-size: 1.8rem;
@@ -314,15 +276,11 @@ window.onload = function(){
 <div id="ScheduleContainer">
 	<h3>
 		<!-- 사진 바꾸기 -->
-		<img src="/resources/images/school/aftSchool/aftSchoolIcon1.png"
-			style="width: 50px; display: inline-block; vertical-align: middel;">
-		<span id="schoolNm"></span> <span>&nbsp;시간표</span> <img
-			src="/resources/images/school/aftSchool/aftSchoolIcon2.png"
-			style="width: 50px; display: inline-block; vertical-align: middel;">
+		<img src="/resources/images/school/aftSchool/aftSchoolIcon1.png" style="width: 50px; display: inline-block; vertical-align: middel;">
+		<span id="schoolNm"></span><span>&nbsp;시간표</span>
+		<img src="/resources/images/school/aftSchool/aftSchoolIcon2.png" style="width: 50px; display: inline-block; vertical-align: middel;">
 	</h3>
-
-	<div class="ScheduleAll"
-		style="width: 1400px; margin: auto; margin-bottom: 50px;">
+	<div class="ScheduleAll" style="width: 1400px; margin: auto; margin-bottom: 50px;">
 		<div class="free-cont">
 			<div>
 				<label for="">학기 선택 </label> 
@@ -332,7 +290,6 @@ window.onload = function(){
 					<option value="2">2학기</option>
 				</select>
 			</div>
-
 			<div>
 				<label for="">시간표 입력</label>
 			</div>
@@ -340,12 +297,9 @@ window.onload = function(){
 				<button id="btnAuto" style="background:white; border:white">
 					<i class="fa fa-pencil-square-o" aria-hidden="true" style="height:25px; width:25px; margin:5px; margin: 20px 10px 0 10px;"></i>
 				</button>
-				<button type="button"
-					class="btn btn-custon-rounded-two btn-primary scheduleAdd">추가</button>
-				<button type="button"
-					class="btn btn-custon-rounded-two btn-danger scheduleMinus">삭제</button>
+				<button type="button" class="btn btn-custon-rounded-two btn-primary scheduleAdd">추가</button>
+				<button type="button" class="btn btn-custon-rounded-two btn-danger scheduleMinus">삭제</button>
 			</div>
-
 			<div class="fixed-table-body">
 				<table id="table" class="table JColResizer">
 					<thead>
@@ -391,9 +345,7 @@ window.onload = function(){
 							<td class = "selectTr 4" data-cmmn-day = "A18004" data-period="4"></td>
 							<td class = "selectTr 5" data-cmmn-day = "A18005" data-period="4"></td>
 						</tr>
-						<!-- 추가할 내용 들어갈 공간. -->
 					</tbody>
-
 				</table>
 				<hr>
 			</div>

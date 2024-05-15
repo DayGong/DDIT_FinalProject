@@ -10,7 +10,6 @@
 	window.onload = function() {
 		// 시간표 등록 버튼 클릭시 생성화면으로 이동하기
 		if("${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode}" == 'ROLE_A14002'){
-			console.log("체크",document.querySelector("#addSchedule"));
 			document.querySelector("#addSchedule").addEventListener("click", function(){
 				location.href = "/class/scheduleCreate?clasCode="+"${CLASS_INFO.clasCode}";
 			});
@@ -33,140 +32,64 @@
 				"semstr" : $("#semstr").val()
 			};
 
-			console.log("data : ", data);
-
 			// 시간표 목록 가져오는 ajax
 			$.ajax({
-				 url: "/class/scheduleList",
-				    contentType: "application/json;charset=utf-8",
-				    data: JSON.stringify(data),
-				    type: "post",
-				    dataType: "json",
-				    beforeSend: function(xhr) {
-				        xhr.setRequestHeader(header, token);
-				    },
-				    success: function(result) {
-				        console.log("result : ", result);
-				        let tbodyStr ="";
-				        
-				        if(result.length ===0){
-				        	// 로그인한 사람이 교사일때 시간표 생성 화면으로 이동.
-				        	if("${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode}" == 'ROLE_A14002'){
-					        	Swal.fire(
-										"시간표가 생성되지 않았습니다.",
-										"시간표 생성 페이지로 이동합니다.",
-										"info"
-					          ).then(function(){
-							        // create로 이동
-					        	  	location.href = "/class/scheduleCreate?clasCode="+"${CLASS_INFO.clasCode}";
-					          });
-				        	}
-				        	
-				        }else{
-							for(let i=1; i<=6; i++){
-								tbodyStr += `<tr><td>\${i}교시</td><td></td><td></td><td></td><td></td><td></td></tr>`;
-							}
-							tbody.innerHTML = tbodyStr;
-							let trs = tbody.querySelectorAll("tr");
-							
-							const weekday = {
-								"월":1,
-								"화":2,
-								"수":3,
-								"목":4,
-								"금":5,
-							}
-	
-							for(let i=0; i<result.length;i++){
-								let skedVO = result[i];
-								console.log("skedVO:",skedVO)
-								trs[skedVO.period-1].children[weekday[skedVO.cmmnDayNm]].innerHTML = skedVO.cmmnSbject;
-	
-	
-								/*  이력서, 자기소개소 
-								if(skedVO.cmmnDayNm == "월"){
-										console.log("월", skedVO.cmmnSbject);
-										trs[skedVO.period-1].children[1].innerHTML = skedVO.cmmnSbject;
-								}
-								if(skedVO.cmmnDayNm == "화"){
-									console.log("화", skedVO.cmmnSbject);
-										trs[skedVO.period-1].children[2].innerHTML = skedVO.cmmnSbject;
-								}
-								if(skedVO.cmmnDayNm == "수"){
-									console.log("수", skedVO.cmmnSbject);
-										trs[skedVO.period-1].children[3].innerHTML = skedVO.cmmnSbject;
-								}
-								if(skedVO.cmmnDayNm == "목"){
-									console.log("목", skedVO.cmmnSbject);
-										trs[skedVO.period-1].children[4].innerHTML = skedVO.cmmnSbject;
-								}
-								if(skedVO.cmmnDayNm == "금"){
-									console.log("금", skedVO.cmmnSbject);
-										trs[skedVO.period-1].children[5].innerHTML = skedVO.cmmnSbject;
-								}
-								*/
-							}
-				        }
-	
-	
-							// tbody에 맹글깅!
+				url: "/class/scheduleList",
+				contentType: "application/json;charset=utf-8",
+				data: JSON.stringify(data),
+				type: "post",
+				dataType: "json",
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader(header, token);
+				},
+				success: function(result) {
+					let tbodyStr ="";
+					
+					if(result.length ===0){
+						// 로그인한 사람이 교사일때 시간표 생성 화면으로 이동.
+						if("${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode}" == 'ROLE_A14002'){
+							Swal.fire(
+								"시간표가 생성되지 않았습니다.",
+								"시간표 생성 페이지로 이동합니다.",
+								"info"
+							).then(function(){
+								// create로 이동
+								location.href = "/class/scheduleCreate?clasCode="+"${CLASS_INFO.clasCode}";
+							});
+						}
+					}else{
+						for(let i=1; i<=6; i++){
+							tbodyStr += `<tr><td>\${i}교시</td><td></td><td></td><td></td><td></td><td></td></tr>`;
+						}
+						tbody.innerHTML = tbodyStr;
+						let trs = tbody.querySelectorAll("tr");
 						
-				        	/* 요일별로 데이터 묶기
-				        	const groupDay ={};
-				        	result.forEach(function(skedVO,idx){
-								if(!groupDay[skedVO.cmmnDayNm]){
-									groupDay[skedVO.cmmnDayNm] = [];
-								}
-								groupDay[skedVO.cmmnDayNm].push(skedVO);
-					        });		
-				        	console.log("groupDay :",groupDay);
-							*/
-	
-					        /* 시간표 출력
-							let trs = tbody.querySelectorAll("tr");
-					        let str = "";
-					        Object.keys(groupDay).forEach(function(day){
-								console.log("day: ", day);
-					        	for (let i = 0; i < groupDay[day].length; i++) {
-					        	    const skedVO = groupDay[day][i];
-									if(skedVO.cmmnDaynm == "월"){
-										trs[i].children[1].innerHTML = skedVO.cmmnSubject;
-									}
-									if(skedVO.cmmnDaynm == "화"){
-										trs[i].children[2].innerHTML = skedVO.cmmnSubject;
-									}
-									if(skedVO.cmmnDaynm == "수"){
-										trs[i].children[3].innerHTML = skedVO.cmmnSubject;
-									}
-									if(skedVO.cmmnDaynm == "목"){
-										trs[i].children[4].innerHTML = skedVO.cmmnSubject;
-									}
-									if(skedVO.cmmnDaynm == "금"){
-										trs[i].children[5].innerHTML = skedVO.cmmnSubject;
-									}
-					        	};
-					        	
-					        });
-							*/
-					       // console.log("str : ",str);
-					       // document.querySelector("#listBody").innerHTML = str;
-				    }
-				});
+						const weekday = {
+							"월":1,
+							"화":2,
+							"수":3,
+							"목":4,
+							"금":5,
+						}
 
+						for(let i=0; i<result.length;i++){
+							let skedVO = result[i];
+							trs[skedVO.period-1].children[weekday[skedVO.cmmnDayNm]].innerHTML = skedVO.cmmnSbject;
+						}
+					}
+				}
+			});
 		}
 		
 		// 학기 선택
 		const selectSemstr = function() {
-
 			var semstr = document.querySelector("#semstr").value;
-			console.log("selectSemstr:",semstr);
 			// 학기 선택후 목록 다시 불러옴.
 			scheduleList();
 		}
 		selectSemstr();
 		document.querySelector("#semstr").addEventListener("change",selectSemstr);
 	}
-	
 </script>
 <style>
 .pagination {
@@ -289,8 +212,6 @@ table{
 							src="/resources/images/school/aftSchool/aftSchoolIcon2.png"
 							style="width: 50px; display: inline-block; vertical-align: middel;">
 					</h3>
-
-
 					<div class="sparkline13-graph">
 						<div class="datatable-dashv1-list custom-datatable-overright">
 							<div class="fixed-table-toolbar">
@@ -310,7 +231,6 @@ table{
 	</div>
 
 	<!-- 시간표 -->
-
 	<div class="fixed-table-container" style="padding-bottom: 0px;text-align: center;" >
 		<div class="fixed-table-body" >
 			<table>

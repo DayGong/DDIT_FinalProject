@@ -50,7 +50,7 @@ $( document ).ready(function() {
 		var cnt = [];//투표항목 채택 인원 수
 		<c:forEach var="iemvo" items="${smallList}" varStatus="status2">
 			arr.push("${iemvo.VOTE_DETAIL_IEM_CN}");//투표항목
-			cnt.push("${iemvo.CNT}");//투표항목 채택 인원 수
+			cnt.push("${iemvo.CNT}");				//투표항목 채택 인원 수
 		</c:forEach>
 		var ctx = document.getElementById("myChart" + "${status.count}" + "-1").getContext('2d');//div가져오기 id값은 겹치면 안되므로 status로 구분
 		var myChart = new Chart(ctx, {
@@ -126,8 +126,8 @@ $( document ).ready(function() {
 	
 	//도넛 차트
 	<c:forEach var="responseList" items="${responseMemberList}" varStatus="status">
-		var zeroCnt = 0;//미응시자 인원을 담을 카운트
-		var oneCnt = 0;//응시자 인원을 담을 카운트
+		var zeroCnt = 0;	//미응시자 인원을 담을 카운트
+		var oneCnt = 0;		//응시자 인원을 담을 카운트
 		<c:forEach var="map" items="${responseList}" varStatus="status2">
 			if("0" == "${map.CNT}") {
 				zeroCnt++;
@@ -204,7 +204,7 @@ $( document ).ready(function() {
 	//투표한 사람의 권한 체크
 	<c:forEach var="authList" items="${responseMemberList}" varStatus="status">
 		var parents = 0;//학부모의 인원수
-		var std = 0;//학생의 인원수
+		var std = 0;	//학생의 인원수
 		<c:forEach var="map" items="${authList}" varStatus="status2">
 			if("1" == "${map.CNT}") {
 				if("ROLE_A01001"=="${map.CMMN_DETAIL_CODE}"){
@@ -214,7 +214,6 @@ $( document ).ready(function() {
 					parents++;
 				}
 			}
-			console.log("std -> ", std);
 		</c:forEach>
 		var cnt = [std, parents]
 		var ctx3 = document.getElementById("myChart" + "${status.count}" + "-3").getContext('2d');
@@ -270,10 +269,8 @@ $( document ).ready(function() {
 			}
 		});
 	</c:forEach>
-	
 });
 </script>
-
 <div id="chartContainer">
 	<h3>
 		<img src="/resources/images/classRoom/freeBrd/grap.png"style="width: 50px; display: inline-block; vertical-align: middel;">
@@ -281,7 +278,6 @@ $( document ).ready(function() {
 		<img src="/resources/images/classRoom/freeBrd/vote1.png" style="width: 50px; display: inline-block; vertical-align: middel;">
 	</h3>
 	<div class="chart-wrap">
-		
 		<c:choose>
 			<c:when test="${voteNdQustnrVOMapList != null and fn:length(voteNdQustnrVOMapList) > 0}">
 				<c:forEach var="voteNdQustnrVO"  items="${voteNdQustnrVOMapList}" varStatus="status">
@@ -306,6 +302,5 @@ $( document ).ready(function() {
 				</div>
 			</c:otherwise>
 		</c:choose>
-		
 	</div>
 </div>

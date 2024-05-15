@@ -13,6 +13,7 @@ p{
 input{
 	padding:10px 15px;
 }
+
 .FreeBoardAll, .questionContainer{
 	width: 1400px;
 	margin: auto;
@@ -35,6 +36,7 @@ input{
 #goListBtn{
 	background: #666;
 }
+
 .question{
 	background: #111;
 	width: fit-content;
@@ -46,12 +48,14 @@ input{
 	margin-bottom:15px;
 	margin-top:30px;
 }
+
 .default-container p input, .multiple-choice-Survey p input, .ubjective-Survey p input{
 	height:45px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	
 }
+
 .btnAll{
 	border:none;
 	background: #006DF0;
@@ -77,12 +81,15 @@ input{
 #surveyAdd, .multipleAnswerAddBtn{
 	background: #333;
 }
+
 #Survey-Zone{
 	position: relative;
 }
+
 .FreeBoardAll{
 	position: relative;
 }
+
 #FreeBoardContainer h3{
 	font-size: 2.2rem;
 	text-align: center;
@@ -99,6 +106,7 @@ input{
 	-webkit-animation: fadein 1s; /* Safari and Chrome */
 	-o-animation: fadein 1s; /* Opera */
 }
+
 @keyframes fadein {
     from {
         opacity: 0;
@@ -132,18 +140,15 @@ input{
     }
 
 </style>
-
 <script type="text/javascript">
-
 $(function(){
-	
 	const multiples = document.querySelectorAll(".multiple-choice");
 
 	for(let i=0; i< multiples.length; i++){
-		    var answers = multiples[i].querySelectorAll("p.answers");
-			if(answers.length >= 3){
-				multiples[i].querySelector("button.multipleAnswerDelBtn").style.display="inline-block";
-			}
+	    var answers = multiples[i].querySelectorAll("p.answers");
+		if(answers.length >= 3){
+			multiples[i].querySelector("button.multipleAnswerDelBtn").style.display="inline-block";
+		}
 	}
 	
 	$("#autoBtn").on("click",function(){
@@ -173,9 +178,7 @@ $(function(){
 				}
 			}
 		});
-
 	});
-	
 	
 	//사용자가 이미 답변한 투표일 때 수정 불가능하게 처리
 	if("${answerCnt}" > 0){
@@ -189,7 +192,6 @@ $(function(){
 		
 		$("#btn-Zone").append(coment);
 	}
-
 
 	$("#studentFreeBoardLi").css("display", "block");
 	$("#teacherFreeBoardLi").css("display", "block");
@@ -211,7 +213,6 @@ $(function(){
 		if(answers.length > 1){
 			delBtn.css("display","inline-block");
 		}
-		
 	});
 	
 	//보기 삭제 버튼 이벤트
@@ -229,25 +230,22 @@ $(function(){
 	
 	//투표 수정 버튼 이벤트
 	$("#surveyUpdateBtn").on("click",function(){
-		var voteQustnrNm = $("#voteQustnrNm").val();//투표이름
-		var voteQustnrCn = $("#voteQustnrCn").val();//투표내용(목적)
-		var voteQustnrBeginDt = $("#voteQustnrBeginDt").val();//투표시작날짜
-
-		var voteQustnrEndDt = $("#voteQustnrEndDt").val();//투표종료일
+		var voteQustnrNm = $("#voteQustnrNm").val();			//투표이름
+		var voteQustnrCn = $("#voteQustnrCn").val();			//투표내용(목적)
+		var voteQustnrBeginDt = $("#voteQustnrBeginDt").val();	//투표시작날짜
+		var voteQustnrEndDt = $("#voteQustnrEndDt").val();		//투표종료일
 		//투표시작 날짜와 종료날짜 비교를 위한 변수와 조건문
 		var voteQustnrBeginDtArr = voteQustnrBeginDt.split('-');
 		var voteQustnrEndDtArr = voteQustnrEndDt.split('-');
 		var startDateCompare = new Date(voteQustnrBeginDtArr[0], parseInt(voteQustnrBeginDtArr[1])-1, voteQustnrBeginDtArr[2]);
 		var endDateCompare = new Date(voteQustnrEndDtArr[0], parseInt(voteQustnrEndDtArr[1])-1, voteQustnrEndDtArr[2]);
 		var now = new Date();
-		
 		now.setTime(new Date().getTime() - (1 * 24 * 60 * 60 * 1000)); //1일전     return d.format("d");
 		
 		if(startDateCompare.getTime() > endDateCompare.getTime()) {
 			alertError("투표 종료일은 투표 시작일의 이전 일 수 없습니다.");
 			return;
 		}
-		
 		if(now.getTime() > startDateCompare.getTime()) {
 			alertError("투표 시작일은 투표 작성일의 이전 일 수 없습니다.");
 			return;
@@ -316,7 +314,6 @@ $(function(){
 				qustnrList.push(obj);
 			});
 			data.qustnrList = qustnrList;
-			console.log(data);
 			
 			$.ajax({
 				type : 'POST',
@@ -337,7 +334,6 @@ $(function(){
 			});
 		}
 	});
-	
 });
 </script>
 
@@ -445,6 +441,5 @@ $(function(){
 				</div>
 			</c:forEach>
 		</div>
-	</div>
-</form>
+	</form>
 </div>

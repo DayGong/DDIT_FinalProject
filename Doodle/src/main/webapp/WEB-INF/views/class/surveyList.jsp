@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -87,18 +86,17 @@
 </style>
 <script type="text/javascript" src="/resources/js/jquery.min.js"></script>
 <script>
-
 var qustnrSttus ='';
 function dateFormat(date){
-	   var selectDate = new Date(date);
-	   var d = selectDate.getDate();
-	   var m = selectDate.getMonth() + 1;
-	   var y = selectDate.getFullYear();
-	   
-	   if(m < 10) m = "0" + m;
-	   if(d < 10) d = "0" + d;
-	   
-	   return y + "-" + m + "-" + d; 
+	var selectDate = new Date(date);
+	var d = selectDate.getDate();
+	var m = selectDate.getMonth() + 1;
+	var y = selectDate.getFullYear();
+	
+	if(m < 10) m = "0" + m;
+	if(d < 10) d = "0" + d;
+	
+	return y + "-" + m + "-" + d; 
 }
 
 $(document).ready(function(){
@@ -106,8 +104,6 @@ $(document).ready(function(){
 });
 
 function fn_getSurveyPage(currentPage) {
-
-	
 	var data = {
 		"clasCode" : "${clasCode}",
 		"schulCode" : "${schulCode}",
@@ -127,20 +123,16 @@ function fn_getSurveyPage(currentPage) {
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success: function(res){
+			var str ="";
+			var total = res.total;
+			var currentPage = res.currentPage;
 			
 			$("#surveyFormDownBtn").on("click",function(){
 				location.href="/freeBoard/surveyFormDownload";
 			});
 			
-
-			var str ="";
-			var total = res.total;
-			var currentPage = res.currentPage;
-			
-			console.log("res.content -> ", res.content);	
-			
 			if(res.content == 0){
-				str +=	"<tr style='text-align:center;'><td colspan='7' class='none' style='text-align:center!important;'><span>조회된 내용이 없습니다.</span></td></tr>"
+				str += "<tr style='text-align:center;'><td colspan='7' class='none' style='text-align:center!important;'><span>조회된 내용이 없습니다.</span></td></tr>"
 				$("#surveyTbody").html(str);
 				$("#divPaging").html(res.pagingArea);
 			}else{
@@ -191,13 +183,9 @@ function fn_getSurveyPage(currentPage) {
 					str +=		"</td>";
 					str +=	"</tr>";
 					
-					
-					
 					$("#surveyTbody").html(str);
 					$("#divPaging").html(res.pagingArea);
-					
 				});
-				
 				
 				$(".surbeyList").each(function(idx, item){
 					var stat = $(item).find("a.stat2").text();
@@ -217,20 +205,15 @@ function fn_getSurveyPage(currentPage) {
 						astat.css("color","#fff");
 					}
 				});
-				
 			}
-			
-		
 			
 			$("#surveyTbody").on("click","[data-target='target']",function(){
 				var voteQustnrCode = $(this).find('input').val();
 				$("#voteQustnrCode").val(voteQustnrCode);
 				var stat = $(this).closest("tr").find("td.stat").find("a.stat2");
 				
-				
 				if(${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode == "ROLE_A14002" ||  USER_INFO.vwMemberAuthVOList[1].cmmnDetailCode == "ROLE_A14002"}){
-				//action="/freeBoard/surveyDetailView"
-				$("#surveyfrm").attr("action","/freeBoard/surveyUpdate").submit();	
+					$("#surveyfrm").attr("action","/freeBoard/surveyUpdate").submit();	
 				}else{
 					if(stat.text()=='마감'){
 						alertError("이미 마감된 설문입니다.");
@@ -269,7 +252,6 @@ function fn_surveyPaging(item, currentPage) {
 	fn_getSurveyPage(currentPage);
 }
 </script>
-
 <div id="FreeBoardContainer">
 	<form id="surveyfrm" method="post" action="/freeBoard/surveyDetailView">
 		<input type="hidden" value="" id="voteQustnrCode" name="voteQustnrCode">
@@ -277,8 +259,7 @@ function fn_surveyPaging(item, currentPage) {
 	</form>
 	<div class="sparkline13-list">
 		<h3>
-			<img src="/resources/images/classRoom/freeBrd/survey.png"
-				style="width: 50px; display: inline-block; vertical-align: middel;">
+			<img src="/resources/images/classRoom/freeBrd/survey.png" style="width: 50px; display: inline-block; vertical-align: middel;">
 			설문 게시판 <img src="/resources/images/classRoom/freeBrd/vote.png" style="width: 50px; display: inline-block; vertical-align: middel;">
 		</h3>
 		<div class="sparkline13-graph">
@@ -294,7 +275,6 @@ function fn_surveyPaging(item, currentPage) {
 									설문조사 양식 다운로드
 								</button>
 							</c:if>
-							
 						</div>
 						<div class="pull-right search" style="margin-bottom: 20px;">
 							<!-- 검색 조건 시작-->
@@ -355,7 +335,6 @@ function fn_surveyPaging(item, currentPage) {
 									</tr>
 								</thead>
 								<tbody id="surveyTbody">
-	
 								</tbody>
 							</table>
 						</div>

@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-   pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <style>
 #TaskContainer h3{
@@ -74,9 +73,6 @@
   display: flex;
   align-items: center;
 }
-.prepend-big-btn {
-  position: ;
-}
 .icon-right {
   margin-right: 10px;
 }
@@ -87,7 +83,6 @@
   cursor: pointer;
   padding: 0px 15px 0px 7px;
   border-bottom: 1px solid #d7d7d7;
-/*   border-radius: 5px; */
   
 }
 .file-button input {
@@ -110,7 +105,6 @@
 .input-file-button{
   background-color:#fff;
   border-radius: 4px;
-/*   color: white; */
   cursor: pointer;
 }
 
@@ -169,8 +163,6 @@ $(function() {
 });
 
 $(function() {
-// 	console.log("${taskVO}");
-
 	/* 파일이 여러 개일 때 처리 시작*/
     var fileNameValue = '';
 
@@ -208,8 +200,8 @@ $(function() {
 	
 	    // 입력 정보들 가져오기
 	    var taskSj = $("#taskSj").val();
-	    
-        var newTaskEndDt = new Date($("#taskEndDt").val());
+     
+	    var newTaskEndDt = new Date($("#taskEndDt").val());
         newTaskEndDt.setHours(23);   // 시간을 23으로 설정
         newTaskEndDt.setMinutes(59); // 분을 59으로 설정
         newTaskEndDt = dateToMinFormat(newTaskEndDt).toString();
@@ -217,14 +209,11 @@ $(function() {
 	    // 에디터에 적은 내용 가져오기
 	    var taskCn = oEditors.getById["se2Cn"].getIR();
 	    $("#taskCn").val(taskCn);
-	    console.log("taskCn: " + taskCn);
 	
 	    // 업로드한 파일 가져오기
 	    var files = $("#inputTask")[0].files;
-	    console.log("files", files);
 	
 	    var formData = new FormData();
-	
 	    // 마감일을 수정했을 때의 처리
 	    if (newTaskEndDt != null && newTaskEndDt != "") {
 	        formData.append("taskEndDt", newTaskEndDt);
@@ -247,8 +236,6 @@ $(function() {
 	        formData.append("uploadFiles", files[i]);
 	    };
 	
-	    console.log("formData: ", formData);
-	
 	    $.ajax({
 	        url: "/task/taskUpdate",
 	        processData: false,
@@ -260,8 +247,6 @@ $(function() {
 	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
 	        },
 	        success: function(res) {
-	            console.log("res: ", res);
-	            
 	            Swal.fire({
 	               title: '등록이 완료되었습니다.',
 	               text: '',

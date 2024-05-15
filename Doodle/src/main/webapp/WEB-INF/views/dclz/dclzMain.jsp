@@ -3,7 +3,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <script type="text/javascript" src="/resources/js/jquery.min.js"></script>
 <link rel="stylesheet" href="/resources/css/mainPage.css">
-
 <style>
 #dclzMain {
 	width :1400px;
@@ -32,9 +31,7 @@
 	height:20px;
 	width:auto;
 }
-
 </style>
-
 <script>
 // 출결 정보 get
 const getAllDclz = function(){
@@ -50,7 +47,6 @@ const getAllDclz = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success : function(res) {
-			console.log("getAllDclz:",res);
 			returnData = res;
 		},
 		 error:function(request,status,error){
@@ -60,6 +56,7 @@ const getAllDclz = function(){
 	
 	return returnData;
 }
+
 // 반학생 목록 get
 const getAllClasStd = function(){
 	let returnData;
@@ -74,7 +71,6 @@ const getAllClasStd = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success : function(res) {
-			console.log("getAllClasStd:",res);
 			returnData = res;
 		},
 		 error:function(request,status,error){
@@ -83,7 +79,6 @@ const getAllClasStd = function(){
 	})
 	
 	return returnData;
-	
 }
 
 // (학생)출석 버튼
@@ -97,7 +92,6 @@ const insertStdDclz = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success : function(res) {
-			console.log("insertStdDclz:",res);
 			if(res > 0){
 				cjh.swAlert("완료", "출결 처리가 완료되었습니다.", "success");
 				drawDclzTb();
@@ -127,7 +121,6 @@ const insertDclz = function(cscode ,nm , day){
 					xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 				},
 				success : function(res) {
-					console.log("insertDclz:",res);
 					if(res > 0){
 						cjh.swAlert("완료", "출결 처리가 완료되었습니다.", "success");
 					}else{
@@ -145,10 +138,6 @@ const insertDclz = function(cscode ,nm , day){
 
 //출결 정보 테이블 리스트로 생성
 const makeDclzStr = function(){
-	console.log("startDateFilter:",startDateFilter);
-	console.log("endDateFilter:",endDateFilter);
-	console.log("stdFilter:",stdFilter);
-	
 	if(stdFilter == "not"){
 		return `<tr><td colspan = "100%" style ="text-align:center;">학생을 선택해주세요..</td></tr>`;
 	}
@@ -302,7 +291,6 @@ const makeDclzStr = function(){
 							`;
 				}
 				str += `</tr>`;
-			
 			})
 		})
 	})
@@ -335,7 +323,6 @@ const extendTr = function(trCl){
 		}
 	})
 }
-
 
 // 필터링
 const startTimeSelect = function(date){
@@ -385,7 +372,6 @@ const changeStatus = function(stdClasCode, std, dtDt){
 			// 취소
 		} else{
 			// 변경 로직
-// 			console.log("res:",res);
 			let cnt = updateDclzCmmn(stdClasCode, dtDt, res);
 			if(cnt >0){
 				cjh.swAlert("완료","출결 처리 상태 변경이 완료되었습니다.").
@@ -414,7 +400,6 @@ const getDclzCmmn = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success : function(res) {
-			console.log("getDclzCmmn:",res);
 			returnData = res;
 		},
 		error:function(request,status,error){
@@ -443,7 +428,6 @@ const updateDclzCmmn = function(clasStdntCode, dtDt, res){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success : function(res) {
-// 			console.log("getDclzCmmn:",res);
 			returnData = res;
 		},
 		error:function(request,status,error){
@@ -478,7 +462,6 @@ const clickDoc = function(p){
 		}
 		
 		str += `\${p[i].cmmnProcessSttusNm}</div></td></tr>`;
-				
 	}
 	document.querySelector("#docListModal tbody").innerHTML = str;
 	
@@ -498,18 +481,17 @@ const subDoc = function(clasStdntCode, dtDt){
 	</sec:authorize>
 }
 
-
-let dclzDone = false; // 데이터 get 종료되었는지
-const dclzRes = getAllDclz(); // 모든 출결 데이터
+let dclzDone = false; 				// 데이터 get 종료되었는지
+const dclzRes = getAllDclz(); 		// 모든 출결 데이터
 <sec:authorize access="hasRole('A01002')">
-let clasStdDone = false; // 데이터 get 종료되었는지
-const clasStdRes = getAllClasStd(); // 모든 반학생
-let dclzCmmnRes = null; // 출결 상태 값
+let clasStdDone = false; 			// 데이터 get 종료되었는지
+const clasStdRes = getAllClasStd();	// 모든 반학생
+let dclzCmmnRes = null; 			// 출결 상태 값
 </sec:authorize>
 
-let stdFilter = null; // 학생 필터링
-let startDateFilter = null; // 시작일 필터링
-let endDateFilter = null; // 종료일 필터링
+let stdFilter = null; 				// 학생 필터링
+let startDateFilter = null; 		// 시작일 필터링
+let endDateFilter = null; 			// 종료일 필터링
 
 window.onload = function(){
 	let sel = document.querySelector("#stdSelect");
@@ -522,11 +504,8 @@ window.onload = function(){
 </script>
    
 <div id ="dclzMain">
-
 	<h3><img src ="/resources/images/schedule/scheduleIcon2.png">출결<img src ="/resources/images/schedule/scheduleIcon2.png"></h3>
-	
 	<div  class ="box" style ="margin-bottom: 40px;">
-
 		<div>
 			<sec:authorize access ="hasRole('A01001')">
 			<button onclick = "insertStdDclz()" class = "d-btn-blue" style ="width:320px; height:50px; margin-bottom: 20px;">출석</button>
@@ -587,17 +566,14 @@ window.onload = function(){
 				</div>
 			</div>
 		</div>
-	
 	</div>
 	
 	<!-- modal -->
 	<div id="docListModal" class="modal modal-edu-general default-popup-PrimaryModal fade"role="dialog">
-	
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-close-area modal-close-df">
-					<a class="close" data-dismiss="modal" href="#"> <i
-						class="fa fa-close"></i></a>
+					<a class="close" data-dismiss="modal" href="#"> <i class="fa fa-close"></i></a>
 				</div>
 				<div class="modal-body">
 					<h3>제출 서류 목록</h3>

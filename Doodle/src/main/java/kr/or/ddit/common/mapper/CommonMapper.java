@@ -48,12 +48,6 @@ public interface CommonMapper {
 	//비밀번호 찾기
 	public String searchPwd();
 
-	//FAQ 게시판 목록
-	public String faq();
-
-	//학원 조회
-	public String academy();
-	
 	// 방문자 수와 브라우저를 등록하는 메서드
 	public int addVisitrCo(String browserName);
 

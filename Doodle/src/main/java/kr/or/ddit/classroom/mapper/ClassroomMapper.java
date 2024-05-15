@@ -21,12 +21,6 @@ public interface ClassroomMapper {
 	//학급클래스 목록
 	public String classList();
 	
-	//학급클래스 소속회원 목록
-	public String classMemberList();
-	
-	// 결석 사유 신청(체험학습도)
-	public String absentReason();
-	
 	//자유 게시판 목록 
 	public String freeBoard();
 	
@@ -47,12 +41,6 @@ public interface ClassroomMapper {
 	
 	//학급 시간표 조회
 	public String schedule();
-	
-	//온라인 수업
-	public String onlineClass();
-	
-	//생활 기록부 조회
-	public String lifeRecord();
 
 	// 학급클래스(반) 목록 개수 조회
 	public int classroomGetTotal(Map<String, Object> map);

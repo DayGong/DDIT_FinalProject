@@ -140,7 +140,6 @@ iframe{
 }
 .file-upload input[type="text"] {
   flex-grow: 1;
-/*   margin-left: 10px; */
   padding: 8px;
   border: 1px solid #ced4da;
   width: calc(100% - 100px - 10px - 16px); /* Subtract button width and margins */
@@ -179,7 +178,6 @@ label{
 	justify-content: flex-start;
 	border: 1px solid #ccc;
 	height: 105px;
-/* 	margin-top: 10px; */
     margin-bottom: 10px;
 }
 
@@ -189,7 +187,6 @@ label{
 	object-fit: cover;
 	border-radius: 5px;
 	margin: 7px 0px 7px 7px;
-/* 	margin-top: 10px; */
 	cursor: pointer;
 }
 </style>
@@ -223,8 +220,6 @@ window.onload = function(){
         
         $("#imageDiv").removeAttr("style");
         
-//         console.log(e.dataTransfer.files);
-        
         // 드래그한 파일들을 files에 추가
 	    for (var i = 0; i < e.dataTransfer.files.length; i++) {
 	        files.push(e.dataTransfer.files[i]);
@@ -257,8 +252,6 @@ $(function(){
 	$("#inputImage").on("input", function() {
 		var inputImage = $("#inputImage")[0];
 		
-		console.log(inputImage.files);
-
 		// 업로드한 파일 가져와서 넣기
 		for (var i = 0; i < inputImage.files.length; i++) {
 	        files.push(inputImage.files[i]);
@@ -277,14 +270,12 @@ $(function(){
 	
 	// 첨부한 사진 개별 삭제 이벤트
 	$(document).on("click", ".images", function(){
-		var imageId = $(this).attr("id"); // 클릭한 이미지의 id 가져오기
-	    var idx = imageId.replace("images", ""); // images를 제거하여 인덱스 추출
+		var imageId = $(this).attr("id"); 			// 클릭한 이미지의 id 가져오기
+	    var idx = imageId.replace("images", "");	// images를 제거하여 인덱스 추출
 		  
 	    delete files[idx];
 	    
 	    $("#images"+idx).remove();
-	    
-	    console.log("파일 확인", files);
 	    
 	    var notUndefinedChk = 0;
 	    
@@ -314,8 +305,6 @@ $(function(){
 			return item !== undefined && item !== null;
 		});
 		
-// 		console.log("필터 후 files", files);
-		
         var formData = new FormData();
         formData.append("clasCode", clasCode);
         formData.append("ntcnSj", ntcnSj);
@@ -336,8 +325,6 @@ $(function(){
 				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 	        },
            	success: function(res){
-	            console.log("ntcnCode", res);
-	            
 	            var ntcnCode = res;
 	            
 	            ntcnSj = "[알림장] " + ntcnSj;
@@ -436,17 +423,17 @@ $(function(){
 // 네이버 스마트 에디터 API
 $(function() {
 	nhn.husky.EZCreator.createInIFrame({
-      oAppRef : oEditors,
-      elPlaceHolder : "se2Cn",
-      //SmartEditor2Skin.html 파일이 존재하는 경로
-      sSkinURI : '<c:url value="/resources/se2/SmartEditor2Skin.html"/>',
-      htParams : {
-         bUseToolbar : true,          // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
-         bUseVerticalResizer : true,  // 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
-         bUseModeChanger : true,      // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
-         bSkipXssFilter : true,       // client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
-         }, //boolean
-      fCreator: "createSEditor2"
+		oAppRef : oEditors,
+		elPlaceHolder : "se2Cn",
+		//SmartEditor2Skin.html 파일이 존재하는 경로
+		sSkinURI : '<c:url value="/resources/se2/SmartEditor2Skin.html"/>',
+		htParams : {
+			bUseToolbar : true,          // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+			bUseVerticalResizer : true,  // 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+			bUseModeChanger : true,      // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+			bSkipXssFilter : true,       // client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
+		}, //boolean
+      	fCreator: "createSEditor2"
    });
 });
 </script>
@@ -478,7 +465,6 @@ $(function() {
 				<textarea name="se2Cn" id="se2Cn" style="width: 100%; height: 412px;"></textarea>
 				<textarea name="taskCn" id="taskCn" style="width: 100%; height: 412px; display: none;"></textarea>
 				<div id="imageDiv" style="display: none;">
-<!-- 					<p>첨부된 파일이 없습니다.</p> -->
 				</div>
 				<div class="file-upload-div">
 					<i class="fa fa-cloud-download" aria-hidden="true" style="color: #ccc; font-size: 50px;"></i>

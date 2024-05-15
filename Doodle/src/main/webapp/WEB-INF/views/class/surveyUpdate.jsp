@@ -50,7 +50,6 @@ input{
 	height:45px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
-	
 }
 .btnAll{
 	border:none;
@@ -130,13 +129,9 @@ input{
     to {
         opacity: 1;
     }
-
 </style>
-
 <script type="text/javascript">
-
 $(function(){
-	
 	$("#surveyAllDelBtn").on("click",function(){
 		var data = {};
 		data.voteQustnrCode = "${voteNdQustnrVO.voteQustnrCode}";
@@ -157,10 +152,7 @@ $(function(){
 				}
 			}
 		});
-
 	});
-	
-
 	
 	//사용자가 이미 답변한 설문일 때 수정 불가능하게 처리
 	if("${answerCnt}" > 0){
@@ -175,7 +167,6 @@ $(function(){
 		$("#btn-Zone").append(coment);
 	}
 
-
 	$("#studentFreeBoardLi").css("display", "block");
 	$("#teacherFreeBoardLi").css("display", "block");
 	$("#parentFreeBoardLi").css("display", "block");
@@ -186,7 +177,6 @@ $(function(){
 	$("#surveyAdd").on("click",function(){
 		var selectBox = $("#selectBox").val()||0;
 		if(selectBox == 1) {
-			console.log("객관식");
 			var newHtml = '';
 			newHtml +=	'<div class="questionContainer">'
 			newHtml +=		'<div class="multiple-choice-Survey">'
@@ -219,9 +209,7 @@ $(function(){
 			newHtml +='</div>';
 			
 			$('#Survey-Zone').append(newHtml);
-			
 		}else {
-			console.log("주관식");
 			var newHtml = '';
 			newHtml += '<div class="questionContainer">';
 			newHtml += 	'<ul class="questionAnswerDefault">';
@@ -293,9 +281,9 @@ $(function(){
 	
 	//설문 수정 버튼 이벤트
 	$("#surveyUpdateBtn").on("click",function(){
-		var voteQustnrNm = $("#voteQustnrNm").val();//설문이름
-		var voteQustnrCn = $("#voteQustnrCn").val();//설문내용(목적)
-		var voteQustnrBeginDt = $("#voteQustnrBeginDt").val();//설문시작날짜
+		var voteQustnrNm = $("#voteQustnrNm").val();			//설문이름
+		var voteQustnrCn = $("#voteQustnrCn").val();			//설문내용(목적)
+		var voteQustnrBeginDt = $("#voteQustnrBeginDt").val();	//설문시작날짜
 
 		var voteQustnrEndDt = $("#voteQustnrEndDt").val();//설문종료일
 		//설문시작 날짜와 종료날짜 비교를 위한 변수와 조건문
@@ -304,7 +292,6 @@ $(function(){
 		var startDateCompare = new Date(voteQustnrBeginDtArr[0], parseInt(voteQustnrBeginDtArr[1])-1, voteQustnrBeginDtArr[2]);
 		var endDateCompare = new Date(voteQustnrEndDtArr[0], parseInt(voteQustnrEndDtArr[1])-1, voteQustnrEndDtArr[2]);
 		var now = new Date();
-		
 		now.setTime(new Date().getTime() - (1 * 24 * 60 * 60 * 1000)); //1일전     return d.format("d");
 		
 		if(startDateCompare.getTime() > endDateCompare.getTime()) {
@@ -380,7 +367,6 @@ $(function(){
 				qustnrList.push(obj);
 			});
 			data.qustnrList = qustnrList;
-			console.log(data);
 			
 			$.ajax({
 				type : 'POST',
@@ -392,9 +378,7 @@ $(function(){
 				},
 				success : function(result) {
 					if(result > 0){
-						console.log("result->" , result);
 						resultAlert2(result, '설문 수정 ', '리스트로 이동합니다.', '/freeBoard/surveyList');
-						
 					}else{
 						alertError("설문 수정이 실패하였습니다.");
 						return;
@@ -403,10 +387,8 @@ $(function(){
 			});
 		}
 	});
-	
 });
 </script>
-
 <!-- 자유게시판 hover효과 js -->
 <div id="FreeBoardContainer">
 	<h3>
@@ -527,7 +509,6 @@ $(function(){
 										<button style="display:none;" type="button" class="btnAll multipleAnswerDelBtn">보기 삭제</button>
 									</c:if>
 								</p>
-								
 								<c:forEach items="${voteNdQustnrVO.voteQustnrDetailIemVOList}" var="detail" varStatus="vstatus">
 									<c:if test="${items.voteIemSn == detail.voteIemSn}">
 										<p class="answers" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
@@ -543,6 +524,5 @@ $(function(){
 				</div>
 			</c:forEach>
 		</div>
-	</div>
-</form>
+	</form>
 </div>

@@ -125,11 +125,9 @@
 }
 
 #excelContainer{
-/* 	display: none; */
 	margin-top:10px;
 	display: flex;
 	justify-content: space-evenly;
-/* 	z-index: 5; */
 	right: 73px;
 	bottom: 50px;
 	width: 220px;
@@ -149,13 +147,11 @@ var schulCode = "${param.schulCode}";
 
 function fn_search(page) {
     var keyword = $("#keyword").val();
-    
     var data = {
         "schulCode": schulCode,
         "currentPage": page, // page 매개변수 사용
         "keyword": keyword
     }
-
 
     $.ajax({
         url: "/employee/employeeListAjax",
@@ -167,7 +163,6 @@ function fn_search(page) {
             xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
         },
         success: function(result) {
-
             if (result.total == 0) {
                 $("#keyword").val('');
 
@@ -184,7 +179,6 @@ function fn_search(page) {
                     	<sec:authorize access = "hasAnyRole('A01000','A14001','A14003')" >
                         	str += "<tr onclick='location.href=\"/employee/employeeDetail?schulCode=" + schulPsitnMberVO.schulCode + "&mberId=" + schulPsitnMberVO.mberId + "\"' style='cursor: pointer;'>";
                         </sec:authorize>
-                        
                     	<sec:authorize access = "hasAnyRole('A01001','A01003','A14002','A14004','A14005')" >
                         	str += "<tr>";
                         </sec:authorize>
@@ -199,14 +193,11 @@ function fn_search(page) {
                         str += "</tr>";
                     });
                 });
-
                 $("#employeeBody").html(str);
             }
-
             $("#divPaging").html(result.pagingArea);
         },
         error: function(xhr, status, error) {
-            console.error(status, error);
         }
     });
 }
@@ -227,16 +218,14 @@ function resultSAlert(result, actTitle, reloadPage) {
 $(function(){
 	fn_search(1);
 	
-	
 	//input태그에서 엔터시 검색버튼누르기
 	var input = $("#keyword");
-
-	  input.on("keypress", function(event) {
-	      if (event.key === "Enter") {
-	          event.preventDefault();
-	          $("#search").click();
-	      }
-	  });
+	input.on("keypress", function(event) {
+	    if (event.key === "Enter") {
+	        event.preventDefault();
+	        $("#search").click();
+	    }
+	});
 
 	// 교직원 검색
 	$("#search").on("click",function(){
@@ -264,12 +253,8 @@ $(function(){
 	
 	//엑셀로 등록
 	$("#fileBtn").on("click",function(){
-		//직원 등록 완료의 수
-		var ajaxCount = 0;
-		
-		//vo의 수
-		var voCount = 0;
-		
+		var ajaxCount = 0;	//직원 등록 완료의 수
+		var voCount = 0;	//vo의 수
 		var fm = document.empFrm;
 		var fnm = fm.upload;
 		var filePath = fnm.value;
@@ -299,18 +284,10 @@ $(function(){
 					xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 				},
 				success:function(result){
-					
-					//text -> json
-					const obj = JSON.parse(result);
-					var voCount = obj.length; // vo의 수 설정
-					
-					
-					//JSON.stringify : json->text
+					const obj = JSON.parse(result);	//text -> json
+					var voCount = obj.length; 		// vo의 수 설정
 					
 					$.each(obj,function(idx,vo){
-						//{"0":"7.58109211004E11","1":"java","2":"박민수","3":"000000-0000003","4":"010-3698-1472",
-						//"5":"park@example.com","6":"24680.0","7":"서울시 강북구","8":"재직","9":"교사"}
-						//ex) vo[0] : 7.58109211004E11 / vo[6] : 24680.0
 						let mberId = vo[0];
 						let password = vo[1];
 						let mberNm = vo[2];
@@ -389,7 +366,6 @@ $(function(){
 	});
 })
 </script>
-
 <div id="empContainer">
 	<div class="sparkline13-list">
 		<h3>

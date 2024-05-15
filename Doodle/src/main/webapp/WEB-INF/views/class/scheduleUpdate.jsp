@@ -4,7 +4,6 @@
 //beforeSend 전역변수 처리
 const header="${_csrf.headerName}";
 const token ="${_csrf.token}";
-
 let tbody;
 
 window.onload = function(){
@@ -13,65 +12,55 @@ window.onload = function(){
 	const scheduleList = function(){
 		let clasCode = "${CLASS_INFO.clasCode}";
 		let semstr = "";
-		
 		let data = {
 			"clasCode" : clasCode,
 			"semstr" : $("#semstr").val()
 		};
 		
-		console.log("data : ", data);
-
 		// 시간표 목록 가져오는 ajax
 		$.ajax({
-			 url: "/class/scheduleList",
-			    contentType: "application/json;charset=utf-8",
-			    data: JSON.stringify(data),
-			    type: "post",
-			    dataType: "json",
-			    beforeSend: function(xhr) {
-			        xhr.setRequestHeader(header, token);
-			    },
-			    success: function(result) {
-			        console.log("result : ", result);
-					let tbodyStr ="";
-					
-					for(let i=1; i<=8; i++){
-						tbodyStr += `<tr><td>\${i}교시</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
-					}
-					tbody.innerHTML = tbodyStr;
-					let trs = tbody.querySelectorAll("tr");
-					
-					const weekday = {
-						"월":1,
-						"화":2,
-						"수":3,
-						"목":4,
-						"금":5,
-					}
+			url: "/class/scheduleList",
+			contentType: "application/json;charset=utf-8",
+			data: JSON.stringify(data),
+			type: "post",
+			dataType: "json",
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(header, token);
+			},
+			success: function(result) {
+				let tbodyStr ="";
+				
+				for(let i=1; i<=8; i++){
+					tbodyStr += `<tr><td>\${i}교시</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
+				}
+				tbody.innerHTML = tbodyStr;
+				let trs = tbody.querySelectorAll("tr");
+				
+				const weekday = {
+					"월":1,
+					"화":2,
+					"수":3,
+					"목":4,
+					"금":5,
+				}
 
-					for(let i=0; i<result.length;i++){
-						let skedVO = result[i];
-						console.log("skedVO:",skedVO)
-						trs[skedVO.period-1].children[weekday[skedVO.cmmnDayNm]].innerHTML = skedVO.cmmnSbject;
-
-					}
-			    }
-			});
+				for(let i=0; i<result.length;i++){
+					let skedVO = result[i];
+					trs[skedVO.period-1].children[weekday[skedVO.cmmnDayNm]].innerHTML = skedVO.cmmnSbject;
+				}
+			}
+		});
 	}
+
 	// 수정할 학기 선택
 	const selectSemstr = function() {
-
 		var semstr = document.querySelector("#semstr").value;
-		console.log(selectSemstr);
 		// 학기 선택후 목록 다시 불러옴.
 		scheduleList();
 	}
 	selectSemstr();
 	document.querySelector("#semstr").addEventListener("change",selectSemstr);
 }
-		
-
-
 </script>
 
 <style>
@@ -152,15 +141,11 @@ window.onload = function(){
 <div id="ScheduleContainer">
 	<h3>
 		<!-- 사진 바꾸기 -->
-		<img src="/resources/images/school/aftSchool/aftSchoolIcon1.png"
-			style="width: 50px; display: inline-block; vertical-align: middel;">
-		<span id="schoolNm"></span> <span>&nbsp;시간표</span> <img
-			src="/resources/images/school/aftSchool/aftSchoolIcon2.png"
-			style="width: 50px; display: inline-block; vertical-align: middel;">
+		<img src="/resources/images/school/aftSchool/aftSchoolIcon1.png" style="width: 50px; display: inline-block; vertical-align: middel;">
+		<span id="schoolNm"></span> <span>&nbsp;시간표</span>
+		<img src="/resources/images/school/aftSchool/aftSchoolIcon2.png" style="width: 50px; display: inline-block; vertical-align: middel;">
 	</h3>
-
-	<div class="ScheduleAll"
-		style="width: 1400px; margin: auto; margin-bottom: 50px;">
+	<div class="ScheduleAll" style="width: 1400px; margin: auto; margin-bottom: 50px;">
 		<div class="free-cont">
 			<div>
 				<label for="">학기 선택 </label> 
@@ -170,19 +155,14 @@ window.onload = function(){
 					<option value="2">2학기</option>
 				</select>
 			</div>
-
 			<div>
 				<label for="">시간표 입력</label>
 			</div>
 			<div>
-				<button type="button"
-					class="btn btn-custon-rounded-two btn-default btnAuto">자동등록</button>
-				<button type="button"
-					class="btn btn-custon-rounded-two btn-primary scheduleAdd">추가</button>
-				<button type="button"
-					class="btn btn-custon-rounded-two btn-danger scheduleMinus">삭제</button>
+				<button type="button" class="btn btn-custon-rounded-two btn-default btnAuto">자동등록</button>
+				<button type="button" class="btn btn-custon-rounded-two btn-primary scheduleAdd">추가</button>
+				<button type="button" class="btn btn-custon-rounded-two btn-danger scheduleMinus">삭제</button>
 			</div>
-
 			<div class="fixed-table-body">
 				<table id="table" class="table JColResizer" >
 					<thead>
@@ -197,7 +177,6 @@ window.onload = function(){
 					</thead>
 					<tbody id="listBody">
 					</tbody>
-
 				</table>
 				<hr>
 			</div>

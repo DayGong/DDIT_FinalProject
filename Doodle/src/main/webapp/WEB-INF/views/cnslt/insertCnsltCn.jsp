@@ -164,7 +164,6 @@ let cnsltSmartEditor = function(cnsltCn) {
 window.onload = function() {
 	<!------------------------- 자동 완성 버튼 시작 --------------------------->
 	$(document).on("click", "#cnsltAutoBtn", function() {
-		console.log("ok");
 		let txt = "지은이는 의욕 넘치고 머리가 비상해서 노력이 빛을 발할 거에요!<br>방과후학교라는 새로운 경험으로 학업에대한 압박감을 줄여주는 것을 추천 드립니다.";
 		oEditors.getById["cnsltCn"].exec("SET_IR", [""]);		//내용초기화
 		oEditors.getById["cnsltCn"].exec("PASTE_HTML", [txt]);

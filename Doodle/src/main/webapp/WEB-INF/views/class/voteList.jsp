@@ -4,6 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
 <style>
 #FreeBoardContainer h3 {
 	font-size: 2.2rem;
@@ -84,12 +85,9 @@
 	padding: 5px 10px;
 	margin-left: 15px;
 }
-
 </style>
-<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
 <script>
 var qustnrSttus ='';
-
 
 function dateFormat(date){
 	   var selectDate = new Date(date);
@@ -108,11 +106,9 @@ $(document).ready(function(){
 	$("#createVoteBtn").on("click",function(){
 		location.href="/freeBoard/voteCreate";
 	});
-	
 });
 
 function fn_getSurveyPage(currentPage){
-	
 	var data = {
 			"clasCode" : "${clasCode}",
 			"schulCode" : "${schulCode}",
@@ -121,7 +117,7 @@ function fn_getSurveyPage(currentPage){
 			"searchCondition" : $("#searchCondition").val(),
 			"currentPage" : currentPage
 	};
-	//console.log("data->" , data);
+	
 	$.ajax({
 		url:"/freeBoard/voteListAjax",
 		contentType:"application/json;charset=utf-8",
@@ -132,12 +128,9 @@ function fn_getSurveyPage(currentPage){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success: function(res){
-
 			var str ="";
 			var total = res.total;
 			var currentPage = res.currentPage;
-			
-			console.log("res.content -> ", res.content);	
 			
 			if(res.content == 0){
 				str +=	"<tr style='text-align:center;'><td colspan='7' class='none' style='text-align:center!important;'><span>조회된 내용이 없습니다.</span></td></tr>"
@@ -222,10 +215,8 @@ function fn_getSurveyPage(currentPage){
 				$("#voteQustnrCode").val(voteQustnrCode);
 				var stat = $(this).closest("tr").find("td.stat").find("a.stat2");
 				
-				
 				if(${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode == "ROLE_A14002" ||  USER_INFO.vwMemberAuthVOList[1].cmmnDetailCode == "ROLE_A14002"}){
-				//action="/freeBoard/surveyDetailView"
-				$("#surveyfrm").attr("action","/freeBoard/voteUpdate").submit();	
+					$("#surveyfrm").attr("action","/freeBoard/voteUpdate").submit();	
 				}else{
 					if(stat.text()=='마감'){
 						alertError("이미 마감된 투표입니다.");
@@ -343,7 +334,6 @@ function fn_surveyPaging(item, currentPage) {
 									</tr>
 								</thead>
 								<tbody id="surveyTbody">
-									
 								</tbody>
 							</table>
 						</div>

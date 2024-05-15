@@ -96,11 +96,8 @@ const getScoreTableStr = function(ueRes){
 //성적 테이블 출력
 const setScoreTable = function(){
 	let testDiv = document.querySelector("#tableDiv");
-	tableDiv.parentNode.style.display ="block";
-	
 	let str = getScoreTableStr(ueRes, "-1");
-	console.log("setScoreTable => " + setScoreTable);
-	
+	tableDiv.parentNode.style.display ="block";
 	tableDiv.innerHTML = str;
 	
 	let rs =[];
@@ -234,7 +231,6 @@ const setScoreTbSel = function(){
 
 // 학생 select 변경
 const changeSelStd = function(index){
-
 	let member = ueRes[0].unitEvlScoreVOList[0];
 	
 	// 막대 그래프

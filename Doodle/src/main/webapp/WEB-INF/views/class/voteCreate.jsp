@@ -6,8 +6,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <script type="text/javascript" src="/resources/js/jquery.min.js"></script>
 <style>
-
-
 p{
 	margin-bottom:0;
 }
@@ -177,7 +175,6 @@ $(function(){
 		if(answers.length > 1){
 			delBtn.css("display","inline-block");
 		}
-		
 	});
 	
 	$("#Survey-Zone").on("click", ".multipleAnswerDelBtn",function(){
@@ -197,7 +194,6 @@ $(function(){
 		var voteQustnrNm = $("#voteQustnrNm").val();//설문이름
 		var voteQustnrCn = $("#voteQustnrCn").val();//설문내용(목적)
 		var voteQustnrBeginDt = $("#voteQustnrBeginDt").val();//설문시작날짜
-// 		console.log("voteQustnrBeginDt->",voteQustnrBeginDt);
 		var voteQustnrEndDt = $("#voteQustnrEndDt").val();//설문종료일
 		//설문시작 날짜와 종료날짜 비교를 위한 변수와 조건문
 		var voteQustnrBeginDtArr = voteQustnrBeginDt.split('-');
@@ -205,7 +201,6 @@ $(function(){
 		var startDateCompare = new Date(voteQustnrBeginDtArr[0], parseInt(voteQustnrBeginDtArr[1])-1, voteQustnrBeginDtArr[2]);
 		var endDateCompare = new Date(voteQustnrEndDtArr[0], parseInt(voteQustnrEndDtArr[1])-1, voteQustnrEndDtArr[2]);
 		var now = new Date();
-		
 		now.setTime(new Date().getTime() - (1 * 24 * 60 * 60 * 1000)); //1일전     return d.format("d");
 		
 		if(startDateCompare.getTime() > endDateCompare.getTime()) {
@@ -217,7 +212,6 @@ $(function(){
 			alertError("투표 시작일은 투표 작성일의 이전 일 수 없습니다.");
 			return;
 		}
-		
 		
 		//설문지 등록시 null 체크
 		if(voteQustnrNm == null || voteQustnrNm == ''){
@@ -274,7 +268,6 @@ $(function(){
 				qustnrList.push(obj);
 			});
 			data.qustnrList = qustnrList;
-			console.log(data);
 			
 			$.ajax({
 				type : 'POST',
@@ -293,11 +286,8 @@ $(function(){
 					}
 				}
 			});
-			
 		}
 	});
-	
-
 });
 </script>
 <div id="FreeBoardContainer">

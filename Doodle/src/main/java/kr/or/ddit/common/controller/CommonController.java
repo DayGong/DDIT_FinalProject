@@ -174,18 +174,6 @@ public class CommonController {
         return passwordChk;
 	}
 
-	// FAQ 게시판 목록
-	@GetMapping("/faq")
-	public String faq() {
-		return "common/faq";
-	}
-
-	// 학원 조회
-	@GetMapping("/academy")
-	public String academy() {
-		return "common/academy";
-	}
-
 	// 시큐리티 권한 에러 났을때
 	@GetMapping("/accessError")
 	public String accessError() {

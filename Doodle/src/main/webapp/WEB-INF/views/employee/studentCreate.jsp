@@ -12,9 +12,9 @@ function resultSAlert(result, actTitle, reloadPage) {
 	if (result != 2) { res = "실패"; icon = "error"; }
 	
 	Swal.fire({
-      title: actTitle + " " + res + '하였습니다.',
-      text: reloadPage,
-      icon: icon
+		title: actTitle + " " + res + '하였습니다.',
+		text: reloadPage,
+		icon: icon
 	}).then(result => { location.href = "/employee/studentList?schulCode="+schulCode; });
 }
 
@@ -65,7 +65,6 @@ $(function() {
 				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 			},
 			success:function(result){
-
 				var chk = idChk.test(mberId);
 				if(result == 0){
 					if (!chk) {
@@ -88,10 +87,8 @@ $(function() {
 	//회원가입 실행버튼 클릭 시
 	$("#insertBtn").on("click",function(){
 		
-		//정규식 검사할 개수
-		var targetCnt = $("[data-valid]").length;
-		//정규식 통과한 개수
-		var successCnt = $("[data-valid='true']").length;
+		var targetCnt = $("[data-valid]").length;			//정규식 검사할 개수
+		var successCnt = $("[data-valid='true']").length;	//정규식 통과한 개수
 		
 		if(targetCnt == successCnt) {
 		let schulCode = $("#schulCode").val();
@@ -107,7 +104,6 @@ $(function() {
 		let cmmnGrade = $("#cmmnGrade option:selected").val();
 		let cmmnSchulPsitnSttus = $("#cmmnSchulPsitnSttus option:selected").val();
 
-		// 가상 폼 <form></form>
 		//주소 + 상세주소를 하나로 합치는 스크립트 (DB에 주소 컬럼이 1개이므로 합쳐서 저장)
 		var mberAdres = $("#mberAdres1").val() + ' ' + $("#mberAdres2").val();
 		$("#mberAdres").val(mberAdres);
@@ -125,42 +121,36 @@ $(function() {
 			},
 			success:function(result){
 				if(result==2){
-							resultSAlert(result,'학생 등록을','학생 목록으로 이동합니다.');
-						}else{
-							alertError('학생 등록에 실패하였습니다.', ' ');
-						}
-					}
-				});
-				}else {
-					alertError('필수값을 입력해주세요.', ' ');
+					resultSAlert(result,'학생 등록을','학생 목록으로 이동합니다.');
+				}else{
+					alertError('학생 등록에 실패하였습니다.', ' ');
 				}
-				
+			}
+		});
+		}else {
+			alertError('필수값을 입력해주세요.', ' ');
+		}
 	});
 	
 	//썸네일
 	$("#inputImgs").on("change",handleImg);
 	
-	//e : onchange 이벤트 객체
 	function handleImg(e){
-		//e.target : <input type="file"..
-		let files = e.target.files;
-		//이미지 오브젝트 배열		
-		let fileArr = Array.prototype.slice.call(files);
+		let files = e.target.files;							//e.target : <input type="file"..
+		let fileArr = Array.prototype.slice.call(files);	//이미지 오브젝트 배열	
+
 		//초기화
 		$("#thum").html("");
+
 		//fileArr : {"개똥이.jpg객체","홍길동.jpg객체"}
-		//f :각각의 이미지 파일
 		fileArr.forEach(function(f){
-			//f.type : MIME타입
 			if(!f.type.match("image.*")){
 				alert("이미지 확장자만 가능합니다");
-				//함수 종료
 				return;
 			}
+
 			//이미지를 읽어보자
 			let reader = new FileReader();
-			
-			//e : reader가 이미지를 읽을 때 그 이벤트
 			reader.onload = function(e){
 				//e.target : 이미지 객체
 				let img = "<img src="+e.target.result+" style='width:100%; height:100%; text-align:center; display:block; margin:auto;' />";
@@ -181,14 +171,13 @@ $(function() {
 		new daum.Postcode({
 			//다음 창에서 검색이 완료되면
 			oncomplete : function(data) {
-				$("#zip").val(data.zonecode);//우편번호
-				$("#mberAdres1").val(data.address);//주소
+				$("#zip").val(data.zonecode);		//우편번호
+				$("#mberAdres1").val(data.address);	//주소
 			}
 		}).open();
 	});
 });
 </script>
-
 
 <style>
 /*회원가입 폼 스타일 정의*/
@@ -203,9 +192,9 @@ $(function() {
 	margin-top: 80px;
 	margin-bottom: 60px;
 	animation: fadein 1s;
-	-moz-animation: fadein 1s; /* Firefox */
-	-webkit-animation: fadein 1s; /* Safari and Chrome */
-	-o-animation: fadein 1s; /* Opera */
+	-moz-animation: fadein 1s; 		/* Firefox */
+	-webkit-animation: fadein 1s; 	/* Safari and Chrome */
+	-o-animation: fadein 1s; 		/* Opera */
 	padding-left: 80px;
 	padding-right: 80px;
 }
@@ -217,7 +206,7 @@ $(function() {
 				opacity: 1;
 		}
 	}
-	@-moz-keyframes fadein { /* Firefox */
+	@-moz-keyframes fadein { 		/* Firefox */
 			from {
 					opacity: 0;
 			}
@@ -225,7 +214,7 @@ $(function() {
 					opacity: 1;
 			}
 	}
-	@-webkit-keyframes fadein { /* Safari and Chrome */
+	@-webkit-keyframes fadein {		/* Safari and Chrome */
 			from {
 					opacity: 0;
 			}
@@ -233,7 +222,7 @@ $(function() {
 					opacity: 1;
 			}
 	}
-	@-o-keyframes fadein { /* Opera */
+	@-o-keyframes fadein { 			/* Opera */
 			from {
 					opacity: 0;
 			}
@@ -255,7 +244,7 @@ $(function() {
 	width:100%;
 	margin-top:10px;
 	font-size:1rem;
-	padding:10px; 15px;
+	padding:10px, 15px;
 	outline:none;
 }
 #signUpContainer span{
@@ -291,13 +280,11 @@ $(function() {
 	text-align: center;
 	font-weight:700;
 	width:200px;
-/* 	margin:auto; */
 	border-radius: 10px;
 	background: #006DF0;
 	color: #fff;
 	font-size: 1.2rem;
 	margin-left: 10px;
-	
 }
 
 #autoBtn{
@@ -328,14 +315,12 @@ $(function() {
 	text-align: center;
 	font-weight:700;
 	width:200px;
-/* 	margin:auto; */
 	border-radius: 10px;
 	background: #333;
 	color: #fff;
 	font-size: 1.2rem;
 	margin-left: 10px;
 }
-
 
 #frm .btnZone{
 	display:flex;
@@ -365,14 +350,11 @@ $(function() {
 	font-size:0.9rem; 
 	border:none;
 }
-
 #frm #childChk{
 	background: #ffd77a;
 	color:#3e3f41;
 	font-weight:700;
 }
-
-
 #frm #childDelBtn{
 	background:#666; 
 }

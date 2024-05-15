@@ -5,7 +5,6 @@
 <!-- 스와이프 -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<!--  -->
 <link rel="stylesheet" href="/resources/css/mainPage.css">
 <style>
 /* 프로필 시작 */
@@ -14,7 +13,6 @@
    width: 150px; 
    border-radius: 70%;
    object-fit: cover;
-/*    box-shadow: 0px 0px 10px 2px #0c4c9c40, inset 0px 0px 10px 1px #ffffff70; */
 }
 
 .single-product-text .cards-hd-dn {
@@ -66,11 +64,9 @@
     color: #999;
 }
 
-
 #classMain {
-/* 	font-size: 1.2rem; */
-width :1400px;
-margin :auto;
+	width :1400px;
+	margin :auto;
 }
 
 #classMain h3, #classMain h2, #classMain h1 {
@@ -80,7 +76,6 @@ margin :auto;
 #classMain td {
 	border-radius: 0px;
 }
-
 
 .hor-div{
 	margin-bottom: 12px;
@@ -133,20 +128,20 @@ margin :auto;
 }
 
 .modal-body-class-stdnt {
-text-align: center;
-backdrop-filter: blur(4px);
-background-color: rgba(255, 255, 255, 1);
-border-radius: 50px;
-box-shadow: 35px 35px 68px 0px rgba(145, 192, 255, 0.5), inset -8px -8px 16px 0px rgba(145, 192, 255, 0.6), inset 0px 11px 28px 0px rgb(255, 255, 255);
-padding-top: 35px;
-padding-bottom: 35px;
-margin-bottom: 40px;
-padding: 10%;
-margin: 5%;
+	text-align: center;
+	backdrop-filter: blur(4px);
+	background-color: rgba(255, 255, 255, 1);
+	border-radius: 50px;
+	box-shadow: 35px 35px 68px 0px rgba(145, 192, 255, 0.5), inset -8px -8px 16px 0px rgba(145, 192, 255, 0.6), inset 0px 11px 28px 0px rgb(255, 255, 255);
+	padding-top: 35px;
+	padding-bottom: 35px;
+	margin-bottom: 40px;
+	padding: 10%;
+	margin: 5%;
 }	
 
 .modal-body-class-stdnt h3{
-padding-bottom: 30px;
+	padding-bottom: 30px;
 }
 
 .product-status-wrap.drp-lst table td {
@@ -157,10 +152,10 @@ padding-bottom: 30px;
 <script type="text/javascript" src="/resources/js/jquery.min.js" ></script>
 <script type="text/javascript">
 var clasCode = '${clasCode}';
+
 // 새창에서 채팅창 여는 함수
 function openChatPop(url) {
-    window.open(url, '_blank'
-    		, 'top=140, left=0, width=500, height=875, menubar=no, toolbar=no, location=no, directories=no, status=no, scrollbars=no, copyhistory=no, resizable=no');
+    window.open(url, '_blank', 'top=140, left=0, width=500, height=875, menubar=no, toolbar=no, location=no, directories=no, status=no, scrollbars=no, copyhistory=no, resizable=no');
 }
 
 // 상단 학교 정보
@@ -180,8 +175,6 @@ const classInfoModalInit = function(){
 
 // 반 정보 버튼
 const classroomInfoBtn = function(){
-	/* console.log("classroomInfoBtn act");
-	$("#classroomInfoModal").modal('show'); */
     let url="/class/viewClassMgmt?clasCode=" + clasCode;
     let features = "scrollbars=no, width=500, height=700, location=no, resizable=yes";
     let windowName = "반 정보";
@@ -199,7 +192,6 @@ const modifyClassroom = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success :function(res){
-			console.log("modifyClassroom res:",res);
 		}
 	})
 }
@@ -242,8 +234,6 @@ const getStdList = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success :function(res){
-// 			console.log("getStdList res:",res);
-			
 			str ="";
 			res.forEach(function(std){
 				str += `<tr>
@@ -261,9 +251,6 @@ const getStdList = function(){
 			}
 			
 		},error:function(request, status, error){
-			console.log("code: " + request.status)
-	        console.log("message: " + request.responseText)
-	        console.log("error: " + error);
 		}
 	})
 }
@@ -281,7 +268,6 @@ const getTaskList = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success :function(res){
-			console.log("getTaskList res:",res);
 			str = "";
 			
 			if(res.length > 0){
@@ -305,9 +291,6 @@ const getTaskList = function(){
 			}
 			
 		},error:function(request, status, error){
-			console.log("code: " + request.status)
-	        console.log("message: " + request.responseText)
-	        console.log("error: " + error);
 		}
 	});
 }
@@ -323,7 +306,6 @@ const getDoingExam = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success :function(res){
-			console.log("getDoingExam res:",res);
 			str = "";
 			
 			if(res.length > 0){
@@ -344,11 +326,7 @@ const getDoingExam = function(){
 					`;
 				document.querySelector("#unitTestListTb").innerHTML = str;
 			}
-			
 		},error:function(request, status, error){
-			console.log("code: " + request.status)
-	        console.log("message: " + request.responseText)
-	        console.log("error: " + error);
 		}
 	});
 }
@@ -366,7 +344,6 @@ const getNtcnList = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success :function(res){
-// 			console.log("getNtcnList res:",res);
 			str = "";
 			
 			if(res.length > 0){
@@ -397,9 +374,6 @@ const getNtcnList = function(){
 			}
 			
 		},error:function(request, status, error){
-			console.log("code: " + request.status)
-	        console.log("message: " + request.responseText)
-	        console.log("error: " + error);
 		}
 	});
 }
@@ -409,15 +383,16 @@ const getRecentAtend = function(){
 	$.ajax({
 		url:"/dclz/getRecentAtend",
 		method:"post",
-		data:JSON.stringify({"clasCode":'${CLASS_INFO.clasCode}',
-			"size":"30"}),
+		data:JSON.stringify({
+			"clasCode":'${CLASS_INFO.clasCode}',
+			"size":"30"
+		}),
 		contentType: "application/json; charset=utf-8",
 		dataType:"json",
 		beforeSend:function(xhr){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success :function(res){
-			console.log("getRecentAtend res:",res);
 			str = "";
 			
 			if(res.length > 0){
@@ -441,9 +416,6 @@ const getRecentAtend = function(){
 			}
 			
 		},error:function(request, status, error){
-			console.log("code: " + request.status)
-	        console.log("message: " + request.responseText)
-	        console.log("error: " + error);
 		}
 	});
 }
@@ -460,8 +432,6 @@ const getClasImg = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success :function(res){
-			console.log("getClasImg res:",res);
-			
 			str = "";
 			res.forEach(function(f,index) {
 				if ((index)%3 == 0){
@@ -491,9 +461,6 @@ const getClasImg = function(){
 			}
 		        
 		},error:function(request, status, error){
-			console.log("code: " + request.status)
-	        console.log("message: " + request.responseText)
-	        console.log("error: " + error);
 		}
 	});
 }
@@ -535,7 +502,6 @@ const todaySchedule = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success:function(result){
-			console.log("todaySchedule:",result);
 			let str = "";
 			
 			if(result.length> 0){
@@ -558,24 +524,8 @@ const todaySchedule = function(){
 	})
 }
 
-// 과제 테이블에서 게시물 클릭
-const goToTask = function(taskCode){
-	console.log("goToTask act:", taskCode);
-}
-
-// 과제 테이블에서 게시물 클릭
-const goToNt = function(ntcnCode){
-	console.log("goToNt act:", ntcnCode);
-}
-
-// 단원평가 테이블에서 게시물 클릭
-const goToUe = function(ueCode){
-	console.log("goToUe act:", ueCode);
-}
-
 // 학생 목록 버튼
 const stdListBtn = function(){
-	console.log("stdListBtn act");
 	$("#stdListModal").modal('show');
 }
 
@@ -588,16 +538,16 @@ const nextSwipe = function(){
 //스와이프 초기화
 const initSwiper = function(){
 	var swiper = new Swiper('.swiper', {
-	  slidesPerView : 'auto', // 한 슬라이드에 보여줄 갯수
-	  spaceBetween : 6, // 슬라이드 사이 여백
-	  loop : false, // 슬라이드 반복 여부
-	  loopAdditionalSlides : 1, // 슬라이드 반복 시 마지막 슬라이드에서 다음 슬라이드가 보여지지 않는 현상 수정
-	  pagination : false, // pager 여부
-	  autoplay : {  // 자동 슬라이드 설정 , 비 활성화 시 false
-	    delay : 3000,   // 시간 설정
-	    disableOnInteraction : false,  // false로 설정하면 스와이프 후 자동 재생이 비활성화 되지 않음
+	  slidesPerView : 'auto', 			// 한 슬라이드에 보여줄 갯수
+	  spaceBetween : 6, 				// 슬라이드 사이 여백
+	  loop : false, 					// 슬라이드 반복 여부
+	  loopAdditionalSlides : 1, 		// 슬라이드 반복 시 마지막 슬라이드에서 다음 슬라이드가 보여지지 않는 현상 수정
+	  pagination : false, 				// pager 여부
+	  autoplay : {  					// 자동 슬라이드 설정 , 비 활성화 시 false
+	    delay : 3000,   				// 시간 설정
+	    disableOnInteraction : false,  	// false로 설정하면 스와이프 후 자동 재생이 비활성화 되지 않음
 	  },
-	  navigation: {   // 버튼 사용자 지정
+	  navigation: {   					// 버튼 사용자 지정
 	  	nextEl: '.swiper-button-next',
 	  	prevEl: '.swiper-button-prev',
 	  },
@@ -606,8 +556,7 @@ const initSwiper = function(){
 
 //화상수업
 const virtualClass = function(){
-	console.log("virtualClass act");
-	 window.open("https://code-gun.github.io/", "_blank");
+	window.open("https://code-gun.github.io/", "_blank");
 }
 
 window.onload = function() {
@@ -627,96 +576,68 @@ window.onload = function() {
 	
 	// 학생은 출석버튼 on
 	<sec:authorize access ="hasAnyRole('A01002', 'A01003')">
-	document.querySelector("#onTheAtend").style.height = "88%";
+		document.querySelector("#onTheAtend").style.height = "88%";
 	</sec:authorize>
 	<sec:authorize access ="hasRole('A01001')">
-	document.querySelector("#onTheAtend").style.height = "73%";
+		document.querySelector("#onTheAtend").style.height = "73%";
 	</sec:authorize>
 	
-// 	var mberImage = "${hrtchrVO.memberVO.mberImage}";
 	var mberNm = "${hrtchrVO.memberVO.mberNm}";
 	var moblphonNo = "${hrtchrVO.memberVO.moblphonNo}";
 	var mberEmail = "${hrtchrVO.memberVO.mberEmail}";
-// 	alert(mberImage);
-	
-// 	var profileImg = document.getElementById("profileImg");
-// 	profileImg.setAttribute("src", "/upload/profile/" + mberImage);
-	
 	var clasCode = '${clasCode}';
 	
-// 	document.getElementById("goToTaskList").addEventListener("click", () => {
-// 		location.href = "/task/taskList?clasCode=" + "${clasCode}";
-// 	});
-
 	//선생님과 채팅하기
 	var teacherChatBtn = '${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode eq 'ROLE_A01003' }';
-	console.log("teacherChatBtn : ",teacherChatBtn);
 	var familyChatBtn = '${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode eq 'ROLE_A01002' || USER_INFO.vwMemberAuthVOList[1].cmmnDetailCode eq 'ROLE_A01002' }';
-	console.log("familyChatBtn : ",familyChatBtn);
 
 	if(teacherChatBtn === "true"){
 		document.querySelector('#teacherChatBtn').addEventListener('click', function () {
-			console.log("체크");
 			let myId = '${USER_INFO.mberId}';
-			console.log("발신자아이디 : "+myId);
-		
 			let teacherId = '${hrtchrVO.mberId}'
-			console.log("수신자아이디 : "+teacherId);
-		
 			let schulCode = '${hrtchrVO.clasVO.schulCode}';
-			console.log("학교코드 : " + schulCode);
-		
 			let data = {
-					"crtrId":teacherId,
-		   			"prtcpntId":myId
-				}
-				
-			console.log("data@@!!",data);
+				"crtrId":teacherId,
+				"prtcpntId":myId
+			}
 		
 			$.ajax({
 			 	url: '/chat/roomCode',
-		           type: 'post',
-		           data: JSON.stringify(data),
-		           contentType: 'application/json;charset=utf-8',
-		           dataType: 'text',
-		           beforeSend: function (xhr) {
-		               xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
-		           },
-		           success: function (result) {
-		          	console.log("@생성한 채팅방 코드@",result);
-		          	console.log("@생성한 채팅방 코드길이@",result.length);
+				type: 'post',
+				data: JSON.stringify(data),
+				contentType: 'application/json;charset=utf-8',
+				dataType: 'text',
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
+				},
+				success: function (result) {
 		          	//result가 있으면 내가 생성한 방이 있으므로 생성된 방으로 이동
 		          	if(result !='' && result != null){
-		         		console.log("생성된 방으로 이동");
 		         		openChatPop("/chat/chtt?chttRoomCode="+result);
-		          		//location.href = "/chat/chtt?chttRoomCode="+result;
 		         	}
 		          	 //result가 없으면 내가 초대 받은 방이 있는지확인 
-		          	 else{
-		          		 let data = {
-		        			"crtrId":myId,
-		            		"prtcpntId":teacherId	 
-		          		 }
+					else{
+						let data = {
+							"crtrId":myId,
+							"prtcpntId":teacherId	 
+						}
 		          		 
 		          		$.ajax({
-		         			 url: '/chat/roomCode',
-		                      type: 'post',
-		                      data: JSON.stringify(data),
-		                      contentType: 'application/json;charset=utf-8',
-		                      dataType: 'text',
-		                      beforeSend: function (xhr) {
-		                          xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
-		                      },
-		                      success: function (result) {
-		                     	 console.log("@초대 받은 채팅방 코드@",result);
-		                     	//result가 있으면 내가 초대 받은 방이 있으므로 초대 받은 방으로 이동
-		                       if(result != '' && result != null){
-		                      		console.log("초대 받은 방으로 이동");
+							url: '/chat/roomCode',
+							type: 'post',
+							data: JSON.stringify(data),
+							contentType: 'application/json;charset=utf-8',
+							dataType: 'text',
+							beforeSend: function (xhr) {
+								xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
+							},
+							success: function (result) {
+								//result가 있으면 내가 초대 받은 방이 있으므로 초대 받은 방으로 이동
+		                       	if(result != '' && result != null){
 		                      		openChatPop("/chat/chtt?chttRoomCode="+result);
-		                      		//location.href = "/chat/chtt?chttRoomCode="+result;
 		                      	}
 		                     	 //result가 0이면 채팅방 생성
-		                     	 else{
+								else{
 		                     		let data = {
 		                       			"type":"room",
 		                       			"schulCode":"",
@@ -725,77 +646,61 @@ window.onload = function() {
 		                       			"prtcpntId":myId
 		                       		}
 		                       		
-		                       		console.log("data:", data);
-		                       		
 		                       		$.ajax({
-		                       			 url: '/chat/room',
-		                                    type: 'post',
-		                                    data: JSON.stringify(data),
-		                                    contentType: 'application/json;charset=utf-8',
-		                                    dataType: 'json',
-		                                    beforeSend: function (xhr) {
-		                                        xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
-		                                    },
-		                                    success: function (result) {
-		                                   	 console.log("1?",result);
-		                                   	 
-		                                   	 $.ajax({
-		                                 			 url: '/chat/roomCode',
-		                                              type: 'post',
-		                                              data: JSON.stringify(data),
-		                                              contentType: 'application/json;charset=utf-8',
-		                                              dataType: 'text',
-		                                              beforeSend: function (xhr) {
-		                                                  xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
-		                                              },
-		                                              success: function (result) {
-		                                           	   console.log("지금 만든 채팅방 코드",result)
-		                                           	   //result가 있으면 내가 만든 방이 있으므로 만든 방으로 이동
-		                                                  if(result != '' && result != null){
-		                                                 		console.log("만든 방으로 이동");
-		                                                 		socket.send("room,"+teacherId+","+myId+","+result);
-		                                                 			openChatPop("/chat/chtt?chttRoomCode="+result);
-		                                                 		//location.href = "/chat/chtt?chttRoomCode="+result;
-		                                                 	}
-		                                           	   else{
-		                                           		   var Toast = Swal.mixin({
-		                                           			   toast: true,
-		                                      					   position: 'top-end',
-		                                      					   showConfirmButton: true,
-		                                      					   timer: 3000
-		                                      				   });
-		                                      				   Toast.fire({
-		                                      					   icon:'error',
-		                                      					   title:'채팅방 만들기 실패'
-		                                      				   });
-		                                           		   return;
-		                                           	   }
-		                                              },
-		                                              error:function(xhr){
-		                                              	console.log("4",xhr.status);
-		                                              } 
-		                                        });
-		                                   	 
-		                                   	 
-		                                    },
-		                                    error:function(xhr){
-		                                    	console.log("3",xhr.status);
-		                                    }
+										url: '/chat/room',
+										type: 'post',
+										data: JSON.stringify(data),
+										contentType: 'application/json;charset=utf-8',
+										dataType: 'json',
+										beforeSend: function (xhr) {
+											xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
+										},
+										success: function (result) {
+											$.ajax({
+												url: '/chat/roomCode',
+												type: 'post',
+												data: JSON.stringify(data),
+												contentType: 'application/json;charset=utf-8',
+												dataType: 'text',
+												beforeSend: function (xhr) {
+													xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
+												},
+												success: function (result) {
+													//result가 있으면 내가 만든 방이 있으므로 만든 방으로 이동
+													if(result != '' && result != null){
+														socket.send("room,"+teacherId+","+myId+","+result);
+														openChatPop("/chat/chtt?chttRoomCode="+result);
+													}
+													else{
+														var Toast = Swal.mixin({
+															toast: true,
+															position: 'top-end',
+															showConfirmButton: true,
+															timer: 3000
+														});
+															Toast.fire({
+															icon:'error',
+															title:'채팅방 만들기 실패'
+														});
+														return;
+													}
+												},
+												error:function(xhr){
+												} 
+											});
+										},
+										error:function(xhr){
+										}
 		                       		});
-		                     	 }
-		                     	 
-		                      },
-		                      error:function(xhr){
-		                      	console.log("2",xhr.status);
-		                      }
-		         			});
-		          		 
-		          	 }
-		          	 
-		           },
-		           error:function(xhr){
-		           	console.log("1",xhr.status);
-		           }
+								}
+							},
+							error:function(xhr){
+							}
+						});
+					}
+				},
+				error:function(xhr){
+				}
 			});
 		});
 	}
@@ -814,9 +719,7 @@ window.onload = function() {
 <div id = "classMain" class ="main-page">
 	<div class = "hor-div" style ="align-items: center;">
 		<div class="box header-box" style="display: flex; align-items: center; justify-content: center; padding-top: 0px; padding-bottom: 0px; background: #78b0ff;">
-<!-- 			<img src = "/resources/images/classRoom/class001.png"  onclick ="classroomInfoBtn()" style =" margin-right:12px; width:50px; height:50px"> -->
 			<h1 id = "schoolInfoBanner" style ="margin:0px; margin-top: 22px; margin-bottom: 22px; color: #fff;" onclick ="classroomInfoBtn()"></h1>
-<!-- 			<a class ="d-btn-gray" onclick = "stdListBtn()" style ="margin:10px; width : auto;">구성원 목록</a> -->
 			<a class ="d-btn-gray" onclick = "virtualClass()" style ="margin:10px; width : auto;">수업입장</a>
 		</div>
 	</div>
@@ -855,12 +758,7 @@ window.onload = function() {
 			</div>
 		</div>
 		
-		
 		<div class = "box" style ="width:60%; height:100%; position: relative;">
-<!-- 			<div style ="position:absolute; height : 100%; width:100%; display: flex; align-items: center; justify-content: center;"> -->
-<!-- 				<img src = "/resources/images/classRoom/noteSpring.png"  -->
-<!-- 				style ="height : 105%; width : 120px; margin-right: 22px; margin-bottom: 25px;"/> -->
-<!-- 			</div> -->
 			<div class="menuTitle">
 				<h3 style ="height : 10%; margin-bottom: 0px; margin-left: 10px;">진행중인 일정</h3>
 			</div>
@@ -935,7 +833,6 @@ window.onload = function() {
 					<img class="shortcutIcon" src="/resources/images/classRoom/shortcut.png" alt="">바로 가기
 				</a>
 			</div>
-			
 			<div class="product-status-wrap drp-lst con" style="padding: 0px; background-color: #fafafa;">
 				<div id="ntcnContent">
 					<table id = "ntcnListTb">
@@ -990,34 +887,30 @@ window.onload = function() {
 			</div>
 			<div class ="inner-box2" style = "padding-left: 0px; padding-right: 0px; height: 90%;">
 				<div class="swiper" style ="height: 100%;">
-				  <!-- Additional required wrapper -->
-				  <div class="swiper-wrapper">
-				    <!-- Slides -->
-				    <div class="swiper-slide">
-						<img  src="/resources/images/student/루피1.png"/>
-						<img src="/resources/images/student/루피1.png"/>
-						<img src="/resources/images/student/루피1.png"/>
-				    </div>
-				    <div class="swiper-slide">
-						<img src="/resources/images/student/루피1.png"/>
-						<img src="/resources/images/student/루피1.png"/>
-						<img src="/resources/images/student/루피1.png"/>
-				    </div>
-				    <div class="swiper-slide">
-						<img src="/resources/images/student/루피1.png"/>
-						<img src="/resources/images/student/루피1.png"/>
-						<img src="/resources/images/student/루피1.png"/>
-				    </div>
-				  </div>
-				  <!-- If we need pagination -->
-				  <div class="swiper-pagination"></div>
-				
-				  <!-- If we need navigation buttons -->
-				  <div class="swiper-button-prev"></div>
-				  <div class="swiper-button-next"></div>
-				
-				  <!-- If we need scrollbar -->
-	<!-- 			  <div class="swiper-scrollbar"></div> -->
+					<!-- Additional required wrapper -->
+					<div class="swiper-wrapper">
+						<!-- Slides -->
+						<div class="swiper-slide">
+							<img  src="/resources/images/student/루피1.png"/>
+							<img src="/resources/images/student/루피1.png"/>
+							<img src="/resources/images/student/루피1.png"/>
+						</div>
+						<div class="swiper-slide">
+							<img src="/resources/images/student/루피1.png"/>
+							<img src="/resources/images/student/루피1.png"/>
+							<img src="/resources/images/student/루피1.png"/>
+						</div>
+						<div class="swiper-slide">
+							<img src="/resources/images/student/루피1.png"/>
+							<img src="/resources/images/student/루피1.png"/>
+							<img src="/resources/images/student/루피1.png"/>
+						</div>
+					</div>
+					<!-- If we need pagination -->
+					<div class="swiper-pagination"></div>
+					<!-- If we need navigation buttons -->
+					<div class="swiper-button-prev"></div>
+					<div class="swiper-button-next"></div>
 				</div>
 			</div>
 		</div>
@@ -1028,7 +921,6 @@ window.onload = function() {
 					<img class="shortcutIcon" src="/resources/images/classRoom/shortcut.png" alt="">바로 가기
 				</a>
 			</div>
-			
 			<div class="product-status-wrap drp-lst con" style="padding: 0px; background-color: transparent;">
 				<table id = "recentAtendTb">
 					<thead>
@@ -1048,20 +940,14 @@ window.onload = function() {
 	</div> <!-- 2floor-div -->
 </div> <!-- master-div -->
 
-
 <!-- modal -->
-<div id="stdListModal"
-	class="modal modal-edu-general default-popup-PrimaryModal fade"
-	role="dialog">
-
+<div id="stdListModal" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-close-area modal-close-df">
-				<a class="close" data-dismiss="modal" href="#"> <i
-					class="fa fa-close"></i></a>
+				<a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
 			</div>
 			<div class="modal-body-class-stdnt">
-				<!-- <img src="/resources/images/school/aftSchool/aftSchoolImg2.png" style="position: absolute;left: 0px;top: 10px;z-index: -1; transform: translate(0px, -100px);"> -->
 				<h3 style ="margin-bottom: 0px">
 					<span style="background: linear-gradient(to top, #7cb8ff 20%, transparent 20%);">우리반 친구들</span>
 				</h3>
@@ -1069,16 +955,17 @@ window.onload = function() {
 					<table id = "stdListTb">
 						<thead>
 					        <tr>
-					      <th>번호</th>
-					      <th>이름</th>
-					      <th>성별</th>
-					      <th>전화번호</th>
-					      <th>이메일</th>
+								<th>번호</th>
+								<th>이름</th>
+								<th>성별</th>
+								<th>전화번호</th>
+								<th>이메일</th>
 					        </tr>
 						</thead>
 					    <tbody>
 					        <tr>
-							<td colspan="100%" style="text-align: center;">학생이 없습니다..</td>
+								<td colspan="100%" style="text-align: center;">학생이 없습니다..</td>
+							</tr>
 				        </tbody>
 				    </table>
 				</div>
@@ -1088,15 +975,11 @@ window.onload = function() {
 </div>
 
 <!-- 반 정보 modal -->
-<div id="classroomInfoModal"
-	class="modal modal-edu-general default-popup-PrimaryModal fade"
-	role="dialog">
-
+<div id="classroomInfoModal" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-close-area modal-close-df">
-				<a class="close" data-dismiss="modal" href="#"> <i
-					class="fa fa-close"></i></a>
+				<a class="close" data-dismiss="modal" href="#"> <i class="fa fa-close"></i></a>
 			</div>
 			<div class="modal-body">
 				<h3>반 정보</h3>
@@ -1125,8 +1008,8 @@ window.onload = function() {
 			</div>
 			<div class="modal-footer">
 				<sec:authorize access ="hasRole('A01002')">
-				<button onclick="modifyClassroom()" class = "mf-btn d-btn-blue">수정</button>
-				<button onclick="deleteClassroom()" class = "mf-btn d-btn-red">삭제</button>
+					<button onclick="modifyClassroom()" class = "mf-btn d-btn-blue">수정</button>
+					<button onclick="deleteClassroom()" class = "mf-btn d-btn-red">삭제</button>
 				</sec:authorize>
 				<button data-dismiss="modal" class = "mf-btn d-btn-gray">닫기</button>
 			</div>

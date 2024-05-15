@@ -40,9 +40,6 @@ public interface TeacherMapper {
 	
 	// 성적 목록
 	public String gradeList();
-	
-	// 생활기록 학생 목록
-	public String lifeRecordList();
 	 
 	// 학생 출결 목록
 	public String attendanceList();

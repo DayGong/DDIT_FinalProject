@@ -8,18 +8,13 @@
 <script type="text/javascript" src="/resources/js/jquery.min.js"></script>
 <script type="text/javascript">
 window.onload = function() {
-   document.getElementById("btnList").addEventListener("click",()=>{
-      location.href = "/gallery/gallery?clasCode=" + "${CLASS_INFO.clasCode}";
-   })
-   
-   // 사용자 세션 확인용 -> 지워도 됩니다.
-   console.log("sessionMemberVO => " + `${sessionMemberVO}`);
+	document.getElementById("btnList").addEventListener("click",()=>{
+		location.href = "/gallery/gallery?clasCode=" + "${CLASS_INFO.clasCode}";
+	})
 }
 
-<!-- 신고 submit javascript 시작 --------------------------------->
 // 신고 후 게시물 신고 누적과 게시물 신고 상태를 update하는 함수
 function fn_modNttSttemnt(atchFileCode) {
-	console.log("atchFileCode -> " + atchFileCode);
 	$.ajax({
 		type: "post",
 		url: "/gallery/modNttSttemnt",
@@ -28,7 +23,6 @@ function fn_modNttSttemnt(atchFileCode) {
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success: function(res) {
-			console.log("res => " + res);
 		}
 	});
 }
@@ -72,7 +66,6 @@ function fn_addComplaint() {
 		}
 	});
 }
-<!-- 신고 submit javascript 끝 ----------------------------------->
 
 $(function(){
 	//날짜 포맷 생성  함수
@@ -87,7 +80,6 @@ $(function(){
 	$("#updtDe").val(dateFormat(new Date()));		// 수정 일자
 	// 날짜 함수 끝~
 	
-	
 	// 갤러리 상세내용 불러오기
 	loadGalleryDetail();
 	function loadGalleryDetail(){
@@ -100,10 +92,8 @@ $(function(){
 		    type: "get",
 		    dataType: "json",
 		    success: function(result) {
-		        console.log("result : ", result);
-		
 		        let carouselItems = "";
-		        let index = 0; // 캐러셀 인덱스 변수 추가
+		        let index = 0; 				// 캐러셀 인덱스 변수 추가
 		        let mberId = "${mberId}";	// 로그인한 아이디
 		        
 		        if(result.length === 1) {
@@ -117,9 +107,8 @@ $(function(){
 		        	}else{
 		        		$('#btnModify').hide();
 		                $('#btnDeleteAll').hide();
-		        		
 		        	}
-		        	
+
 		            $.each(clasAlbumVO.atchFileVOList, function(innerIdx, atchFileVO) {
 		                carouselItems += "<div class='swiper-slide'>";
 		                carouselItems += "<img src='/upload" + atchFileVO.atchFileCours + "'alt='" + atchFileVO.atchFileNm + "'>";
@@ -138,9 +127,7 @@ $(function(){
 	        		}
 	        	})
 		        	
-		        console.log("hashTag : ",hashTag);
 	        	$(".hashTagList").html(hashTag);
-	        	
 
 	        	// 캐러셀에 이미지 추가
 		        $('.swiper-slide').html(carouselItems);
@@ -197,7 +184,6 @@ $(function(){
 
 		        });
 		     	
-				/* 신고 javascript 시작 ----------------------------------------------------------------------------------- */
 		    	document.querySelector("#complaintBtn").addEventListener("click", function() {
 		    		document.querySelector("#complaintNm").innerHTML = result[0].albumNm;
 		    		document.querySelector("#complaintDe").innerHTML = albumDe;
@@ -222,7 +208,6 @@ $(function(){
 		    			}
 		    		}); // end /admin/getComplaintCn Ajax
 		    	});// end #complaintBtn click event
-		    /* 신고 javascript 끝 ------------------------------------------------------------------------------------- */
 		    }
 		});
 	}
@@ -237,7 +222,6 @@ $(function(){
 	    $('#tag-list-modal').html(hashTagHTML);
 	});
 	
-	
 	// 모달창 닫기 시작
 	$('#btnUpdateCancel').on("click",function(){
 		$(".modal").modal("hide");
@@ -245,7 +229,6 @@ $(function(){
 	
 	// 모달창 닫을때 초기화 하기
 	$('.modal').on('hidden.bs.modal', function (e) {
-		console.log('modal close');
 		// 수정 부분 초기화
 		$(this).find('#atchFileNm').val('');		// 파일 이름 초기화
 		$(this).find('input[type=file]').val('');	// 파일 초기화
@@ -254,14 +237,12 @@ $(function(){
 		$(this).find('#tag').val('');				// 해시태그 입력부분 초기화
 		
 	}); // 모달창 닫기 끝
-
 	
 	// 모달창 승인버튼 누를 시 update
 	document.querySelector("#btnUpdate").addEventListener("click",function(){
 		let pathname = window.location.pathname;
-		pathname = "${param.atchFileCode}";//OJ20240101ALB00007
-		pathname = pathname.substring(0,10);//OJ20240101
-		console.log("pathname :  "  + pathname);
+		pathname = "${param.atchFileCode}";
+		pathname = pathname.substring(0,10);
 		
 		let atchFileCode = "${param.atchFileCode}";
 		let albumNm = $("#albumNmModify").val();	// 사진 제목
@@ -272,15 +253,11 @@ $(function(){
 		
 		// FormData 객체 생성(가상 폼)
 		let formData = new FormData();
-		formData.append("clasCode",pathname);//OJ20240101
+		formData.append("clasCode",pathname);
 		formData.append("albumNm",albumNm);
 		formData.append("albumUpdtDe",dateFormat(new Date()));
 		formData.append("inputImgs",inputImgs);
-		formData.append("atchFileCode",atchFileCode);//*******앨범 하나 OJ20240101ALB00007
-		
-        for (let key of formData.keys()) {
-        	console.log(key, ":", formData.get(key));
-        }
+		formData.append("atchFileCode",atchFileCode);// 앨범 하나
 		
 		// FormData에 각각의 이미지를 넣는다.
 		for(let i = 0; i < files.length; i++){
@@ -299,7 +276,6 @@ $(function(){
 			},
 			success:function(result){
 				//res : ClasAlbumVO
-				console.log("insertImages->result: ", result);
 				Swal.fire({
 			        title: '갤러리를 수정하시겠습니까?',
 			        text: "수정내용은 바로 반영됩니다.",
@@ -310,117 +286,104 @@ $(function(){
 			        confirmButtonText: '예',
 			        cancelButtonText: '아니오',
 			        reverseButtons: false, // 버튼 순서 거꾸로
-			        
-			      }).then((result) => {
+				}).then((result) => {
 			        if (result.isConfirmed) {
-				          Swal.fire(
-				            '갤러리가 수정 되었습니다.',
-				            '화면으로 이동합니다.',
-				            'success'
-				          ).then(function(){
-							    $('.modal').modal('hide');
-							    loadGalleryDetail();
-							});
-				        }
-				     });
-				},
-				error: function(xhr, status, error){
-					Swal.fire({
-			            icon: 'error',
-			            title: '갤러리 수정 중 오류가 발생했습니다',
-			            text: '다시 확인해주세요.'
-			        });
-				}
+						Swal.fire(
+							'갤러리가 수정 되었습니다.',
+							'화면으로 이동합니다.',
+							'success'
+						).then(function(){
+							$('.modal').modal('hide');
+							loadGalleryDetail();
+						});
+					}
+				});
+			},
+			error: function(xhr, status, error){
+				Swal.fire({
+					icon: 'error',
+					title: '갤러리 수정 중 오류가 발생했습니다',
+					text: '다시 확인해주세요.'
+				});
+			}
 		});//end ajax		
 	});	
  
-	
-   // 이미지 미리보기 시작
-   $("#inputImgs").on("change", handleImg);
-   // e : onchange 이벤트 객체
-   function handleImg(e){
-      
-      let files = e.target.files;
-      
-      let fileArr = Array.prototype.slice.call(files);
-   
-      fileArr.forEach(function(f){
-         // 이미지 파일이 아닌 경우
-         if(!f.type.match("image.*")){
-            alert("이미지 확장자만 가능합니다"); 
-            return;
-         }
-         // 이미지를 읽기
-         let reader = new FileReader();
-         
-         $("#divImage").html("");
-         
-         reader.onload = function(e){
-            $(".divImage").css({"background-image":"url("+e.target.result+")","background-position":"center","background-size":"cover"});
-            let img = "<img src="+e.target.result+" style='width:20%;' />";
-            $("#divImage").append(img); 
-         }
-         reader.readAsDataURL(f);
-      });
-   } // 이미지 미리보기 끝	
-	
+	// 이미지 미리보기 시작
+	$("#inputImgs").on("change", handleImg);
+	function handleImg(e){
+		let files = e.target.files;
+		let fileArr = Array.prototype.slice.call(files);
+		fileArr.forEach(function(f){
+			// 이미지 파일이 아닌 경우
+			if(!f.type.match("image.*")){
+				alert("이미지 확장자만 가능합니다"); 
+				return;
+			}
+
+			// 초기화
+			$("#divImage").html("");
+
+			// 이미지를 읽기
+			let reader = new FileReader();
+			reader.onload = function(e){
+				$(".divImage").css({"background-image":"url("+e.target.result+")","background-position":"center","background-size":"cover"});
+				let img = "<img src="+e.target.result+" style='width:20%;' />";
+				$("#divImage").append(img); 
+			}
+			reader.readAsDataURL(f);
+      	});
+   	} // 이미지 미리보기 끝	
 	
 	// deleteAll 버튼 클릭시 앨범삭제하기
 	$("#btnDeleteAll").on("click",function(){
 		
 		// url 주소에서 atchFileCode만 추출 
 		let atchFileCode = window.location.search.split('=')[1];
-		console.log("atchFileCode: " + atchFileCode);
-		
 		let clasCode = atchFileCode.split('ALB')[0];
-		console.log("clasCode: " + clasCode);
 		
 		Swal.fire({
-			   title: '정말로 삭제하시겠습니까?',
-			   text: '삭제 후에 다시 되돌릴 수 없습니다.',
-			   icon: 'warning',
-			   showCancelButton: true,
-			   confirmButtonColor: '#3085d6',
-			   cancelButtonColor: '#d33',
-			   confirmButtonText: '삭제',
-			   cancelButtonText: '취소',
-			   reverseButtons: false
-			}).then(result => {
-			   if (result.isConfirmed) {
-			      let formData = new FormData();
-			      formData.append("atchFileCode", atchFileCode);
-			      
-			      $.ajax({
-			         url: "/gallery/deleteAlbum",
-			         contentType: false,
-			         processData: false,
-			         data: formData,
-			         type: "post",
-			         dataType: "text",
-			         beforeSend: function(xhr) {
-			            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-			         },
-			         success: function(result) {
-			            if (result != "0") {
-			               console.log("삭제처리");
-			               Swal.fire('삭제 완료되었습니다.', '', 'success').then(() => {
-			                   window.location.href = "http://localhost/gallery/gallery?clasCode="+"${CLASS_INFO.clasCode}";
-			                });
-			            } else {
-			               Swal.fire('삭제 실패하였습니다.', '', 'error');
-			            }
-			         },
-			         error: function(xhr, status, error) {
-			            console.error("에러발생 :", error);
-			            Swal.fire('삭제 중 오류가 발생했습니다.', '', 'error');
-			         }
-			      });
-			   }
-			});
+			title: '정말로 삭제하시겠습니까?',
+			text: '삭제 후에 다시 되돌릴 수 없습니다.',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: '삭제',
+			cancelButtonText: '취소',
+			reverseButtons: false
+		}).then(result => {
+			if (result.isConfirmed) {
+				let formData = new FormData();
+				formData.append("atchFileCode", atchFileCode);
+				
+				$.ajax({
+					url: "/gallery/deleteAlbum",
+					contentType: false,
+					processData: false,
+					data: formData,
+					type: "post",
+					dataType: "text",
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+					},
+					success: function(result) {
+						if (result != "0") {
+							Swal.fire('삭제 완료되었습니다.', '', 'success').then(() => {
+								window.location.href = "http://localhost/gallery/gallery?clasCode="+"${CLASS_INFO.clasCode}";
+							});
+						} else {
+							Swal.fire('삭제 실패하였습니다.', '', 'error');
+						}
+					},
+					error: function(xhr, status, error) {
+						Swal.fire('삭제 중 오류가 발생했습니다.', '', 'error');
+					}
+				});
+			}
+		});
 	}); // 앨범 전체삭제 끝
-	
 });
-
 </script>
 <style>
 .swiper-slide img {
@@ -431,9 +394,11 @@ $(function(){
 	border-radius: 50px;
 	box-shadow: 0px 0px 15px 1px #0000000c;
 }
+
 div#GalleryContainer {
 	text-align: -webkit-center;
 }
+
 #GalleryContainer h3 {
 	font-size: 2.2rem;
 	text-align: center;
@@ -462,6 +427,7 @@ div#GalleryContainer {
 #GalleryContainer .custom-pagination .pagination {
 	width: max-content;
 }
+
 .GalleryAll, .replyContainer{
 	width: 1400px;
 	margin: auto;
@@ -479,6 +445,7 @@ div#GalleryContainer {
 	min-height: 83px;
 	margin-top: 50px;
 }
+
 .GalleryAll .FreeTit {
 	display: flex;
 	justify-content: space-between;
@@ -491,6 +458,7 @@ div#GalleryContainer {
 	font-weight: 700;
 	margin-top: 6px;
 }
+
 .sparkline8-list {
 	padding: 40px;
 	display: flex;
@@ -516,7 +484,7 @@ div#GalleryContainer {
     font-size: 1.2rem;
 }
 
-/* 신고 시작 ----------------------------------------------------------------------------------- */
+/* 신고 시작 */
 #complaintBtn {
 	cursor: pointer;
 }
@@ -626,32 +594,25 @@ div#GalleryContainer {
 	color:#333;
 	font-weight:600;
 }
-/* 신고 끝 ------------------------------------------------------------------------------------- */
+/* 신고 끝 */
 </style>
 <div id="GalleryContainer">
 	<div class="main-sparkline8-hd">
 		<h3>
-			<img src="/resources/images/classRoom/gallery/galleryIcon1.png"
-				style="width: 50px; display: inline-block; vertical-align: middel;">
-			<span id="schoolNm"></span> <span>&nbsp;우리반 갤러리</span> <img
-				src="/resources/images/classRoom/gallery/galleryIcon2.png"
-				style="width: 50px; display: inline-block; vertical-align: middel;">
+			<img src="/resources/images/classRoom/gallery/galleryIcon1.png" style="width: 50px; display: inline-block; vertical-align: middel;">
+			<span id="schoolNm"></span> <span>&nbsp;우리반 갤러리</span>
+			<img src="/resources/images/classRoom/gallery/galleryIcon2.png" style="width: 50px; display: inline-block; vertical-align: middel;">
 		</h3>
 	</div>
-	<div class="GalleryAll"
-		style="width: 1400px; margin: auto; margin-bottom: 50px; min-height: 530px;">
+	<div class="GalleryAll" style="width: 1400px; margin: auto; margin-bottom: 50px; min-height: 530px;">
 		<div class="FreeTit">
-			<img src="/resources/images/classRoom/gallery/galleryIcon3.png"
-					style="width: 50px; display: inline-block; vertical-align: middel;">
-			<input type="text" class="form-control albumTitle"
-				style="width: 95%; border: none; background: none; height: 50px; font-size: 1.4rem; display: inline-block; vertical-align: middle; margin-bottom: 6px;" readonly>
-				<img src="/resources/images/classRoom/freeBrd/line.png"
-				style="position: absolute; left: 0px; top: 10px; z-index: -1;">
+			<img src="/resources/images/classRoom/gallery/galleryIcon3.png" style="width: 50px; display: inline-block; vertical-align: middel;">
+			<input type="text" class="form-control albumTitle" style="width: 95%; border: none; background: none; height: 50px; font-size: 1.4rem; display: inline-block; vertical-align: middle; margin-bottom: 6px;" readonly>
+			<img src="/resources/images/classRoom/freeBrd/line.png" style="position: absolute; left: 0px; top: 10px; z-index: -1;">
 		</div>
 		<div class="freeInfo">
 			<span style="font-size: 14px;">
-			<img src="/resources/images/classRoom/freeBrd/freeDateIcon.png" alt="게시글 등록일자 아이콘"
-				style="width: 12px; margin-top: 4px; vertical-align: top; display: inline-block;" />
+				<img src="/resources/images/classRoom/freeBrd/freeDateIcon.png" alt="게시글 등록일자 아이콘" style="width: 12px; margin-top: 4px; vertical-align: top; display: inline-block;" />
 				<small style="font-weight: 600; color: #222; font-size: 13px;">등록일자: </small>
 				<span class="albumRegistDate" style="color: #666; font-size: 13px;"></span>
 			</span>
@@ -661,17 +622,16 @@ div#GalleryContainer {
 				<small style="font-weight: 600; color: #222; font-size: 13px; line-height: 1.75;">작성자 : </small>
 				<span class="albumRegister" style="color: #666; font-size: 13px;"></span>
 			</span>
-			<!----------------신고--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+			<!-- 신고 시작 -->
 			<span id="complaintBtn" data-toggle="modal"
 				data-target="#complaintModal"
 				style="font-size: 16px; float: right; margin-right: 10px;">
 				<img src="/resources/images/classRoom/freeBrd/freeSiren.png"
 				alt="게시글 신고 횟수 아이콘"
 				style="width: 14px; margin-top: 2px; vertical-align: text-top; display: inline-block;" />
-				<small style="font-weight: 600; color: #d9564e; font-size: 13px;">신고하기
-			</small>
+				<small style="font-weight: 600; color: #d9564e; font-size: 13px;">신고하기</small>
 			</span>
-			<!----------------신고 끝--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+			<!-- 신고 끝 -->
 		</div>
 		<div class="gallery">
 			<div class="swiper">
@@ -703,7 +663,6 @@ div#GalleryContainer {
 	</div>
 </div>
 
-
 <!-- 앨범 수정 -->
 <div id="modalUpdate" class="modal modal-edu-general default-popup-PrimaryModal fade in" role="dialog" style="display: none;">
     <div class="modal-dialog">
@@ -715,18 +674,15 @@ div#GalleryContainer {
 				</div>
 			</div>
 			<div class="modal-body">
-
 				<h2>앨범 수정</h2>
 				<div class="form-group">
 					<label for="">앨범 이름</label> <input type="text"
 						class="form-control is-valid albumTitle" id="albumNmModify"
 						placeholder="앨범 이름" />
 				</div>
-
 				<div class="form-group">
-					<label for="">앨범 수정 날짜</label> <input type="text" name=""
-						class="form-control" id="albumUpdtDe" name="albumUpdtDe"
-						placeholder="현재날짜 표시" required readonly />
+					<label for="">앨범 수정 날짜</label>
+					<input type="text" name="" class="form-control" id="albumUpdtDe" name="albumUpdtDe" placeholder="현재날짜 표시" required readonly />
 				</div>
 				<div class="form-group">
 					<div class="tr_hashTag_area">
@@ -736,18 +692,16 @@ div#GalleryContainer {
 						<div class="form-group">
 							<input type="hidden" value="" name="tag" id="rdTag" />
 						</div>
-
 						<div class="form-group" class="sr-input-func">
-							<input type="text" id="tag" size="7"
-								class="search-int form-control" placeholder="엔터로 해시태그를 등록해주세요." />
+							<input type="text" id="tag" size="7" class="search-int form-control" placeholder="엔터로 해시태그를 등록해주세요." />
 						</div>
 						<ul id="tag-list"></ul>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label for="">사진 첨부</label> <input type="file" class="form-control"
-						id="inputImgs" multiple>
+					<label for="">사진 첨부</label>
+					<input type="file" class="form-control" id="inputImgs" multiple>
 				</div>
 			</div>
 			<div id="divImage"></div>
@@ -758,7 +712,7 @@ div#GalleryContainer {
         </div>
     </div>
 </div>
-<!-- 신고 모달 창 시작 --------------------------------------------------------------->
+<!-- 신고 모달 창 시작 -->
 <div id="complaintModal" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -810,17 +764,16 @@ div#GalleryContainer {
         </div>
     </div>
 </div>
-<!-- 신고 모달 창 끝  ---------------------------------------------------------------->
+<!-- 신고 모달 창 끝 -->
 <script>
 //해시태그 
-
 var tag = {};
 var counter = 0;
 
 // 입력한 값을 태그로 생성한다.
 function addTag(value) {
     tag[counter] = value;
-    counter++; // del-btn 의 고유 id 가 된다.
+    counter++; // del-btn 의 고유 id
 }
 
 // tag 안에 있는 값을 array type 으로 만들어서 넘긴다.
@@ -860,31 +813,25 @@ $("#tag").on("keypress", function (e) {
                 addTag(tagValue);
                 self.val("");
             } else {
-           	 Swal.fire({
-           	      title: '태그값이 중복됩니다.',
-           	      text: "다시 입력하세요.",
-           	      icon: 'warning',
-           	      showCancelButton: false,
-           	      confirmButtonColor: '#3085d6',
-           	      cancelButtonColor: '#d33'
+           	 	Swal.fire({
+					title: '태그값이 중복됩니다.',
+					text: "다시 입력하세요.",
+					icon: 'warning',
+					showCancelButton: false,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33'
            	    })
             }
         }
         e.preventDefault(); // SpaceBar 시 빈공간이 생기지 않도록 방지
     }
 
-
-	 // 삭제 버튼 
-	 // 인덱스 검사 후 삭제
-	 $(document).on("click", ".del-btn", function (e) {
-	     var index = $(this).attr("idx");
-	     tag[index] = "";
-	     $(this).parent().remove();
-	 });
+	// 삭제 버튼 
+	// 인덱스 검사 후 삭제
+	$(document).on("click", ".del-btn", function (e) {
+		var index = $(this).attr("idx");
+		tag[index] = "";
+		$(this).parent().remove();
+	});
 });	
 </script>
-<style>
-
-</style>
-
-

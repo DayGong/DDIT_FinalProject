@@ -5,15 +5,12 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <style>
-	
 	@font-face {
 	font-family: 'Chosunilbo_myungjo';
 	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Chosunilbo_myungjo.woff') format('woff');
 	font-weight: normal;
 	font-style: normal;
 	}
-	
-
 	
 	p{
 		margin-bottom:0;
@@ -37,6 +34,7 @@
 		padding: 10px 15px;
 		margin-bottom:0px;
 	}
+	
 	#surveyVoteContainer .surveyVoteBg{
 		display:flex;
 		justify-content: space-between;
@@ -46,7 +44,6 @@
 		width: 1200px;
 		margin: auto;
 	}
-
 	#surveyVoteContainer  .surveyVoteBg .bonmun{
 			flex: 1;
 			padding-left: 90px;
@@ -58,12 +55,10 @@
 		color:#333;
 		font-family: 'Chosunilbo_myungjo';
 	}
-	
 	#surveyVoteContainer .surveyVoteBg .topdiv{
 		padding-bottom:10px;
 		border-bottom:2px solid #000;
 	}
-	
 	#surveyVoteContainer .surveyVoteBg .topdiv #stat{
 		font-size:14.4px;
 	}
@@ -78,7 +73,6 @@
 	#surveyVoteContainer .surveyVoteContent{
 		margin-top:30px;
 	}
-	
 	#surveyVoteContainer .surveyVoteContent .question-li{
 		border-bottom: 1px solid #333;
 		border-top: 2px solid #333;
@@ -87,7 +81,6 @@
 		padding-bottom: 10px;
 		padding-left: 10px;
 	}
-	
 	#surveyVoteContainer .surveyVoteContent .surveyVotebogi{
 		margin-top:20px;
 		margin-bottom:20px;
@@ -109,8 +102,7 @@
 		margin-top:80px;
 		text-align: center;
 	}
-	
-	
+
 	.svBtn{
 		display:inline-block;
 		text-align: center;
@@ -125,18 +117,17 @@
 		margin-bottom: 40px;
 		margin-right:15px;
 	}
+	.svBtn:hover{
+		background: #ffd77a!important;
+		transition: all 1s ease;
+		color:#333;
+		font-weight:600;
+	}
+	
 	#surveyVotegoList{
 		background:#333;
 	}
-	
-	
-	.svBtn:hover{
-	background: #ffd77a!important;
-	transition: all 1s ease;
-	color:#333;
-	font-weight:600;
-	}
-	
+
 	.cntext{
 		padding: 10px 15px;
 	}
@@ -192,13 +183,10 @@ $(function(){
 		$(this).find($("input:radio")).attr("checked",true);
 	});
 	
-	
-	
 	var startDt = new Date("${voteQustnrBeginDt}");
 	var endDt = new Date("${voteQustnrEndDt}");
 	var todayDt = new Date();
 	var qustnrSttus = '';
-
 	
 	if(startDt > todayDt) {
 		qustnrSttus = '예정';
@@ -214,15 +202,16 @@ $(function(){
 		$(".statIcon").html("<i class='fa-solid fa-face-frown' style='color:#666;'></i>");
 	}
 	
-	
 	$("#stat").text(qustnrSttus);
-//		A22001 -1학년
-//		A22002 -2학년
-//		A22003 -3학년
-//		A22004 -4학년
-//		A22005 -5학년
-//		A22006 -6학년
 	
+	/*
+		A22001 -1학년
+		A22002 -2학년
+		A22003 -3학년
+		A22004 -4학년
+		A22005 -5학년
+		A22006 -6학년
+	*/
 	if("${clasVO.cmmnGrade}"=="A22001"){
 		$(".grade").text("1");
 	}else if("${clasVO.cmmnGrade}"=="A22002"){
@@ -237,23 +226,18 @@ $(function(){
 		$(".grade").text("6");
 	}
 	
-	
-	
 	$("#surveyVoteSubmitBtn").on("click",function(){
 		var data = {"voteQustnrCode": "${voteNdQustnrVO.voteQustnrCode}"};
 		var QVList = [];
 		$("input[data-target='data']:checked").each(function(idx, item) {
 			var temp = {
-						"voteIemSn" : $(item).data("voteIemSn")
-						,"voteDetailIemCn" :$(item).val()
-						};
+				"voteIemSn" : $(item).data("voteIemSn")
+				,"voteDetailIemCn" :$(item).val()
+			};
 			
 			QVList.push(temp);
 			data.QVList = QVList;
 		});
-		console.log("--------------------------------------------------------------")
-		console.log("data->", data);
-		console.log("QVList->", QVList);
 		
 		var nullchk = true;
 		if($("input[data-target='data']:checked").length != 1){
@@ -286,7 +270,6 @@ $(function(){
 			}
 		});
 	});
-	
 });
 </script>
 <div id="surveyVoteContainer">
@@ -324,7 +307,6 @@ $(function(){
 						<h4 style="display:inline-block;">
 							${item.voteIemCn}
 						</h4>
-						
 					</li>
 					<c:if test="${item.voteQustnrType=='V'}">
 						<li>

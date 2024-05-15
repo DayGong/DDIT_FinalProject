@@ -12,9 +12,9 @@ function resultSAlert(result, actTitle, reloadPage) {
 	if (result != 2) { res = "실패"; icon = "error"; }
 	
 	Swal.fire({
-      title: actTitle + " " + res + '하였습니다.',
-      text: reloadPage,
-      icon: icon
+		title: actTitle + " " + res + '하였습니다.',
+		text: reloadPage,
+		icon: icon
 	}).then(result => { location.href = "/employee/employeeList?schulCode="+schulCode; });
 }
 
@@ -148,8 +148,10 @@ $(function() {
 		let files = e.target.files;
 		//이미지 오브젝트 배열		
 		let fileArr = Array.prototype.slice.call(files);
+
 		//초기화
 		$("#thum").html("");
+		
 		//fileArr : {"개똥이.jpg객체","홍길동.jpg객체"}
 		//f :각각의 이미지 파일
 		fileArr.forEach(function(f){
@@ -192,14 +194,13 @@ $(function() {
 		new daum.Postcode({
 			//다음 창에서 검색이 완료되면
 			oncomplete : function(data) {
-				$("#zip").val(data.zonecode);//우편번호
-				$("#mberAdres1").val(data.address);//주소
+				$("#zip").val(data.zonecode);		//우편번호
+				$("#mberAdres1").val(data.address);	//주소
 			}
 		}).open();
 	});
 });
 </script>
-
 
 <style>
 /*회원가입 폼 스타일 정의*/
@@ -220,6 +221,7 @@ $(function() {
 	padding-left: 80px;
 	padding-right: 80px;
 }
+
 @keyframes fadein {
 		from {
 				opacity: 0;
@@ -266,7 +268,7 @@ $(function() {
 	width:100%;
 	margin-top:10px;
 	font-size:1rem;
-	padding:10px; 15px;
+	padding:10px, 15px;
 	outline:none;
 }
 #signUpContainer span{
@@ -307,7 +309,6 @@ $(function() {
 	color: #fff;
 	font-size: 1.2rem;
 	margin-left: 10px;
-	
 }
 
 #autoBtn{
@@ -345,7 +346,6 @@ $(function() {
 	margin-left: 10px;
 }
 
-
 #frm .btnZone{
 	display:flex;
 	text-align: center;
@@ -360,7 +360,6 @@ $(function() {
 	color: #fff;
 	font-weight: 600;
 }
-
 #frm #childAddBtn, #frm #childDelBtn, #frm #childChk{
 	display:inline-block; 
 	background:#006DF0; 
@@ -374,14 +373,11 @@ $(function() {
 	font-size:0.9rem; 
 	border:none;
 }
-
 #frm #childChk{
 	background: #ffd77a;
 	color:#3e3f41;
 	font-weight:700;
 }
-
-
 #frm #childDelBtn{
 	background:#666; 
 }
@@ -394,11 +390,11 @@ $(function() {
 <!-- 직원 등록 폼 전체 -->
 <div id="signUpContainer">
    <h2>
-      직원 등록 
-      <img src="..\resources\images\member\signUp1.png" style="width:40px;">
-       <button type="button" id="autoBtn">
-          <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-       </button>
+		직원 등록 
+		<img src="..\resources\images\member\signUp1.png" style="width:40px;">
+		<button type="button" id="autoBtn">
+			<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+		</button>
    </h2>
       <form id="frm" action="" method="post" enctype="multipart/form-data">
          <ul class="signUpinputAll">
@@ -475,12 +471,11 @@ $(function() {
             </li>
          </ul>
          <p class="btnZone">
-           
             <button type="button" id="insertBtn">
-               직원 등록
+               	직원 등록
             </button>
             <button type="button" id="goList">
-               직원 목록
+               	직원 목록
             </button>
          </p>
          <sec:csrfInput />

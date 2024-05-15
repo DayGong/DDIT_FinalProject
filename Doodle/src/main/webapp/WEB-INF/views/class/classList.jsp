@@ -7,9 +7,9 @@
 #clasInNo {
 	border: 2px solid #bbb;
     border-radius: 5px; /* 둥근 테두리 설정 */
-    font-size: 15px; /* 원하는 크기로 설정 */
-    padding: 10px; /* 텍스트 입력란의 내부 여백 설정 */
-    width: 50px; /* 입력 필드의 너비 설정 */
+    font-size: 15px; 	/* 원하는 크기로 설정 */
+    padding: 10px; 		/* 텍스트 입력란의 내부 여백 설정 */
+    width: 50px; 		/* 입력 필드의 너비 설정 */
 }
 
 /* Chrome, Safari, Edge, Opera input 숫자 화살표 없애기*/
@@ -38,7 +38,8 @@ input[type='number'] {
     margin-top: 20px; /* 상단 여백 설정 */
 }
 
-.modal-area-button .Primary { /* 신청버튼 */
+/* 신청버튼 */
+.modal-area-button .Primary { 
     background: #006DF0;
     font-size: 14px;
     padding: 8px 15px;
@@ -49,7 +50,8 @@ input[type='number'] {
     margin-top: 0px;
 }
 
-.modal-area-button .danger-color {/* 종료버튼 */
+/* 종료버튼 */
+.modal-area-button .danger-color {
     background: #eaeaea;
     padding: 8px 15px;
 }
@@ -75,7 +77,7 @@ input[type='number'] {
 	margin-bottom: 40px;
 }
 #classListContainer{
-		min-height: 790px;
+	min-height: 790px;
 }
 #classListContainer .custom-pagination{
 	max-width:302px;
@@ -100,41 +102,38 @@ input[type='number'] {
     font-size: 40px;
     width: 300px;
     letter-spacing: 6.2px;
-    /* 다른 스타일 속성들 */
 }
-	
 
 #invCodeJoinModal p {
     line-height: 24px;
     font-size: 35px;
     font-weight: 400;
     margin-top: -25px;
-    /* 다른 스타일 속성들 */
 }
 
 #cmmnClasSttusNm{
-		height: 40px;
-		border: 1px solid #ddd;
-		border-radius: 5px;
-		padding-left: 10px;
+	height: 40px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding-left: 10px;
 }
 
 .searchForm{
-		height: 40px;
-		border: 1px solid #ddd;
-		border-radius: 5px;
-		padding: 15px 20px;
+	height: 40px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 15px 20px;
 }
 
-#btnSearch,#createBtn{
-		background: #333;
-		height: 40px;
-		border: none;
-		padding: 10px 15px;
-		border-radius: 10px;
-		font-family: 'Pretendard' !important;
-		font-weight: 600;
-		color: #fff;
+#btnSearch, #createBtn{
+	background: #333;
+	height: 40px;
+	border: none;
+	padding: 10px 15px;
+	border-radius: 10px;
+	font-family: 'Pretendard' !important;
+	font-weight: 600;
+	color: #fff;
 }
 #btnSearch:hover, #createBtn:hover{
 	background: #ffd77a;
@@ -150,7 +149,6 @@ input[type='number'] {
     background: #f5f5f5!important;
 }
 
-
 </style>
 <script>
 //전역 변수
@@ -163,65 +161,56 @@ var size = 10;
 var mberClasCode = [];		//내가 속해있는 클래스들
 var mberId = "${memberVO.mberId}";
 
-
 $(function(){
-	//console.log("존재:",$("#btnSearch")[0]);
 	if(currentPage == "") currentPage = "1"; 
-
-	//getMberClasCode();
 
 	//기본조회
 	fn_search(1);
 	
 	//input태그에서 엔터시 검색버튼누르기
 	var input = $("#keyword");
-	  input.on("keypress", function(event) {
-	      if (event.key === "Enter") {
-	          event.preventDefault();
-	          $("#btnSearch").click();
-	      }
-	  });
+	input.on("keypress", function(event) {
+		if (event.key === "Enter") {
+			event.preventDefault();
+			$("#btnSearch").click();
+		}
+	});
 	
 	//검색조회
 	$("#btnSearch").on("click",function(){
 		fn_search(1);
-	}); //검색 끝
+	});
 		
 	//상태 선택조회
     $("#cmmnClasSttusNm").change(function() {
     	fn_search(1);
-    });//셀렉트끝
-
+    });
 
 	//모달---------------- 
 
 	//가입완료버튼 -> 클래스 코드 가져오기
 	$(document).on('click', '#joinChk', function() {
 	    clasCode = $(this).data('clas-code');
-	    console.log("clasCode:", clasCode);
 	});
     
 	$("#joinBtn").on("click",function(){
-		console.log("clasCode",clasCode);
-		console.log("내가 가져온 값들 ->", clasCode + "랑 " + schulCode);
 		
 		let clasInNo = $("#clasInNo").val(); //학급 번호
 
 		// 학생 번호 입력 체크 - sweetAlert2사용
 		if (!clasInNo.trim()) { 
-			  Swal.fire({
-				  icon : "error",
-			      title: "번호를 입력해주세요 !"
-			    })
+			Swal.fire({
+				icon : "error",
+				title: "번호를 입력해주세요 !"
+			})
 			return;
 		}
 		
 		let data = {
-				"schulCode":schulCode,
-				"clasInNo":clasInNo,
-				"clasCode":clasCode
+			"schulCode":schulCode,
+			"clasInNo":clasInNo,
+			"clasCode":clasCode
 		}
-		console.log("data",data);
 		
 		//클래스 가입 ajax
 		$.ajax({
@@ -232,28 +221,28 @@ $(function(){
 			dataType:"text",
 			beforeSend:function(xhr){
 				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-			},success:function(result){
-				console.log("result",result);
-				//result=0 실패 / result=1성공
+			},
+			success:function(result){
 				if(result =="0"){
 					Swal.fire({
 						title: '이미 가입신청 한 클래스입니다.',
 						text: '가입신청을 취소할까요?',
 						icon: 'warning',
 						
-						showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
-						confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
-						cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
-						confirmButtonText: '승인', // confirm 버튼 텍스트 지정
-						cancelButtonText: '취소', // cancel 버튼 텍스트 지정
-						}).then(result => {
+						showCancelButton: true, 		// cancel버튼 보이기. 기본은 원래 없음
+						confirmButtonColor: '#3085d6', 	// confrim 버튼 색깔 지정
+						cancelButtonColor: '#d33', 		// cancel 버튼 색깔 지정
+						confirmButtonText: '승인', 		// confirm 버튼 텍스트 지정
+						cancelButtonText: '취소', 		// cancel 버튼 텍스트 지정
+					}).then(result => {
 						// 만약 Promise리턴을 받으면,
 						if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
 						
 							let data = {
-									"schulCode":schulCode,	//학교코드
-									"clasCode":clasCode		//클래스코드
+								"schulCode":schulCode,	//학교코드
+								"clasCode":clasCode		//클래스코드
 							}
+
 							$.ajax({
 								url:"/class/classJoinReqCancelAajx",
 								contentType:"application/json;charset=utf-8",
@@ -262,14 +251,15 @@ $(function(){
 								dataType:"text",
 								beforeSend:function(xhr){
 									xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-								},success:function(result){
-									console.log("1이면 삭제성공! >> ",result);
+								},
+								success:function(result){
 								}
 							}); //DELETE AJAX 끝
-								Swal.fire({
+
+							Swal.fire({
 								title: '가입신청을 취소했습니다.',
 								icon: 'success'
-								})
+							})
 							$("#classroomJoinChekModal").modal('hide'); //모달 닫기
 						}
 					});
@@ -277,36 +267,34 @@ $(function(){
 					Swal.fire({
 						icon : "success",
 						title: "가입신청이 완료되었습니다."
-			    		}).then(() => {
-							$("#classroomJoinChekModal").modal('hide'); //모달 닫기
-						});
+					}).then(() => {
+						$("#classroomJoinChekModal").modal('hide'); //모달 닫기
+					});
 				}
 			}//success끝
 		}); //가입 ajax끝
 	}); //가입버튼 끝
 	//등록버튼
 	$("#createBtn").on("click", function() {
-			location.href = "/class/classCreate?schulCode="+schulCode; //GET방식
-		});
+		location.href = "/class/classCreate?schulCode="+schulCode; //GET방식
+	});
 });
 
 //초대코드 가입하기 모달
 $(document).on('click', '#invCodeBtn', function() {
-
 	$('#classroomJoinChekModal').modal('hide');
 });
+
 //초대코드모달 -> 완료
 $(document).on('click', '#invCodeChkBtn', function() {
 
 	var invCode = $(".invCode").val();
-	console.log("invCode",invCode);
-	console.log("clasCode",clasCode);
 
 	if(!invCode || invCode === null || invCode.trim() === ""){
 		Swal.fire({
-					icon : "warning",
-					title: "초대코드를 입력해주세요"
-				});
+			icon : "warning",
+			title: "초대코드를 입력해주세요"
+		});
 		return;
 	}
 
@@ -317,7 +305,6 @@ $(document).on('click', '#invCodeChkBtn', function() {
 			"schulCode":schulCode,
 			"clasCode":clasCode
 		}
-		console.log("schulCode",schulCode);
 
 		$.ajax({
 			type:"post",
@@ -327,7 +314,8 @@ $(document).on('click', '#invCodeChkBtn', function() {
 			dataType:"json",
 			beforeSend:function(xhr){
 				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-			},success:function(result){
+			},
+			success:function(result){
 				if(result == 0){
 					Swal.fire({
 						icon : "error",
@@ -338,64 +326,23 @@ $(document).on('click', '#invCodeChkBtn', function() {
 						icon : "success",
 						title: "가입이 완료되었습니다."
 					}).then(result => {
-					if (result.isConfirmed) {
-					location.href = `/main`; //get방식
-					}
-				});
+						if (result.isConfirmed) {
+							location.href = `/main`;
+						}
+					});
 				}
 			}
-
 		})//Ajax 끝
-
-		
 	}else{
 		Swal.fire({
-					icon : "error",
-					title: "초대코드를 확인해주세요."
-			    });
+			icon : "error",
+			title: "초대코드를 확인해주세요."
+		});
 		return;
 	} //if문 끝
 });//완료버튼끝
 
-
-
-    //모달 ------------------
-
-//내가 속해있는 클래스 조회
-/*
-function getMberClasCode(){
-	$.ajax({
-		url:"/class/getMberClasCode",
-		type:"post",
-		dataType:"json",
-		beforeSend:function(xhr){
-			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-		},
-		success:function(result){
-			console.log("result은????",result);
-			$.each(result, function(index, clasStdntVO) {
-					console.log("메로!", clasStdntVO);
-					mberClasCode.push(clasStdntVO.clasCode);
-				});
-			console.log("찍혔남?",mberClasCode);
-		}
-	});
-
-};
-*/
-
-// 클릭한 학급클래스 입장
-/*
-const enterClass = function(clasCode, childId){
-	document.querySelector("#mainClasCode").value=clasCode;
-	if(childId != null){
-		document.querySelector("#mainChildId").value=childId;
-	}
-	console.log("clasCode잘아ㅗㅅ나",clasCode);
-	console.log("mberId잘아ㅗㅅ나",mberId);
-	document.querySelector("#mainGoToClassForm").submit();
-}
-*/
+//모달 ------------------
 
 //기본조회함수
 function fn_search(page) {
@@ -408,8 +355,9 @@ function fn_search(page) {
     		"cmmnClasSttusNm" : $("#cmmnClasSttusNm").val(),
 			"size":size
     }
-    console.log("data : ",data);
+	
     $("#classListBody").html(""); //목록 초기화
+
     $.ajax({
 		url:"/class/classListAjax",
 		type:"post",
@@ -420,8 +368,6 @@ function fn_search(page) {
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success:function(result){
-			/* console.log("result.pagingArea", result.pagingArea); */
-			console.log("result!!",result);
             if (result.total == 0) {
                 $("#keyword").val('');
 
@@ -441,9 +387,6 @@ function fn_search(page) {
 						<td>\${clasVO.mberNm}</td>
 						<td>\${clasVO.cmmnClasSttusNm}</td>
 						<td>`;
-					/* if (mberClasCode[0] == clasVO.clasCode) {
-						html += `<div class='modal-area-button'><a class='Primary mg-b-10' onclick ="enterClass(\${clasVO.clasCode},\${mberId})" data-toggle='modal'>입장</a></div>`;
-					} */
 					if (clasVO.cmmnClasSttusNm === '운영') {
 						html += `<div class='modal-area-button'><a class='Primary mg-b-10' href='#classroomJoinChekModal' data-toggle='modal' data-clas-code='\${clasVO.clasCode}' data-schul-code='\${clasVO.schulCode}' id='joinChk'>신청</a></div>`;
 					} else if (clasVO.cmmnClasSttusNm === '중지' || clasVO.cmmnClasSttusNm === '종료') {
@@ -458,18 +401,11 @@ function fn_search(page) {
 			}
 			//페이징처리
 			$("#divPaging").html(result.pagingArea);
-		 
 		}
 	}); //ajax끝
 }
     
 </script>
-
-<!-- <form id="mainGoToClassForm" action="/class/classMain" method="post">
-	<input type="hidden" id="mainClasCode" name="clasCode" value="">
-	<input type="hidden" id="mainChildId" name="childId" value="">
-	<sec:csrfInput />
-</form> -->
 
 <div id="classListContainer">
 	<div class="sparkline13-list">
@@ -486,21 +422,20 @@ function fn_search(page) {
 					</c:if>
 				</div>
 				<div class="pull-right search" style="margin-bottom: 20px;">
-						<!-- 검색 셀렉트 -->
-							<select name="cmmnClasSttusNm" id="cmmnClasSttusNm">
-								<option value="전체">전체</option>
-								<option value="운영">운영</option>
-								<option value="중지">중지</option>
-								<option value="종료">종료</option>
-							</select>
-						<!-- 검색 셀렉트 -->
-						<!-- 검색어 시작 -->
-						<input class="searchForm" type="text" placeholder="검색어를 입력해 주세요." name="keyword" id="keyword" value="${keyword}">
-						<button type="button" id="btnSearch">검색</button>
-						<!-- 검색어 끝 -->
+					<!-- 검색 셀렉트 시작 -->
+					<select name="cmmnClasSttusNm" id="cmmnClasSttusNm">
+						<option value="전체">전체</option>
+						<option value="운영">운영</option>
+						<option value="중지">중지</option>
+						<option value="종료">종료</option>
+					</select>
+					<!-- 검색 셀렉트 끝 -->
+					<!-- 검색어 시작 -->
+					<input class="searchForm" type="text" placeholder="검색어를 입력해 주세요." name="keyword" id="keyword" value="${keyword}">
+					<button type="button" id="btnSearch">검색</button>
+					<!-- 검색어 끝 -->
 				</div>
 			</div>
-			
 		</div>
 		<div class="static-table-list modal-area-button">
 			<table class="table">
@@ -516,7 +451,6 @@ function fn_search(page) {
 					</tr>
 				</thead>
 				<tbody id="classListBody">
-					
 				</tbody>
 			</table>
 		</div>
@@ -545,7 +479,6 @@ function fn_search(page) {
 </div>
 <!--학생 클래스 가입 모달 끝-->
 
-
 <!--학부모 클래스 가입 모달 시작-->
 <div id="invCodeJoinModal" class="modal modal-edu-general default-popup-PrimaryModal fade in" role="dialog" style="display: none; padding-right: 17px;">
 	<div class="modal-dialog">
@@ -558,7 +491,6 @@ function fn_search(page) {
 				<br>
 				<input class="invCode" type="text" style="border: none;" maxlength="10">
 				<hr>
-				
 			</div>
 			<div class="modal-footer">
 				<a href="#" id="invCodeChkBtn">완료</a>
@@ -586,4 +518,3 @@ function fn_search(page) {
 	</div>
 </div>
 <!-- 종료 클래스 가입 모달 끝 -->
-

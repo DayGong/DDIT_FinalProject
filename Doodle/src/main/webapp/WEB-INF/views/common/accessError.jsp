@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <style>
 	#frm{
 		width:500px;
@@ -168,11 +169,11 @@
 <script type="text/javascript">
 $(function(){
 	$("#loginBtn").on("click",function(){
-			let mberId = $("#mberId").val();
-			let password = $("#password").val();
-			let data = {"mberId" : mberId,
-						 "password" : password};
-			$.ajax({
+		let mberId = $("#mberId").val();
+		let password = $("#password").val();
+		let data = {"mberId" : mberId,
+					 "password" : password};
+		$.ajax({
 			url:"/login",
 			contentType:"application/json;charset=utf-8",
 			data:JSON.stringify(data),

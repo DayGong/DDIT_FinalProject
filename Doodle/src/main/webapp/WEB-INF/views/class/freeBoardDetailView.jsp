@@ -8,10 +8,10 @@
 <script type="text/javascript" src="/resources/js/jquery.min.js"></script>
 <script>
 	$(function(){
-		
 		$(".auto-reply-btn").on("click",function(){
 			$("#answerCn").val("나도 정말 재미있었어. 다음에도 꼭 버스 옆자리 같이 앉자!");
 		});
+
 		//목록으로가기
 		$("#goFree").on("click",function(){
 			location.href="/freeBoard/freeBoardList"; //게시글 목록으로 가기 위함
@@ -32,12 +32,10 @@
 		/* 게시글 삭제 */
 		$("#freeDelBtn").on("click",function(){
 
-			
 			var data = {
 				"nttAtchFileCode":"${nttVO.nttAtchFileCode}",
 				"nttCode":"${nttVO.nttCode}"
 			};
-			
 			
 			$.ajax({
 				url:"/freeBoard/deleteFreeBoardAjax",
@@ -82,11 +80,10 @@
 			
 			/*댓글 내용 가져오기*/
 			var answerCn = $("#answerCn").val();
-			
 			var data = {
-					"answerCn": answerCn,
-					"nttCode":"${nttVO.nttCode}"
-				};
+				"answerCn": answerCn,
+				"nttCode":"${nttVO.nttCode}"
+			};
 			
 			/*댓글 등록 전송*/
 			$.ajax({
@@ -102,7 +99,7 @@
 					if(result.result > 0){
 						resultAlert2(result.result,"댓글 등록",'','');
 					}
-					/*댓글 날짜 포맷 그냥 오늘 날짜로 기입 디비에서 불러오니까 엉킴*/
+
 					var replyDate = "";
 					var date = new Date();
 					var month = date.getMonth() + 1;
@@ -111,8 +108,6 @@
 					day = day >= 10 ? day : '0' + day;
 					replyDate = date.getFullYear() + '-' + month + '-' + day;
 					
-					
-// 					<button type='button' class='updateReplyBtn' data-target='updReplyBtn' data-reply-upd-id='"+result.answerVO.answerCode+"'>댓글 수정</button>
 					/*댓글 등록 후 바로 내용 그리기*/
 					var str="";
 					str +="<ul class='replyListAll' data-target='target'>";
@@ -162,7 +157,6 @@
 			}
 			
 			var btnObj = $(this);//ajax에서의 this와 여기의 this가 다르게 적용되어서 동일하게 사용하기위해 변수에 담음(클릭한 삭제버튼)
-			
 			var replyListAll = $(this).closest("ul.replyListAll");
 			var replyListLi = replyListAll.find($(".replyListLi"));
 			var replylistCn = replyListAll.find($(".replylistCn"));
@@ -172,8 +166,6 @@
  			var replylistCnText = replylistCn.text().trim();
  			var mberId = replyListLi.find(".replylistId").text();
 			var replylistDate = replyListLi.find(".replylistDate").text();
-			console.log("answerCode->", answerCode);
-			console.log("answerCn->", answerCn);
 
 			$(replyInfoAll).remove();
 			
@@ -200,9 +192,7 @@
 			updateReply +=		"</p>";
 			updateReply +=	"</li>";
 			updateReply +="</ul>";
-			
 			updateReply +=	"<p class='replylistCn' style='margin-bottom: 0px; font-weight: 500; display:flex; padding-top: 10px;'>";
-			
 			updateReply +=	"</p>";
 
 			$(replyListLi).append(updateReply);
@@ -218,15 +208,12 @@
 			var answerCode = replylistCnBtn.data("replyUpdId");
 			var mberId = replyListLi.find(".replylistId").text();
 			var replyInfoAll = replyListLi.find(".replyInfoAll");
-			console.log("answerCode->", answerCode);
 			var upCnAra = replyListAll.find($(".upCnAra"));
 			var answerCn = upCnAra.val();
-			
-			console.log("answerCn->", answerCn);
-			
- 			var data = {"answerCode": answerCode, "answerCn" : answerCn};
+			var chk = true;
+ 		
+			var data = {"answerCode": answerCode, "answerCn" : answerCn};
  			
- 			var chk = true;
  			if(answerCn==null || answerCn==''){
  				chk=false;
  			}
@@ -235,7 +222,6 @@
  				alert("수정할 내용을 입력해주세요.");
  				return;
  			}
- 			
  			
  			$.ajax({
 				url:"/freeBoard/updateReply",
@@ -247,7 +233,6 @@
 					xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 				},
 				success:function(result){
-					console.log("result->", result);
 					if(result > 0){
 						resultAlert2(result, '댓글 수정 ', '', '');
 						$(replyInfoAll).remove();
@@ -280,22 +265,18 @@
 						updateAfter +=		"</li>";
 						updateAfter +=	"</ul>";
 						$(replyListLi).append(updateAfter);
-						
 					}
-				
 				}
 			});
 		});
 		/*댓글 수정 이벤트 끝*/
 		/*댓글 삭제 이벤트 시작*/
-		/*댓글 삭제 후 내용 해당 내용도 바로 화면에서 삭제시키려하는데 기존부터 삭제 이후에도 있는 div를 기준으로 지워야 지워짐 */
 		$("[data-div='replyDiv']").on("click", "[data-target='delReplyBtn']", function(){
 			
 			var btnObj = $(this);//ajax에서의 this와 여기의 this가 다르게 적용되어서 동일하게 사용하기위해 변수에 담음(클릭한 삭제버튼)
 			var answerCode = btnObj.data("replyId");
 			
 			var data = {"answerCode": answerCode};
-			console.log("data->", data);
 			$.ajax({
 				url:"/freeBoard/deleteReply",
 				contentType:"application/json;charset=utf-8",
@@ -306,7 +287,6 @@
 					xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 				},
 				success:function(result){
-					console.log("result->", result);
 					if(result == 1){
 						resultAlert2(result, '댓글 삭제 ', '', '');
 						btnObj.closest("[data-target='target']").remove();
@@ -320,7 +300,6 @@
 					}
 				}
 			});
-			
 		});
 		/*댓글 삭제 이벤트 끝*/
 	});
@@ -365,8 +344,6 @@
 	justify-content: space-between;
 	position:relative;
 }
-
-
 .FreeBoardAll .title{
 	font-size: 1.8rem;
 	font-weight: 700;
@@ -391,12 +368,10 @@
 	background: #111;
 	color:#fff;
 }
-
 #freeUpdBtn{
 	background: #666;
 	color:#fff;
 }
-
 #goFree:hover,#freeUpdBtn:hover,#freeDelBtn:hover, #replyInsertBtn:hover{
 	background: #ffd77a;
 	transition: all 1s ease;
@@ -412,7 +387,6 @@
 	border: 1px solid rgba(255, 255, 255, 0.18);
 	padding: 15px 20px;
 }
-
 .uploadList ul{
 	display: block;
 }
@@ -420,7 +394,6 @@
 	display: block;
 	margin-bottom:5px;
 }
-
 .uploadList ul li.fileList{
 	cursor: pointer;
 }
@@ -471,8 +444,6 @@
 /*댓글 CSS 끝*/
 </style>
 
-
-
 <div id="FreeBoardContainer">
 	<!-- 데이터 전달용 form -->
 	<form method="post" action="/freeBoard/download" id="freeUploadFrm">
@@ -495,137 +466,130 @@
 		<img src="/resources/images/classRoom/freeBrd/freeBoardTitChat.png" style="width:50px; display:inline-block; vertical-align:middel;">		
 	</h3>
 	<!-- 게시판 타이틀 끝 -->
-		<!-- 게시판 내용 제목/내용 시작 -->
-		<div class="FreeBoardAll" style="width: 1400px; margin: auto; margin-bottom:50px; min-height:530px;">
-			<div class="FreeTit">
-				<input type="text"  class="form-control input-sm" style="width:95%;border:none;background: none;height: 50px;font-size: 1.4rem;display: inline-block;vertical-align: middle; margin-bottom:6px;" 
-				name="nttNm" id="nttNm" value="${nttVO.nttNm}" readonly>
-				<img src="/resources/images/classRoom/freeBrd/line.png" style="position: absolute;left: 0px;top: 10px;z-index: -1;">
-			</div>
-			<div class="freeInfo">
-				<span style="font-size: 14px;">
-					<img src="/resources/images/classRoom/freeBrd/freeDateIcon.png" alt="게시글 등록일자 아이콘" style="width: 12px;margin-top: 4px;vertical-align: top;display: inline-block;"/>
-						<small style="font-weight: 600;color: #222;font-size: 13px;">등록일자 : </small>
-					<span style="color:#666; font-size: 13px;"><fmt:formatDate value="${nttVO.nttWritngDt}" pattern="yyyy-MM-dd" /></span>
-				</span>
-				<span style="margin-left:15px; font-size: 13px;">
-					<img src="/resources/images/classRoom/freeBrd/freePersonIcon.png" alt="게시글 작성자 아이디 아이콘" style="width: 12px;margin-top: 5px;vertical-align: top;display: inline-block;"/>
-						<small style="font-weight: 600;color: #222;font-size: 13px; line-height: 1.75;">작성자 아이디 : </small>
-					<span style="color:#666; font-size: 13px;">${nttVO.mberId}</span>
-				</span>
-<!----------------신고--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-<!-- 				<span style="font-size: 16px; float: right; margin-right: 10px;"> -->
-<!-- 					<img src="/resources/images/classRoom/freeBrd/freeSiren.png" alt="게시글 신고 횟수 아이콘" style="width: 14px; margin-top:2px; vertical-align: text-top;display: inline-block;"/> -->
-<!-- 						<small style="font-weight: 600;color: #d9564e;font-size: 13px;">신고 : </small> -->
-<!-- 					<span style="color: #d9564e; font-size: 13px;">0</span> -->
-<!-- 				</span> -->
-<!----------------신고 끝--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-			</div>
-			<!-- 첨부파일 시작 -->
-			<div class="mb-3" style="display:flex;margin-top:20px;">
-				<img src="/resources/images/classRoom/freeBrd/freeFile.png" style="width:40px; display:inline-block;"alt="첨부파일 아이콘"/>
-				<span style="font-size:1.05rem; display: inline-block; vertical-align: middle;line-height: 2.5;">첨부파일</span> 
-			</div>
-			<div class="uploadList">
-				<ul>
-					<c:choose>
-						<c:when test="${fn:length(atchFileVOList) > 0}">
-							<c:forEach items="${atchFileVOList}" var="atchVO" varStatus="status">
-									<li class="fileList" data-atch-file-code ="${atchVO.atchFileCode}" 
-									data-atch-file-sn="${atchVO.atchFileSn}" data-atch-file-nm="${atchVO.atchFileNm}">
-										<img alt="${atchVO.atchFileNm}파일 다운로드" src="/resources/images/classRoom/freeBrd/free-download-solid.png" style="width:15px; height: 15px; margin-bottom:3px;"> 
-										${atchVO.atchFileNm}
-									</li>
-							</c:forEach>
-						</c:when>
-						<c:otherwise>
-							<li>
-								<p style="margin-bottom:0px;">
-									<img alt="파일이 미존재 시 파일 아이콘 " src="/resources/images/classRoom/freeBrd/free-file-solid.png"  style=" width: 13px;margin-right: 2px; margin-bottom: 3px;">
-									첨부된 파일이 없습니다.
-								</p>
-							</li>
-						</c:otherwise>
-					</c:choose>
-				</ul>
-			</div>
-			<!-- 첨부파일 끝-->
-			<div class="free-cont">
-				​​​​​​​​<div id="smarteditor">
-					<div id="nttCn" style="width:412px;" style="border:1px solid #ddd;">
-						${nttVO.nttCn}
-					</div>
-				</div>
-			</div>
-			<div class="btn-zone">
-				​​​​​​​​<input type="button" value="목록" id="goFree"/>
-				<c:if test="${USER_INFO.mberId == nttVO.mberId || USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode == 'ROLE_A14002' ||  USER_INFO.vwMemberAuthVOList[1].cmmnDetailCode == 'ROLE_A14002'}">
-					​​​​​​​​<input type="button" value="수정" id="freeUpdBtn"/> 
-					​​​​​​​​<input type="button" value="삭제" id="freeDelBtn"/>
-				</c:if>
-			</div>
+	<!-- 게시판 내용 제목/내용 시작 -->
+	<div class="FreeBoardAll" style="width: 1400px; margin: auto; margin-bottom:50px; min-height:530px;">
+		<div class="FreeTit">
+			<input type="text"  class="form-control input-sm" style="width:95%;border:none;background: none;height: 50px;font-size: 1.4rem;display: inline-block;vertical-align: middle; margin-bottom:6px;" 
+			name="nttNm" id="nttNm" value="${nttVO.nttNm}" readonly>
+			<img src="/resources/images/classRoom/freeBrd/line.png" style="position: absolute;left: 0px;top: 10px;z-index: -1;">
 		</div>
-		<!-- 게시판 내용 제목/내용 끝 -->
-		<!-- 댓글 시작 -->
-		<div class="replyContainer">
-			<!-- 댓글 작성 form 시작-->
-			<form id="freeReplyInsertForm">
-				<input type="hidden" value="" name="nttCode" id="nttCode3">
-				<h4>댓글 <button type= "button" class="auto-reply-btn">자동입력</button></h4>
-				
-				<div class="replyForm" style="display:flex; margin-bottom:35px;">
-					<textarea name="answerCn" rows="" cols=""  id="answerCn" style="resize: none; width:96%; padding:10px 15px; border: 1px solid #ccc; border-radius:3px; border-right: none;  border-bottom-right-radius:0px; border-top-right-radius:0px;"></textarea>
-					<button type="button" id="replyInsertBtn" style="flex:1; border:none;  border-bottom-right-radius:5px; border-top-right-radius:5px;">
-						등록
-					</button>
-				</div>
-				<sec:csrfInput />
-			</form>
-			<!-- 댓글 작성 form 끝-->
-			<div data-div="replyDiv" id="replyDiv" style="border-top:1px solid #ddd;">
+		<div class="freeInfo">
+			<span style="font-size: 14px;">
+				<img src="/resources/images/classRoom/freeBrd/freeDateIcon.png" alt="게시글 등록일자 아이콘" style="width: 12px;margin-top: 4px;vertical-align: top;display: inline-block;"/>
+					<small style="font-weight: 600;color: #222;font-size: 13px;">등록일자 : </small>
+				<span style="color:#666; font-size: 13px;"><fmt:formatDate value="${nttVO.nttWritngDt}" pattern="yyyy-MM-dd" /></span>
+			</span>
+			<span style="margin-left:15px; font-size: 13px;">
+				<img src="/resources/images/classRoom/freeBrd/freePersonIcon.png" alt="게시글 작성자 아이디 아이콘" style="width: 12px;margin-top: 5px;vertical-align: top;display: inline-block;"/>
+					<small style="font-weight: 600;color: #222;font-size: 13px; line-height: 1.75;">작성자 아이디 : </small>
+				<span style="color:#666; font-size: 13px;">${nttVO.mberId}</span>
+			</span>
+		</div>
+		<!-- 첨부파일 시작 -->
+		<div class="mb-3" style="display:flex;margin-top:20px;">
+			<img src="/resources/images/classRoom/freeBrd/freeFile.png" style="width:40px; display:inline-block;"alt="첨부파일 아이콘"/>
+			<span style="font-size:1.05rem; display: inline-block; vertical-align: middle;line-height: 2.5;">첨부파일</span> 
+		</div>
+		<div class="uploadList">
+			<ul>
 				<c:choose>
-					<c:when test="${fn:length(replyList) > 0}">
-						<c:forEach var="answerVO" items="${replyList}" varStatus="status">
-						<ul class="replyListAll" data-target="target">
-							<li class="replyListLi">
-									<ul class="replyInfoAll">
-										<li style="display:flex; justify-content: space-between;">
-											<span>
-												<span class="replylistId" style="margin-bottom: 10px; font-weight: 800;">
-													<span class="freeReMemberId">${answerVO.mberId}</span>
-												</span>
-												<span class="replylistDate" style="margin-bottom: 10px; font-weight: 500;">
-													<fmt:formatDate value="${answerVO.answerWritngDt}" pattern="yyyy-MM-dd" />
-												</span>
-											</span>
-											<c:if test="${USER_INFO.mberId == answerVO.mberId || USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode == 'ROLE_A14002' ||  USER_INFO.vwMemberAuthVOList[1].cmmnDetailCode == 'ROLE_A14002'}">
-												<small>
-													<button type="button" class="updateReplyBtn" data-target="updateReplyBtn" data-reply-upd-id="${answerVO.answerCode}">댓글 수정</button>
-													<button type="button" class="delReplyBtn" data-target="delReplyBtn" data-reply-id="${answerVO.answerCode}">댓글 삭제</button>
-												</small>
-											</c:if>
-										</li>
-										<li>
-											<p class="replylistCn " style="margin-bottom: 0px; font-weight: 500; display:flex; padding-top: 10px;">
-												${answerVO.answerCn}											
-											</p>
-										</li>
-									</ul>
+					<c:when test="${fn:length(atchFileVOList) > 0}">
+						<c:forEach items="${atchFileVOList}" var="atchVO" varStatus="status">
+								<li class="fileList" data-atch-file-code ="${atchVO.atchFileCode}" 
+								data-atch-file-sn="${atchVO.atchFileSn}" data-atch-file-nm="${atchVO.atchFileNm}">
+									<img alt="${atchVO.atchFileNm}파일 다운로드" src="/resources/images/classRoom/freeBrd/free-download-solid.png" style="width:15px; height: 15px; margin-bottom:3px;"> 
+									${atchVO.atchFileNm}
 								</li>
-							</ul>	
 						</c:forEach>
 					</c:when>
 					<c:otherwise>
-						<ul class="replyListAll" id="noReplyUl">
-							<li class="replyListLi">
-								<ul class="replyInfoAll">
-									<li>아직 작성한 댓글이 없습니다.</li>
-								</ul>
-							</li>
-						</ul>
+						<li>
+							<p style="margin-bottom:0px;">
+								<img alt="파일이 미존재 시 파일 아이콘 " src="/resources/images/classRoom/freeBrd/free-file-solid.png"  style=" width: 13px;margin-right: 2px; margin-bottom: 3px;">
+								첨부된 파일이 없습니다.
+							</p>
+						</li>
 					</c:otherwise>
 				</c:choose>
+			</ul>
+		</div>
+		<!-- 첨부파일 끝-->
+		<div class="free-cont">
+			​​​​​​​​<div id="smarteditor">
+				<div id="nttCn" style="width:412px;" style="border:1px solid #ddd;">
+					${nttVO.nttCn}
+				</div>
 			</div>
 		</div>
-		<!-- 댓글 끝 -->
+		<div class="btn-zone">
+			​​​​​​​​<input type="button" value="목록" id="goFree"/>
+			<c:if test="${USER_INFO.mberId == nttVO.mberId || USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode == 'ROLE_A14002' ||  USER_INFO.vwMemberAuthVOList[1].cmmnDetailCode == 'ROLE_A14002'}">
+				​​​​​​​​<input type="button" value="수정" id="freeUpdBtn"/> 
+				​​​​​​​​<input type="button" value="삭제" id="freeDelBtn"/>
+			</c:if>
+		</div>
+	</div>
+	<!-- 게시판 내용 제목/내용 끝 -->
+	<!-- 댓글 시작 -->
+	<div class="replyContainer">
+		<!-- 댓글 작성 form 시작-->
+		<form id="freeReplyInsertForm">
+			<input type="hidden" value="" name="nttCode" id="nttCode3">
+			<h4>댓글 <button type= "button" class="auto-reply-btn">자동입력</button></h4>
+			
+			<div class="replyForm" style="display:flex; margin-bottom:35px;">
+				<textarea name="answerCn" rows="" cols=""  id="answerCn" style="resize: none; width:96%; padding:10px 15px; border: 1px solid #ccc; border-radius:3px; border-right: none;  border-bottom-right-radius:0px; border-top-right-radius:0px;"></textarea>
+				<button type="button" id="replyInsertBtn" style="flex:1; border:none;  border-bottom-right-radius:5px; border-top-right-radius:5px;">
+					등록
+				</button>
+			</div>
+			<sec:csrfInput />
+		</form>
+		<!-- 댓글 작성 form 끝-->
+		<div data-div="replyDiv" id="replyDiv" style="border-top:1px solid #ddd;">
+			<c:choose>
+				<c:when test="${fn:length(replyList) > 0}">
+					<c:forEach var="answerVO" items="${replyList}" varStatus="status">
+					<ul class="replyListAll" data-target="target">
+						<li class="replyListLi">
+								<ul class="replyInfoAll">
+									<li style="display:flex; justify-content: space-between;">
+										<span>
+											<span class="replylistId" style="margin-bottom: 10px; font-weight: 800;">
+												<span class="freeReMemberId">${answerVO.mberId}</span>
+											</span>
+											<span class="replylistDate" style="margin-bottom: 10px; font-weight: 500;">
+												<fmt:formatDate value="${answerVO.answerWritngDt}" pattern="yyyy-MM-dd" />
+											</span>
+										</span>
+										<c:if test="${USER_INFO.mberId == answerVO.mberId || USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode == 'ROLE_A14002' ||  USER_INFO.vwMemberAuthVOList[1].cmmnDetailCode == 'ROLE_A14002'}">
+											<small>
+												<button type="button" class="updateReplyBtn" data-target="updateReplyBtn" data-reply-upd-id="${answerVO.answerCode}">댓글 수정</button>
+												<button type="button" class="delReplyBtn" data-target="delReplyBtn" data-reply-id="${answerVO.answerCode}">댓글 삭제</button>
+											</small>
+										</c:if>
+									</li>
+									<li>
+										<p class="replylistCn " style="margin-bottom: 0px; font-weight: 500; display:flex; padding-top: 10px;">
+											${answerVO.answerCn}											
+										</p>
+									</li>
+								</ul>
+							</li>
+						</ul>	
+					</c:forEach>
+				</c:when>
+				<c:otherwise>
+					<ul class="replyListAll" id="noReplyUl">
+						<li class="replyListLi">
+							<ul class="replyInfoAll">
+								<li>아직 작성한 댓글이 없습니다.</li>
+							</ul>
+						</li>
+					</ul>
+				</c:otherwise>
+			</c:choose>
+		</div>
+	</div>
+	<!-- 댓글 끝 -->
 </div>

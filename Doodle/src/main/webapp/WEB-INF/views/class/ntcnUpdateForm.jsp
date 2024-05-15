@@ -121,7 +121,6 @@
   padding: 8px 16px;
   margin-right: 10px;
   cursor: pointer;
-  
 }
 .file-button input {
   display: none;
@@ -131,7 +130,6 @@
 }
 .file-upload input[type="text"] {
   flex-grow: 1;
-/*   margin-left: 10px; */
   padding: 8px;
   border: 1px solid #ced4da;
   width: calc(100% - 100px - 10px - 16px); /* Subtract button width and margins */
@@ -180,7 +178,6 @@ label{
 	object-fit: cover;
 	border-radius: 5px;
 	margin: 7px 0px 7px 7px;
-/* 	margin-top: 10px; */
 	cursor: pointer;
 }
 </style>
@@ -193,10 +190,8 @@ var clasCode = "${CLASS_INFO.clasCode}";
 var schulCode = "${CLASS_INFO.schulCode}";
 var taskCode = "${taskCode}";
 var loginId = "${USER_INFO.mberId}";
-
 var files = [];
 var index = 0;
-
 var oEditors = [];
 
 // 첨부 파일 개별 삭제
@@ -210,7 +205,6 @@ function fn_deleteOne(param){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
         },
        	success: function(res){
-       		console.log(res);
        	}	
 	})
 }
@@ -256,8 +250,6 @@ window.onload = function(){
 	    	var imageDiv = document.querySelector("#imageDiv");
 	        imageDiv.appendChild(imgTag);
 	    }
-        
-        console.log("드래그 files", files);
     });
 }
 
@@ -286,8 +278,6 @@ $(function(){
 	    	var imageDiv = document.querySelector("#imageDiv");
 	        imageDiv.appendChild(imgTag);
 		}
-		
-        console.log("첨부 files", files);
 	});
 	
 	// 첨부한 사진 개별 삭제 이벤트
@@ -302,8 +292,7 @@ $(function(){
 	    var idx = imageId.replace("images", ""); // images를 제거하여 인덱스 추출
 		  
 	    delete files[idx];
-		console.log(files);
-	    
+
 	    $("#images"+idx).remove();
 	});
       
@@ -314,20 +303,16 @@ $(function(){
         
         // 입력 정보들 가져오기
         var ntcnSj = $("#ntcnSj").val();
-        console.log("ntcnSj: " + ntcnSj);
 	    
         // 에디터에 적은 내용 가져오기
         var ntcnCn = oEditors.getById["se2Cn"].getIR();
         $("#ntcnCn").val(ntcnCn);
-        console.log("ntcnCn: " + ntcnCn);
         
         // 업로드한 파일 가져오기
         // 개별 삭제 되어 empty처리 된 인덱스 필터 작업
 		files = files.filter(function(item){
 			return item !== undefined && item !== null;
 		});
-		
-		console.log("필터 후 files", files);
 		
         var formData = new FormData();
         formData.append("ntcnCode", "${ntcnVO.ntcnCode}");
@@ -403,21 +388,20 @@ $(function(){
 // 네이버 스마트 에디터 API
 $(function() {
 	nhn.husky.EZCreator.createInIFrame({
-      oAppRef : oEditors,
-      elPlaceHolder : "se2Cn",
-      //SmartEditor2Skin.html 파일이 존재하는 경로
-      sSkinURI : '<c:url value="/resources/se2/SmartEditor2Skin.html"/>',
-      htParams : {
-         bUseToolbar : true,          // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
-         bUseVerticalResizer : true,  // 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
-         bUseModeChanger : true,      // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
-         bSkipXssFilter : true,       // client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
-         }, //boolean
-      fCreator: "createSEditor2"
+		oAppRef : oEditors,
+		elPlaceHolder : "se2Cn",
+		//SmartEditor2Skin.html 파일이 존재하는 경로
+		sSkinURI : '<c:url value="/resources/se2/SmartEditor2Skin.html"/>',
+		htParams : {
+			bUseToolbar : true,          // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+			bUseVerticalResizer : true,  // 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+			bUseModeChanger : true,      // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+			bSkipXssFilter : true,       // client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
+		}, //boolean
+      	fCreator: "createSEditor2"
    });
 });
 </script>
-
 <div id="NtcnContainer">
 	<h3>
 		<img src="/resources/images/classRoom/notice/noticeContent.png" style="width:50px; margin-bottom: 5px; display:inline-block; vertical-align:middel;">

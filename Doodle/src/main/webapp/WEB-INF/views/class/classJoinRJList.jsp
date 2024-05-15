@@ -25,14 +25,15 @@ h3{
 	var clasCode = "${clasCode}";
 	var schulCode = "${schulCode}";
 	var size = 10;
-window.onload = function() {
-	if(currentPage == "") currentPage = "1"; 
 
-	//기본조회 
-	fn_search(1);
-}
+	window.onload = function() {
+		if(currentPage == "") currentPage = "1"; 
 
-function fn_search(page) {
+		//기본조회 
+		fn_search(1);
+	}
+
+	function fn_search(page) {
 		//가입신청 대기목록 불러오는 ajax 시작//
 		let data = {
 			"schulCode":schulCode,
@@ -40,7 +41,6 @@ function fn_search(page) {
 			"currentPage" : currentPage,
 			"size":size
 		}
-		console.log("data",data);
 		
 		$.ajax({
 			url: "/class/classJoinRJListAjax",
@@ -49,10 +49,9 @@ function fn_search(page) {
 			type : "post",
 			dataType:"json",
 			beforeSend:function(xhr){
-					xhr.setRequestHeader(header,token);
-				},
+				xhr.setRequestHeader(header,token);
+			},
 			success:function(result){				
-				console.log("result!!: ", result);
 				//참고 -> location.href = `/school/dataRoomDetail?schulCode=\${schulCode}&nttCode=\${result}`;
 				const classJoinReqListBody = document.querySelector("#classJoinReqListBody");
 				var str = "";
@@ -73,59 +72,52 @@ function fn_search(page) {
 			}
 		});
 	}
-//가입 신청 처리
-function classJoinChk(action, mberId) {
-	
-	var cmmnClasPsitnSttus; //공통 반 소속 상태(A03) 
-	var clasStdntJoinDate; // 가입일
-	
-	if(action === "accept"){ //수락시
-		cmmnClasPsitnSttus = "A03101"; //성공
-		clasStdntJoinDate = new Date().toLocaleDateString('en-GB').split('/').reverse().join('-'); //yy-MM-dd형식의 문자열 , 가입일 등록
-		// console.log("수락")
-	}
-	console.log("cmmnClasPsitnSttus",cmmnClasPsitnSttus);
-	console.log("mberId",mberId);
+	//가입 신청 처리
+	function classJoinChk(action, mberId) {
+		
+		var cmmnClasPsitnSttus; //공통 반 소속 상태(A03) 
+		var clasStdntJoinDate; // 가입일
+		
+		if(action === "accept"){ //수락시
+			cmmnClasPsitnSttus = "A03101"; //성공
+			clasStdntJoinDate = new Date().toLocaleDateString('en-GB').split('/').reverse().join('-'); //yy-MM-dd형식의 문자열 , 가입일 등록
+		}
 
-	let data = {
-		"cmmnClasPsitnSttus":cmmnClasPsitnSttus,
-		"mberId":mberId,
-		"schulCode":schulCode,
-		"clasCode":clasCode,
-		"clasStdntJoinDate":clasStdntJoinDate
-	}
-	console.log("data",data);
+		let data = {
+			"cmmnClasPsitnSttus":cmmnClasPsitnSttus,
+			"mberId":mberId,
+			"schulCode":schulCode,
+			"clasCode":clasCode,
+			"clasStdntJoinDate":clasStdntJoinDate
+		}
 
-	$.ajax({
-        url: "/class/classJoinAjax",
-		contentType:"application/json;charset=utf-8",
-		type: "POST",
-        data: JSON.stringify(data),
-		dataType: "json", // 반환되는 데이터의 타입을 명시
-		beforeSend:function(xhr){
+		$.ajax({
+			url: "/class/classJoinAjax",
+			contentType:"application/json;charset=utf-8",
+			type: "POST",
+			data: JSON.stringify(data),
+			dataType: "json", // 반환되는 데이터의 타입을 명시
+			beforeSend:function(xhr){
 				xhr.setRequestHeader(header,token);
 			},
-        success: function(result) {
-            console.log("AJAX 호출 성공");
-			fn_search(1);
-        }
-
-	});//ajax끝
-}
-//가입 신청 끝
+			success: function(result) {
+				fn_search(1);
+			}
+		});//ajax끝
+	}
+	//가입 신청 끝
 </script>
 <div class="sparkline8-list">
 	<div class="sparkline8-hd">
 		<div class="main-sparkline8-hd">
 			<h3>
-			<img src="/resources/images/classRoom/x.png" style="width:50px; display:inline-block; vertical-align:middel;">
-				가입 거절
-			<img src="/resources/images/classRoom/wait2.png" style="width:50px; display:inline-block; vertical-align:middel;">		
-		</h3>
+				<img src="/resources/images/classRoom/x.png" style="width:50px; display:inline-block; vertical-align:middel;">
+					가입 거절
+				<img src="/resources/images/classRoom/wait2.png" style="width:50px; display:inline-block; vertical-align:middel;">		
+			</h3>
 		</div>
 	</div>
-	<div class="row">
-	</div>
+	<div class="row"></div>
 	<div class="sparkline8-graph">
 		<div class="static-table-list modal-area-button ">
 			<table class="table">
@@ -139,8 +131,7 @@ function classJoinChk(action, mberId) {
 						<th>가입</th>
 					</tr>
 				</thead>
-				<tbody id="classJoinReqListBody">
-					
+				<tbody id="classJoinReqListBody">	
 				</tbody>
 			</table>
 		</div>

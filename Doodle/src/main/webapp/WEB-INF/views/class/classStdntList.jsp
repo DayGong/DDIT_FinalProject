@@ -18,45 +18,42 @@ h3{
 }
 
 .pagination {
-display: inline-flex;
-padding-left: 0;
-margin: 20px 0;
-border-radius: 4px;
+	display: inline-flex;
+	padding-left: 0;
+	margin: 20px 0;
+	border-radius: 4px;
 }
 </style>
 <script>
+	//const : 상수형 변수(재선언 불가, 데이터 변경 불가)
 	const header = "${_csrf.headerName}";
 	const token = "${_csrf.token}";
-	//const : 상수형 변수(재선언 불가, 데이터 변경 불가)
-	var clasCode = "${clasCode}";
 	const schulCode = "${schulCode}";
+	var clasCode = "${clasCode}";
 	var currentPage = "${param.currentPage}";
 	var size = 10;
-	console.log("clasCode",clasCode);
-	console.log("schulCode",schulCode);
 
 	window.onload = function() {
 		if(currentPage == "") currentPage = "1"; 
 		
 		const classStdntListAjax = function(currentPage){
-		//기본조회
-		let data = {
-			"clasCode":clasCode,
-			"schulCode":schulCode,
-			"currentPage":currentPage,
-			"size":size
-		}
-		$.ajax({
+			//기본조회
+			let data = {
+				"clasCode":clasCode,
+				"schulCode":schulCode,
+				"currentPage":currentPage,
+				"size":size
+			}
+			$.ajax({
 				url: "/class/classStdntListAjax",
 				contentType:"application/json;charset=utf-8",
 				data:JSON.stringify(data),
 				type : "post",
 				dataType:"json",
 				beforeSend:function(xhr){
-						xhr.setRequestHeader(header,token);
-					},
+					xhr.setRequestHeader(header,token);
+				},
 				success:function(result){	
-					console.log("result~~",result);			
 					const classStudListBody = document.querySelector("#classStudListBody");
 					let html = "";	//목록 초기화
 					$.each(result.content, function(idx, clasStdntVO){
@@ -69,7 +66,6 @@ border-radius: 4px;
 								</tr>`;
 					}); //반복문 끝 
 					classStudListBody.innerHTML = html;
-					//$("#divPaging").html(result.pagingArea);
 					document.getElementById("divPaging").innerHTML = result.pagingArea;
 				}
 			}); //ajax끝
@@ -77,7 +73,6 @@ border-radius: 4px;
 		classStdntListAjax(currentPage);	
 	}//window.onload끝
 </script>
-
 
 <div class="sparkline8-list">
 	<div class="sparkline8-hd">
@@ -87,7 +82,6 @@ border-radius: 4px;
 					학생 목록
 				<img src="/resources/images/classRoom/stdent2.png" style="width:50px; display:inline-block; vertical-align:middel;">
 			</h3>
-			
 		</div>
 	</div>
 	<div class="sparkline8-graph">
@@ -103,9 +97,9 @@ border-radius: 4px;
 					</tr>
 				</thead>
 				<tbody id="classStudListBody">
+				</tbody>
 			</table>
 		</div>
 	</div>
 	<div class="pagination text-center" style="width:100%;" id="divPaging"></div>
-
 </div>

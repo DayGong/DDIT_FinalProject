@@ -153,7 +153,6 @@ $(function() {
 	
 	// 선생님 말씀 자동 완성
 	$(document).on("click", "#replyAutoBtn", function(){
-		console.log("테스트");
 		$("#answerCn").html("정말 재밌는 하루를 보냈군요!\n앞으로 더 좋은 날만 가득할 거에요.");
 	});
 
@@ -362,7 +361,6 @@ function fn_getAnswerDetail(nttCode) {
 		dataType: "json",
 		async: false,		// 비동기 옵션을 false로 설정하여 동기적으로 요청을 보냄
 		success: function(result) {
-			console.log("rrr => ", result);
 			if (result == null || result == '') {
 				html += `<ul class="replyListAll">
 							<li class="replyListLi">

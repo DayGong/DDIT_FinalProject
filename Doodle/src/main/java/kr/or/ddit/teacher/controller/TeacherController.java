@@ -157,12 +157,6 @@ public class TeacherController {
 	public String gradeList() {
 		return "teacher/gradeList";
 	}
-	
-	//생활기록 학생 목록
-	@GetMapping("/lifeRecordList")
-	public String lifeRecordList() {
-		return "teacher/lifeRecordList";
-	}
 	 
 	//학생 출결 목록
 	@GetMapping("/attendanceList")

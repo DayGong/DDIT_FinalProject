@@ -132,7 +132,7 @@ p{
 }
 
 .custom-datatable-overright table tbody tr.none-tr td:hover{
-	background: #fff!imporant;
+	background: #fff!important;
 }
 
 .ntcnAll{
@@ -144,7 +144,7 @@ p{
 	box-shadow: 0px 35px 68px 0px rgba(145, 192, 255, 0.5), inset 0px -6px 16px 0px rgba(145, 192, 255, 0.6), inset 0px 11px 28px 0px rgb(255, 255, 255);
 	padding: 50px 80px;
 	margin-bottom:50px;
-	min-height:430px;"
+	min-height:430px;
 }
 
 .ntcnAll .ntcn-cont{
@@ -253,7 +253,6 @@ function fn_ntcnList(paramPage){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success: function(res){
-			console.log("ntcnList : ", res);
 			length = res.length;
 			
 			if(length > 0){
@@ -332,10 +331,8 @@ function fn_ntcnList(paramPage){
 					str += "<div id='ntcnCn' name='ntcnCn' readonly>"+ntcnVO.ntcnCn+"</div>"
 	
 					$("#ntcnCn").html(ntcnVO.ntcnCn);
-	
 					
 					str += "<div id='imgDiv'>";
-					
 					str += "</div></div></div></div></div></div>";
 				});//end each
 			}else{
@@ -409,9 +406,9 @@ $(function(){
 	 	Swal.fire({
 			title: title,
 			icon: 'warning',
-			showCancelButton: true,       	// cancel 버튼 보이기
-			confirmButtonText: '설정',       // confirm 버튼 텍스트 지정
-			cancelButtonText: '취소',        // cancel 버튼 텍스트 지정
+			showCancelButton: true,			// cancel 버튼 보이기
+			confirmButtonText: '설정',		// confirm 버튼 텍스트 지정
+			cancelButtonText: '취소',		// cancel 버튼 텍스트 지정
 		}).then(result => {
 	        if(result.isConfirmed){
             	var data = {
@@ -443,12 +440,11 @@ $(function(){
 	 	Swal.fire({
 			title: "정말 삭제하시겠습니까?",
 			icon: 'warning',
-			showCancelButton: true,       	// cancel 버튼 보이기
-			confirmButtonText: '삭제',       // confirm 버튼 텍스트 지정
-			cancelButtonText: '취소',        // cancel 버튼 텍스트 지정
+			showCancelButton: true,			// cancel 버튼 보이기
+			confirmButtonText: '삭제',		// confirm 버튼 텍스트 지정
+			cancelButtonText: '취소',		// cancel 버튼 텍스트 지정
 		}).then(result => {
 	        if(result.isConfirmed){
-	        	
             	var data = {
            			"ntcnCode":ntcnCode,
            			"atchFileCode":atchFileCode
@@ -502,6 +498,4 @@ $(function(){
 		</div>
 	</div>
 </div>
-
 <div id="ntcnContainer"></div>
-

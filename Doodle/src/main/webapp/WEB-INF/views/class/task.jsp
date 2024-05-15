@@ -79,7 +79,6 @@
 .taskStatus{
 	padding: 2px 7px;
 	text-align: center;
-/* 	background-color: #f9e09a; */
 	background: rgb(31, 129, 255);
     color: rgb(255, 255, 255);
 	width: 60px;
@@ -97,9 +96,6 @@ var clasCode = "${CLASS_INFO.clasCode}";
 
 function fn_search(currentPage) {
 	var keyword = $("#keyword").val();
-    
-//     if(currentPage == "") currentPage = "1";
-    
     var data = {
 		"keyword": keyword,
 		"currentPage": currentPage,
@@ -120,8 +116,6 @@ function fn_search(currentPage) {
 	        var str = "";
 	        var total = res.total;
 	        var currentPage = res.currentPage;
-			console.log("res", res);
-			console.log("pagingArea", res.pagingArea);
 			
 			// 과제 리스트가 있는 경우
 			if(res.content.length > 0){
@@ -194,7 +188,6 @@ $(function(){
    });
 });
 </script>
-
 <div id="TaskContainer">
 	<div class="sparkline13-list">
 		<h3>
@@ -263,15 +256,12 @@ $(function(){
 									</tr>
 								</thead>
 								<tbody id="taskBody">
-							
 								</tbody>
 							</table>
 						</div>
 						<div id="noTaskDiv">
-						
 						</div>
 						<div class="custom-pagination" id="divPaging">
-               
                			</div>
 					</div>
 				</div>

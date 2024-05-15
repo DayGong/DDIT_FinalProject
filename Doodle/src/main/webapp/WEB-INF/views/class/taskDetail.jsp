@@ -346,7 +346,6 @@ $(function(){
 	        xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
 	    },
 	    success: function (res) {
-	        console.log("clasStdntVOList", res);
 	        var auth = "${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode}";
 	        var str = "";
          
@@ -481,7 +480,6 @@ $(function(){
 								str += "<div id='feedbackContent'>" + taskVO.taskResultVO.fdbck + "</div>";
 							}
 						}
-				
                 		str += "</div>";
 					});
 				// 학부모 권한(자녀 과제만 출력)
@@ -587,14 +585,13 @@ $(function(){
 	// 제출한 과제 삭제
 	$(document).on("click", "#myTaskDeleteBtn", function(){
 	    var taskResultCode = $(this).closest('.inputTaskAll').find('.taskResultCode').val();
-	    console.log("taskResultCode: " + taskResultCode);
        
 		Swal.fire({
            title: '제출한 과제를 삭제하시겠습니까?',
            text: '',
            icon: 'warning',
-           showCancelButton: true,         // cancel 버튼 보이기
-           confirmButtonText: '삭제',       // confirm 버튼 텍스트 지정
+           showCancelButton: true,			// cancel 버튼 보이기
+           confirmButtonText: '삭제',		// confirm 버튼 텍스트 지정
            cancelButtonText: '취소',        // cancel 버튼 텍스트 지정
 		}).then(result => {
 			if(result.isConfirmed){
@@ -682,7 +679,6 @@ $(function(){
 				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
 			},
 			success: function(res) {
-				console.log("noticeVO", res);
 	            Swal.fire({
 	               title: '피드백이 등록되었습니다.',
 	               text: '',
@@ -808,7 +804,7 @@ $(function(){
 	        icon: 'warning',
 	        showCancelButton: true,			// cancel 버튼 보이기
 	        confirmButtonText: '삭제',		// confirm 버튼 텍스트 지정
-	        cancelButtonText: '취소',			// cancel 버튼 텍스트 지정
+	        cancelButtonText: '취소',		// cancel 버튼 텍스트 지정
 		}).then(result => {
 			if(result.isConfirmed){
 				$.ajax({

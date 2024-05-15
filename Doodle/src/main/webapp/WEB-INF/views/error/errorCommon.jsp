@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <section class="content">
 	<div class="error-page">
-	<!-- model.addAttribute("exception", e); -->
 		<h2 class="headline text-warning">${exception.getMessage()}</h2>
 		<div class="error-content">
 			<c:forEach var="stack" items="${exception.getStackTrace()}" varStatus="stat">
@@ -24,10 +23,7 @@
 						</button>
 					</div>
 				</div>
-
 			</form>
 		</div>
-
 	</div>
-
 </section>

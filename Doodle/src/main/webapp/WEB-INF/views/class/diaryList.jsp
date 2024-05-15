@@ -102,7 +102,6 @@
 </style>
 <script>
 	function fn_search(currentPage) {
-		console.log("curr ==> " + currentPage);
 		var currentPage = currentPage;
 		var keyword = $("input[name='keyword']").val();
 		var size = 10;

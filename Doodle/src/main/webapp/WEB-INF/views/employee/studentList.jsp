@@ -75,7 +75,7 @@
 }
 
 .custom-datatable-overright table tbody tr.none-tr td:hover {
-	background: #fff!imporant;
+	background: #fff!important;
 }
 
 .singleline-ellipsis {
@@ -117,11 +117,9 @@
 }
 
 #excelContainer{
-/* 	display: none; */
 	margin-top:10px;
 	display: flex;
 	justify-content: space-evenly;
-/* 	z-index: 5; */
 	right: 73px;
 	bottom: 50px;
 	width: 220px;
@@ -141,13 +139,11 @@ var schulCode = "${param.schulCode}";
 
 function fn_search(page) {
     var keyword = $("#keyword").val();
-    
     var data = {
         "schulCode": schulCode,
         "currentPage": page, // page 매개변수 사용
         "keyword": keyword
     }
-
 
     $.ajax({
         url: "/employee/studentListAjax",
@@ -159,7 +155,6 @@ function fn_search(page) {
             xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
         },
         success: function(result) {
-
             if (result.total == 0) {
                 $("#keyword").val('');
 
@@ -190,14 +185,11 @@ function fn_search(page) {
                         str += "</tr>";
                     });
                 });
-
                 $("#studentBody").html(str);
             }
-
             $("#divPaging").html(result.pagingArea);
         },
         error: function(xhr, status, error) {
-            console.error(status, error);
         }
     });
 }
@@ -209,9 +201,9 @@ function resultSAlert(result, actTitle, reloadPage) {
 	if (result != 2) { res = "실패"; icon = "error"; }
 	
 	Swal.fire({
-      title: actTitle + " " + res + '하였습니다.',
-      text: reloadPage,
-      icon: icon
+		title: actTitle + " " + res + '하였습니다.',
+		text: reloadPage,
+		icon: icon
 	}).then(result => { location.href = "/employee/studentList?schulCode="+schulCode; });
 }
 
@@ -220,13 +212,12 @@ $(function(){
 	
 	//input태그에서 엔터시 검색버튼누르기
 	var input = $("#keyword");
-
-	  input.on("keypress", function(event) {
-	      if (event.key === "Enter") {
-	          event.preventDefault();
-	          $("#search").click();
-	      }
-	  });
+	input.on("keypress", function(event) {
+	    if (event.key === "Enter") {
+	        event.preventDefault();
+	        $("#search").click();
+	    }
+	});
 
 	currentPage = "1";
 	// 학생 검색
@@ -241,12 +232,8 @@ $(function(){
 	
 	//엑셀로 등록
 	$("#fileBtn").on("click",function(){
-		//학생 등록 완료의 수
-		var ajaxCount = 0;
-		
-		//vo의 수
-		var voCount = 0;
-		
+		var ajaxCount = 0;	//학생 등록 완료의 수
+		var voCount = 0;	//vo의 수
 		var fm = document.empFrm;
 		var fnm = fm.upload;
 		var filePath = fnm.value;
@@ -276,17 +263,10 @@ $(function(){
 					xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 				},
 				success:function(result){
-					
-					//text -> json
-					const obj = JSON.parse(result);
-					var voCount = obj.length; // vo의 수 설정
-					
-					//JSON.stringify : json->text
+					const obj = JSON.parse(result);	//text -> json
+					var voCount = obj.length; 		// vo의 수 설정
 					
 					$.each(obj,function(idx,vo){
-						//{"0":"7.58109211004E11","1":"java","2":"박민수","3":"000000-0000003","4":"010-3698-1472",
-						//"5":"park@example.com","6":"24680.0","7":"서울시 강북구","8":"재학","9":"1"}
-						//ex) vo[0] : 7.58109211004E11 / vo[6] : 24680.0
 						let mberId = vo[0];
 						let password = vo[1];
 						let mberNm = vo[2];
@@ -367,7 +347,6 @@ $(function(){
 			/* 엑셀 ajax 끝 */
 		}
 	});
-	
 })
 </script>
 <div id="stdContainer">
@@ -380,34 +359,34 @@ $(function(){
 		<div class="sparkline13-graph">
 			<div class="datatable-dashv1-list custom-datatable-overright">
 				<div class="bootstrap-table" style="position:relative;">
-				<!-- 검색 조건 시작 -->
+					<!-- 검색 조건 시작 -->
 					<div class="fixed-table-toolbar" style="margin-bottom: 70px;">
 						<div style="text-align: right; right: 0; top:50px; width: 1572px;">
 							<input type="text" placeholder="Search..." class="searchForm"  id="keyword" name="keyword">
 							<button type="button" id="search">검색</button>
 						</div>
-				<!-- 검색 조건 끝 -->
-				<!-- 등록 버튼 시작 -->
-				<sec:authorize access = "hasRole('A14003')" >
-					<div class="col-md-10 text-right pull-right">
-						<div id="btn-Zone">
-							<!-- 엑셀파일 업로드  -->
-								<div id="excelContainer">
-									<div class="excelUpload">
-									<form id="empFrm" name="empFrm">
-										<input type="file"  accept=".xlsx" id="upload" name="upload" style="width: 195px;"/>
-									</form>
+					</div>
+					<!-- 검색 조건 끝 -->
+					<!-- 등록 버튼 시작 -->
+					<sec:authorize access = "hasRole('A14003')" >
+						<div class="col-md-10 text-right pull-right">
+							<div id="btn-Zone">
+								<!-- 엑셀파일 업로드  -->
+									<div id="excelContainer">
+										<div class="excelUpload">
+										<form id="empFrm" name="empFrm">
+											<input type="file"  accept=".xlsx" id="upload" name="upload" style="width: 195px;"/>
+										</form>
+										</div>
+										<button type="button" id="fileBtn">엑셀로 등록</button>
 									</div>
-									<button type="button" id="fileBtn">엑셀로 등록</button>
-								</div>
-								<!-- 엑셀파일 업로드  끝 -->
-						<!-- text-right를 사용하여 오른쪽 정렬 -->
-							<button type="button" id="insertBtn" class="btn btn-custon-rounded-two btn-primary">학생 추가</button>
+									<!-- 엑셀파일 업로드  끝 -->
+							<!-- text-right를 사용하여 오른쪽 정렬 -->
+								<button type="button" id="insertBtn" class="btn btn-custon-rounded-two btn-primary">학생 추가</button>
+							</div>
 						</div>
-					</div>
-				</sec:authorize>
-				<!-- 등록 버튼 끝 -->
-					</div>
+					</sec:authorize>
+					<!-- 등록 버튼 끝 -->
 					<div class="fixed-table-container" style="padding-bottom: 0px;">
 						<div class="fixed-table-body">
 							<table id="table" data-toggle="table" data-pagination="true"
@@ -451,7 +430,6 @@ $(function(){
 									</tr>
 								</thead>
 								<tbody id="studentBody" style="vertical-align: middle;">
-							
 								</tbody>
 							</table>
 						</div>

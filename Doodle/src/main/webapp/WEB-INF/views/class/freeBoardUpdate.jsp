@@ -24,18 +24,13 @@ $(function() {
 		htParams : {
 			bUseToolbar : true,						// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
 			bUseVerticalResizer : false,			// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
-			bUseModeChanger : false,				 // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
-			bSkipXssFilter : true,			// client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
-			//aAdditionalFontList : aAdditionalFontSet,			// 추가 글꼴 목록
+			bUseModeChanger : false,				// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+			bSkipXssFilter : true,					// client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
 			fOnBeforeUnload : function(){
-				 //alert("완료!");
 			},
-//							 I18N_LOCALE : sLang
-			}, //boolean
-			fOnAppLoad : function(){
-							//예제 코드
-//							 oEditors.getById["nttCn"].exec("PASTE_HTML", ["로딩이 완료된 후에 본문에 삽입되는 text입니다."]);
-			},
+		}, //boolean
+		fOnAppLoad : function(){
+		},
 		fCreator: "createSEditor2"
 	});
 	
@@ -43,7 +38,6 @@ $(function() {
 		// 에디터에 적은 내용 가져오기
 		var nttNm = $("#nttNm").val();
 		var nttCn = oEditors.getById["nttCn"].getIR();
-// 		$("#nttCn").val(nttCn);
 		
 		//게시글 null체크
 		if(nttNm == null || nttNm==''){
@@ -76,7 +70,6 @@ $(function() {
 			},
 			success:function(result){
 				//게시글 등록이 성공했을때 1, 실패했을때 0
-					console.log("result : ", result);
 				if(result==1){
 					resultAlert2(result, '게시글 수정 ', '리스트로 이동합니다.', '/freeBoard/freeBoardList');
 				}else{
@@ -92,20 +85,12 @@ $(function() {
 	});
 	
 	$(".FreedelAtch").on("click",function(){
-// 		alert("취소버튼눌럿지용");
-// 		var sn = $(this).parent().data("${atchVO.atchFileSn}");
-// 		arr.push($(this).parent().data('atchFileSn'));
-
 		snArr += $(this).parent().data('atchFileSn') + ","
-		console.log("snArr->",snArr); // 1,2,3,
 		$(this).parent().remove();
 	});
 	
 });
-
 </script>
-
-
 <style>
 #FreeBoardContainer h3{
 	font-size: 2.2rem;
@@ -187,7 +172,6 @@ $(function() {
 .FreedelAtch{
 	cursor: pointer;
 }
-
 </style>
 <!-- 자유게시판 hover효과 js -->
 <div id="FreeBoardContainer">
@@ -209,16 +193,15 @@ $(function() {
 			<div class="mb-3" style="display:flex;">
 				<img src="/resources/images/classRoom/freeBrd/freeFile.png" style="width:40px; display:inline-block;">
 				<span style="font-size:1.05rem; display: inline-block; vertical-align: middle;line-height: 2.5;">첨부파일</span> 
-<!-- 				<input name="upload" class="form-control" style=" margin-top: 15px; display:inline-block; border: none;"type="file" id="upload" multiple="multiple"> -->
 			</div>
 			<div class="uploadList">
 				<ul>
 					<c:if test="${fn:length(atchFileVOList) > 0}">
 						<c:forEach items="${atchFileVOList}" var="atchVO" varStatus="status">
-								<li class="fileList" data-atch-file-sn="${atchVO.atchFileSn}" style="display: flex; justify-content: flex-start;">
-									<img  class="FreedelAtch"alt="${atchVO.atchFileNm}파일 삭제" src="/resources/images/classRoom/freeBrd/free-circle-xmark-solid.png" style="width:15px; height: 15px; margin-top: 3px;margin-right: 5px;">
-									<span class="fileName">${atchVO.atchFileNm}</span>
-								</li>
+							<li class="fileList" data-atch-file-sn="${atchVO.atchFileSn}" style="display: flex; justify-content: flex-start;">
+								<img  class="FreedelAtch"alt="${atchVO.atchFileNm}파일 삭제" src="/resources/images/classRoom/freeBrd/free-circle-xmark-solid.png" style="width:15px; height: 15px; margin-top: 3px;margin-right: 5px;">
+								<span class="fileName">${atchVO.atchFileNm}</span>
+							</li>
 						</c:forEach>
 					</c:if>
 					<li>

@@ -95,7 +95,6 @@
    box-shadow: 0px 35px 68px 0px rgba(145, 192, 255, 0.5), inset 0px -6px 16px 0px rgba(145, 192, 255, 0.6), inset 0px 11px 28px 0px rgb(255, 255, 255);
    padding: 30px;
 }
-
 .MyPageAll .free-cont{
    border: 1px solid #ddd;
    border-radius: 10px;
@@ -142,6 +141,7 @@ function resultSAlert(result, actTitle, reloadPage) {
       icon: icon
 	}).then(result => { location.reload(); }); 
 }
+
 function resultDAlert(result, actTitle, reloadPage) {
 	let res = "성공";
 	let icon = "success";
@@ -154,18 +154,19 @@ function resultDAlert(result, actTitle, reloadPage) {
       icon: icon
 	}).then(result => { location.href="/employee/studentList?schulCode=${param.schulCode}" }); 
 }
+
 $(function(){
 	// cmmnSchulPsitnSttus와 cmmnEmpClsf 값 설정
-    var cmmnSchulPsitnSttusValue = '${schulVO.schulPsitnMberVOList[0].cmmnSchulPsitnSttus}'; 
-    var cmmnGradeValue = '${schulVO.schulPsitnMberVOList[0].cmmnGrade}';
-    
-    // cmmnSchulPsitnSttus 요소의 값을 선택
-    $('#cmmnSchulPsitnSttus').val(cmmnSchulPsitnSttusValue);
-    
-    // cmmnEmpClsf 요소의 값을 선택
-    $('#cmmnGrade').val(cmmnGradeValue);
-    
-    let schulCode = $("#schulCode").val();
+   var cmmnSchulPsitnSttusValue = '${schulVO.schulPsitnMberVOList[0].cmmnSchulPsitnSttus}'; 
+   var cmmnGradeValue = '${schulVO.schulPsitnMberVOList[0].cmmnGrade}';
+   
+   // cmmnSchulPsitnSttus 요소의 값을 선택
+   $('#cmmnSchulPsitnSttus').val(cmmnSchulPsitnSttusValue);
+   
+   // cmmnEmpClsf 요소의 값을 선택
+   $('#cmmnGrade').val(cmmnGradeValue);
+   
+   let schulCode = $("#schulCode").val();
 	let mberId = $("#mberId").val();
 	let mberNm = $("#mberNm").val();
 	let moblphonNo = $("#moblphonNo").val();
@@ -182,12 +183,10 @@ $(function(){
 		}
 		let schulCode = $("#schulCode").val();
 		let mberId = $("#mberId").val();
-		
 		let data = {
 				"mberId":mberId,
 				"schulCode":schulCode
 		};
-		
 		
 		$.ajax({
 			url:"/employee/studentDeleteAjax",
@@ -200,7 +199,7 @@ $(function(){
 			},
 			success:function(result){
 				if(result == 2){
-				resultDAlert(result, '학생 삭제를', '학생 목록으로 이동합니다.');
+				   resultDAlert(result, '학생 삭제를', '학생 목록으로 이동합니다.');
 				}else{
 					alertError('학생 삭제를 실패하였습니다.', ' ');
 				}
@@ -212,7 +211,6 @@ $(function(){
 	$("#saveBtn").on("click",function(){
 		let cmmnSchulPsitnSttus = $("#cmmnSchulPsitnSttus option:selected").val();
 		let cmmnGrade = $("#cmmnGrade option:selected").val();
-		
 
 		// 가상 폼 <form></form>
 		var frm = new FormData($("#frm")[0]);
@@ -231,7 +229,7 @@ $(function(){
 			success:function(result){
 				//성공 : 2
 				if(result == 2){
-				resultSAlert(result, '정보 수정을', '학생 상세 화면으로 이동합니다.');
+				   resultSAlert(result, '정보 수정을', '학생 상세 화면으로 이동합니다.');
 				}else{
 					alertError('정보 수정을 실패하였습니다.', ' ');
 				}
@@ -242,7 +240,6 @@ $(function(){
 	
 	/* 수정 버튼 시작 */
 	$("#updateBtn").on("click",function(){
-		
 		$('#mberNm').removeAttr('disabled');
 		$("#moblphonNo").removeAttr('disabled');
 		$("#mberEmail").removeAttr('disabled');
@@ -256,8 +253,6 @@ $(function(){
 		$("#saveBtn").css("display","block");
 		$("#cancelBtn").css("display","block");
 		$("#profileUploadIcon").css("display","block");
-		
-		
 	}); /* 수정 버튼 끝 */
 	
 	/* 취소버튼 시작 */
@@ -283,9 +278,9 @@ $(function(){
 		new daum.Postcode({
 			//다음 창에서 검색이 완료되면
 			oncomplete : function(data) {
-				$("#zip").val(data.zonecode);//우편번호
-		        $("#mberAdres").val(data.address + " ");
-		        $("#mberAdres").focus();
+            $("#zip").val(data.zonecode);//우편번호
+            $("#mberAdres").val(data.address + " ");
+            $("#mberAdres").focus();
 			}
 		}).open();
 	});
@@ -294,25 +289,21 @@ $(function(){
 	/* 썸네일 시작 */
 	$("#inputImg").on("change",handleImg);
 	
-	//e : onchange 이벤트 객체
 	function handleImg(e){
-		//e.target : <input type="file"..
-		let files = e.target.files;
-		//이미지 오브젝트 배열		
-		let fileArr = Array.prototype.slice.call(files);
+		let files = e.target.files;                        //e.target : <input type="file"..
+		let fileArr = Array.prototype.slice.call(files);   //이미지 오브젝트 배열
+
 		//초기화
 		$(".profile-img").html("");
+
 		//fileArr : {"개똥이.jpg객체","홍길동.jpg객체"}
-		//f :각각의 이미지 파일
 		fileArr.forEach(function(f){
-			//f.type : MIME타입
 			if(!f.type.match("image.*")){
 				alertError('이미지 파일만 가능합니다.', ' ');
 			}
+
 			//이미지를 읽어보자
 			let reader = new FileReader();
-			
-			//e : reader가 이미지를 읽을 때 그 이벤트
 			reader.onload = function(e){
 				//e.target : 이미지 객체
 				let img = "<img src="+e.target.result+" id='thum' />";
@@ -323,20 +314,16 @@ $(function(){
 		});
 	}/* 썸네일 끝 */
 	
-	
-	
 	/* 목록 버튼 시작 */
 	$("#listBtn").on("click",function(){
 		location.href = "/employee/studentList?schulCode="+schulCode;
-	});/* 목록 버튼 끝 */
+	});
 	
 	/* 이미지 업로드 아이콘 클릭 시작 */
 	$("#profileUploadIcon").on("click", function(){
     	$("#inputImg").trigger("click");
-    })
-	/* 이미지 업로드 아이콘 클릭 끝 */
+    });
 });
-
 </script>
 <div id="studentContainer">
    <h4>
@@ -360,14 +347,14 @@ $(function(){
                                  <div class="single-cards-item" style="margin-top: 20px;">
                                     <div class="profile-img" style="text-align: center;">
                                        <c:choose>
-                                           <%-- 프로필이 있는 경우 --%>
-                                           <c:when test="${schulVO.schulPsitnMberVOList[0].memberVO.mberImage != null}">
-                                               <img src="/upload/profile/${schulVO.schulPsitnMberVOList[0].memberVO.mberImage}" alt="" id="thum" />
-                                           </c:when>
-                                           <%-- 프로필이 없는 경우 --%>
-                                           <c:otherwise>
-                                               <img src="/resources/images/member/profile/user_l.png" alt="" id="thum"/>
-                                           </c:otherwise>
+                                          <%-- 프로필이 있는 경우 --%>
+                                          <c:when test="${schulVO.schulPsitnMberVOList[0].memberVO.mberImage != null}">
+                                             <img src="/upload/profile/${schulVO.schulPsitnMberVOList[0].memberVO.mberImage}" alt="" id="thum" />
+                                          </c:when>
+                                          <%-- 프로필이 없는 경우 --%>
+                                          <c:otherwise>
+                                             <img src="/resources/images/member/profile/user_l.png" alt="" id="thum"/>
+                                          </c:otherwise>
                                        </c:choose>
                                        <img id="profileUploadIcon" src="/resources/images/member/myPage/camera.png" alt="" style="display: none">
                                     </div>
@@ -424,31 +411,31 @@ $(function(){
                                        <li><span class="dataSpan school">· 학교주소 </span>${schulVO.schulAdres}</li>
                                        <li><span class="dataSpan school">· 전화번호 </span>${schulVO.schulTlphonNo}</li>
                                        <li>
-	                                       	<span class="dataSpan school">· 
-	                                       		<label class="col-form-label" for="cmmnSchulPsitnSttus">소속 상태</label>
-	                                       	</span>
-											<select name="cmmnSchulPsitnSttus" id="cmmnSchulPsitnSttus" disabled>
-												<option disabled>상태를 선택하세요</option>
-												<option value="A02101">재학</option>
-												<option value="A02102">휴학</option>
-												<option value="A02103">전학</option>
-												<option value="A02107">졸업</option>
-												<option value="A02108">자퇴</option>
-											</select>
+                                          <span class="dataSpan school">· 
+                                             <label class="col-form-label" for="cmmnSchulPsitnSttus">소속 상태</label>
+                                          </span>
+                                          <select name="cmmnSchulPsitnSttus" id="cmmnSchulPsitnSttus" disabled>
+                                             <option disabled>상태를 선택하세요</option>
+                                             <option value="A02101">재학</option>
+                                             <option value="A02102">휴학</option>
+                                             <option value="A02103">전학</option>
+                                             <option value="A02107">졸업</option>
+                                             <option value="A02108">자퇴</option>
+                                          </select>
                                        </li>
                                        <li>
 	                                       <span class="dataSpan school">·
 	                                       		<label class="col-form-label" for="cmmnGrade">학년</label>
 	                                       </span>
-											<select name="cmmnGrade" id="cmmnGrade" disabled>
-												<option disabled>학년을 선택하세요</option>
-												<option value="A22001">1</option>
-												<option value="A22002">2</option>
-												<option value="A22003">3</option>
-												<option value="A22004">4</option>
-												<option value="A22005">5</option>
-												<option value="A22006">6</option>
-											</select>	
+                                          <select name="cmmnGrade" id="cmmnGrade" disabled>
+                                             <option disabled>학년을 선택하세요</option>
+                                             <option value="A22001">1</option>
+                                             <option value="A22002">2</option>
+                                             <option value="A22003">3</option>
+                                             <option value="A22004">4</option>
+                                             <option value="A22005">5</option>
+                                             <option value="A22006">6</option>
+                                          </select>	
                                        </li>
                                     </ul>
                                  </div>
@@ -468,7 +455,7 @@ $(function(){
                      <div class="col-lg-12" style="display: flex; justify-content: center;">
                         <label for="inputImg" id="updateLabel" style="display: none;" class="btn btn-primary waves-effect waves-light">
                            <input type="file" accept="image/*" name="uploadFile" id="inputImg" class="hide" />
-                           	사진 업로드
+                           사진 업로드
                         </label>
                         <input type="hidden" name="mberImage" id="mberImage" value="">
                         <sec:authorize access = "hasAnyRole('A14001','A14003')" >

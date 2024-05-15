@@ -6,7 +6,6 @@
 <%-- <h1>자유게시판 create${USER_INFO.mberNm}</h1> --%>
 <script type="text/javascript">
 
-
 // 네이버 스마트 에디터 API
 var oEditors = [];
 $(function() {
@@ -16,70 +15,60 @@ $(function() {
 		//SmartEditor2Skin.html 파일이 존재하는 경로
 		sSkinURI : '<c:url value="/resources/se2/SmartEditor2Skin.html"/>',
 		htParams : {
-			bUseToolbar : true,						// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
-			bUseVerticalResizer : false,			// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
-			bUseModeChanger : false,				 // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+			bUseToolbar : true,				// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+			bUseVerticalResizer : false,	// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+			bUseModeChanger : false,		// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
 			bSkipXssFilter : true,			// client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
-			//aAdditionalFontList : aAdditionalFontSet,			// 추가 글꼴 목록
 			fOnBeforeUnload : function(){
-				 //alert("완료!");
 			},
-//							 I18N_LOCALE : sLang
-			}, //boolean
-			fOnAppLoad : function(){
-							//예제 코드
-//							 oEditors.getById["nttCn"].exec("PASTE_HTML", ["로딩이 완료된 후에 본문에 삽입되는 text입니다."]);
-			},
+		}, //boolean
+		fOnAppLoad : function(){
+		},
 		fCreator: "createSEditor2"
 	});
-// 네이버 스마트 에디터 API 끝
-//등록버튼 클릭 이벤트 시작
-$("#insertBtn").on("click",function(){
-	// 에디터에 적은 내용 가져오기
-	var nttNm = $("#nttNm").val();
-	var nttCn = oEditors.getById["nttCn"].getIR();
-	
-	//게시글 null체크
-	if(nttNm == null || nttNm==''){
-		alertError('제목을 입력해주세요!');
-		return;
-	}else if(nttCn==null || nttCn=='' || nttCn=='<br>'){
-		alertError('내용을 입력해주세요!');
-		return;
-	}
-	
-	oEditors.getById["nttCn"].exec("UPDATE_CONTENTS_FIELD",[]);
-	console.log($("#nttCn").val());
-	
-	//게시글 등록 실행
-	var frm = new FormData($("#frm")[0]);
-	$.ajax({
-		url : "/freeBoard/freeBoarRegistration",
-		processData:false,
-		contentType:false,
-		data:frm,
-		dataType:"text",
-		type:"post",
-		beforeSend:function(xhr){
-			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-		},
-		success:function(result){
-			//게시글 등록이 성공했을때 1, 실패했을때 0
-				console.log("result : ", result);
-			if(result==1){
-				resultAlert2(result, '게시글 등록 ', '리스트로 이동합니다.', '/freeBoard/freeBoardList');
-			}else{
-				alertError('게시글 등록 실패!');
-			}
+	// 네이버 스마트 에디터 API 끝
+
+	//등록버튼 클릭 이벤트 시작
+	$("#insertBtn").on("click",function(){
+		// 에디터에 적은 내용 가져오기
+		var nttNm = $("#nttNm").val();
+		var nttCn = oEditors.getById["nttCn"].getIR();
+		
+		//게시글 null체크
+		if(nttNm == null || nttNm==''){
+			alertError('제목을 입력해주세요!');
+			return;
+		}else if(nttCn==null || nttCn=='' || nttCn=='<br>'){
+			alertError('내용을 입력해주세요!');
+			return;
 		}
-	})	
+		
+		oEditors.getById["nttCn"].exec("UPDATE_CONTENTS_FIELD",[]);
+		
+		//게시글 등록 실행
+		var frm = new FormData($("#frm")[0]);
+		$.ajax({
+			url : "/freeBoard/freeBoarRegistration",
+			processData:false,
+			contentType:false,
+			data:frm,
+			dataType:"text",
+			type:"post",
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+			},
+			success:function(result){
+				//게시글 등록이 성공했을때 1, 실패했을때 0
+				if(result==1){
+					resultAlert2(result, '게시글 등록 ', '리스트로 이동합니다.', '/freeBoard/freeBoardList');
+				}else{
+					alertError('게시글 등록 실패!');
+				}
+			}
+		})	
+	});
 });
-	
-});
-
-
 </script>
-
 
 <style>
 #FreeBoardContainer h3{
@@ -106,13 +95,11 @@ $("#insertBtn").on("click",function(){
 	padding: 50px 80px;
 }
 
-
 .FreeBoardAll .FreeTit {
 	display: flex;
 	justify-content: space-between;
 	position:relative;
 }
-
 
 .FreeBoardAll .title{
 	font-size: 1.8rem;
@@ -140,7 +127,6 @@ $("#insertBtn").on("click",function(){
 	transition: all 1s ease;
 	color:#333;
 }
-
 
 </style>
 <!-- 자유게시판 hover효과 js -->

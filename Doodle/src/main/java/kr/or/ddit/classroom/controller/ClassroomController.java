@@ -69,18 +69,6 @@ public class ClassroomController {
 		return "class/classMain";
 	}
 	
-	//학급클래스 소속회원 목록
-	@GetMapping("/memberList")
-	public String classMemberList() {
-		return "class/memberList";
-	}
-	
-	// 결석 사유 신청(체험학습도)
-	@GetMapping("/absentReason")
-	public String absentReason() {
-		return "class/absentReason";
-	}
-	
 	//자유 게시판 목록 
 	@GetMapping("/freeBoard")
 	public String freeBoard() {
@@ -176,18 +164,6 @@ public class ClassroomController {
 		log.debug("result ->"+result);
 		
 		return result;
-	}
-	
-	//온라인 수업
-	@GetMapping("/onlineClass")
-	public String onlineClass() {
-		return "class/onlineClass";
-	}
-	
-	//생활 기록부 조회
-	@GetMapping("/lifeRecord")
-	public String lifeRecord() {
-		return "class/lifeRecord";
 	}
 	
 	/** 학급클래스(반) 목록 불러오기 */

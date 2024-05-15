@@ -5,7 +5,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <script type="text/javascript" src="/resources/js/jquery.min.js"></script>
 <script type="text/javascript" src="/resources/js/commonFunction.js"></script>
-
 <!-- FullCalendar -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.css">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.js"></script>
@@ -203,7 +202,6 @@ $(function() {
                     },	// end dateClick
                     // 날짜 클릭하면 발생하는 이벤트
                     navLinkDayClick: function(date, jsEvent) {
-                    	console.log("jsEvent ==> ", jsEvent);
                     	date = getDate(date);		// 날짜
                     	if ( getDayOfWeek(date) == false ) { 
                     		alertError('주말은 상담 예약이 불가합니다!', '다른 날짜를 선택해주세요.');
@@ -229,11 +227,6 @@ $(function() {
 						let classNames = info.event.classNames;							// 한국 기념일이라는 클래스 네임을 갖고있는지 확인하기위해 사용
 						
 						sessionStorage.setItem("cnsltCode",cnsltCode);					// 상담 코드를 클라이언트측 세션에 저장
-						
-// 						if (classNames !== null || classNames !== "") {
-// 				            event.preventDefault();	// 이벤트의 기본 동작(구글 캘린더로의 이동)을 막음
-//                     		return;
-// 						}
 						
 						// 예약 확인 이후면 수정, 삭제 불가
 						if (sttusCode == "A09001") {	

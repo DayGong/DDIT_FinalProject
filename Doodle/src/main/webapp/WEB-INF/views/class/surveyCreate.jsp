@@ -24,11 +24,9 @@ input{
 	padding: 50px 80px;
 }
 
-
 .questionContainer {
 	margin-bottom: 50px;
 }
-
 
 #insertBtn{
 	display: block;
@@ -111,7 +109,6 @@ input{
 	color: #fff;
 }
 
-
 #surveyAdd, .multipleAnswerAddBtn{
 	background: #333;
 }
@@ -170,10 +167,7 @@ input{
 	}
 }
 </style>
-
-
 <script type="text/javascript">
-
 	function dateFormat(date){
 		var selectDate = new Date(date);
 		var d = selectDate.getDate();
@@ -196,8 +190,6 @@ input{
 		});
 	
 		$("#fileBtn").on("click",function(){
-			
-			
 			var fm = document.SurveyFrm;
 			var fnm = fm.upload;
 			var filePath = fnm.value;
@@ -212,14 +204,7 @@ input{
 				return;
 			}
 			
-// 			console.log("fm-> ", fm);
-// 			console.log("fnm-> ", fnm);
-// 			console.log("filePath-> ", filePath);
-// 			console.log("서브스터 확인 ", filePath.substr(filePath.length - 4) );
-			
 			if(filePath.substr(filePath.length - 4) == 'xlsx' || filePath == null || filePath == ''){
-				//alert("엑셀파일 맞음");'
-				
 				var excelFrm = new FormData($("#SurveyFrm")[0]);
 				
 				$.ajax({
@@ -236,19 +221,10 @@ input{
 						var map = {};
 						$("#Survey-Zone").find(".questionContainer").remove();
 						//게시글 등록이 성공했을때 1, 실패했을때 0
- 						console.log("result : ", result);
-						//text -> json
 						const obj = JSON.parse(result);
-						//JSON.stringify : json->text
-						
-				
-// 						console.log("obj : ", obj);
 						$.each(obj,function(idx,vo){
-							//vo : {"0": "객관식","1": "친구나 선배에게 맞거나 갇혔다(폭행, 감금)","2": "없음","3": "6개월에 1~2번","4": "한 달에 1~2번",
-							//"5": "1주일에 1~2번","6": "거의매일"}
+							//vo : {"0": "객관식","1": "친구나 선배에게 맞거나 갇혔다(폭행, 감금)","2": "없음","3": "6개월에 1~2번","4": "한 달에 1~2번", "5": "1주일에 1~2번","6": "거의매일"}
 							//ex) vo[0] : 객관식 / vo[6] : 거의매일
-// 							console.log("vo["+idx+"] : ",vo);
-// 							console.log(vo[0] + ", " + vo[1]);
 							if(vo[0] != null && vo[0]!=''){
 								if(vo[0]=="객관식"){
 									var newHtml = '';
@@ -293,7 +269,6 @@ input{
 									}
 									
 								}else{
-									console.log("주관식");
 									var newHtml = '';
 									newHtml += '<div class="questionContainer">';
 									newHtml += 	'<ul class="questionAnswerDefault">';
@@ -314,26 +289,19 @@ input{
 									newHtml += 	'</ul>';
 									newHtml += '</div>';
 									
-									
 									$('#Survey-Zone').append(newHtml);
-								
 								}
 							}
-	
 						});
-						
 						return;
-					
 					}
 				});
 			}else{
 				alertError("설문지는 엑셀 파일만 등록 가능합니다.");
 				return;
 			}
-		
 		});
 		
-	
 		$("#studentFreeBoardLi").css("display", "block");
 		$("#teacherFreeBoardLi").css("display", "block");
 		$("#parentFreeBoardLi").css("display", "block");
@@ -343,7 +311,6 @@ input{
 		$("#surveyAdd").on("click",function(){
 			var selectBox = $("#selectBox").val()||0;
 			if(selectBox == 1) {
-				console.log("객관식");
 				var newHtml = '';
 				newHtml +=	'<div class="questionContainer">'
 				newHtml +=		'<div class="multiple-choice-Survey">'
@@ -378,7 +345,6 @@ input{
 				$('#Survey-Zone').append(newHtml);
 				
 			}else {
-				console.log("주관식");
 				var newHtml = '';
 				newHtml += '<div class="questionContainer">';
 				newHtml += 	'<ul class="questionAnswerDefault">';
@@ -429,7 +395,6 @@ input{
 			newHtml +='</p>'
 			$(this).closest(".multiple-choice").append(newHtml);
 			
-			
 			if(answers.length > 1){
 				delBtn.css("display","inline-block");
 			}
@@ -443,8 +408,6 @@ input{
 	
 			multiple.find(answers).last().remove();
 			
-	
-			
 			if(answers.length == 3) {
 				delBtn.css("display", "none");
 			}
@@ -452,11 +415,10 @@ input{
 		
 		$("#surveyInsertBtn").on("click",function(){
 			//설문 설정 값 가져오기
-			var voteQustnrNm = $("#voteQustnrNm").val();//설문이름
-			var voteQustnrCn = $("#voteQustnrCn").val();//설문내용(목적)
-			var voteQustnrBeginDt = $("#voteQustnrBeginDt").val();//설문시작날짜
-	
-			var voteQustnrEndDt = $("#voteQustnrEndDt").val();//설문종료일
+			var voteQustnrNm = $("#voteQustnrNm").val();			//설문이름
+			var voteQustnrCn = $("#voteQustnrCn").val();			//설문내용(목적)
+			var voteQustnrBeginDt = $("#voteQustnrBeginDt").val();	//설문시작날짜
+			var voteQustnrEndDt = $("#voteQustnrEndDt").val();		//설문종료일
 			//설문시작 날짜와 종료날짜 비교를 위한 변수와 조건문
 			var voteQustnrBeginDtArr = voteQustnrBeginDt.split('-');
 			var voteQustnrEndDtArr = voteQustnrEndDt.split('-');
@@ -466,7 +428,6 @@ input{
 			
 			now.setTime(new Date().getTime() - (1 * 24 * 60 * 60 * 1000)); //1일전     return d.format("d");
 	
-			
 			if(startDateCompare.getTime() > endDateCompare.getTime()) {
 				alertError("설문 종료일은 설문 시작일의 이전 일 수 없습니다.");
 				return;
@@ -533,7 +494,6 @@ input{
 					qustnrList.push(obj);
 				});
 				data.qustnrList = qustnrList;
-				console.log(data);
 				
 				$.ajax({
 					type : 'POST',
@@ -554,10 +514,8 @@ input{
 				});
 			}
 		});
-	
 	});
-	</script>
-
+</script>
 <!-- 자유게시판 hover효과 js -->
 <div id="FreeBoardContainer">
 	<h3>

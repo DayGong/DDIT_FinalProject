@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>    
- <link rel="stylesheet" href="/resources/css/webfonts.css">
+<link rel="stylesheet" href="/resources/css/webfonts.css">
 <style>
 	body{
 		font-family: "Pretendard";
@@ -27,9 +27,8 @@
 		-moz-animation: fadein 1s; /* Firefox */
 		-webkit-animation: fadein 1s; /* Safari and Chrome */
 		-o-animation: fadein 1s; /* Opera */
-		
-		
 	}
+	
 	@keyframes fadein {
 		from {
 				opacity: 0;
@@ -68,7 +67,6 @@
 		text-align:center;
 		display:block;
 	}
-	
 	#loginFormContainer	#frm .login-box{
 		width:50%;
 		margin:auto;
@@ -261,7 +259,6 @@
 			</li>
 			<li style="display:flex;">
 				<button type="submit" class="custom-btn btn-16" style="font-family: Pretendard; margin-right:10px;">로그인</button>
-				
 			</li>
 		</ul>
 		<sec:csrfInput />
@@ -269,6 +266,5 @@
 	
 	<button type="button" class="custom-btn btn-16" id="autoBtn" style="font-family: Pretendard;">신규 </button>
 	<button type="button" class="custom-btn btn-16" id="autoBtn2" style="font-family: Pretendard;">기존</button>
-	
 	<button type="button" class="custom-btn btn-16" id="autoBtn3" style="font-family: Pretendard;">행정실</button>
 </div>
