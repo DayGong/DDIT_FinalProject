@@ -75,11 +75,9 @@ let mySectionChart = null;
 window.onload = function(){
 	// 진짜진짜 모든 단원평가 정보
 	getAllUnitEvlAndAllGc();
-	console.log("ueRes:",ueRes);
 	// 단원평가 정보 get
 	getUnitTestList();
 	// 성적 그래프(꺾은선, 파이)
-	
 	if(ueRes.length != 0){
 		let ctArr = document.querySelectorAll(".curtain");
 		for(let i = 0; i < ctArr.length; ++i){
@@ -93,7 +91,7 @@ window.onload = function(){
 	drawScatterChart(); // 분산 그래프
 	if(ueRes.length > 0){
 			setSelStd(); // select박스
-			setScoreTbSel(); // 
+			setScoreTbSel();
 	}
 	</sec:authorize>
 
@@ -113,7 +111,6 @@ const getAllUnitEvlAndAllGc = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
         success:function(res){
-        	console.log("getAllUnitEvlAndAllGc res:",res);
 			ueRes = res;
         }
 	})
@@ -152,68 +149,69 @@ const scrTbStdSelChange = function(idx){
 
 // 단원평가 리스트 읽어와 출력
 const getUnitTestList = function(){
-       	let str ="";
+      	let str ="";
+	
+      	$.each(ueRes,function(index,ue){
+      		let beginDt = dateToMinFormat(ue.unitEvlBeginDt);
+      		let endDt   = dateToMinFormat(ue.unitEvlEndDt);
+      		
+      		// 학생. 시험을 보았는지
+		<sec:authorize access="hasAnyRole('A01001', 'A01003')"> 
+      		if(ue.unitEvlScoreVOList[0].gcCode == null && cjh.isUnderNowTime(endDt)){
+			str +=`<tr onclick ="goExamConfirmForm()" class ="d-tr">`;
+      		} else if(ue.unitEvlScoreVOList[0].gcCode == null && !cjh.isUnderNowTime(endDt)){
+			str +=`<tr onclick ="goExamConfirmForm('\${ue.unitEvlCode}')" class ="d-tr">`;
+      		} else{
+			str +=`<tr onclick ="goDetail('\${ue.unitEvlCode}')" class ="d-tr">`;
+      		}
+      		</sec:authorize>
+
+      		<sec:authorize access="hasRole('A01002')"> 
+			str +=`<tr onclick ="goDetail('\${ue.unitEvlCode}')" class ="d-tr">`;
+      		</sec:authorize>
+      		
+		str +=`<td>\${index+1}</td>
+			   <td>\${cutStr(ue.unitEvlNm,40)}</td>
+			   <td>\${beginDt}</td>
+			   <td>\${endDt}</td>`
 		
-       	$.each(ueRes,function(index,ue){
-       		let beginDt = dateToMinFormat(ue.unitEvlBeginDt);
-       		let endDt   = dateToMinFormat(ue.unitEvlEndDt);
-       		
-       		// 학생. 시험을 보았는지
-			<sec:authorize access="hasAnyRole('A01001', 'A01003')"> 
-       		if(ue.unitEvlScoreVOList[0].gcCode == null && cjh.isUnderNowTime(endDt)){
-				str +=`<tr onclick ="goExamConfirmForm()" class ="d-tr">`;
-       		} else if(ue.unitEvlScoreVOList[0].gcCode == null && !cjh.isUnderNowTime(endDt)){
-				str +=`<tr onclick ="goExamConfirmForm('\${ue.unitEvlCode}')" class ="d-tr">`;
-       		} else{
-				str +=`<tr onclick ="goDetail('\${ue.unitEvlCode}')" class ="d-tr">`;
-       		}
-       		</sec:authorize>
-
-       		<sec:authorize access="hasRole('A01002')"> 
-				str +=`<tr onclick ="goDetail('\${ue.unitEvlCode}')" class ="d-tr">`;
-       		</sec:authorize>
-       		
-			str +=`<td>\${index+1}</td>
-				   <td>\${cutStr(ue.unitEvlNm,40)}</td>
-				   <td>\${beginDt}</td>
-				   <td>\${endDt}</td>`
-			
-			let scoreStr = "";	// 학생 : 내 점수. 교사 : 평균 점수.		    
-			let statusStr = ""; // 단원평가 상태	
-			let cntStr = "";    // 응시, 미응시 인원
-				   
-			if(cjh.isUnderNowTime(endDt)){
-				statusStr = `<td style="text-align:center;"><div class ="d-div-gray">종료</div></td></tr>`;
-			}else{
-				statusStr = `<td style="text-align:center;"><div class ="d-div-yellow">진행중</div></td></tr>`;
-			}
-
-			// 학생
-			<sec:authorize access="hasAnyRole('A01001', 'A01003')"> 
-			scoreStr = "<td>미응시</td>"; // 학생 : 내 점수
-			// 응시 완료한 단원평가는 완료 상태로 변경.
-			if(ue.unitEvlScoreVOList[0].gcCode != null){
-				scoreStr = `<td>\${ue.unitEvlScoreVOList[0].scre}</td>`;
-				statusStr = `<td style="text-align:center;"><div class ="d-div-green">완료</div></td></tr>`;
-			}
-			</sec:authorize>
-			
-			// 교사
-			<sec:authorize access="hasRole('A01002')"> 
-			cntStr += `<td>\${ue.allCnt-ue.doneCnt}</td>`;
-			cntStr += `<td>\${ue.doneCnt}</td>`;
-			cntStr += `<td>\${ue.allCnt}</td>`;
-			scoreStr += `<td>\${ue.avgClasScore}</td>`;
-			str += cntStr;
-			</sec:authorize>
-
-			
-			str += scoreStr;
-			str += statusStr;
-		}); // res.forEach end...
-		if(str != ""){
-			document.querySelector("#listTbody").innerHTML = str;
+		let scoreStr = "";	// 학생 : 내 점수. 교사 : 평균 점수.		    
+		let statusStr = ""; // 단원평가 상태	
+		let cntStr = "";    // 응시, 미응시 인원
+			   
+		if(cjh.isUnderNowTime(endDt)){
+			statusStr = `<td style="text-align:center;"><div class ="d-div-gray">종료</div></td></tr>`;
+		}else{
+			statusStr = `<td style="text-align:center;"><div class ="d-div-yellow">진행중</div></td></tr>`;
 		}
+
+		// 학생
+		<sec:authorize access="hasAnyRole('A01001', 'A01003')"> 
+		scoreStr = "<td>미응시</td>"; // 학생 : 내 점수
+		// 응시 완료한 단원평가는 완료 상태로 변경.
+		if(ue.unitEvlScoreVOList[0].gcCode != null){
+			scoreStr = `<td>\${ue.unitEvlScoreVOList[0].scre}</td>`;
+			statusStr = `<td style="text-align:center;"><div class ="d-div-green">완료</div></td></tr>`;
+		}
+		</sec:authorize>
+		
+		// 교사
+		<sec:authorize access="hasRole('A01002')"> 
+		cntStr += `<td>\${ue.allCnt-ue.doneCnt}</td>`;
+		cntStr += `<td>\${ue.doneCnt}</td>`;
+		cntStr += `<td>\${ue.allCnt}</td>`;
+		scoreStr += `<td>\${ue.avgClasScore}</td>`;
+		str += cntStr;
+		</sec:authorize>
+
+		
+		str += scoreStr;
+		str += statusStr;
+	}); // res.forEach end...
+	
+	if(str != ""){
+		document.querySelector("#listTbody").innerHTML = str;
+	}
 }
 
 // 상세보기
@@ -221,7 +219,6 @@ const goDetail = function(unitEvlCode){
 	document.querySelector("#formDataUnitEvlCode").value = unitEvlCode;
 	let form = document.querySelector("#tempForm");
 	form.action = "/unitTest/detail";
-	console.log("form action : ",form.action);
 	form.submit();
 }
 
@@ -277,49 +274,7 @@ const drawChart = function(){
 					            },
 					        },
 						};
-	console.log("chartOptions:",chartOptions);
 
-	// 학생, 학부모
-// 	<sec:authorize access="hasRole('A01001')">
-// 	// 내 점수 추가
-// 	let chartDataClone = JSON.parse(JSON.stringify(chartData[0]));
-// 	for(let i =ueRes.length-1 ; i >= 0; --i){
-// 		chartLabel.push(i+1+" "+ueRes[i].unitEvlNm);
-// 		chartDataClone.data.push(ueRes[i].unitEvlScoreVOList[0].scre);
-// 	}
-// 	chartDataClone.backgroundColor = '#FCC25Bb0';
-// 	chartDataClone.label = "내 점수"
-
-// 	// 반 평균 점수 추가
-// 	let chartDataClone2 = JSON.parse(JSON.stringify(chartData[0]));
-// 	for(let i =ueRes.length-1 ; i >= 0; --i){
-// 		chartDataClone2.data.push(ueRes[i].avgClasScore);
-// 	}
-// 	chartDataClone2.backgroundColor = '#ccccccb0';
-// 	chartDataClone2.label = "반 평균 점수";
-
-// 	chartOptions.plugins.legend.display = "true";
-// 	// 그래프 push
-// 	chartData.push(chartDataClone);
-// 	chartData.push(chartDataClone2);
-// 	</sec:authorize> // 학생 끝 .. 
-	
-	// 교사
-// 	<sec:authorize access="hasRole('A01002')">
-	// 학생 정보 put
-// 	let chartDataClone = JSON.parse(JSON.stringify(chartData[0]));
-// 	for(let i =ueRes.length-1 ; i >= 0; --i){
-// 		chartLabel.push(i+1+" "+ueRes[i].unitEvlNm);
-// 		chartDataClone.data.push(ueRes[i].avgClasScore);
-// 	}
-// 	chartDataClone.backgroundColor.push('#ccccccb0');
-// 	chartDataClone.label = "반 평균 점수"
-	
-	// 막대 그래프 push
-// 	chartData.push(chartDataClone);
-// 	</sec:authorize> // 교사 끝 ..
-	
-	
 	// 평균 점수 꺾은선 그래프 추가
 	let chartDataClone3 = JSON.parse(JSON.stringify(chartData[0]));
 	
@@ -370,8 +325,6 @@ const drawChart = function(){
 		chartDataClone5.data.push(ueRes[i].minScore);
 	}
 	chartData.push(chartDataClone5);
-
-	
 	
 	chartData.shift();
 	myScoreChart = new Chart(scoreChart, {
@@ -443,17 +396,11 @@ const drawFinishRatioChart = function(sel){
 	chartData.data.datasets[0].data.push(yetCnt);
 	
 	if(myFinishRatioChart != null) {
-// 		myFinishRatioChart.config = chartData;
 		myFinishRatioChart.destroy();
-	} else{
-// 		myFinishRatioChart = new Chart(finishRatioChart, chartData);
 	}
 
 	finishRatioChart.height = "300";
 	myFinishRatioChart = new Chart(finishRatioChart, chartData);
-	console.log("myFinishRatioChart:",myFinishRatioChart);
-	// 도넛 중앙 텍스트
-// 	textCenter(myFinishRatioChart, (doneCnt/(doneCnt+yetCnt) *100).toFixed());
 	
 	myFinishRatioChart.update();
 }
@@ -526,134 +473,13 @@ const drawScatterChart = function(std){
 			chartData.data.datasets.push(clone);
 		}
 	}
-	else{ // 선택 학생
-	}
-	
+
 	scatterChart.style.height = "200px";
 	chartData.data.datasets.shift();
 	
 	myScatterChart = new Chart(scatterChart, chartData);
 	myScatterChart.update();
 }
-
-// 성적 구간 비율 차트
-const drawSectionChart = function(sel){
-// 	const sectionChart = document.querySelector('#sectionChart');
-// 	sectionChart.parentNode.style.display ="block";
-	
-// 	let over90 = 0;
-// 	let over80 = 0;
-// 	let over70 = 0;
-// 	let over60 = 0;
-// 	let over50 = 0;
-// 	let over40 = 0;
-// 	let over30 = 0;
-// 	let under30 = 0;
-
-// 	chartData = {
-// 			type:"pie",
-// 			data:{
-// 				labels:[],
-// 				datasets:[{
-// 					data:[],
-// 				}],
-// 			},
-// 			options: {
-// 	        	responsive: false,
-// 	        }
-// 	};
-	
-// 	// 전체 학생
-// 	if(sel == null || sel == -1){
-// 		for(let i = ueRes.length-1; i >= 0; --i){
-// 			for(let j = ueRes[i].unitEvlScoreVOList.length-1; j >= 0; --j){
-// 				switch(ueRes[i].unitEvlScoreVOList[j].scre){
-// 				case 90>=0 :
-// 					over90 ++;
-// 					break;
-// 				case 80>=0 :
-// 					over80 ++;
-// 					break;
-// 				case 70>=0 :
-// 					over70 ++;
-// 					break;
-// 				case 60>=0 :
-// 					over60 ++;
-// 					break;
-// 				case 50>=0 :
-// 					over50 ++;
-// 					break;
-// 				case 40>=0 :
-// 					over40 ++;
-// 					break;
-// 				case 30>=0 :
-// 					over30 ++;
-// 					break;
-// 				case default :
-// 					under30 ++;
-// 					break;
-// 				}
-// 			}
-// 		}
-// 		chartData.data.labels.push("응시 인원");
-// 		chartData.data.labels.push("미응시 인원");
-// 	}
-// 	else{ // 선택 학생
-// 		for(let i = ueRes.length-1; i >= 0; --i){
-// 			if(ueRes[i].unitEvlScoreVOList[sel].gcCode != null) {doneCnt++;}
-// 			else{yetCnt++;}
-// 		}	
-// 		chartData.data.labels.push("응시 횟수");
-// 		chartData.data.labels.push("미응시 횟수");
-// 	}
-
-// 	chartData.data.datasets[0].data.push(doneCnt);
-// 	chartData.data.datasets[0].data.push(yetCnt);
-	
-// 	if(mySectionChart != null) {
-// // 		myFinishRatioChart.config = chartData;
-// 		mySectionChart.destroy();
-// 	} else{
-// // 		myFinishRatioChart = new Chart(finishRatioChart, chartData);
-// 	}
-
-// 	sectionChart.style.height = "300px";
-// 	mySectionChart = new Chart(sectionChart, chartData);
-// 	console.log("mySectionChart:",mySectionChart);
-// 	// 도넛 중앙 텍스트
-// // 	textCenter(myFinishRatioChart, (doneCnt/(doneCnt+yetCnt) *100).toFixed());
-	
-	
-// 	mySectionChart.update();
-}
-
-// function textCenter(target, val) {
-// 	console.log("target:",target);
-// 	Chart.pluginService.register({
-// 		clear: function(chart) {
-// 			if(target.ctx != null)
-// 				chart.ctx.clearRect(0, 0, chart.width,
-// 				chart.height); },
-// 		beforeDraw: function(chart) {
-// 		  var width = chart.chart.width,
-// 		      height = chart.chart.height,
-// 		      ctx = target.ctx;
-// // 		console.log("ctx:",ctx);
-		
-// 		  ctx.restore();
-// 		  var fontSize = (height / 130).toFixed(2);
-// 		  ctx.font = fontSize + "em sans-serif";
-// 		  ctx.textBaseline = "middle";
-		
-// 		  var text = val+"%",
-// 		      textX = Math.round((width - ctx.measureText(text).width) / 2),
-// 		      textY = height / 2 + 15;
-		
-// 		  ctx.fillText(text, textX, textY);
-// 		  ctx.save();
-// 	  }
-// 	});
-// }
 
 // 점수표 학생 select
 const setSelStd = function(){
@@ -698,7 +524,6 @@ const changeSelStd = function(index){
 	
 	if(myScoreChart.data.datasets.length >= 4){
 		myScoreChart.data.datasets.pop();
-// 		myScoreChart.data.datasets.pop();
 		
 		if(index == -1) {
 			myScoreChart.update();
@@ -712,16 +537,6 @@ const changeSelStd = function(index){
 	
 	// 막대 그래프
 	let insertData = {};
-// 	insertData.backgroundColor = "#FCC25BB0";
-// 	insertData.borderWidth = 1;
-// 	insertData.label = "["+member.clasInNo + "]"+member.mberNm + "의 점수";
-// 	insertData.maxBarThickness = 200;
-// 	for(i = ueRes.length-1; i >= 0; --i){
-// 		if(insertData.data == null){
-// 			insertData.data = [];
-// 		}
-// 		insertData.data.push(ueRes[i].unitEvlScoreVOList[index].scre);
-// 	}
 
 	// 꺽은선 그래프
 	let lineClone = JSON.parse(JSON.stringify(insertData));
@@ -744,7 +559,6 @@ const changeSelStd = function(index){
 		lineClone.data.push(ueRes[i].unitEvlScoreVOList[index].scre);
 	}
 	
-// 	myScoreChart.data.datasets.push(insertData);
 	myScoreChart.data.datasets.push(lineClone);
 	myScoreChart.update();
 	
@@ -761,9 +575,8 @@ const changeSelStd = function(index){
 </form>
 
 <div id = "unitTestList">
-
 	<h3><img src ="/resources/images/classRoom/unitTest01.png">단원평가<img src ="/resources/images/classRoom/unitTest01.png"></h3>
-	
+
 	<!-- 차트 1행 -->
 	<div class = "box" style ="display :flex; justify-content:space-between; position: relative;">
 		<!-- 점수 꺾은선 차트 -->
@@ -813,13 +626,11 @@ const changeSelStd = function(index){
 				<canvas id="sectionChart" style="height:300px; width:100%;"></canvas>
 			</div>
 		</div>	
-		
 	
 		<!-- 커튼 -->
 		<div class = "curtain">
 			<span>생성된 단원평가가 없습니다.</span>
 		</div>
-
 	</div> <!-- 2층 그래프 -->
 	</sec:authorize>
 
@@ -873,8 +684,7 @@ const changeSelStd = function(index){
 								</thead>
 								<tbody id="listTbody">
 									<tr>
-										<td colspan="100%" style="text-align: center;">등록된 단원평가가
-											없습니다..</td>
+										<td colspan="100%" style="text-align: center;">등록된 단원평가가 없습니다..</td>
 									</tr>
 								</tbody>
 							</table>
@@ -885,7 +695,3 @@ const changeSelStd = function(index){
 		</div>
 	</div>
 </div>
-
-
-
-

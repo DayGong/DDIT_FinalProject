@@ -8,7 +8,6 @@
 #studentAuth:before{
 	color:#333;
 }
-
 a:hover, a:focus {
   outline: none;
 }
@@ -29,7 +28,6 @@ a:hover, a:focus {
   -moz-transform: translateY(-10px);
   transform: translateY(-10px);
 }
-
 .SMN_effect-3 a:hover:after, .SMN_effect-3 a:focus:after {
   height: 5px;
   opacity: 1;
@@ -56,7 +54,6 @@ a:hover, a:focus {
   -moz-transform: translateY(-10px);
   transform: translateY(-10px);
 }
-
 .SMN_effect-3Parents a:hover:after, .SMN_effect-3Parents a:focus:after {
   height: 5px;
   opacity: 1;
@@ -87,7 +84,6 @@ a:hover, a:focus {
   -moz-transform: translateY(-10px);
   transform: translateY(-10px);
 }
-
 .SMN_effect-3Teacher a:hover:after, .SMN_effect-3Parents a:focus:after {
   height: 5px;
   opacity: 1;
@@ -100,6 +96,7 @@ a:hover, a:focus {
 	color:#fff;
 }
 /*선생님권한 메뉴 css 끝 */
+
 .child-content{
 	display: flex;
     justify-content: center;
@@ -113,13 +110,11 @@ a:hover, a:focus {
 }
 
 input[type=checkbox]{
-/*     width: 16px; */
     margin-left: 15px;
 }
 
 .noticeContainer{
     margin-bottom: 10px;
-/*     min-height: 254px; */
     align-content: center;
 }
 
@@ -178,6 +173,7 @@ input[type=checkbox]{
 .nav-item{
 	align-content: center;
 }
+
 .header-right-info .nav>li>a>img {
 	width: 26px;
     height: 26px;
@@ -204,7 +200,6 @@ input[type=checkbox]{
 .indicator-nt{
 	background:#ff6060;
 }
-
 /* 공통 css 끝*/
 
 /* 학부모 학급클래스 선택 모달*/
@@ -225,11 +220,9 @@ input[type=checkbox]{
 </style>
 <script type="text/javascript" src="/resources/js/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-<!-- <script type="text/javascript" src="/resources/js/commonFunction.js"></script> -->
 <script type="text/javascript">
 // 전역 변수
 var mberId = "${USER_INFO.mberId}";
-// var password = "${USER_INFO.password}";
 var socket = null;
 var noticeLength = "";
 
@@ -269,14 +262,7 @@ $(function(){
 	
 	// (실시간 알림) 소켓 객체 생성
 	var soc = new SockJS("<c:url value="/alram"/>");
-	
-	soc.onopen = function () {
-        console.log('주희 Info: connection opened.');
-    };
-    
 	soc.onmessage = function(data) {
-		console.log("data", data);
-		
 		var str = "";
 		str += "<div class='review-item-rating' style='margin-right: 15px;'>";
 		str += elapsedTime(data.timeStamp);
@@ -289,7 +275,6 @@ $(function(){
 	// 알림을 읽었을 때 알림 열람 여부 변경 이벤트
 	$(document).on("click", ".noticeContent", function(){
 	    var noticeCode = $(this).closest('.noticeList').find('#noticeCode').text();
-		
 		var data = {
 			"noticeCode":noticeCode
 		};
@@ -303,7 +288,6 @@ $(function(){
 				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 			},
 			success:function(res){
-// 				alert("알림 열람 여부 잘 변경됐음");
 			}
 		});
 	});
@@ -322,14 +306,11 @@ $(function(){
 			if(checkedArr[i] == true)
 			indexArr.push(i);
 		}
-// 		console.log("checkedArr", checkedArr);
-// 		console.log(indexArr);
 		
 		for (var i = 0; i < indexArr.length; i++) {
 			// 체크된 배열의 index에 저장된 noticeCode를 배열에 저장
 			noticeCodeArr.push($("#noticeCheckbox"+indexArr[i]).attr("data-noticeCode"));
 		}
-// 		console.log("noticeCodeArr", noticeCodeArr);
 		
 		if(noticeCodeArr.length == 0) return;
 		
@@ -364,7 +345,6 @@ const enterMypage = function(){
 	// 비밀번호 입력 이벤트
 	$("#enterMyPageBtn").on("click", function(){
 		var inputPassword = $("#password").val();
-		console.log("inputPassword: " + inputPassword);
 		
 		// 암호화된 비밀번호 해독 작업
 		$.ajax({
@@ -376,7 +356,6 @@ const enterMypage = function(){
 				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 			},
 			success:function(res){
-				console.log(res);
 				if(res === "true"){
 					if(isStudent()){
 						window.location.href = "/student/mypage";
@@ -451,8 +430,6 @@ const headerEnterClass = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success:function(clasCode){
-			console.log("clasCode -> " + clasCode);
-			
 			// 소속된 클래스가 있는 경우
 			if(clasCode != null && clasCode != ""){
 				var cmmnSchulPsitnSttus = "${SCHOOL_USER_INFO.cmmnSchulPsitnSttus}";
@@ -489,12 +466,8 @@ const headerEnterClass = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success:function(res){
-			console.log("자녀 리스트", res);
-	
 			var str = "";
 			var clasCode = ""; 		// 학생, 교사의 클래스 코드
-// 			var clasCodeArr = []; 	// 학부모 자녀의 클래스 코드들
-			console.log("res",  res);
 			
 			$.each(res, function(index, schulVOList){
 				var item = schulVOList.schulVOList[0];
@@ -519,8 +492,6 @@ const headerEnterClass = function(){
 };
 
 const goToClass = function(clasCode, childId){
-	console.log("clasCode: " + clasCode);
-	
 	if(childId != null){
 		document.querySelector("#childId").value = childId;
 	}
@@ -541,8 +512,6 @@ function getAllNotice(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success:function(res){
-			console.log("알림", res);
-			
 			noticeLength = res.length;
 			var str = "";
 			var notReadingCount = 0; // 읽지 않은 알림의 수
@@ -672,9 +641,6 @@ function getAllNotice(){
 													<button id='noticeDelBtn' style='float: right;'>삭제</button>
 												</div>
 												<div class="noticeContainer"></div>
-<!-- 												<div class="notification-view"> -->
-<!-- 													<a href="#">모든 알림을 확인했습니다.</a> -->
-<!-- 												</div> -->
 											</div>
 										</li>
 
@@ -747,7 +713,8 @@ function getAllNotice(){
 										<li class="nav-item">
 											<a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
 												<img src="/resources/images/header/bell.png" alt="프로필 사진" class="profileImg"/>
-											<span class="indicator-nt" style="background:#ff6060;"></span></a>
+												<span class="indicator-nt" style="background:#ff6060;"></span>
+											</a>
 											<div role="menu" class="notification-author dropdown-menu animated zoomIn" style="width: 365px; height: 395px; overflow: auto; top: 183%;">
 												<div class="noticeTitle" style='text-align: center; margin-top: 10px; display: flex; justify-content: center;'>
 													<h3>알림</h3>
@@ -759,9 +726,6 @@ function getAllNotice(){
 													<button id='noticeDelBtn' style='float: right;'>삭제</button>
 												</div>
 												<div class="noticeContainer"></div>
-<!-- 												<div class="notification-view"> -->
-<!-- 													<a href="#">모든 알림을 확인했습니다.</a> -->
-<!-- 												</div> -->
 											</div>
 										</li>
 
@@ -837,12 +801,12 @@ function getAllNotice(){
 							<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
 								<div class="header-right-info">
 									<ul class="nav navbar-nav mai-top-nav header-right-menu">
-										
 										<!-- 학부모 알림 -->
 										<li class="nav-item">
 											<a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
 												<img src="/resources/images/header/bell.png" class="profileImg"/>
-											<span class="indicator-nt" style="background:#ff6060;"></span></a>
+												<span class="indicator-nt" style="background:#ff6060;"></span>
+											</a>
 											<div role="menu" class="notification-author dropdown-menu animated zoomIn" style="width: 365px; height: 395px; overflow: auto; top: 183%;">
 												<div class="noticeTitle" style='text-align: center; margin-top: 10px; display: flex; justify-content: center;'>
 													<h3>알림</h3>
@@ -854,9 +818,6 @@ function getAllNotice(){
 													<button id='noticeDelBtn' style='float: right;'>삭제</button>
 												</div>
 												<div class="noticeContainer"></div>
-<!-- 												<div class="notification-view"> -->
-<!-- 													<a href="#">모든 알림을 확인했습니다.</a> -->
-<!-- 												</div> -->
 											</div>
 										</li>
 										
@@ -881,7 +842,6 @@ function getAllNotice(){
 												<sec:csrfInput />
 											</form>
 										</li>
-
 									</ul>
 								</div>
 							</div>
@@ -917,7 +877,7 @@ function getAllNotice(){
 							</div>
 							<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
 								<div class="header-right-info">
-									<ul class="nav navbar-nav mai-top-nav header-right-menu">
+									<ul class="nav navbar-nav mai-top-nav header-right-menu" style='margin-right: 80px;'>
 										<!-- 내 정보 -->
 										<li class="nav-item">
 											<a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
@@ -931,69 +891,6 @@ function getAllNotice(){
 												<sec:csrfInput />
 											</form>
 										</li>
-
-										<!-- 알림 -->
-										<li class="nav-item"><a href="#" data-toggle="dropdown"
-											role="button" aria-expanded="false"
-											class="nav-link dropdown-toggle"><i
-												class="educate-icon educate-bell" aria-hidden="true"></i><span
-												class="indicator-nt"></span></a>
-											<div role="menu"
-												class="notification-author dropdown-menu animated zoomIn">
-												<div class="notification-single-top">
-													<h1>Notifications</h1>
-												</div>
-												<ul class="notification-menu">
-													<li><a href="#">
-															<div class="notification-icon">
-																<i
-																	class="educate-icon educate-checked edu-checked-pro admin-check-pro"
-																	aria-hidden="true"></i>
-															</div>
-															<div class="notification-content">
-																<span class="notification-date">16 Sept</span>
-																<h2>Advanda Cro</h2>
-																<p>Please done this project as soon possible.</p>
-															</div>
-													</a></li>
-													<li><a href="#">
-															<div class="notification-icon">
-																<i class="fa fa-cloud edu-cloud-computing-down"
-																	aria-hidden="true"></i>
-															</div>
-															<div class="notification-content">
-																<span class="notification-date">16 Sept</span>
-																<h2>Sulaiman din</h2>
-																<p>Please done this project as soon possible.</p>
-															</div>
-													</a></li>
-													<li><a href="#">
-															<div class="notification-icon">
-																<i class="fa fa-eraser edu-shield" aria-hidden="true"></i>
-															</div>
-															<div class="notification-content">
-																<span class="notification-date">16 Sept</span>
-																<h2>Victor Jara</h2>
-																<p>Please done this project as soon possible.</p>
-															</div>
-													</a></li>
-													<li><a href="#">
-															<div class="notification-icon">
-																<i class="fa fa-line-chart edu-analytics-arrow"
-																	aria-hidden="true"></i>
-															</div>
-															<div class="notification-content">
-																<span class="notification-date">16 Sept</span>
-																<h2>Victor Jara</h2>
-																<p>Please done this project as soon possible.</p>
-															</div>
-													</a></li>
-												</ul>
-<!-- 												<div class="notification-view"> -->
-<!-- 													<a href="#">모든 알림을 확인했습니다.</a> -->
-<!-- 												</div> -->
-											</div>
-										</li>
 									</ul>
 								</div>
 							</div>
@@ -1005,202 +902,6 @@ function getAllNotice(){
 	</div>
 </sec:authorize>
 <!-- 관리자 권한 header끝 -->
-<!-- Mobile Menu start -->
-<div class="mobile-menu-area">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-				<div class="mobile-menu">
-					<nav id="dropdown">
-						<ul class="mobile-menu-nav">
-
-							<li><a href="">학급클래스</a></li>
-							<li><a href="">학교정보</a></li>
-							<li><a href="">학교/클래스 찾기</a></li>
-							<li><a href="">1대1 채팅</a></li>
-							<li><a href="">공지사항</a></li>
-
-							<!-- 
-                                <li><a data-toggle="collapse" data-target="#Charts" href="#">Home <span class="admin-project-icon edu-icon edu-down-arrow"></span></a>
-                                    <ul class="collapse dropdown-header-top">
-                                        <li><a href="/resources/kiaalap/index.html">Dashboard v.1</a></li>
-                                        <li><a href="/resources/kiaalap/index-1.html">Dashboard v.2</a></li>
-                                        <li><a href="/resources/kiaalap/index-3.html">Dashboard v.3</a></li>
-                                        <li><a href="/resources/kiaalap/analytics.html">Analytics</a></li>
-                                        <li><a href="/resources/kiaalap/widgets.html">Widgets</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="events.html">Event</a></li>
-                                <li><a data-toggle="collapse" data-target="#demoevent" href="#">Professors <span class="admin-project-icon edu-icon edu-down-arrow"></span></a>
-                                    <ul id="demoevent" class="collapse dropdown-header-top">
-                                        <li><a href="/resources/kiaalap/all-professors.html">All Professors</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/add-professor.html">Add Professor</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/edit-professor.html">Edit Professor</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/professor-profile.html">Professor Profile</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a data-toggle="collapse" data-target="#demopro" href="#">Students <span class="admin-project-icon edu-icon edu-down-arrow"></span></a>
-                                    <ul id="demopro" class="collapse dropdown-header-top">
-                                        <li><a href="/resources/kiaalap/all-students.html">All Students</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/add-student.html">Add Student</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/edit-student.html">Edit Student</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/student-profile.html">Student Profile</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a data-toggle="collapse" data-target="#democrou" href="#">Courses <span class="admin-project-icon edu-icon edu-down-arrow"></span></a>
-                                    <ul id="democrou" class="collapse dropdown-header-top">
-                                        <li><a href="/resources/kiaalap/all-courses.html">All Courses</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/add-course.html">Add Course</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/edit-course.html">Edit Course</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/course-profile.html">Courses Info</a>
-                                        </li>
-                                        <li><a href="course-payment.html">Courses Payment</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a data-toggle="collapse" data-target="#demolibra" href="#">Library <span class="admin-project-icon edu-icon edu-down-arrow"></span></a>
-                                    <ul id="demolibra" class="collapse dropdown-header-top">
-                                        <li><a href="/resources/kiaalap/library-assets.html">Library Assets</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/add-library-assets.html">Add Library Asset</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/edit-library-assets.html">Edit Library Asset</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a data-toggle="collapse" data-target="#demodepart" href="#">Departments <span class="admin-project-icon edu-icon edu-down-arrow"></span></a>
-                                    <ul id="demodepart" class="collapse dropdown-header-top">
-                                        <li><a href="/resources/kiaalap/departments.html">Departments List</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/add-department.html">Add Departments</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/edit-department.html">Edit Departments</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a data-toggle="collapse" data-target="#demo" href="#">Mailbox <span class="admin-project-icon edu-icon edu-down-arrow"></span></a>
-                                    <ul id="demo" class="collapse dropdown-header-top">
-                                        <li><a href="/resources/kiaalap/mailbox.html">Inbox</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/mailbox-view.html">View Mail</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/mailbox-compose.html">Compose Mail</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a data-toggle="collapse" data-target="#Miscellaneousmob" href="#">Interface <span class="admin-project-icon edu-icon edu-down-arrow"></span></a>
-                                    <ul id="Miscellaneousmob" class="collapse dropdown-header-top">
-                                        <li><a href="/resources/kiaalap/google-map.html">Google Map</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/data-maps.html">Data Maps</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/pdf-viewer.html">Pdf Viewer</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/x-editable.html">X-Editable</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/code-editor.html">Code Editor</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/tree-view.html">Tree View</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/preloader.html">Preloader</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/images-cropper.html">Images Cropper</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a data-toggle="collapse" data-target="#Chartsmob" href="#">Charts <span class="admin-project-icon edu-icon edu-down-arrow"></span></a>
-                                    <ul id="Chartsmob" class="collapse dropdown-header-top">
-                                        <li><a href="/resources/kiaalap/bar-charts.html">Bar Charts</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/line-charts.html">Line Charts</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/area-charts.html">Area Charts</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/rounded-chart.html">Rounded Charts</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/c3.html">C3 Charts</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/sparkline.html">Sparkline Charts</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/peity.html">Peity Charts</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a data-toggle="collapse" data-target="#Tablesmob" href="#">Tables <span class="admin-project-icon edu-icon edu-down-arrow"></span></a>
-                                    <ul id="Tablesmob" class="collapse dropdown-header-top">
-                                        <li><a href="/resources/kiaalap/static-table.html">Static Table</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/data-table.html">Data Table</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a data-toggle="collapse" data-target="#formsmob" href="#">Forms <span class="admin-project-icon edu-icon edu-down-arrow"></span></a>
-                                    <ul id="formsmob" class="collapse dropdown-header-top">
-                                        <li><a href="/resources/kiaalap/basic-form-element.html">Basic Form Elements</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/advance-form-element.html">Advanced Form Elements</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/password-meter.html">Password Meter</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/multi-upload.html">Multi Upload</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/tinymc.html">Text Editor</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/dual-list-box.html">Dual List Box</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a data-toggle="collapse" data-target="#Appviewsmob" href="#">App views <span class="admin-project-icon edu-icon edu-down-arrow"></span></a>
-                                    <ul id="Appviewsmob" class="collapse dropdown-header-top">
-                                        <li><a href="/resources/kiaalap/basic-form-element.html">Basic Form Elements</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/advance-form-element.html">Advanced Form Elements</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/password-meter.html">Password Meter</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/multi-upload.html">Multi Upload</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/tinymc.html">Text Editor</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/dual-list-box.html">Dual List Box</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a data-toggle="collapse" data-target="#Pagemob" href="#">Pages <span class="admin-project-icon edu-icon edu-down-arrow"></span></a>
-                                    <ul id="Pagemob" class="collapse dropdown-header-top">
-                                        <li><a href="/resources/kiaalap/login.html">Login</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/register.html">Register</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/lock.html">Lock</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/password-recovery.html">Password Recovery</a>
-                                        </li>
-                                        <li><a href="/resources/kiaalap/404.html">404 Page</a></li>
-                                        <li><a href="/resources/kiaalap/500.html">500 Page</a></li>
-                                    </ul>
-                                </li>
-                                 -->
-						</ul>
-					</nav>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-
 
 <!-- 학부모의 학급 클래스 입장 시, 자녀의 클래스 목록을 띄우는 모달 -->
 <div id="goToChildClassModal"
@@ -1216,11 +917,9 @@ function getAllNotice(){
 				<h2><span style="background: linear-gradient(to top, #7cb8ff 20%, transparent 20%);">자녀 학급 클래스 목록</span></h2>
 				<br>
 				<div class="modal-body-clas-list">
-					<div class="row child-content">
-					</div>
+					<div class="row child-content"></div>
 				</div>
 			</div>
-
 		</div>
 	</div>
 </div>

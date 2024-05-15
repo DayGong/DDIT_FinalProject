@@ -19,8 +19,6 @@ function fn_search(page) {
         "keyword": keyword
     }
 
-    console.log("data:", data);
-
     $.ajax({
         url: "/school/dataRoomAjax",
         type: "post",
@@ -31,8 +29,6 @@ function fn_search(page) {
             xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
         },
         success: function(result) {
-            console.log("result.pagingArea", result.pagingArea);
-
             if (result.total == 0) {
                 $("#keyword").val('');
 
@@ -45,7 +41,6 @@ function fn_search(page) {
                 var str = ""; // 결과를 누적하기 위해 빈 문자열로 초기화
 
                 $.each(result.content, function(idx, nttVO) {
-					console.log("nttVO[" + idx + "] : ", nttVO);
 					str += "<tr onclick=\"location.href='/school/dataRoomDetail?schulCode=" +nttVO.schulCode+ "&nttCode=" + nttVO.nttCode + "'\" style=\"cursor: pointer;\">";
 					str += "<td>" + nttVO.rnum + "</td>";
 					str += "<td>" + nttVO.nttNm + "</td>";
@@ -55,44 +50,41 @@ function fn_search(page) {
 					str += "</tr>";
 				});
 
-
                 $("#dataBody").html(str);
             }
 
             $("#divPaging").html(result.pagingArea);
         },
         error: function(xhr, status, error) {
-            console.error(status, error);
         }
     });
 }
 
-
 $(function(){
+	fn_search(1);
+	
+	//input태그에서 엔터시 검색버튼누르기
+	var input = $("#keyword");
+
+	  input.on("keypress", function(event) {
+	      if (event.key === "Enter") {
+	          event.preventDefault();
+	          $("#btnSearch").click();
+	      }
+	  });
+
+	currentPage = "1";
+	// 자료실 검색
+	$("#btnSearch").on("click",function(){
 		fn_search(1);
-		
-		//input태그에서 엔터시 검색버튼누르기
-		var input = $("#keyword");
+	});
+	
+	//등록버튼
+	$("#createBtn").on("click", function() {
+		location.href = "/school/dataRoomCreate";
+	});
+})
 
-		  input.on("keypress", function(event) {
-		      if (event.key === "Enter") {
-		          event.preventDefault();
-		          $("#btnSearch").click();
-		      }
-		  });
-
-		currentPage = "1";
-		// 자료실 검색
-		$("#btnSearch").on("click",function(){
-			fn_search(1);
-		});
-		
-		//등록버튼
-		$("#createBtn").on("click", function() {
-			location.href = "/school/dataRoomCreate"; //GET방식
-		});
-		
-	})
 // 날짜 포맷 함수(ex: 2024-03-12)
 function dateFormat(date){
    var selectDate = new Date(date);
@@ -105,8 +97,6 @@ function dateFormat(date){
    
    return y + "-" + m + "-" + d; 
 }
-	
-	
 </script>
 <style>
 #dataRoomContainer h3{
@@ -123,27 +113,27 @@ function dateFormat(date){
 	margin-bottom: 40px;
 }
 #dataRoomContainer{
-		min-height: 790px;
+	min-height: 790px;
 }
 #dataRoomContainer .custom-pagination{
 	max-width:302px;
 	margin: auto;
 }
 .searchForm{
-		height: 40px;
-		border: 1px solid #ddd;
-		border-radius: 5px;
-		padding: 15px 20px;
+	height: 40px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 15px 20px;
 }
 #btnSearch,#createBtn{
-		background: #333;
-		height: 40px;
-		border: none;
-		padding: 10px 15px;
-		border-radius: 10px;
-		font-family: 'Pretendard' !important;
-		font-weight: 600;
-		color: #fff;
+	background: #333;
+	height: 40px;
+	border: none;
+	padding: 10px 15px;
+	border-radius: 10px;
+	font-family: 'Pretendard' !important;
+	font-weight: 600;
+	color: #fff;
 }
 #btnSearch:hover, #insertBtn:hover{
 	background: #ffd77a;
@@ -158,8 +148,6 @@ function dateFormat(date){
 .fixed-table-body tbody tr.none-tr:hover {
     background: #f5f5f5!important;
 }
-
-
 </style>
 
 <div id="dataRoomContainer">
@@ -195,16 +183,6 @@ function dateFormat(date){
 						</tr>
 					</thead>
 					<tbody id="dataBody">
-						<%-- <c:forEach var="nttVO" items="${nttVOList}" varStatus="stat">
-							<tr onclick="location.href='/school/dataRoomDetail?nttCode=${nttVO.nttCode}'"
-								style="cursor: pointer;">
-								<td>${nttVO.rnum}</td>
-								<td>${nttVO.nttNm}</td>
-								<td>${nttVO.mberNm}</td>
-								<td><fmt:formatDate value="${nttVO.nttWritngDt}"
-										pattern="yyyy-MM-dd" /></td>
-							</tr>
-						</c:forEach> --%>
 					</tbody>
 				</table>
 			</div>

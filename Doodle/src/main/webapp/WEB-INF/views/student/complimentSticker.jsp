@@ -1,4 +1,4 @@
-<%@page import="kr.or.ddit.vo.MemberVO"%>
+<%@ page import="kr.or.ddit.vo.MemberVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -18,7 +18,6 @@
 }
 
 .school {
-	/* 	border-right: 2px solid #eee; */
 	margin-right: 10px;
 }
 
@@ -65,10 +64,6 @@
 	margin: auto;
 	margin-top: 10px;
 	margin-bottom: 40px;
-}
-
-#Container h5{
-/* 	color: #777; */
 }
 
 #updateBtn, #cancelBtn {
@@ -144,7 +139,6 @@
 	border: 1px solid #ddd;
 	padding: 30px;
 	border-radius: 10px;
-/* 	margin: 70px; */
 }
 </style>
 <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
@@ -152,23 +146,17 @@
 <script type="text/javascript">
 // 전역 변수
 var complimentStickerCount = "${complimentStickerCount}";
-
-$(function() {
-	console.log("${taskResultVOList}");
-});
 </script>
 <div id="Container">
 	<h4>
-		<img src="/resources/images/member/myPage/happyEmotion.png"
-			style="width: 45px; display: inline-block; vertical-align: middel; margin-right: 7px; margin-bottom: 5px;">
-		칭찬 스티커 <img src="/resources/images/member/myPage/colorHorse.png"
-			style="width: 55px; display: inline-block; vertical-align: middel; margin-bottom: 9px;">
+		<img src="/resources/images/member/myPage/happyEmotion.png" style="width: 45px; display: inline-block; vertical-align: middel; margin-right: 7px; margin-bottom: 5px;">
+		칭찬 스티커 
+		<img src="/resources/images/member/myPage/colorHorse.png" style="width: 55px; display: inline-block; vertical-align: middel; margin-bottom: 9px;">
 	</h4>
 	<div class="MyPageAll">
 		<div class="row">
 			<div id="myTabContent" class="tab-content custom-product-edit">
-				<div class="product-tab-list tab-pane fade active in"
-					id="description">
+				<div class="product-tab-list tab-pane fade active in" id="description">
 					<div class="row">
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -203,7 +191,6 @@ $(function() {
 		                                	</c:when>
 		                                	<c:otherwise>
 		                                		<div style="text-align: center; align-content: center; height: 350px;">
-<!-- 													<img class="stickerIcon" src="/resources/images/member/myPage/cry.png" alt=""> -->
 			                                		<p style="color: #999">아직 받은 칭찬 스티커가 없습니다.</p>
 		                                		</div>
 		                                	</c:otherwise>
@@ -218,4 +205,3 @@ $(function() {
 		</div>
 	</div>
 </div>
-

@@ -23,8 +23,6 @@ const getSchoolAndChildren = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success:function(res){
-			console.log("getSchoolAndChildren res:",res);
-			
 			if(res == null || res.length == 0){
 				let str =`
 						<div style ="text-align: center;">
@@ -52,18 +50,14 @@ const getSchoolAndChildren = function(){
 							</div>
 							`;
 				})
-				
 				str += `</div></div>`;
 			})
-			
 			document.querySelector("#schListContainer").innerHTML = str;
 		},
 		error : function(request, status, error){
-			console.log("code: " + request.status + " message: " + request.responseText + " error: " + error)
 		}
 	});
 };
-
 
 window.onload = function(){
 	getSchoolAndChildren();
@@ -71,7 +65,7 @@ window.onload = function(){
 </script>
 
 <form id ="form" action = "">
-<input type="hidden" id = "schulCodeInput" name="schulCode" value="" />
+	<input type="hidden" id = "schulCodeInput" name="schulCode" value="" />
 </form>
 
 <style>
@@ -117,16 +111,12 @@ window.onload = function(){
 	filter: brightness(95%);
 }
 
-
 </style>
 
 <div id ="chooseStd" class = "box ver-div">
-<!-- 	<div class ="inner-box2"> -->
-		<div style ="margin-bottom: 20px;">
-			<h3>학교 선택</h3>
-		</div>
-
-		<div id ="schListContainer" class ="ver-div">
-		</div>
-<!-- 	</div> -->
+	<div style ="margin-bottom: 20px;">
+		<h3>학교 선택</h3>
+	</div>
+	<div id ="schListContainer" class ="ver-div">
+	</div>
 </div>

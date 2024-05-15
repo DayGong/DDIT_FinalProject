@@ -11,7 +11,6 @@
 	--main-color-dark : #0f4b92;
 	--sub-color : #FCC25B;
 	--sub-color-dark : #e1a130;
-	
 	font-size : 1.3rem;
 	width:1400px;
 	height: 790px;
@@ -68,14 +67,13 @@
 ::-webkit-scrollbar {
   display: none;
 }
-
 </style>
 
 <script>
-var currentLen = 1;                              // 현재 문제 번호
-var maxLen = ${fn:length(unitEvlVO.quesVOList)}; // 문제 총 개수
-var arr = []; 									 // 학생의 선택
-var isCardMoving = false;                        // 카드 애니메이션
+var currentLen = 1;									// 현재 문제 번호
+var maxLen = ${fn:length(unitEvlVO.quesVOList)};	// 문제 총 개수
+var arr = [];										// 학생의 선택
+var isCardMoving = false;							// 카드 애니메이션
 
 window.onload = function(){
 	var quesNoDiv = document.querySelector("#quesNoDiv");
@@ -102,10 +100,8 @@ const makeGc = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success:function(res){
-			console.log("makeGc:"+res);
 		},
 		error:function(xhr){
-			console.log("error:"+xhr.status);
 		}
 	})
 }
@@ -115,8 +111,6 @@ const solve = function(v){
 	if(isCardMoving){return;}
 	
 	arr.push(v);
-	console.log("select value :"+v);
-	console.log("arr",arr);
 
 	currentLen ++;
 	if(currentLen > maxLen){
@@ -150,7 +144,6 @@ const solveFinish = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success:function(res){
-			console.log("finishGc:"+res);
 		}
 	})
 }
@@ -195,16 +188,14 @@ const cardAnimCome = function(){
 
 <!-- 문제 저장 -->
 <c:forEach var="item" items="${unitEvlVO.quesVOList}" varStatus="stat">
-<div id = "ques${item.quesNo}" style ="display : none;">${item.quesQues}</div>
-<div id = "scre${item.quesNo}" style ="display : none;">${item.quesAllot}</div>
+	<div id = "ques${item.quesNo}" style ="display : none;">${item.quesQues}</div>
+	<div id = "scre${item.quesNo}" style ="display : none;">${item.quesAllot}</div>
 </c:forEach>
 
 <div id="unitTestExamAll">
-
 	<h3><img src ="/resources/images/classRoom/unitTest01.png">단원평가<img src ="/resources/images/classRoom/unitTest01.png"></h3>
 	
 	<div id="cardDiv">
-	
 		<!-- 제목 -->
 		<div style ="margin-bottom:15px; font-weight: 700; font-size: 2.0rem">
 			${unitEvlVO.unitEvlNm}
@@ -215,7 +206,6 @@ const cardAnimCome = function(){
 			<span id="quesNoDiv">${unitEvlVO.quesVOList[0].quesNo}. </span>	
 			<span id="quesDiv">${unitEvlVO.quesVOList[0].quesQues}</span>			
 			<span id="scoreDiv">[${unitEvlVO.quesVOList[0].quesAllot}점]</span>			
-			<!-- 				<img src="/resources/images/classRoom/freeBrd/freeFile.png" style="width:40px; display:inline-block;"> -->
 		</div>
 
 		<!-- OX 카드 -->

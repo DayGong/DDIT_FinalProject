@@ -153,8 +153,7 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2 -->
-		<!-- dbcp : database connection pool => 커넥션객체를 미리 만들어놓고 쓰고/반납 최근에는 hikaricp를 
-			사용하는 경우도 있음 -->
+		<!-- dbcp : database connection pool => 커넥션객체를 미리 만들어놓고 쓰고 반납 최근에는 hikaricp를 사용하는 경우도 있음 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
@@ -329,8 +328,8 @@
 		</dependency>
 		<!-- 파일업로드 끝 -->
 
-		<!-- AOP(Aspect Oriented Programming : 관점 지향 프로그래밍) 시작 1) aspectjrt => 
-			이미 있으므로 생략 2) aspectjweaver => 없으므로 의존 관계를 정의 -->
+		<!-- AOP(Aspect Oriented Programming : 관점 지향 프로그래밍) 시작
+			1) aspectjrt => 이미 있으므로 생략 2) aspectjweaver => 없으므로 의존 관계를 정의 -->
 		<!-- https://mvnrepository.com/artifact/aspectj/aspectjweaver1.5.4 -->
 		<!-- AspectJ Weaver -->
 		<dependency>
@@ -362,35 +361,35 @@
 		</dependency>
       
        <!-- https://mvnrepository.com/artifact/com.sun.mail/javax.mail -->
-	<dependency>
-	    <groupId>com.sun.mail</groupId>
-	    <artifactId>javax.mail</artifactId>
-	    <version>1.6.2</version>
-	</dependency>
-	
-	<!-- https://mvnrepository.com/artifact/com.itextpdf/html2pdf -->
-	<dependency>
-	    <groupId>com.itextpdf</groupId>
-	    <artifactId>html2pdf</artifactId>
-	    <version>3.0.3</version>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
-	<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
-	<dependency>
-		<groupId>org.apache.poi</groupId>
-		<artifactId>poi</artifactId>
-		<version>4.1.2</version>
+		<dependency>
+		    <groupId>com.sun.mail</groupId>
+		    <artifactId>javax.mail</artifactId>
+		    <version>1.6.2</version>
 		</dependency>
-	<dependency>
-		<groupId>org.apache.poi</groupId>
-		<artifactId>poi-ooxml</artifactId>
-		<version>4.1.2</version>
-	</dependency>
-	<dependency>
-		<groupId>org.apache.poi</groupId>
-		<artifactId>poi-scratchpad</artifactId>
-		<version>4.1.2</version>
-	</dependency>
+	
+		<!-- https://mvnrepository.com/artifact/com.itextpdf/html2pdf -->
+		<dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>html2pdf</artifactId>
+		    <version>3.0.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>4.1.2</version>
+			</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>4.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-scratchpad</artifactId>
+			<version>4.1.2</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

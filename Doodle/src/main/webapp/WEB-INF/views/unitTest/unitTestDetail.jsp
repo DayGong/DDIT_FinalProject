@@ -4,7 +4,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <script type="text/javascript" src="/resources/js/jquery.min.js"></script>    
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- 4.4.2 -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script> -->
 <script type="text/javascript" src="/resources/js/commonFunction.js"></script>  
 <script type="text/javascript" src="/resources/js/cjh.js"></script>  
 <script type="text/javascript" src="/resources/js/unitTest.js"></script>  
@@ -71,7 +70,6 @@ rowsCount =5;
 window.onload = function(){
 	// 모든 시험 정보 가져오는 ajax
 	getOneUnitEvlAndAllGc();
-	console.log("ueRes:",ueRes);
 	// 성적 테이블 출력
 	<sec:authorize access="hasAnyRole('A01002', 'A01003')">
 	setScoreTable();
@@ -99,7 +97,7 @@ const getOneUnitEvlAndAllGc = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success : function(res) {
-		ueRes = res;
+			ueRes = res;
 		}
 	})
 }
@@ -111,16 +109,12 @@ const setUnitTestDetail = function(){
 	document.querySelector("#aswperViewer").style.display = "block";
 	</sec:authorize>
 			
-	/*
-	단원평가 기본 정보
-	*/
+	/* 단원평가 기본 정보 */
 	cjh.selOne("#unitTestNm").innerHTML = cutStr(ueRes[0].unitEvlNm,45);
 	cjh.selOne("#unitStartDate").innerHTML = dateToMinFormat(ueRes[0].unitEvlBeginDt);
 	cjh.selOne("#unitEndDate").innerHTML = dateToMinFormat(ueRes[0].unitEvlEndDt);
 	
-	/*
-	문항 
-	*/
+	/* 문항  */
 	let num = 1;
 	ueRes[0].quesList.forEach(function(item, idx){
 		// 구조 복사
@@ -400,7 +394,6 @@ const drawChart = function(){
 	chartData[0].backgroundColor.push('#ccccccb0');
 	chartData[0].maxBarThickness=45;
 	
-	
 	chartOptions = {
     	responsive: false,
     	indexAxis : 'y', // 가로 차트
@@ -426,7 +419,6 @@ const drawChart = function(){
 	<sec:authorize access="hasRole('A01002')">
 	
 	chartData[0].maxBarThickness = "200";
-	console.log("charData[0]",chartData[0]);
 
 	// 반평균 점수 put
 		chartLabel.push("평균 점수");
@@ -501,10 +493,6 @@ const drawChart = function(){
 	    options: {
         	responsive: false,
             plugins: {
-//                 legend: {
-//                   display: false
-//                 },
-                
                 responsive: true,
 			    legend: {
 			      display: false
@@ -520,37 +508,12 @@ const drawChart = function(){
         }
 	});
 	
-// 	textCenter(myFinishRatioChart, (ueRes[0].doneCnt/ueRes[0].allCnt*100).toFixed() );
 	myFinishRatioChart.update();
 }
-
-
-// function textCenter(target, val) {
-//   Chart.pluginService.register({
-//     beforeDraw: function(chart) {
-//       var width = chart.chart.width,
-//           height = chart.chart.height,
-//           ctx = target.ctx;
-
-//       ctx.restore();
-//       var fontSize = (height / 130).toFixed(2);
-//       ctx.font = fontSize + "em sans-serif";
-//       ctx.textBaseline = "middle";
-
-//       var text = val+"%",
-//           textX = Math.round((width - ctx.measureText(text).width) / 2),
-//           textY = height / 2 + 15;
-
-//       ctx.fillText(text, textX, textY);
-//       ctx.save();
-//     }
-//   });
-// }
 
 // 경고 문자 전송
 const sendMsg = function(index){
 	member = ueRes[0].unitEvlScoreVOList[index];
-	console.log("member:",member);
 	let sendStr = "[두들 학습 시스템 성적 경고문] " + member.mberNm+" 자녀의 " + ueRes[0].unitEvlNm +" 단원평가 결과 점수는 " +member.scre + "점입니다.";
 	
 	Swal.fire({
@@ -560,19 +523,16 @@ const sendMsg = function(index){
 		   input:"text",
 		   inputValue:sendStr,
 		   
-		   showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
-		   confirmButtonColor: 'var(--blue-color)', // confrim 버튼 색깔 지정
+		   showCancelButton: true, 						// cancel버튼 보이기. 기본은 원래 없음
+		   confirmButtonColor: 'var(--blue-color)', 	// confrim 버튼 색깔 지정
 		   cancelButtonColor: 'var(--gray-color-dark)', // cancel 버튼 색깔 지정
-		   confirmButtonText: '문자 전송', // confirm 버튼 텍스트 지정
-		   cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+		   confirmButtonText: '문자 전송', 				// confirm 버튼 텍스트 지정
+		   cancelButtonText: '취소', 					// cancel 버튼 텍스트 지정
 		   
 		})
 		.then(result => {
-			
 			if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
-				console.log("member.mberId:",member.mberId);
 				let parentList = getParents(member.mberId);
-				console.log("parentList", parentList);
 				
 				if(parentList == null){
 					cjh.swAlert("실패","등록된 학부모가 없어 문자 전송에 실패했습니다.","error").then(function(res){
@@ -603,16 +563,12 @@ const sendMsg = function(index){
 								parentsStr += item.parentMemberVO.mberNm +"님("+item.parentMemberVO.moblphonNo+")";
 							}
 						}, error : function(request, status, error){
-							console.log("code: " + request.status)
-							console.log("message: " + request.responseText)
-							console.log("error: " + error);
 						}
 					})
 				})
 				
 				if(parentsStr != ""){
 					cjh.swAlert('학부모['+parentsStr+']에게 문자 전송이 완료되었습니다.',result.value,"success").then(function(res){
-		    			console.log("done");
 						return;
 		    		})
 				}
@@ -641,9 +597,6 @@ const getParents = function(mberId){
 		success : function(res) {
 			parentList = res;
 		}, error : function(request, status, error){
-			console.log("code: " + request.status)
-			console.log("message: " + request.responseText)
-			console.log("error: " + error);
 		}
 	})
 	return parentList;
@@ -657,161 +610,138 @@ const getParents = function(mberId){
 </form>
 
 <div id ="unitTest">
-	
-<h3><img src ="/resources/images/classRoom/unitTest01.png">단원평가<img src ="/resources/images/classRoom/unitTest01.png"></h3>
-
-
-<div class="box">
-	<div class="product-status mg-b-15">
-		<div class="container-fluid" >
-			<div class="row">
-				<sec:authorize access="hasRole('A01002')">
-					<button class="d-btn-red pull-right"
-					onclick="deleteUnitTest()" style="margin: 1px;">단원평가
-					삭제하기</button>
-					<form id = "modForm" action="/unitTest/modify" method="post">
-						<input type ="text" name = "unitEvlCode" value = "${unitEvlCode}" style="display:none;">
-						<button class="d-btn-blue pull-right" type = "submit"
-							 style="margin: 1px; margin-right: 10px">단원평가
-							수정하기</button>
-							<sec:csrfInput />
-					</form>
-				</sec:authorize>
-			</div>
-		
-			<div class="row">
-				<div class="product-status-wrap" style="position: relative;">
-					<div class="asset-inner">
-						<form action="/unitTest/exam" method="post" id ="goExamForm">
-							<input type="text" name="unitEvlCode" style="display: none;"
-								value="${unitEvlCode}">
-							<table id = "title-tb">
-								<thead>
-									<tr>
-										<th style ="width:50%">단원평가 명</th>
-										<th>시작 일시</th>
-										<th>종료 일시</th>
-										<sec:authorize access="hasAnyRole('A01001', 'A01003')">
-											<th style="text-align: center;">상태</th>
-										</sec:authorize>
-									</tr>
-								</thead>
-								<tbody id="">
-									<tr>
-										<td id="unitTestNm"></td>
-										<td id="unitStartDate"></td>
-										<td id="unitEndDate"></td>
-										<td id="" style="text-align: center">
-											<sec:authorize access="hasRole('A01001')">
-												<button class="d-btn d-btn-blue" id="examBtn"
-													type="button" onclick ="goExamConfirmForm()" style="width: 100%;">단원평가
-													실시하기</button>
-											</sec:authorize>
-											<sec:authorize access="hasRole('A01003')">
-												<div class="d-div-yellow" id="examBtn" style="width: 100%;">단원평가 실시중</div>
-											</sec:authorize>
-										</td>
-									</tr>
-								</tbody>
-							</table>
+	<h3><img src ="/resources/images/classRoom/unitTest01.png">단원평가<img src ="/resources/images/classRoom/unitTest01.png"></h3>
+	<div class="box">
+		<div class="product-status mg-b-15">
+			<div class="container-fluid" >
+				<div class="row">
+					<sec:authorize access="hasRole('A01002')">
+						<button class="d-btn-red pull-right" onclick="deleteUnitTest()" style="margin: 1px;">단원평가 삭제하기</button>
+						<form id = "modForm" action="/unitTest/modify" method="post">
+							<input type ="text" name = "unitEvlCode" value = "${unitEvlCode}" style="display:none;">
+							<button class="d-btn-blue pull-right" type = "submit" style="margin: 1px; margin-right: 10px">단원평가 수정하기</button>
 							<sec:csrfInput />
 						</form>
-
-						<div id="examAlarm"></div>
+					</sec:authorize>
+				</div>
+		
+				<div class="row">
+					<div class="product-status-wrap" style="position: relative;">
+						<div class="asset-inner">
+							<form action="/unitTest/exam" method="post" id ="goExamForm">
+								<input type="text" name="unitEvlCode" style="display: none;" value="${unitEvlCode}">
+								<table id = "title-tb">
+									<thead>
+										<tr>
+											<th style ="width:50%">단원평가 명</th>
+											<th>시작 일시</th>
+											<th>종료 일시</th>
+											<sec:authorize access="hasAnyRole('A01001', 'A01003')">
+												<th style="text-align: center;">상태</th>
+											</sec:authorize>
+										</tr>
+									</thead>
+									<tbody id="">
+										<tr>
+											<td id="unitTestNm"></td>
+											<td id="unitStartDate"></td>
+											<td id="unitEndDate"></td>
+											<td id="" style="text-align: center">
+												<sec:authorize access="hasRole('A01001')">
+													<button class="d-btn d-btn-blue" id="examBtn"
+														type="button" onclick ="goExamConfirmForm()" style="width: 100%;">단원평가
+														실시하기</button>
+												</sec:authorize>
+												<sec:authorize access="hasRole('A01003')">
+													<div class="d-div-yellow" id="examBtn" style="width: 100%;">단원평가 실시중</div>
+												</sec:authorize>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<sec:csrfInput />
+							</form>
+							<div id="examAlarm"></div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
-
-<!-- 정답지 -->
-<div id = "aswperViewer" class="box" style = "display:none;">
-	<h4>정답지</h4>
-	<div class="product-status mg-b-30">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="alert-title">
-					<p></p>
-					<div class="panel-group edu-custon-design" id="accordion">
-						<div class="panel panel-default">
-
-							<div class="panel-heading accordion-head" style="padding:0px;">
-								<h4 class="panel-title" style="height:50px; vertical-align: middle;">
-									<a data-toggle="collapse" data-parent="#accordion"
-										href="#collapse1" class="collapsed" aria-expanded="false"
-										style="display: block; width:100%; height:100px; padding:10px;"> 해설 펼쳐서 보기</a>
-								</h4>
-							</div>
-							<div id="collapse1" class="panel-collapse panel-ic collapse"
-								aria-expanded="false" style="height: 0px;">
-								<div id="quesContainer" class="panel-body admin-panel-content animated bounce">
-
-									<div id="quesDiv" style="display: none;">
-										<!-- 문제 번호 -->
-										<div class="form-group-inner">
-											<div class="row">
-												<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-													<label class="login2 pull-right pull-right-pro noLabel"><span
-														class="no">1번 문제</span></label>
-												</div>
-												<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12"></div>
-											</div>
-										</div>
-
-										<!-- 지문 -->
-										<div class="form-group-inner">
-											<div class="row">
-												<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-													<label class="login2 pull-right pull-right-pro quesLabel"
-														for="quesQues">지문</label>
-												</div>
-												<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-													<textarea rows="2" class="form-control ques"
-														name="quesQues" id="quesQues" readonly></textarea>
+	<!-- 정답지 -->
+	<div id = "aswperViewer" class="box" style = "display:none;">
+		<h4>정답지</h4>
+		<div class="product-status mg-b-30">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="alert-title">
+						<p></p>
+						<div class="panel-group edu-custon-design" id="accordion">
+							<div class="panel panel-default">
+								<div class="panel-heading accordion-head" style="padding:0px;">
+									<h4 class="panel-title" style="height:50px; vertical-align: middle;">
+										<a data-toggle="collapse" data-parent="#accordion" href="#collapse1" class="collapsed" aria-expanded="false" style="display: block; width:100%; height:100px; padding:10px;"> 해설 펼쳐서 보기</a>
+									</h4>
+								</div>
+								<div id="collapse1" class="panel-collapse panel-ic collapse" aria-expanded="false" style="height: 0px;">
+									<div id="quesContainer" class="panel-body admin-panel-content animated bounce">
+										<div id="quesDiv" style="display: none;">
+											<!-- 문제 번호 -->
+											<div class="form-group-inner">
+												<div class="row">
+													<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+														<label class="login2 pull-right pull-right-pro noLabel"><span class="no">1번 문제</span></label>
+													</div>
+													<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12"></div>
 												</div>
 											</div>
-										</div>
 
-										<!-- 배점 -->
-										<div class="form-group-inner">
-											<div class="row">
-												<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-													<label class="login2 pull-right pull-right-pro allotLabel"
-														for="quesAllot">배점</label>
-												</div>
-												<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-													<input type="text" class="form-control allot"
-														name="quesAllot" id="quesAllot" readonly>
+											<!-- 지문 -->
+											<div class="form-group-inner">
+												<div class="row">
+													<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+														<label class="login2 pull-right pull-right-pro quesLabel" for="quesQues">지문</label>
+													</div>
+													<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+														<textarea rows="2" class="form-control ques" name="quesQues" id="quesQues" readonly></textarea>
+													</div>
 												</div>
 											</div>
-										</div>
 
-										<!-- 정답 -->
-										<div class="form-group-inner">
-											<div class="row">
-												<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-													<label class="login2 pull-right pull-right-pro cnsrLabel"
-														for="cnsr">정답</label>
-												</div>
-												<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-													<input type="text" class="form-control cnsr" name="cnsr"
-														id="cnsr" readonly>
+											<!-- 배점 -->
+											<div class="form-group-inner">
+												<div class="row">
+													<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+														<label class="login2 pull-right pull-right-pro allotLabel" for="quesAllot">배점</label>
+													</div>
+													<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+														<input type="text" class="form-control allot" name="quesAllot" id="quesAllot" readonly>
+													</div>
 												</div>
 											</div>
-										</div>
 
-										<!-- 해설 -->
-										<div class="form-group-inner">
-											<div class="row">
-												<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-													<label class="login2 pull-right pull-right-pro explnaLabel"
-														for="quesExplna">해설</label>
+											<!-- 정답 -->
+											<div class="form-group-inner">
+												<div class="row">
+													<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+														<label class="login2 pull-right pull-right-pro cnsrLabel" for="cnsr">정답</label>
+													</div>
+													<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+														<input type="text" class="form-control cnsr" name="cnsr" id="cnsr" readonly>
+													</div>
 												</div>
-												<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-													<textarea rows="4" class="form-control explna"
-														name="quesExplna" id="quesExplna" readonly></textarea>
+											</div>
+
+											<!-- 해설 -->
+											<div class="form-group-inner">
+												<div class="row">
+													<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+														<label class="login2 pull-right pull-right-pro explnaLabel" for="quesExplna">해설</label>
+													</div>
+													<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+														<textarea rows="4" class="form-control explna" name="quesExplna" id="quesExplna" readonly></textarea>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -824,79 +754,76 @@ const getParents = function(mberId){
 			</div>
 		</div>
 	</div>
-</div>
 
 
-<!-- 점수 차트 -->
-<div class = "box" style ="display :flex;">
-	<div style ="width :75%">
-		<h4>학생 점수</h4>
-		<div style="width:100%; ">
-			<canvas id="scoreChart" style="height:200px; width:100%; display :none;"></canvas>
+	<!-- 점수 차트 -->
+	<div class = "box" style ="display :flex;">
+		<div style ="width :75%">
+			<h4>학생 점수</h4>
+			<div style="width:100%; ">
+				<canvas id="scoreChart" style="height:200px; width:100%; display :none;"></canvas>
+			</div>
+		</div>
+		
+		<!-- 응시 비율 차트 -->
+		<div style ="width :25%">
+			<h4>응시 비율</h4>
+			<div style="width:100%;">
+				<canvas id="finishRatioChart" style="height:200px; width:100%; display :none;"></canvas>
+			</div>
 		</div>
 	</div>
-	
-	<!-- 응시 비율 차트 -->
-	<div style ="width :25%">
-		<h4>응시 비율</h4>
-		<div style="width:100%;">
-			<canvas id="finishRatioChart" style="height:200px; width:100%; display :none;"></canvas>
-		</div>
+
+	<!-- 전체 표 -->
+	<div class="box">
+		<h4>성적표</h4>
+		<div id="tableDiv" style ="display :none;"></div>
 	</div>
-</div>
-
-<!-- 전체 표 -->
-<div class="box">
-	<h4>성적표</h4>
-	<div id="tableDiv" style ="display :none;"></div>
-</div>
 
 
-<!-- 학생 단원평가 결과 -->
-<div class="box">
-	<h4>결과 정보</h4>
-	<div class="product-status mg-b-15">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="product-status-wrap" style="position: relative;">
-					<div class="asset-inner resDet">
-						<table>
-							<thead>
-								<tr>
-									<th>학급 번호</th>
-									<th style ="width:40%">학생명</th>
-									<th>응시 일시</th>
-									<th>성적</th>
-									<th style="text-align: center;">상세</th>
-									<sec:authorize access="hasRole('A01002')">
-										<th style="text-align: center">삭제</th>
-										<th style="text-align: center">경고 문자</th>
-									</sec:authorize>
-								</tr>
-							</thead>
-							<tbody id="listTbody">
-								<tr>
-									<td id = "ueResDefaultTd" colspan="100%" style="text-align: center;">등록된 단원평가가
-										없습니다..</td>
-								</tr>
-							</tbody>
-						</table>
+	<!-- 학생 단원평가 결과 -->
+	<div class="box">
+		<h4>결과 정보</h4>
+		<div class="product-status mg-b-15">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="product-status-wrap" style="position: relative;">
+						<div class="asset-inner resDet">
+							<table>
+								<thead>
+									<tr>
+										<th>학급 번호</th>
+										<th style ="width:40%">학생명</th>
+										<th>응시 일시</th>
+										<th>성적</th>
+										<th style="text-align: center;">상세</th>
+										<sec:authorize access="hasRole('A01002')">
+											<th style="text-align: center">삭제</th>
+											<th style="text-align: center">경고 문자</th>
+										</sec:authorize>
+									</tr>
+								</thead>
+								<tbody id="listTbody">
+									<tr>
+										<td id = "ueResDefaultTd" colspan="100%" style="text-align: center;">등록된 단원평가가 없습니다..</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
-<div class="">
-	<div class="product-status mg-b-30">
-		<div class="container-fluid">
-			<div class="row" style = "text-align: center">
-				<button class="d-btn-black pull-right"
-					onclick="location.href='/unitTest/list'">목록으로 돌아가기</button>
+	<div class="">
+		<div class="product-status mg-b-30">
+			<div class="container-fluid">
+				<div class="row" style = "text-align: center">
+					<button class="d-btn-black pull-right"
+						onclick="location.href='/unitTest/list'">목록으로 돌아가기</button>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
-
 </div>

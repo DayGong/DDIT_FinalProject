@@ -35,14 +35,12 @@
 var unitEvlCode = ""; // 단원평가 코드
 var cnt = 0; // 문항 수 
 window.onload = function(){
-	
 	let quesDiv = document.querySelector("#quesDiv"); // 복사할 원본
 	let addDiv = document.querySelector("#addDiv");    // 붙여넣기할 위치
 	init();
 }
 
 const init = function(){
-	
 	$.ajax({
 		url :"/unitTest/getUnitTestDetail",
 	    type:"post",
@@ -59,12 +57,9 @@ const init = function(){
 				return;
 			}
 			
-			console.log("res",res);
 			unitEvlCode = res.unitEvlCode; // 단원평가 코드 저장
 			
-			/*
-			단원평가 기본 정보
-			*/
+			/* 단원평가 기본 정보 */
 			let startDate = dateToMinFormat(res.unitEvlBeginDt);
 			startDate     = startDate.split(" ");
 			let startYmd  = startDate[0];
@@ -81,9 +76,7 @@ const init = function(){
 			let startTm   = cjh.selOne("#startTm").value = startHm;
 			let endTm     = cjh.selOne("#endTm").value   = endHm;
 			
-			/*
-			답안
-			*/
+			/* 답안 */
 			res.quesVOList.forEach(function(item, idx){
 				let clone = null;
 				let cloneId = null;				
@@ -104,7 +97,6 @@ const init = function(){
 					addDiv.append(clone);
 				}
 				
-				
 				// 요소 찾기
 				let quesNo     = cjh.selOne("#"+cloneId+" .no")          ;
 				let quesQues   = cjh.selOne("#"+cloneId+" .ques")        ;
@@ -118,38 +110,19 @@ const init = function(){
 				cnsrLabels     = cjh.selOne("#"+cloneId+" .cnsrLabel")   ;
 				explnaLabels   = cjh.selOne("#"+cloneId+" .explnaLabel") ;
 				
-// 				console.log("quesNo",quesNo);
-// 				console.log("quesQues",quesQues);
-				console.log("quesCnsr",quesCnsr);
-// 				console.log("quesAllot",quesAllot);
-// 				console.log("quesExplna",quesExplna);
-// 				console.log("noLabels",noLabels);
-// 				console.log("quesLabels",quesLabels);
-// 				console.log("allotLabels",allotLabels);
-// 				console.log("cnsrLabels",cnsrLabels);
-// 				console.log("explnaLabels",explnaLabels);
-				
 				// id, name, value 변경
 				quesNo.innerHTML = idx+1+"번 문제";
 				quesQues.id      = "quesQues"  +cnt;
 				quesQues.name    = "quesQues"  +cnt;
 				quesQues.innerHTML = item.quesQues;
 				for(let i =0 ; i<quesCnsr.length; ++i){
-// 					quesCnsr[i].id      = "quesCnsr"  +cloneId;
 					quesCnsr[i].name    = "quesCnsr"  +cnt;
-					console.log("quesCnsr["+i+"].name:"+quesCnsr[i].name);
-					console.log("quesCnsr["+i+"].value:"+quesCnsr[i].value);
-					console.log("item.quesCnsr:"+item.quesCnsr);
 					if(quesCnsr[i].value == item.quesCnsr){
 						quesCnsr[i].checked = true;
 					}
 				}
 				
 				let temp = cjh.selAll("#"+cloneId+" .cnsr");
-				console.log("temp : ",temp);
-				for (let i = 0; i < temp.length; ++i){
-					console.log("test snsr selected:",temp[i].checked);
-				}
 				
 				quesAllot.id     = "quesAllot" +cnt;
 				quesAllot.name   = "quesAllot" +cnt;
@@ -284,20 +257,16 @@ const completeModify = function(){
 	
 	// 문항
 	$(".ques").each(function(idx,ques){
-		console.log("quesQues"+idx+":",$(this).val());
 		formData.append("quesVOList["+idx+"].quesNo", idx+1);
 		formData.append("quesVOList["+idx+"].quesQues", $(this).val());
 	});
 	$(".allot").each(function(idx,explna){
-		console.log("quesAllot"+idx+":",$(this).val());
 		formData.append("quesVOList["+idx+"].quesAllot", $(this).val());
 	});
 	$(".cnsr:checked").each(function(idx,cnsr){
-		console.log("quesCnsr"+idx+":",$(this).val());
 		formData.append("quesVOList["+idx+"].quesCnsr", $(this).val());
 	});
 	$(".explna").each(function(idx,explna){
-		console.log("quesExplna"+idx+":",$(this).val());
 		formData.append("quesVOList["+idx+"].quesExplna", $(this).val());
 	});
 	
@@ -330,7 +299,6 @@ const completeModify = function(){
             }
         },
         error:function(xhr){
-            console.log(xhr.status);
         }
     })
 }
@@ -351,9 +319,7 @@ const backToList = function(){
 	<sec:csrfInput />
 </form>
 
-
 <div class = "unitTestModify">
-
 	<h3><img src ="/resources/images/classRoom/unitTest01.png">단원평가 수정<img src ="/resources/images/classRoom/unitTest01.png"></h3>
 	
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -367,8 +333,7 @@ const backToList = function(){
 									<div class="form-group-inner">
 										<div class="row">
 											<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-												<label class="login2 pull-right pull-right-pro" for="title">단원평가
-													제목</label>
+												<label class="login2 pull-right pull-right-pro" for="title">단원평가 제목</label>
 											</div>
 											<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 												<input type="text" class="form-control" id="title">
@@ -378,8 +343,7 @@ const backToList = function(){
 									<div class="form-group-inner">
 										<div class="row">
 											<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-												<label class="login2 pull-right pull-right-pro" for="startDt">시작
-													일자</label>
+												<label class="login2 pull-right pull-right-pro" for="startDt">시작 일자</label>
 											</div>
 											<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 												<input type="date" class="form-control" id="startDt">
@@ -390,8 +354,7 @@ const backToList = function(){
 									<div class="form-group-inner">
 										<div class="row">
 											<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-												<label class="login2 pull-right pull-right-pro" for="startTm">시작
-													시간</label>
+												<label class="login2 pull-right pull-right-pro" for="startTm">시작 시간</label>
 											</div>
 											<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 												<input type="time" class="form-control" id="startTm">
@@ -402,8 +365,7 @@ const backToList = function(){
 									<div class="form-group-inner">
 										<div class="row">
 											<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-												<label class="login2 pull-right pull-right-pro" for="endDt">종료
-													일자</label>
+												<label class="login2 pull-right pull-right-pro" for="endDt">종료 일자</label>
 											</div>
 											<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 												<input type="date" class="form-control" id="endDt">
@@ -414,8 +376,7 @@ const backToList = function(){
 									<div class="form-group-inner">
 										<div class="row">
 											<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-												<label class="login2 pull-right pull-right-pro" for="endTm">종료
-													시간</label>
+												<label class="login2 pull-right pull-right-pro" for="endTm">종료 시간</label>
 											</div>
 											<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 												<input type="time" class="form-control" id="endTm">
@@ -429,8 +390,7 @@ const backToList = function(){
 										<div class="form-group-inner">
 											<div class="row">
 												<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-													<label class="login2 pull-right pull-right-pro noLabel"><span class ="no">1번
-														문제</span></label>
+													<label class="login2 pull-right pull-right-pro noLabel"><span class ="no">1번 문제</span></label>
 												</div>
 												<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12"></div>
 											</div>
@@ -440,12 +400,10 @@ const backToList = function(){
 										<div class="form-group-inner">
 											<div class="row">
 												<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-													<label class="login2 pull-right pull-right-pro quesLabel"
-														for="quesQues1">지문</label>
+													<label class="login2 pull-right pull-right-pro quesLabel" for="quesQues1">지문</label>
 												</div>
 												<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-													<textarea rows="2" class="form-control ques"
-														name="quesQues1" id="quesQues1"></textarea>
+													<textarea rows="2" class="form-control ques" name="quesQues1" id="quesQues1"></textarea>
 												</div>
 											</div>
 										</div>
@@ -454,12 +412,10 @@ const backToList = function(){
 										<div class="form-group-inner">
 											<div class="row">
 												<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-													<label class="login2 pull-right pull-right-pro allotLabel"
-														for="quesAllot1">배점</label>
+													<label class="login2 pull-right pull-right-pro allotLabel" for="quesAllot1">배점</label>
 												</div>
 												<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-													<input type="number" class="form-control allot"
-														name="quesAllot1" id="quesAllot1">
+													<input type="number" class="form-control allot" name="quesAllot1" id="quesAllot1">
 												</div>
 											</div>
 										</div>
@@ -472,9 +428,8 @@ const backToList = function(){
 												</div>
 												<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 													<div class="bt-df-checkbox">
-														<input class="cnsr" checked type="radio" value="O" id="quesCnsr1"
-															name="cnsr1">O <input class="cnsr" type="radio"
-															value="X" id="quesCnsr1" name="cnsr1">X
+														<input class="cnsr" checked type="radio" value="O" id="quesCnsr1" name="cnsr1">O 
+														<input class="cnsr" type="radio" value="X" id="quesCnsr1" name="cnsr1">X
 													</div>
 												</div>
 											</div>
@@ -484,12 +439,10 @@ const backToList = function(){
 										<div class="form-group-inner">
 											<div class="row">
 												<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-													<label class="login2 pull-right pull-right-pro explnaLabel"
-														for="quesExplna1">해설</label>
+													<label class="login2 pull-right pull-right-pro explnaLabel" for="quesExplna1">해설</label>
 												</div>
 												<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-													<textarea rows="4" class="form-control explna"
-														name="quesExplna1" id="quesExplna1"></textarea>
+													<textarea rows="4" class="form-control explna" name="quesExplna1" id="quesExplna1"></textarea>
 												</div>
 											</div>
 										</div>
@@ -504,11 +457,8 @@ const backToList = function(){
 												<label class="login2 pull-right pull-right-pro" for=""></label>
 											</div>
 											<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-												<button
-													class="btn btn-custon-four btn-primary waves-effect waves-light"
-													type="button" onclick="addQues()">+</button>
-												<button class="btn btn-custon-four btn-danger waves-effect"
-													type="button" onclick="delQues()">-</button>
+												<button class="btn btn-custon-four btn-primary waves-effect waves-light" type="button" onclick="addQues()">+</button>
+												<button class="btn btn-custon-four btn-danger waves-effect" type="button" onclick="delQues()">-</button>
 											</div>
 										</div>
 									</div>
@@ -519,10 +469,8 @@ const backToList = function(){
 											<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
 												<label class="login2 pull-right pull-right-pro" for=""></label>
 											</div>
-											<button class="btn btn-white " type="button"
-												onclick="backToList()">목록으로 돌아가기</button>
-											<button class="btn btn-primary waves-light " type="button"
-												onclick="completeModify()">수정 완료</button>
+											<button class="btn btn-white " type="button" onclick="backToList()">목록으로 돌아가기</button>
+											<button class="btn btn-primary waves-light " type="button" onclick="completeModify()">수정 완료</button>
 										</div>
 									</div>
 								</form>
@@ -533,5 +481,4 @@ const backToList = function(){
 			</div>
 		</div>
 	</div>
-
 </div>

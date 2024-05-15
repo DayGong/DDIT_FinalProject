@@ -4,7 +4,6 @@
 <script type="text/javascript" src="/resources/js/commonFunction.js"></script>
 <script type="text/javascript" src="/resources/js/cjh.js"></script> 
 <link rel="stylesheet" href="/resources/css/mainPage.css">
-
 <style>
 
 .createUnitTest {
@@ -29,7 +28,6 @@
 .createUnitTest > h3 > img{
 	width:50px;
 }
-
 
 textarea {
 	resize: none;
@@ -156,16 +154,12 @@ hr {
     
     // 단원 평가 등록
     const createUnitEvl = function(){
-    	
     	let formData = new FormData();
-    	
     	let title = document.querySelector("#title").value;
     	let startDt = document.querySelector("#startDt").value;
     	let endDt = document.querySelector("#endDt").value;
     	let startTm = document.querySelector("#startTm").value;
     	let endTm = document.querySelector("#endTm").value;
-    	
-    	console.log("title : " + title + ", startDt : " +  startDt + ", endDt : " + endDt + ", startTm : " + startTm + ", endTm : " + endTm);
     	
     	// 단원 평가
     	formData.append("unitEvlNm",title);
@@ -173,20 +167,16 @@ hr {
     	formData.append("unitEvlEndDt",endDt + " " + endTm);	//2024-03-21 18:31
     	// 문항
     	$(".ques").each(function(idx,ques){
-    		console.log("quesQues"+idx+":",$(this).val());
 			formData.append("quesVOList["+idx+"].quesNo", idx+1);
 			formData.append("quesVOList["+idx+"].quesQues", $(this).val());
 		});
     	$(".allot").each(function(idx,explna){
-    		console.log("quesAllot"+idx+":",$(this).val());
 			formData.append("quesVOList["+idx+"].quesAllot", $(this).val());
 		});
     	$(".cnsr:checked").each(function(idx,cnsr){
-    		console.log("quesCnsr"+idx+":",$(this).val());
 			formData.append("quesVOList["+idx+"].quesCnsr", $(this).val());
 		});
     	$(".explna").each(function(idx,explna){
-    		console.log("quesExplna"+idx+":",$(this).val());
 			formData.append("quesVOList["+idx+"].quesExplna", $(this).val());
 		});
     	
@@ -212,12 +202,11 @@ hr {
                 }
             },
             error:function(xhr){
-                console.log(xhr.status);
             }
         })
     }
     
-	 // 시험 생성 취소
+	// 시험 생성 취소
     const cancelCreate = function(){
     	cjh.swConfirm("취소","생성을 취소하고 목록으로 돌아가시겠습니까?","warning").then(function(res){
     		if(res.isConfirmed){
@@ -271,7 +260,6 @@ hr {
 
 <div class ="createUnitTest">
 	<h3><img src ="/resources/images/classRoom/unitTest01.png">단원평가 생성<img src ="/resources/images/classRoom/unitTest01.png"></h3>
-
 	<div class = "box">
 		<div class="sparkline12-list">
 			<div class="sparkline12-graph">
@@ -283,8 +271,7 @@ hr {
 									<div class="form-group-inner">
 										<div class="row">
 											<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-												<label class="login2 pull-right pull-right-pro" for="title">단원평가
-													제목</label>
+												<label class="login2 pull-right pull-right-pro" for="title">단원평가 제목</label>
 											</div>
 											<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 												<input type="text" class="form-control" id="title">
@@ -294,8 +281,7 @@ hr {
 									<div class="form-group-inner">
 										<div class="row">
 											<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-												<label class="login2 pull-right pull-right-pro"
-													for="startDt">시작 일자</label>
+												<label class="login2 pull-right pull-right-pro" for="startDt">시작 일자</label>
 											</div>
 											<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 												<input type="date" class="form-control" id="startDt">
@@ -306,8 +292,7 @@ hr {
 									<div class="form-group-inner">
 										<div class="row">
 											<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-												<label class="login2 pull-right pull-right-pro"
-													for="startTm">시작 시간</label>
+												<label class="login2 pull-right pull-right-pro" for="startTm">시작 시간</label>
 											</div>
 											<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 												<input type="time" class="form-control" id="startTm">
@@ -318,8 +303,7 @@ hr {
 									<div class="form-group-inner">
 										<div class="row">
 											<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-												<label class="login2 pull-right pull-right-pro" for="endDt">종료
-													일자</label>
+												<label class="login2 pull-right pull-right-pro" for="endDt">종료 일자</label>
 											</div>
 											<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 												<input type="date" class="form-control" id="endDt">
@@ -330,8 +314,7 @@ hr {
 									<div class="form-group-inner">
 										<div class="row">
 											<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-												<label class="login2 pull-right pull-right-pro" for="endTm">종료
-													시간</label>
+												<label class="login2 pull-right pull-right-pro" for="endTm">종료 시간</label>
 											</div>
 											<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 												<input type="time" class="form-control" id="endTm">
@@ -345,8 +328,7 @@ hr {
 										<div class="form-group-inner">
 											<div class="row">
 												<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-													<label class="login2 pull-right pull-right-pro">1번
-														문제</label>
+													<label class="login2 pull-right pull-right-pro">1번 문제</label>
 												</div>
 												<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12"></div>
 											</div>
@@ -356,12 +338,10 @@ hr {
 										<div class="form-group-inner">
 											<div class="row">
 												<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-													<label class="login2 pull-right pull-right-pro"
-														for="quesQues1">지문</label>
+													<label class="login2 pull-right pull-right-pro" for="quesQues1">지문</label>
 												</div>
 												<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-													<textarea rows="2" class="form-control ques"
-														name="quesQues1" id="quesQues1"></textarea>
+													<textarea rows="2" class="form-control ques" name="quesQues1" id="quesQues1"></textarea>
 												</div>
 											</div>
 										</div>
@@ -370,12 +350,10 @@ hr {
 										<div class="form-group-inner">
 											<div class="row">
 												<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-													<label class="login2 pull-right pull-right-pro"
-														for="quesAllot1">배점</label>
+													<label class="login2 pull-right pull-right-pro" for="quesAllot1">배점</label>
 												</div>
 												<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-													<input type="number" class="form-control allot"
-														name="quesAllot1" id="quesAllot1">
+													<input type="number" class="form-control allot" name="quesAllot1" id="quesAllot1">
 												</div>
 											</div>
 										</div>
@@ -388,9 +366,7 @@ hr {
 												</div>
 												<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 													<div class="bt-df-checkbox">
-														<input class="cnsr" checked type="radio" value="O" id=""
-															name="quesCnsr1">O <input class="cnsr" type="radio"
-															value="X" id="" name="quesCnsr1">X
+														<input class="cnsr" checked type="radio" value="O" id="" name="quesCnsr1">O <input class="cnsr" type="radio" value="X" id="" name="quesCnsr1">X
 													</div>
 												</div>
 											</div>
@@ -400,12 +376,10 @@ hr {
 										<div class="form-group-inner">
 											<div class="row">
 												<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-													<label class="login2 pull-right pull-right-pro"
-														for="quesExplna1">해설</label>
+													<label class="login2 pull-right pull-right-pro" for="quesExplna1">해설</label>
 												</div>
 												<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-													<textarea rows="4" class="form-control explna"
-														name="quesExplna1" id="quesExplna1"></textarea>
+													<textarea rows="4" class="form-control explna" name="quesExplna1" id="quesExplna1"></textarea>
 												</div>
 											</div>
 										</div>
@@ -420,11 +394,8 @@ hr {
 												<label class="login2 pull-right pull-right-pro" for=""></label>
 											</div>
 											<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" style="display:flex; justify-content: space-between;">
-												<button
-													class="d-btn-blue add-btn"
-													type="button" onclick="addQues()">+</button>
-												<button class="d-btn-red add-btn"
-													type="button" onclick="delQues()">-</button>
+												<button class="d-btn-blue add-btn" type="button" onclick="addQues()">+</button>
+												<button class="d-btn-red add-btn" type="button" onclick="delQues()">-</button>
 											</div>
 										</div>
 									</div>
@@ -435,12 +406,9 @@ hr {
 												<label class="login2 pull-right pull-right-pro" for=""></label>
 											</div>
 											<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" style ="display:flex; justify-content: flex-end;">
-												<button class="d-btn-gray" type="button" style ="margin-right: 10px;"
-													onclick="autoInput()">자동 입력</button>
-												<button class="d-btn-gray" type="button" style ="margin-right: 10px;"
-													onclick="cancelCreate()">목록으로 돌아가기</button>
-												<button class="d-btn-blue" type="button"
-													onclick="createUnitEvl()">생성 완료</button>
+												<button class="d-btn-gray" type="button" style ="margin-right: 10px;" onclick="autoInput()">자동 입력</button>
+												<button class="d-btn-gray" type="button" style ="margin-right: 10px;" onclick="cancelCreate()">목록으로 돌아가기</button>
+												<button class="d-btn-blue" type="button" onclick="createUnitEvl()">생성 완료</button>
 											</div>
 										</div>
 									</div>

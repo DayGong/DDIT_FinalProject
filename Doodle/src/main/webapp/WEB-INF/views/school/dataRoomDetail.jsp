@@ -63,7 +63,6 @@
 	display: block;
 	margin-bottom:5px;
 }
-
 .uploadList ul li.fileList{
 	cursor: pointer;
 }
@@ -108,7 +107,6 @@
 	font-weight:600;
 }
 
-
 .dataRoomInfo{
 	margin-top: 20px;
 	padding-left: 10px;
@@ -119,11 +117,9 @@
 </style>
 <script>
 	var schulCode = "${schulCode}";
- $(function(){
-	//console.log("schulCode",schulCode);
-
-	/* 파일 개별다운로드 시작 */
-	$('.fileList').on("click",function(){
+ 	$(function(){
+		/* 파일 개별다운로드 시작 */
+		$('.fileList').on("click",function(){
 			var atchFileCode  = $(this).data("atchFileCode");
 			var atchFileSn  = $(this).data("atchFileSn");
 			var atchFileNm  = $(this).data("atchFileNm");
@@ -134,86 +130,75 @@
 		});
 		/* 파일 개별다운로드 끝 */
 	
-	//수정버튼
-	$("#updateBtn").on("click",function(){
-		Swal.fire({
-			icon : "warning",
-			title: "수정하시겠습니까?",
-					
-			showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
-		    confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
-		    cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
-		    confirmButtonText: '확인', // confirm 버튼 텍스트 지정
-		    cancelButtonText: '취소', // cancel 버튼 텍스트 지정
-		}).then(result => {
-		    if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
-		    	$("#atchFileCode3").val('${nttVO.nttAtchFileCode}');
-				$("#nttCode2").val('${nttVO.nttCode}');
-				$("#nttNm2").val('${nttVO.nttNm}');
+		//수정버튼
+		$("#updateBtn").on("click",function(){
+			Swal.fire({
+				icon : "warning",
+				title: "수정하시겠습니까?",
 
-				$("#dataUpdateFrm").submit();
-		    } 
-		});
-		
-	});
-	
-	
-	//삭제
-	$("#deleteBtn").on("click",function(){
-		Swal.fire({
-			icon : "warning",
-			title: "삭제하시겠습니까?",
-					
-			showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
-		    confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
-		    cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
-		    confirmButtonText: '확인', // confirm 버튼 텍스트 지정
-		    cancelButtonText: '취소', // cancel 버튼 텍스트 지정
-		}).then(result => {
-		    if (result.isConfirmed) {
-		//삭제시작----------------------------------------
-			let nttAtchFileCode = "${nttVO.nttAtchFileCode}";
-			let nttCode = "${nttVO.nttCode}";
-			
-			
-			let data = {
-					"schulCode":schulCode,
-					"nttCode":nttCode,
-					"nttAtchFileCode":nttAtchFileCode//첨부파일도 같이 삭제되기 위함
-			};
-			
-			//console.log("data : ", data);
-			
-			$.ajax({
-				url:"/school/dataRoomDeleteAjax",
-				contentType:"application/json;charset=utf-8",
-				data:JSON.stringify(data),
-				type:"post",
-				dataType:"text",
-				beforeSend:function(xhr){
-					xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-				},
-				success:function(result){
-					//console.log("result:",result);
-					location.href = "/school/dataRoom";
+				showCancelButton: true, 		// cancel버튼 보이기. 기본은 원래 없음
+				confirmButtonColor: '#3085d6', 	// confrim 버튼 색깔 지정
+				cancelButtonColor: '#d33', 		// cancel 버튼 색깔 지정
+				confirmButtonText: '확인', 		// confirm 버튼 텍스트 지정
+				cancelButtonText: '취소', 		// cancel 버튼 텍스트 지정
+			}).then(result => {
+				if (result.isConfirmed) { 		// 만약 모달창에서 confirm 버튼을 눌렀다면
+					$("#atchFileCode3").val('${nttVO.nttAtchFileCode}');
+					$("#nttCode2").val('${nttVO.nttCode}');
+					$("#nttNm2").val('${nttVO.nttNm}');
+
+					$("#dataUpdateFrm").submit();
 				}
 			});
-		//삭제끝----------------------------------------
-		    } 
 		});
-	});
 	
-	
-	//목록버튼
-	$("#listBtn").on("click",function(){
-		//console.log("목록이다옹");
-		location.href = "/school/dataRoom"; //게시글 목록으로 가기
-	});
-}); 
+		//삭제
+		$("#deleteBtn").on("click",function(){
+			Swal.fire({
+				icon : "warning",
+				title: "삭제하시겠습니까?",
+				showCancelButton: true, 		// cancel버튼 보이기. 기본은 원래 없음
+				confirmButtonColor: '#3085d6', 	// confrim 버튼 색깔 지정
+				cancelButtonColor: '#d33', 		// cancel 버튼 색깔 지정
+				confirmButtonText: '확인', 		// confirm 버튼 텍스트 지정
+				cancelButtonText: '취소', 		// cancel 버튼 텍스트 지정
+			}).then(result => {
+				if (result.isConfirmed) {
+					//삭제시작----------------------------------------
+					let nttAtchFileCode = "${nttVO.nttAtchFileCode}";
+					let nttCode = "${nttVO.nttCode}";
+					
+					let data = {
+							"schulCode":schulCode,
+							"nttCode":nttCode,
+							"nttAtchFileCode":nttAtchFileCode//첨부파일도 같이 삭제되기 위함
+					};
+					
+					$.ajax({
+						url:"/school/dataRoomDeleteAjax",
+						contentType:"application/json;charset=utf-8",
+						data:JSON.stringify(data),
+						type:"post",
+						dataType:"text",
+						beforeSend:function(xhr){
+							xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+						},
+						success:function(result){
+							location.href = "/school/dataRoom";
+						}
+					});
+					//삭제끝----------------------------------------
+				} 
+			});
+		});
+		
+		//목록버튼
+		$("#listBtn").on("click",function(){
+			location.href = "/school/dataRoom"; //게시글 목록으로 가기
+		});
+	}); 
 </script>
 
-
-<!------------------------------------------------------------------------------->
 <div id="dataRoomContainer">
 	<!-- 데이터 전달용 form -->
 	<form method="post" action="/freeBoard/download" id="dataUploadFrm">
@@ -221,7 +206,6 @@
 		<input type="hidden" value="" name="atchFileSn" id="atchFileSn">
 		<sec:csrfInput />
 	</form>
-	<!-- 데이터 전달용 form -->
 	<form method="post" action="/school/dataRoomUpdate" id="dataUpdateFrm">
 		<input type="hidden" value="" name="atchFileCode" id="atchFileCode3">
 		<input type="hidden" value="" name="nttCode" id="nttCode2">
@@ -233,7 +217,7 @@
 	<!-- 게시판 타이틀 시작 -->
 	<h3>
 		<img src="/resources/images/school/dataRoom1.png" style="width:50px; display:inline-block; vertical-align:middel;">
-				자료실
+			자료실
 		<img src="/resources/images/school/dataRoom2.png" style="width:50px; display:inline-block; vertical-align:middel;">		
 	</h3>
 	<!-- 게시판 타이틀 끝 -->
@@ -246,12 +230,12 @@
 		<div class="dataRoomInfo">
 			<span style="font-size: 14px;">
 				<img src="/resources/images/classRoom/freeBrd/freeDateIcon.png" alt="게시글 등록일자 아이콘" style="width: 12px;margin-top: 4px;vertical-align: top;display: inline-block;">
-					<small style="font-weight: 600;color: #222;font-size: 13px;">등록일자 : </small>
+				<small style="font-weight: 600;color: #222;font-size: 13px;">등록일자 : </small>
 				<span style="color:#666; font-size: 13px;"><fmt:formatDate value="${nttVO.nttWritngDt}" pattern="yyyy-MM-dd" /></span>
 			</span>
 			<span style="margin-left:15px; font-size: 13px;">
 				<img src="/resources/images/classRoom/freeBrd/freePersonIcon.png" alt="게시글 작성자 아이디 아이콘" style="width: 12px;margin-top: 5px;vertical-align: top;display: inline-block;">
-					<small style="font-weight: 600;color: #222;font-size: 13px; line-height: 1.75;">작성자 이름 : </small>
+				<small style="font-weight: 600;color: #222;font-size: 13px; line-height: 1.75;">작성자 이름 : </small>
 				<span style="color:#666; font-size: 13px;">${nttVO.mberNm}</span>
 			</span>
 		</div>
@@ -265,11 +249,10 @@
 				<c:choose>
 					<c:when test="${fn:length(atchFileVOList) > 0}">
 						<c:forEach items="${atchFileVOList}" var="atchVO" varStatus="status">
-								<li class="fileList" data-atch-file-code ="${atchVO.atchFileCode}" 
-								data-atch-file-sn="${atchVO.atchFileSn}" data-atch-file-nm="${atchVO.atchFileNm}">
-									<img alt="${atchVO.atchFileNm}파일 다운로드" src="/resources/images/classRoom/freeBrd/free-download-solid.png" style="width:15px; height: 15px; margin-bottom:3px;"> 
-									${atchVO.atchFileNm}
-								</li>
+							<li class="fileList" data-atch-file-code ="${atchVO.atchFileCode}"  data-atch-file-sn="${atchVO.atchFileSn}" data-atch-file-nm="${atchVO.atchFileNm}">
+								<img alt="${atchVO.atchFileNm}파일 다운로드" src="/resources/images/classRoom/freeBrd/free-download-solid.png" style="width:15px; height: 15px; margin-bottom:3px;"> 
+								${atchVO.atchFileNm}
+							</li>
 						</c:forEach>
 					</c:when>
 					<c:otherwise>
@@ -300,5 +283,4 @@
 		</div>
 	</div>
 	<!-- 게시판 내용 제목/내용 끝 -->
-		
 </div>

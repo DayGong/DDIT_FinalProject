@@ -1,4 +1,4 @@
-<%@page import="kr.or.ddit.vo.MemberVO"%>
+<%@ page import="kr.or.ddit.vo.MemberVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -13,7 +13,6 @@
 }
 
 .school{
-/* 	border-right: 2px solid #eee; */
     margin-right: 10px;
 }
 
@@ -133,14 +132,8 @@
 $(function(){
 	// 업로드한 사진 반영하기
 	$("#inputImage").on("input", function() {
-		// 업로드한 파일 가져오기
-		var file = $(this)[0].files[0]
-		console.log("uploadFile: " + file);
-	     
-		// 파일 이름 추출하기
-		var fileName = file.name;
-		console.log("fileName: " + fileName);
-	
+		var file = $(this)[0].files[0];	// 업로드한 파일 가져오기
+		var fileName = file.name;		   // 파일 이름 추출하기
 		var imgSrc = "/resources/images/member/profile/" + fileName;
 	
 		$("#profileImg").attr("src", imgSrc);
@@ -155,18 +148,17 @@ $(function(){
 		var mberAdres = $("#mberAdres").val();
 		
 		// 업로드한 사진이 있으면 가져오기
-        var file = $("#inputImage")[0].files[0];
-        console.log("file", file);
+      var file = $("#inputImage")[0].files[0];
         
-        // 수정된 정보가 없을 시 alert
-        if(mberNm == "${memVO.mberNm}" &&
-           moblphonNo == "${memVO.moblphonNo}" &&
-           mberEmail == "${memVO.mberEmail}" &&
-           mberAdres == "${memVO.mberAdres}" &&
-           file == null){
-        	Swal.fire('수정된 정보가 없습니다.', '', 'info');
-        	return;
-        }
+      // 수정된 정보가 없을 시 alert
+      if(mberNm == "${memVO.mberNm}" &&
+         moblphonNo == "${memVO.moblphonNo}" &&
+         mberEmail == "${memVO.mberEmail}" &&
+         mberAdres == "${memVO.mberAdres}" &&
+         file == null){
+         Swal.fire('수정된 정보가 없습니다.', '', 'info');
+         return;
+      }
 		
 		Swal.fire({
 			title: '해당 내용으로 정보를 수정하시겠습니까?',
@@ -176,9 +168,8 @@ $(function(){
 			confirmButtonText: '수정',       // confirm 버튼 텍스트 지정
 			cancelButtonText: '취소',        // cancel 버튼 텍스트 지정
 		}).then(result => {
-	        if(result.isConfirmed){
+         if(result.isConfirmed){
 	            var formData = new FormData();
-	            
 	            formData.append("mberId", mberId);
 	            formData.append("mberNm", mberNm);
 	            formData.append("moblphonNo", moblphonNo);
@@ -197,64 +188,60 @@ $(function(){
 					data:formData,
 					dataType:"json",
 					beforeSend:function(xhr){
-	                xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-		            },
+                  xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+               },
 					success: function(res){
 						Swal.fire('수정이 완료되었습니다.', '', 'success');
 						
 						// 새 프로필 사진이 있을 경우 적용
 						if(res.mberImage != null){
-		                    var imgSrc = "/upload/profile/" + res.mberImage;
-		                    $("#profileImg").attr("src", imgSrc);
+                     var imgSrc = "/upload/profile/" + res.mberImage;
+                     $("#profileImg").attr("src", imgSrc);
 						}
 					}
-				});
-	        }
-	    });
-    });
+            });  
+         }
+      });
+   });
     
-    // 주소 찾기
-    $("#searchAddrBtn").on("click", function(){
+   // 주소 찾기
+   $("#searchAddrBtn").on("click", function(){
 		new daum.Postcode({
 			//다음 창에서 검색이 완료되면
 			oncomplete : function(data) {
-		        $("#mberAdres").val(data.address + data.zonecode + " ");
-		        $("#mberAdres").focus();
+            $("#mberAdres").val(data.address + data.zonecode + " ");
+            $("#mberAdres").focus();
 			}
 		}).open();
 	});
     
 	// 프로필 사진 업로드 아이콘을 클릭하면 파일 업로드 버튼 클릭한 것과 같게 함
-    $("#profileUploadIcon").on("click", function(){
-    	$("#inputImage").trigger("click");
-    })
+   $("#profileUploadIcon").on("click", function(){
+      $("#inputImage").trigger("click");
+   })
     
-    // 초기화 버튼 클릭 이벤트
-    $("#resetBtn").on("click", function(){
-    	// 업로드한 사진이 있으면 가져오기
-        var file = $("#inputImage")[0].files[0];
-    	var mberImage = "${memVO.mberImage}";
-    	var imgSrc = "";
-    	
-    	if(file != null){
-    		$("#inputImage").val('');
-    		
-    		// 기존 프로필 사진이 있으면 출력
-    		if(mberImage != ""){
-	            imgSrc = "/upload/profile/" + mberImage;
-    		// 기존 프로필 사진 없으면 기본 사진 출력
-    		}else{
-    			imgSrc = "/resources/images/member/profile/user_l.png";
-    		}
-    		
-    		$("#profileImg").attr("src", imgSrc); 
-    	}
-    })
+   // 초기화 버튼 클릭 이벤트
+   $("#resetBtn").on("click", function(){
+      // 업로드한 사진이 있으면 가져오기
+      var file = $("#inputImage")[0].files[0];
+      var mberImage = "${memVO.mberImage}";
+      var imgSrc = "";
+      
+      if(file != null){
+         $("#inputImage").val('');
+         
+         // 기존 프로필 사진이 있으면 출력
+         if(mberImage != ""){
+               imgSrc = "/upload/profile/" + mberImage;
+         // 기존 프로필 사진 없으면 기본 사진 출력
+         }else{
+            imgSrc = "/resources/images/member/profile/user_l.png";
+         }
+         
+         $("#profileImg").attr("src", imgSrc); 
+      }
+   })
 });
-<%-- <p>학생 정보: ${memVO}</p> --%>
-<%-- <p>학교 정보: ${mySchulList}</p> --%>
-<%-- <p>클래스 정보: ${myClassList}</p> --%>
-<%-- <p>회원 이미지: ${memVO.mberImage}</p> --%>
 </script>
 <div id="FreeBoardContainer">
    <h4>
@@ -301,30 +288,26 @@ $(function(){
                                              </p>
                                              <p>
                                                 <span class="dataSpan">이름</span>
-                                                <input id="mberNm" name="mberNm" type="text"
-                                                   class="myDataInputBox" value="${memVO.mberNm}">
+                                                <input id="mberNm" name="mberNm" type="text" class="myDataInputBox" value="${memVO.mberNm}">
                                              </p>
                                           </div>
                                           <div class="form-group">
                                              <p>
                                                 <span class="dataSpan">핸드폰번호</span>
-                                                <input id="moblphonNo" name="moblphonNo"
-                                                   type="text" class="myDataInputBox" value="${memVO.moblphonNo}">
+                                                <input id="moblphonNo" name="moblphonNo" type="text" class="myDataInputBox" value="${memVO.moblphonNo}">
                                              </p>
                                           </div>
                                           <div class="form-group">
                                              <p>
                                                 <span class="dataSpan">이메일</span>
-                                                <input id="mberEmail" name="mberEmail" type="text"
-                                                   class="myDataInputBox" value="${memVO.mberEmail}">
+                                                <input id="mberEmail" name="mberEmail" type="text" class="myDataInputBox" value="${memVO.mberEmail}">
                                              </p>
                                           </div>
                                           <div class="form-group">
                                              <div id="addrDiv">
                                                 <span class="dataSpan">주소</span>
                                                 <p style="display: flex; justify-content:space-between;">
-                                                   <input id="mberAdres" name="mberAdres" type="text"
-                                                      class="myDataInputBox mberAdresBox" value="${memVO.mberAdres}">
+                                                   <input id="mberAdres" name="mberAdres" type="text" class="myDataInputBox mberAdresBox" value="${memVO.mberAdres}">
                                                    <input id="searchAddrBtn" type="button" value="주소 찾기" style="width: 20%; background-color: #f5f5f5; margin-left: 7px; padding-left: 9px;">
                                                 </p>
                                              </div>
@@ -365,8 +348,7 @@ $(function(){
                   </div>
                   <div class="row btn-zone">
                      <div class="col-lg-12" style="display: flex; justify-content: center;">
-                        <label for="inputImage" id="updateLabel" style="display: none;"
-                           class="btn btn-primary waves-effect waves-light">
+                        <label for="inputImage" id="updateLabel" style="display: none;" class="btn btn-primary waves-effect waves-light">
                            <input type="file" accept="image/*" name="uploadFile" id="inputImage" class="hide" />
                            	사진 업로드
                         </label>

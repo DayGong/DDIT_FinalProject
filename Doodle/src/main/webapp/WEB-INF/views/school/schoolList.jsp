@@ -86,9 +86,9 @@
 		const upPointerBtn = document.querySelector("#upPointerBtn");	// 상단 이동 버튼
 		
 		// 학교/학급클래스 탭 구분 변수
-		const schoolTab = document.querySelector("#schoolTab");			// 학교 탭
-		const classroomTab = document.querySelector("#classroomTab");	// 학급클래스(반) 탭
-		const schoolTabDiv = document.querySelector("#schoolTabDiv");	// 학교 탭 출력 div
+		const schoolTab = document.querySelector("#schoolTab");				// 학교 탭
+		const classroomTab = document.querySelector("#classroomTab");		// 학급클래스(반) 탭
+		const schoolTabDiv = document.querySelector("#schoolTabDiv");		// 학교 탭 출력 div
 		const classroomTabDiv = document.querySelector("#classroomTabDiv");	// 학급클래스(반) 탭 출력 div
 		
 		// 학교 선언 변수
@@ -214,7 +214,6 @@
 					xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 				},
 				success: function(result) {
-					console.log("result==> ", result);
 					const cTotal = result.total; 
 					if (cTotal == null || cTotal == '') {
 						classroomHtml += `<tr>

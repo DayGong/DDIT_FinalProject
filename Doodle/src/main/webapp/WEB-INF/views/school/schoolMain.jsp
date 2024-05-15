@@ -1,16 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="sec"
-	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <script type="text/javascript" src="/resources/js/jquery.min.js"></script>
-<!-- <script type="text/javascript" src="/resources/js/commonFunction.js" ></script> -->
-<script type="text/javascript"
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e03ac7f006917848896c4f551e98f356"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e03ac7f006917848896c4f551e98f356"></script>
 <link rel="stylesheet" href="/resources/css/mainPage.css">
 
 <style>
 #schoolMain {
-	/* 	font-size: 1.2rem; */
 	width: 1400px;
 	margin: auto;
 }
@@ -152,7 +148,6 @@
 }
 .con{
 	padding: 0;
-/* 	height: 100%; */
 }
 
 /*퀵메뉴 css 시작*/
@@ -229,7 +224,6 @@ ul.ul-content li.after-box .aft{
 	height: 35px;
 	background-size: cover;
 	opacity: 80%;
-
 }
 
 /*퀵메뉴 급식*/
@@ -243,7 +237,6 @@ ul.ul-content li .back-ground-obj2{
 	right: 0px;
 	transform: rotateY(180deg) rotateX(180deg);
 }
-
 
 ul.ul-content li .quick-icon-box{
 	width: 65px;
@@ -335,10 +328,6 @@ const passwordChange = function(){
 			updateBtn.addEventListener("click", function(){
 				var inputPassword = document.querySelector("#password1").value;
 				var inputPasswordChk = document.querySelector("#password2").value;
-				console.log(inputPassword);
-				console.log(inputPasswordChk);
-				console.log(mberId);
-				
 				var data = {
 					"mberId":mberId,
 					"password":inputPassword
@@ -380,18 +369,7 @@ const schoolInfoModalInit = function(){
 
 // 학교 정보 버튼
 const schoolInfoBtn = function(){
-// 	console.log("classroomInfoBtn act");
 	$("#schoolInfoModal").modal('show');
-}
-
-// 학교 수정
-const modifySchool = function(){
-	console.log("modifySchool act");
-}
-
-// 학교 삭제
-const deleteSchool = function(){
-	console.log("deleteSchool act");
 }
 
 // 급식 정보
@@ -404,13 +382,8 @@ const getMeals = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success:function(res){
-// 			console.log(" getMeals res:",res);
-			
 			let today = res[0];
 			let tomorrow = res[1];
-			
-// 			console.log("today:",today);
-// 			console.log("tomorrow:",tomorrow);
 			
 			if(today != null){
 				document.querySelector("#todayMeal").innerHTML = `<p>\${today.dietMenu}</p>`;
@@ -432,7 +405,6 @@ const getClassList = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success:function(res){
-			console.log("getClassList res:",res);
 			let isTch = false;		
 			<sec:authorize access ="hasRole('A01003')">
 			isTch = true;
@@ -477,9 +449,6 @@ const getClassList = function(){
 			$("#clsContainer").prepend(str);
 		},
 		error:function(request, status, error){
-			console.log("code: " + request.status)
-	        console.log("message: " + request.responseText)
-	        console.log("error: " + error);
 		}
 	})
 }
@@ -496,8 +465,6 @@ const getEmpList = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success:function(res){
-			console.log("employeeListAjax res:", res);
-			
 			let str = "";
 			res.content[0].schulPsitnMberVOList.forEach(function(mem){
 				str += `<tr>
@@ -518,9 +485,6 @@ const getEmpList = function(){
 			document.querySelector("#empListTb tbody").innerHTML = str;
 		},
 		error : function(request, status, error){
-			console.log("code: " + request.status)
-			console.log("message: " + request.responseText)
-			console.log("error: " + error);
 		}
 	})
 }
@@ -530,15 +494,12 @@ const getSchoolScheduleList = function(){
 	$.ajax({
 		url:"/school/scheduleListMain",
 		data:{schulCode:'${SCHOOL_INFO.schulCode}'},
-// 		contentType:"application/json; charset=utf-8",
 		method:"get",
 		dataType:"json",
 		beforeSend:function(xhr){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success:function(res){
-			console.log("getSchoolScheduleList() res:",res);
-			
 			let str ="";
 			
 			res.forEach(function(con){
@@ -588,8 +549,6 @@ const getDataRoomList = function(){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success:function(res){
-// 			console.log("getDataRoomList() res:",res);
-			
 			let str ="";
 			let schulCode = "${SCHOOL_INFO.schulCode}";
 			
@@ -633,8 +592,6 @@ const getEduInfo = function(){
         success: function(res) {
         	str ="";
         	
-//         	console.log("getEduInfo res:",res);
-        	
         	res.content.forEach(function(con){
 				str += `<tr class ="d-tr" onclick ="window.open('\${con.edcInfoNttUrl}'), '_blank'">
 						<td style ="padding-left: 30px;">\${con.edcInfoNttWritngDt}</td>
@@ -664,7 +621,6 @@ const enterClass = function(clasCode, childId){
 	document.querySelector("#mainGoToClassForm").submit();
 }
 
-
 // 지도 api
 const initMap = function(){
 	let schNm = "${SCHOOL_INFO.schulNm}";
@@ -680,8 +636,6 @@ const initMap = function(){
 		dataType:"json",
 		async:false,
 		success:function(res){
-// 			console.log("initMap res:",res);
-			
 			res.documents.forEach(function(item){
 				if(item.place_name == schNm){
 					x = item.x;
@@ -722,23 +676,6 @@ const initMap = function(){
 
 window.onload = function(){
 	var password = "${USER_INFO.password}";
-	
-// 	<sec:authorize access = "hasAnyRole('A01001', 'A01002')">
-// 	// 최초 로그인시 비밀번호 변경 요구
-// 	$.ajax({
-// 		url: "/firstLoginAt",
-// 		type: "get",
-// 		data: {password:password},
-// 		dataType: "text",
-// 		beforeSend:function(xhr){
-// 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-// 		},
-// 		success:function(res){
-// 			if(res === "true") passwordChange();
-// 		}
-// 	});
-// 	</sec:authorize>
-	
 	getMeals(); 				// 급식 정보
 	<sec:authorize access="hasAnyRole('A01001','A01003','A14002')">
 	getClassList(); 			// 가입한 학교 목록
@@ -783,7 +720,6 @@ $(function(){
 	<div class="hor-div" style="height: 350px">
 		<sec:authorize access="hasAnyRole('A01001','A01003','A14002')">
 		<div class="box" style="width: 33%; position: relative;">
-			<!-- 			<img src ="/resources/images/school/school001.png" style ="position: absolute; bottom:15px; right: 30px; z-index: 5; width:250px; height:250px; opacity:0.1;margin:auto 0px;"> -->
 			<div class="headComment">
 				<h3 style="order: 10;">가입한 반</h3>
 			</div>
@@ -806,8 +742,7 @@ $(function(){
 				</div>
 			</div>
 			<div class="con" style="padding: 0px;">
-				<div class="product-status-wrap"
-					style="position: relative; padding: 0px;">
+				<div class="product-status-wrap" style="position: relative; padding: 0px;">
 					<div class="asset-inner">
 						<table id="empListTb">
 							<thead>
@@ -832,8 +767,6 @@ $(function(){
 					<h3 style="order: 10;">급식</h3>
 				</div>
 				<div class="inner-box2" style="background-color: #e6f2ff; height: 88%;">
-						<!-- 						<a class="follow-cards" href="#" -->
-						<!-- 							id="goToTaskList">➤바로 가기</a> -->
 					<div class="ver-div" style="height: 100%;">
 						<div class="subHeadComment">오늘</div>
 						<div class="inner-box" style="height: 38%;">
@@ -911,8 +844,6 @@ $(function(){
 				<div class="headComment">
 					<h3>자료실</h3>
 				</div>
-				<!-- 				<a class="follow-cards" href="/school/dataRoom" -->
-				<!-- 					id="">➤바로 가기</a> -->
 			</div>
 			<div class="con" style="padding: 0px;">
 				<div class="product-status-wrap"
@@ -938,8 +869,6 @@ $(function(){
 				<div class="headComment">
 					<h3>교육부 소식</h3>
 				</div>
-				<!-- 				<a class="follow-cards" href="/school/eduInfo" -->
-				<!-- 					id="goToTaskList">➤바로 가기</a> -->
 			</div>
 			<div class="con" style="padding: 0px;">
 				<div class="product-status-wrap"
@@ -972,9 +901,7 @@ $(function(){
 </div>
 
 <!-- 학교 정보 modal -->
-<div id="schoolInfoModal"
-	class="modal modal-edu-general default-popup-PrimaryModal fade"
-	role="dialog">
+<div id="schoolInfoModal" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header header-color-modal bg-color-1">
@@ -986,8 +913,7 @@ $(function(){
 					</tr>
 				</table>
 				<div class="modal-close-area modal-close-df">
-					<a class="close" data-dismiss="modal" href="#"><i
-						class="fa fa-close"></i></a>
+					<a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
 				</div>
 			</div>
 			<div class="modal-body-school">
@@ -1017,15 +943,11 @@ $(function(){
 </div>
 
 <!-- 최초 로그인 시 비밀번호 변경 모달 -->
-<div id="UpdatePasswordModal"
-	class="modal modal-edu-general default-popup-PrimaryModal fade"
-	role="dialog" style="align-content: center;">
-
+<div id="UpdatePasswordModal" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog" style="align-content: center;">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-close-area modal-close-df">
-				<a class="close" data-dismiss="modal" href="#"> <i
-					class="fa fa-close"></i></a>
+				<a class="close" data-dismiss="modal" href="#"> <i class="fa fa-close"></i></a>
 			</div>
 			<div class="modal-body" style="padding: 50px 70px 25px 70px;">
 				<div>
@@ -1033,24 +955,25 @@ $(function(){
 					<span style="display: none;">*최초 1회 비밀번호 변경이 필요합니다.</span>
 				</div>
 				<br>
-				<div id="firstPwChk" class="alert alert-danger alert-mg-b"
-					role="alert" style="display: none;"></div>
+				<div id="firstPwChk" class="alert alert-danger alert-mg-b" role="alert" style="display: none;"></div>
 				<div id="UpdatePasswordContainer">
 					<ul class="InputPassword">
-						<li><span>비밀번호</span> <input type="password" id="password1"
-							class="form-control"> <small data-chk="dataChk">특수기호/영문가능</small>
+						<li>
+							<span>비밀번호</span> 
+							<input type="password" id="password1" class="form-control"> 
+							<small data-chk="dataChk">특수기호/영문가능</small>
 						</li>
 						<br>
-						<li><span>비밀번호 확인</span> <input type="password"
-							id="password2" class="form-control"> <small
-							data-chk="dataChk">동일한 비밀번호를 입력해주세요</small></li>
+						<li>
+							<span>비밀번호 확인</span> 
+							<input type="password" id="password2" class="form-control"> 
+							<small data-chk="dataChk">동일한 비밀번호를 입력해주세요</small>
+						</li>
 					</ul>
 				</div>
 			</div>
-			<div class="modal-footer"
-				style="text-align: center; margin-bottom: 20px;">
+			<div class="modal-footer" style="text-align: center; margin-bottom: 20px;">
 				<a id="UpdatePasswordBtn" href="#">확인</a>
-				<!--             <a data-dismiss="modal" href="#">취소</a> -->
 			</div>
 		</div>
 	</div>

@@ -1,12 +1,11 @@
-<%@page import="kr.or.ddit.util.etc.AuthManager"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ page import="kr.or.ddit.util.etc.AuthManager"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!doctype html>
 <html class="no-js" lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -60,14 +59,12 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
 	<!-- 두들 권한 체크 함수 -->
-	<jsp:include page="../util/secCheck.jsp" flush="false"/>
 	<jsp:include page="../util/secSession.jsp" flush="false"/>
 	<!-- 두들 CSS -->
 	<link rel="stylesheet" href="/resources/css/commonCss.css">
 	<!-- 두들 공통 함수 -->
 	<script type="text/javascript" src="/resources/js/commonFunction.js"></script>  
 	<script type="text/javascript" src="/resources/js/cjh.js"></script>  
-	
 </head>
 <style>
 	body{
@@ -75,7 +72,6 @@
 	}
 </style>
 <body>
-    <!-- Start Welcome area -->
     <div class="all-content-wrapper" style="margin: 0px; padding: 20px;">
         <!-- Body 시작 ============================================ -->
         <div class="analytics-sparkle-area" style="min-height: 849px;">
@@ -128,13 +124,10 @@
     <script src="/resources/kiaalap/js/plugins.js"></script>
     <!-- main JS ============================================ -->
     <script src="/resources/kiaalap/js/main.js"></script>
-    <!-- tawk chat JS ============================================ -->
-<!--     <script src="/resources/kiaalap/js/tawk-chat.js"></script> -->
     <script type="text/javascript">
     	$('#logoutBtn').on('click', function() {
 			$('#logoutFrm').submit();
 		});
     </script>
 </body>
-
 </html>

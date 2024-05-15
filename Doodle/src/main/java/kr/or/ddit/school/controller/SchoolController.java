@@ -49,36 +49,6 @@ public class SchoolController {
 	@Autowired
 	String uploadFolder;
 	
-	//학교 공지사항 게시판 목록
-	@GetMapping("/notice")
-	public String notice() {
-		return "school/notice";
-	}
-
-	//급식
-	@GetMapping("/meal")
-	public String meal() {
-		return "school/meal";
-	}
-	
-	//시간표
-	@GetMapping("/schedule")
-	public String schedule() {
-		return "school/schedule";
-	}
-	
-	//학생(전교생) 관리 
-	@GetMapping("/studentsManage")
-	public String studentsManage() {
-		return "school/studentsManage";
-	}
-	
-	//학급 클래스 목록
-	@GetMapping("/classList")
-	public String classList() {                                
-		return "school/classList";
-	}
-	
 	/** 학교 목록 찾기 메인 화면 */
 	@GetMapping("/schoolList")
 	public String schoolSearchMain() {

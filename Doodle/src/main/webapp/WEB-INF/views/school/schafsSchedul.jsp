@@ -23,6 +23,7 @@
 	font-weight: bold;
     color: #999;
 }
+
 /* 일정 구분 시작 */
 .scheduleSe{
 	margin-right: 20px;
@@ -40,19 +41,8 @@
 	background-color: white;
 }
 
-/* 하루짜리 일정 배경색 바꾸기 */
-.fc-event-future{
-/* 	background-color: red; */
-
-	
-}
 .fc-event-future:hover{
 	background-color: #fff;
-}
-
-/* 달력에 손가락 올리면 마우스 포인터가 손가락 모양되게 변경 */
-.fc-daygrid-day:hover {
-/* 	cursor: pointer; */
 }
 
 /* 전체 글씨 색 변경 */
@@ -66,7 +56,7 @@
 
 /* 공휴일 글씨 변경 */
 .koHolidays .fc-event-title {
-  font-weight: bold;
+	font-weight: bold;
 }
 
 /* 달력 hover css */
@@ -76,8 +66,8 @@
 
 /* 오늘 날짜 글씨 색과 bold 변경 */
 .fc-day-today a {
-  font-weight: bold;
-  color: #666 !important;
+	font-weight: bold;
+	color: #666 !important;
 }
 
 /* 오늘 날짜 배경색 파란색으로 변경 */
@@ -150,136 +140,123 @@ $(document).ready(function() {
         
         // 데이터를 가져오는 요청이 완료되었을 때 실행
         request.done(function(data) {
-            console.log("data", data);
-            
             // FullCalendar를 생성하고 설정하는 부분
             var calendarEl = document.getElementById('calendar'); // 캘린더의 DOM 요소를 가져옴
-            calendar = new FullCalendar.Calendar(
-                calendarEl, {
-	            	googleCalendarApiKey: 'AIzaSyCfJJJRMweKP_Mca-rRJDBvpdLXANPHS14', // (구글 캘린더 API) API Key
-                    height: '700px', 	// 캘린더의 높이 설정
-                    headerToolbar: { 	// 캘린더의 헤더 표시 설정
-                        left: 'prev',
-                        center: 'title',
-                        right: 'next'
-                    },
-                    initialView: 'dayGridMonth', 	// 캘린더 초기 뷰 설정
-                    navLinks: true, 				// 날짜를 선택하면 Day 캘린더에 링크
-                    editable: true, 				// 캘린더 내 일정을 편집 가능하도록 설정
-                    selectable: true, 				// 달력 일자를 드래그하여 일정을 선택 가능하도록 설정
-                    droppable: true, 				// 드래그 가능한 요소를 캘린더에 떨어뜨릴 수 있도록 설정
-//                     events:	data,					// 캘린더에 표시할 일정 데이터 설정
-                    locale: 'ko', 					// 한국어 설정
-					eventSources : 					// (구글 캘린더 API) 한국 기념일 ko.south_korea 추가
-	                	[ { googleCalendarId : 'ko.south_korea#holiday@group.v.calendar.google.com'
-	                      , className : 'koHolidays'
-	                      , textColor: '#666'			// 글씨 색 설정
-	                      , backgroundColor: '#ccc'		// 배경 색 설정
-	                      , borderColor: '#ccc'} ],		// 테두리 색 설정
-                    eventDidMount: function(info) { 	// 캘린더 이벤트가 마운트된 후 실행
-                        $(".fc-event-time").hide();
-                    }, 
-                    /* 학사 일정 등록 */ 
-                    // 캘린더에서 일정을 선택했을 때 실행되는 함수
-                    select: function(arg) {
-                    	/* 교직원 권한 시작 */
-                    	if("${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode}" == "ROLE_A14003"){
-	                    	// 등록 모달 띄우기
-	                        $("#scheduleInsertModal").modal('show');
-                    	}
-                    	
-                    	// 일정 명 입력란 초기화
-                    	$("#schdulNm").val("");
+            calendar = new FullCalendar.Calendar(calendarEl, {
+				googleCalendarApiKey: 'AIzaSyCfJJJRMweKP_Mca-rRJDBvpdLXANPHS14', // (구글 캘린더 API) API Key
+				height: '700px', 	// 캘린더의 높이 설정
+				headerToolbar: { 	// 캘린더의 헤더 표시 설정
+					left: 'prev',
+					center: 'title',
+					right: 'next'
+				},
+				initialView: 'dayGridMonth', 	// 캘린더 초기 뷰 설정
+				navLinks: true, 				// 날짜를 선택하면 Day 캘린더에 링크
+				editable: true, 				// 캘린더 내 일정을 편집 가능하도록 설정
+				selectable: true, 				// 달력 일자를 드래그하여 일정을 선택 가능하도록 설정
+				droppable: true, 				// 드래그 가능한 요소를 캘린더에 떨어뜨릴 수 있도록 설정
+				locale: 'ko', 					// 한국어 설정
+				eventSources : 					// (구글 캘린더 API) 한국 기념일 ko.south_korea 추가
+					[ { googleCalendarId : 'ko.south_korea#holiday@group.v.calendar.google.com'
+						, className : 'koHolidays'
+						, textColor: '#666'			// 글씨 색 설정
+						, backgroundColor: '#ccc'		// 배경 색 설정
+						, borderColor: '#ccc'} ],		// 테두리 색 설정
+				eventDidMount: function(info) { 	// 캘린더 이벤트가 마운트된 후 실행
+					$(".fc-event-time").hide();
+				}, 
 
-                        var schdulNm = $("#schdulNm").val();
-                		var schdulBegin = dateFormat(arg.start);
-                		var schdulEnd = dateFormat(arg.end - 1);
-                		var schafsSchdulSe = $("#schafsSchdulSe").val();
-                		
-                		$("#schdulBegin").val(schdulBegin);
-                		$("#schdulEnd").val(schdulEnd);
-                		/* 교직원 권한 끝 */
-                    },
+				/* 학사 일정 등록 */ 
+				// 캘린더에서 일정을 선택했을 때 실행되는 함수
+				select: function(arg) {
+					/* 교직원 권한 시작 */
+					if("${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode}" == "ROLE_A14003"){
+						// 등록 모달 띄우기
+						$("#scheduleInsertModal").modal('show');
+					}
+					
+					// 일정 명 입력란 초기화
+					$("#schdulNm").val("");
 
-                    /* 학사 일정 수정 */
-                    // 캘린더에서 일정을 클릭했을 때 실행되는 함수
-                    eventClick: function(info) {
-                    	console.log("info", info);
-                    	var scheduleCd = info.event.extendedProps.scheduleCd;
-                    	var scheduleSe = info.event.extendedProps.scheduleSe;
-                        
-                    	/* 교직원 권한 시작 */
-                    	// 수정 모달 띄우기
-                    	if("${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode}" == "ROLE_A14003"){
-                        	$("#scheduleUpdateModal").modal('show');
-                    	}
-                    	
-                        $("#schdulCode").val(scheduleCd);
-						$("#schdulNm-u").val(info.event._def.title);
-						$("#schdulBegin-u").val(dateFormat(info.event.start));
-                		$("#schdulEnd-u").val(dateFormat(info.event.end));
-                		
-                		$("input[name='scheduleRadio-u'][value='"+scheduleSe+"']").prop('checked', true);
-                		/* 교직원 권한 끝 */
-                    }
-                });
+					var schdulNm = $("#schdulNm").val();
+					var schdulBegin = dateFormat(arg.start);
+					var schdulEnd = dateFormat(arg.end - 1);
+					var schafsSchdulSe = $("#schafsSchdulSe").val();
+					
+					$("#schdulBegin").val(schdulBegin);
+					$("#schdulEnd").val(schdulEnd);
+					/* 교직원 권한 끝 */
+				},
+
+				/* 학사 일정 수정 */
+				// 캘린더에서 일정을 클릭했을 때 실행되는 함수
+				eventClick: function(info) {
+					var scheduleCd = info.event.extendedProps.scheduleCd;
+					var scheduleSe = info.event.extendedProps.scheduleSe;
+					
+					/* 교직원 권한 시작 */
+					// 수정 모달 띄우기
+					if("${USER_INFO.vwMemberAuthVOList[0].cmmnDetailCode}" == "ROLE_A14003"){
+						$("#scheduleUpdateModal").modal('show');
+					}
+					
+					$("#schdulCode").val(scheduleCd);
+					$("#schdulNm-u").val(info.event._def.title);
+					$("#schdulBegin-u").val(dateFormat(info.event.start));
+					$("#schdulEnd-u").val(dateFormat(info.event.end));
+					
+					$("input[name='scheduleRadio-u'][value='"+scheduleSe+"']").prop('checked', true);
+					/* 교직원 권한 끝 */
+				}
+			});
             
-            /* 학사 일정 리스트 출력 */
-            $.each(data, function(idx, scheduleList) {
-            	console.log("scheduleList", scheduleList);
+			/* 학사 일정 리스트 출력 */
+			$.each(data, function(idx, scheduleList) {
+				var backgroundColor = "";
+				var boderColor = "";
 				
-            	var backgroundColor = "";
-            	var boderColor = "";
-            	
-            	if(scheduleList.scheduleSe == "학생"){
-	            	backgroundColor = '#F7C8E0';	// 분홍
-            		boderColor = '#F7C8E0';
-            	}else if(scheduleList.scheduleSe == "학부모"){
-            		backgroundColor = '#F6F7C1';	// 노랑
-            		boderColor = '#F6F7C1';
-            	}else if(scheduleList.scheduleSe == "선생님"){
-            		backgroundColor = '#DFFFD8';	// 연두
-            		boderColor = '#DFFFD8';
-            	}else{ // 공통
-            		backgroundColor = '#95BDFF';	// 파랑
-            		boderColor = '#95BDFF';
-            	}
-            	
-                calendar.addEvent({
-                    title: scheduleList.scheduleNm,
-                    start: scheduleList.scheduleBgnde,  // 시작일
-                    end: scheduleList.scheduleEndde,    // 종료일
-                    backgroundColor: backgroundColor,	// 배경 색
-                    borderColor: boderColor,			// 테두리 색
-                    textColor: "#444",					// 글씨 색
-                    extendedProps: {
-                        scheduleCd: scheduleList.scheduleCd, // scheduleCd 추가
-                        scheduleSe: scheduleList.scheduleSe	 // scheduleSe 추가
-                    }
-                });
-            });
-            
-            calendar.render(); // 캘린더를 렌더링
-        });
-    });
+				if(scheduleList.scheduleSe == "학생"){
+					backgroundColor = '#F7C8E0';	// 분홍
+					boderColor = '#F7C8E0';
+				}else if(scheduleList.scheduleSe == "학부모"){
+					backgroundColor = '#F6F7C1';	// 노랑
+					boderColor = '#F6F7C1';
+				}else if(scheduleList.scheduleSe == "선생님"){
+					backgroundColor = '#DFFFD8';	// 연두
+					boderColor = '#DFFFD8';
+				}else{ // 공통
+					backgroundColor = '#95BDFF';	// 파랑
+					boderColor = '#95BDFF';
+				}
+				
+				calendar.addEvent({
+					title: scheduleList.scheduleNm,
+					start: scheduleList.scheduleBgnde,  // 시작일
+					end: scheduleList.scheduleEndde,    // 종료일
+					backgroundColor: backgroundColor,	// 배경 색
+					borderColor: boderColor,			// 테두리 색
+					textColor: "#444",					// 글씨 색
+					extendedProps: {
+						scheduleCd: scheduleList.scheduleCd, // scheduleCd 추가
+						scheduleSe: scheduleList.scheduleSe	 // scheduleSe 추가
+					}
+				});
+			});
+				
+			calendar.render(); // 캘린더를 렌더링
+		});
+	});
     
-    /* 학사 일정 등록 */
-    $("#insertBtn").on("click", function(){
+	/* 학사 일정 등록 */
+	$("#insertBtn").on("click", function(){
 		var schdulNm = $("#schdulNm").val();
 		var schdulCn = $("#schdulCn").val();
 		var schdulBegin = $("#schdulBegin").val();
-		
 		var schdulEnd = new Date($("#schdulEnd").val());
 		schdulEnd.setHours(23);
 		schdulEnd.setMinutes(59);
 		
 		var schedulSe = $("input[name=scheduleRadio]:checked").val();
-		
-// 		console.log("schdulNm:" + schdulNm);
-// 		console.log("schdulCn:" + schdulCn);
-// 		console.log("schdulBegin:" + schdulBegin);
-// 		console.log("schdulEnd:" + schdulEnd);
-// 		console.log("schedulSe:" + schedulSe);
 		
 		if(schdulNm == ""){
 			Swal.fire('등록 실패!', '일정 명을 입력하지 않았습니다.', 'error');
@@ -306,26 +283,25 @@ $(document).ready(function() {
 			},
 			success:function(res){
 				Swal.fire({
-	               title: '일정 등록이 완료되었습니다.',
-	               text: '',
-	               icon: 'success',
-	               confirmButtonText: '확인',
-	            }).then(result => {
+				title: '일정 등록이 완료되었습니다.',
+				text: '',
+				icon: 'success',
+				confirmButtonText: '확인',
+				}).then(result => {
 					if (result.isConfirmed) {
 						location.reload();
 					}
-	            });
+				});
 			}
 		})
-    });
+	});
     
-    /* 학사 일정 수정 */
-    $("#updateBtn").on("click", function(){
+	/* 학사 일정 수정 */
+	$("#updateBtn").on("click", function(){
 		var schdulCode = $("#schdulCode").val();
 		var schdulNm = $("#schdulNm-u").val();
 		var schdulCn = $("#schdulCn-u").val();
 		var schdulBegin = $("#schdulBegin-u").val();
-		
 		var schdulEnd = new Date($("#schdulEnd-u").val());
 		schdulEnd.setHours(23);
 		schdulEnd.setMinutes(59);
@@ -338,11 +314,11 @@ $(document).ready(function() {
 			return;
 		}
 		
-        // 종료일이 시작일보다 이전일 때의 처리
-        if(schdulBegin > schdulEnd){
-        	Swal.fire('일정 등록 실패!', '종료일은 시작일보다 이전의 날짜일 수 없습니다.', 'error');
-        	return;
-        }
+		// 종료일이 시작일보다 이전일 때의 처리
+		if(schdulBegin > schdulEnd){
+			Swal.fire('일정 등록 실패!', '종료일은 시작일보다 이전의 날짜일 수 없습니다.', 'error');
+			return;
+		}
 		
 		var data = {
 			"schafsSchdulCode":schdulCode,
@@ -365,60 +341,60 @@ $(document).ready(function() {
 			},
 			success:function(res){
 				Swal.fire({
-	               title: '일정 수정이 완료되었습니다.',
-	               text: '',
-	               icon: 'success',
-	               confirmButtonText: '확인',
-	            }).then(result => {
+					title: '일정 수정이 완료되었습니다.',
+					text: '',
+					icon: 'success',
+					confirmButtonText: '확인',
+				}).then(result => {
 					if (result.isConfirmed) {
 						location.reload();
 					}
-	            });
+				});
 			}
 		})
-    });
+	});
     
-    /* 학사 일정 삭제 */
-    $("#deleteBtn").on("click", function(){
-    	var schdulCode = $("#schdulCode").val();
-    	
-    	Swal.fire({
+	/* 학사 일정 삭제 */
+	$("#deleteBtn").on("click", function(){
+		var schdulCode = $("#schdulCode").val();
+		
+		Swal.fire({
 			title: '일정을 삭제하시겠습니까?',
 			text: '',
 			icon: 'warning',
-			showCancelButton: true,       	// cancel 버튼 보이기
+			showCancelButton: true,       	 // cancel 버튼 보이기
 			confirmButtonText: '삭제',       // confirm 버튼 텍스트 지정
 			cancelButtonText: '취소',        // cancel 버튼 텍스트 지정
 		}).then(result => {
 			if(result.isConfirmed){
 				$.ajax({
-		            url: "/school/scheduleDelete",
-		            type: "post",
-		            data: {schdulCode:schdulCode},
-		            dataType: "text",
-		            beforeSend:function(xhr){
-	                    xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-	            	},
+					url: "/school/scheduleDelete",
+					type: "post",
+					data: {schdulCode:schdulCode},
+					dataType: "text",
+					beforeSend:function(xhr){
+						xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+					},
 					success: function(res){
 						location.reload();
-	            	}
-	            });
-	        }
-	    });
-    });
-    
-    /* 학사 일정 수정 시 시작일/종료일 값 넣는 이벤트 시작*/
-    $("#inputSchdulBegin").on("input", function(){
+					}
+				});
+			}
+		});
+	});
+
+	/* 학사 일정 수정 시 시작일/종료일 값 넣는 이벤트 시작*/
+	$("#inputSchdulBegin").on("input", function(){
 		var schdulBegin = $("#inputSchdulBegin").val();
 		$("#schdulBegin-u").val(schdulBegin);
-    });
-    
-    $("#inputSchdulEnd").on("input", function(){
-    	var schdulEnd = $("#inputSchdulEnd").val();
+	});
+	
+	$("#inputSchdulEnd").on("input", function(){
+		var schdulEnd = $("#inputSchdulEnd").val();
 		$("#schdulEnd-u").val(schdulEnd);
-    });
-    /* 학사 일정 수정 시 시작일/종료일 값 넣는 이벤트 끝*/
-    
+	});
+	/* 학사 일정 수정 시 시작일/종료일 값 넣는 이벤트 끝*/
+		
 	// 자동 완성 버튼
 	$("#autoBtn").on("click", function(){
 		document.querySelector("#schdulNm").value = "현장체험학습";

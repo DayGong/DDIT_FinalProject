@@ -22,18 +22,6 @@ public interface SchoolMapper {
 
 	// 학사일정 수정
 	public int scheduleUpdate(SchafsSchdulVO schedule);
-	
-	// 시간표
-	public String schedule();
-	
-	// 학생(전교생) 관리 
-	public String studentsManage();
-	
-	// 방과후학교
-	public String afterSchool();
-	
-	// 학급 클래스 목록
-	public String classList();
 
     // 첨부파일 테이블에 insert
   	public int insertNttAttach(AtchFileVO atchFileVO);

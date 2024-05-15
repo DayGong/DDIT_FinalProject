@@ -136,12 +136,6 @@ public class StudentContoller {
 		return "student/complimentSticker";
 	}
 	
-	//학부모 인증(학생이)
-	@GetMapping("/parentCertification")
-	public String parentCertification() {
-		return "student/parentCertification";
-	}
-	
 	// 연월일 폴더 생성
 	public String getFolder() {
 		SimpleDateFormat sdf = new SimpleDateFormat();

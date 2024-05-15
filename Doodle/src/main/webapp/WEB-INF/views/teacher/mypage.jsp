@@ -11,7 +11,6 @@
 }
 
 .school{
-/* 	border-right: 2px solid #eee; */
     margin-right: 14px;
 }
 
@@ -128,48 +127,38 @@
 <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
 <script type="text/javascript" src="/resources/js/jquery.min.js" ></script>
 <script type="text/javascript">
-
 $(function(){
-// 	console.log("${myClassList}");
-
 	// 업로드한 사진 반영하기
-    $("#inputImage").on("input", function() {
-    	// 업로드한 파일 가져오기
-        var file = $(this)[0].files[0]
-        console.log("uploadFile: " + file);
-        
-        // 파일 이름 추출하기
-        var fileName = file.name;
-        console.log("fileName: " + fileName);
+   $("#inputImage").on("input", function() {
+      var file = $(this)[0].files[0];		// 업로드한 파일 가져오기
+      var fileName = file.name;			// 파일 이름 추출하기
+      var imgSrc = "/resources/images/member/profile/" + fileName;
+   
+      $("#profileImg").attr("src", imgSrc);        	
+   });
 
-        var imgSrc = "/resources/images/member/profile/" + fileName;
-		
-		$("#profileImg").attr("src", imgSrc);        	
-    });
-
-    // 정보 수정
-    $("#updateBtn").on("click", function(){
+   // 정보 수정
+   $("#updateBtn").on("click", function(){
     	var mberId = "${memVO.mberId}";
     	var mberNm = $("#mberNm").val();
     	var moblphonNo = $("#moblphonNo").val();
     	var mberEmail = $("#mberEmail").val();
     	var mberAdres = $("#mberAdres").val();
     	
-        // 업로드한 사진이 있으면 가져오기
-        var file = $("#inputImage")[0].files[0];
-        console.log("file", file);
-        
-        // 수정된 정보가 없을 시 alert
-        if(mberNm == "${memVO.mberNm}" &&
-           moblphonNo == "${memVO.moblphonNo}" &&
-           mberEmail == "${memVO.mberEmail}" &&
-           mberAdres == "${memVO.mberAdres}" &&
-           file == null){
-        	Swal.fire('수정된 정보가 없습니다.', '', 'info');
-        	return;
-        }
+		// 업로드한 사진이 있으면 가져오기
+		var file = $("#inputImage")[0].files[0];
+      
+		// 수정된 정보가 없을 시 alert
+		if( mberNm == "${memVO.mberNm}" &&
+			moblphonNo == "${memVO.moblphonNo}" &&
+			mberEmail == "${memVO.mberEmail}" &&
+			mberAdres == "${memVO.mberAdres}" &&
+			file == null){
+			Swal.fire('수정된 정보가 없습니다.', '', 'info');
+			return;
+		}
     	
-    	Swal.fire({
+		Swal.fire({
 			title: '해당 내용으로 정보를 수정하시겠습니까?',
 			text: '',
 			icon: 'warning',
@@ -177,63 +166,62 @@ $(function(){
 			confirmButtonText: '수정',       // confirm 버튼 텍스트 지정
 			cancelButtonText: '취소',        // cancel 버튼 텍스트 지정
 		}).then(result => {
-	        if(result.isConfirmed){
-		    	var formData = new FormData();
-		    	
-		    	formData.append("mberId", mberId);
-		    	formData.append("mberNm", mberNm);
-		    	formData.append("moblphonNo", moblphonNo);
-		    	formData.append("mberEmail", mberEmail);
-		    	formData.append("mberAdres", mberAdres);
-		    	
+			if(result.isConfirmed){
+	            var formData = new FormData();
+	            formData.append("mberId", mberId);
+	            formData.append("mberNm", mberNm);
+	            formData.append("moblphonNo", moblphonNo);
+	            formData.append("mberEmail", mberEmail);
+	            formData.append("mberAdres", mberAdres);
+            
 	            if(file != null){
-		            formData.append("uploadFile", $("#inputImage")[0].files[0]);
+	               formData.append("uploadFile", $("#inputImage")[0].files[0]);
 	            }
-		    	
-		    	$.ajax({
-		    		url: "/teacher/updateInfo",
-		    		processData: false,
-		    		contentType: false,
-		    		type:"post",
-		    		data:formData,
-		    		dataType:"json",
-		    		beforeSend:function(xhr){
-						xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+            
+	            $.ajax({
+					url: "/teacher/updateInfo",
+					processData: false,
+					contentType: false,
+					type:"post",
+					data:formData,
+					dataType:"json",
+					beforeSend:function(xhr){
+					   xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 					},
-		    		success: function(res){
+					success: function(res){
 						Swal.fire('수정이 완료되었습니다.', '', 'success');
-						
+	                  
 						// 새 프로필 사진이 있을 경우 적용
 						if(res.mberImage != null){
-		                    var imgSrc = "/upload/profile/" + res.mberImage;
-		                    $("#profileImg").attr("src", imgSrc);
+							var imgSrc = "/upload/profile/" + res.mberImage;
+							$("#profileImg").attr("src", imgSrc);
 						}
-		    		}
-		    	});
-	        }
-	    })
-    });
+					}
+				});
+         	}
+		})
+	});
     
-    // 주소 찾기
-    $("#searchAddrBtn").on("click", function(){
+   // 주소 찾기
+   $("#searchAddrBtn").on("click", function(){
 		new daum.Postcode({
 			//다음 창에서 검색이 완료되면
 			oncomplete : function(data) {
-		        $("#mberAdres").val(data.address + data.zonecode + " ");
-		        $("#mberAdres").focus();
+		          $("#mberAdres").val(data.address + data.zonecode + " ");
+		          $("#mberAdres").focus();
 			}
 		}).open();
 	});
     
 	// 프로필 사진 업로드 아이콘을 클릭하면 파일 업로드 버튼 클릭한 것과 같게 함
-    $("#profileUploadIcon").on("click", function(){
+   $("#profileUploadIcon").on("click", function(){
     	$("#inputImage").trigger("click");
-    })
+   })
     
 	// 초기화 버튼 클릭 이벤트
-    $("#resetBtn").on("click", function(){
+   $("#resetBtn").on("click", function(){
     	// 업로드한 사진이 있으면 가져오기
-        var file = $("#inputImage")[0].files[0];
+      var file = $("#inputImage")[0].files[0];
     	var mberImage = "${memVO.mberImage}";
     	var imgSrc = "";
     	
@@ -250,13 +238,9 @@ $(function(){
     		
     		$("#profileImg").attr("src", imgSrc); 
     	}
-    })
+   })
 });
 </script>
-<%-- <p>교사 정보: ${memVO}</p> --%>
-<%-- <p>학교 정보: ${mySchulList}</p> --%>
-<%-- <p>클래스 정보: ${myClassList}</p> --%>
-<%-- <p>회원 이미지: ${memVO.mberImage}</p> --%>
 <div id="FreeBoardContainer">
    <h4>
       <img src="/resources/images/member/myPage/happyEmotion.png" style="width:45px; display:inline-block; vertical-align:middel; margin-right: 7px; margin-bottom: 5px;">      
@@ -389,34 +373,33 @@ $(function(){
 
 <!-- 비밀번호 변경 모달 -->
 <form id="updatePasswordForm" action="/student/updatePassword" method="post">
-	<div id="UpdatePasswordModal"
-		class="modal modal-edu-general default-popup-PrimaryModal fade"
-		role="dialog">
-
+	<div id="UpdatePasswordModal" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-close-area modal-close-df">
-					<a class="close" data-dismiss="modal" href="#"> <i
-						class="fa fa-close"></i></a>
+					<a class="close" data-dismiss="modal" href="#"> <i class="fa fa-close"></i></a>
 				</div>
 				<div class="modal-body">
 					<div>
-					<h2>비밀번호 변경</h2>
-					<span id="firstPwChk" style="display: none;">*최초 1회 비밀번호 변경이 필요합니다.</span>
+                  <h2>비밀번호 변경</h2>
+                  <span id="firstPwChk" style="display: none;">*최초 1회 비밀번호 변경이 필요합니다.</span>
 					</div>
 					<br>
 					<div id="pwChk" class="alert alert-danger alert-mg-b" role="alert" style="display: none;">
-						
 					</div>
 					<div id="UpdatePasswordContainer">
 						<ul class="InputPassword">
-							<li><span>비밀번호</span> <input type="password" name="password"
-								id="password1" class="form-control"> <small
-								data-chk="dataChk">특수기호/영문가능</small></li>
+							<li>
+		                        <span>비밀번호</span> 
+		                        <input type="password" name="password" id="password1" class="form-control"> 
+		                        <small data-chk="dataChk">특수기호/영문가능</small>
+		                    </li>
 							<br>
-							<li><span>비밀번호 확인</span> <input type="password"
-								name="password2" id="password2" class="form-control"> <small
-								data-chk="dataChk">동일한 비밀번호를 입력해주세요</small></li>
+							<li>
+		                        <span>비밀번호 확인</span> 
+		                        <input type="password" name="password2" id="password2" class="form-control"> 
+		                        <small data-chk="dataChk">동일한 비밀번호를 입력해주세요</small>
+		                     </li>
 						</ul>
 					</div>
 				</div>

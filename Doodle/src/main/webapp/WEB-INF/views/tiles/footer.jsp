@@ -6,69 +6,49 @@
 <!-- STOMP -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="/resources/js/jquery-3.6.0.js"></script>
-
 <script>
-// 전역변수 설정
-var sock = null;
-var socket = null;
-var mberId = '${USER_INFO.mberId}';
-// console.log("mberId>> : " + mberId);
-
-function connectWebSocket() {
-    // 웹소켓 연결
-    sock = new SockJS("<c:url value="/echo"/>");
-    socket = sock;
-    
-    sock.onopen = function () {
-        console.log('Info: connection opened.');
-    };
-    
-    sock.onmessage = onMessage; // 데이터를 전달 받았을 때 toast 생성
-    
-    sock.onclose = function(event) {
-        // 연결이 끊겼을 때 다시 접속 시도
-        setTimeout(function() {
-            connectWebSocket();
-        }, 5000); // 5초 후에 재접속 시도
-    };
-}
-
-//toast생성 및 추가
-function onMessage(evt){
-    var data = evt.data;
-    
-    console.log("data:",data);
-
-    var Toast = Swal.mixin({
-		toast: true,
-		position: 'top-end',
-		showConfirmButton: true,
-		timer: 5000
-	});
-	Toast.fire({
-		icon:'info',
-		title: data
-	});
-    
-};
-
-$(document).ready(function(){
-	connectWebSocket(); // 페이지 로드시 웹소켓 연결
-});
-
+	// 전역변수 설정
+	var sock = null;
+	var socket = null;
+	var mberId = '${USER_INFO.mberId}';
 	
+	function connectWebSocket() {
+	    // 웹소켓 연결
+	    sock = new SockJS("<c:url value="/echo"/>");
+	    socket = sock;
+	    sock.onmessage = onMessage; // 데이터를 전달 받았을 때 toast 생성
+	    
+	    sock.onclose = function(event) {
+	        // 연결이 끊겼을 때 다시 접속 시도
+	        setTimeout(function() {
+	            connectWebSocket();
+	        }, 5000); // 5초 후에 재접속 시도
+	    };
+	}
+	
+	//toast생성 및 추가
+	function onMessage(evt){
+	    var data = evt.data;
+	    var Toast = Swal.mixin({
+			toast: true,
+			position: 'top-end',
+			showConfirmButton: true,
+			timer: 5000
+		});
+		Toast.fire({
+			icon:'info',
+			title: data
+		});
+	};
+	
+	$(document).ready(function(){
+		connectWebSocket(); // 페이지 로드시 웹소켓 연결
+	});
 </script>
 <script>
-var sockJs = new SockJS("/stomp/chat");
-var stomp = Stomp.over(sockJs);
-
-stomp.connect({},function(){
-	console.log("STOMP Connection");
-	
-// 	stomp.subscribe("/sub/chat/main/",function(){})
-})
+	var sockJs = new SockJS("/stomp/chat");
+	var stomp = Stomp.over(sockJs);
 </script>
-
 <div id="msgStack"></div>
 <sec:authorize access="hasRole('A01001')">
 	<div class="footer-copyright-area" style= "background: #ffd966e0;">
@@ -111,33 +91,3 @@ stomp.connect({},function(){
 	    </div>
 	</div>
 </sec:authorize>
-
-
-<!-- <div class="lobibox-notify-wrapper bottom right"> -->
-<!-- 	<div -->
-<!-- 		class="lobibox-notify lobibox-notify-default animated-fast fadeInDown" -->
-<!-- 		style="width: 400px;"> -->
-<!-- 		<div class="lobibox-notify-icon-wrapper"> -->
-<!-- 			<div class="lobibox-notify-icon"> -->
-<!-- 				<div> -->
-<!-- 					<img src="img/notification/1.jpg"> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-<!-- 		<div class="lobibox-notify-body"> -->
-<!-- 			<div class="lobibox-notify-title"> -->
-<!-- 				Default -->
-<!-- 				<div></div> -->
-<!-- 			</div> -->
-<!-- 			<div class="lobibox-notify-msg" style="max-height: 60px;">Lorem -->
-<!-- 				ipsum dolor sit amet against apennine any created, spend loveliest, -->
-<!-- 				building stripes.</div> -->
-<!-- 		</div> -->
-<!-- 		<span class="lobibox-close">×</span> -->
-<!-- 		<div class="lobibox-delay-indicator"> -->
-<!-- 			<div style="width: 73.94%;"></div> -->
-<!-- 		</div> -->
-<!-- 	</div> -->
-<!-- </div> -->
-
-

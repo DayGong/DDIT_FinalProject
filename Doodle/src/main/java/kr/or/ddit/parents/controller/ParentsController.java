@@ -113,28 +113,5 @@ public class ParentsController {
 		
 		return memVO;
 	}
-	
-	//학부모 인증 신청(학생에게)
-	@GetMapping("/parentCertification")
-	public String parentCertification() {
-		return "parents/parentCertification";
-	}
-	
-	//학급클래스 신청
-	@GetMapping("/classRequest")
-	public String classRequest() {
-		return "parents/classRequest";
-	}
-	
-	//방과후학교 신청
-	@GetMapping("/afterSchoolRequest")
-	public String afterSchoolRequest() {
-		return "parents/afterSchoolRequest";
-	}
-	
-	//방과후학교 결제
-	@GetMapping("/afterSchoolPay")
-	public String afterSchoolPay() {
-		return "parents/afterSchoolPay";
-	}
+
 }

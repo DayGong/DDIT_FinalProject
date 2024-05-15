@@ -14,7 +14,6 @@ ex) <script>
 	</script>
 
 1. url에 반코드/학교코드가 있을 때
-
 	반페이지    : addClassInfo("${param.clasCode}");
 	학교페이지 : addClassInfo("${param.schulCode}");
 	
@@ -23,21 +22,14 @@ ex) <script>
 	addClassInfo("${param.clascode}");
 
 2. 반코드/학교코드를 컨트롤러에서 model에 담아 jsp로 보냈을 때
-
 	반페이지    : addClassInfo("${param.clasCode}");
 	학교페이지 : addSchoolInfo("${param.schulCode}");
-	
-	이때 model에 VO로 담았으면
-	addClassInfo("${clasVO.clasCode}");
-	등 구조에 따라 다르게 넣어줘야 함.
-	잘 안되면 최재형 문의주세요.
+
+	이때 model에 VO로 담았으면 addClassInfo("${clasVO.clasCode}"); 등 구조에 따라 다르게 넣어줘야 함.
 
 3. 반/학교 페이지에서 퇴장했을 때
-
 	반페이지 : deleteClassInfo();
 	학교페이지 : deleteSchoolInfo();
-
-4. 이외 기능이 필요하면 최재형 문의주세요.
 --%>
 
 <script>
@@ -113,7 +105,6 @@ if(isStdBool){
 	학생일 때 실행시키고 싶은 코드...
 }
 </script>
-
 --%>
 // 1차 권한 학생인지
 const isStudent = function(){
@@ -168,8 +159,6 @@ const isParent = function(){
 	});
 	return returnData=="true"?true:false;
 }
-
-<%-- ======== --%>
 
 // 교직원 권한 교사인지
 const isPrincipal = function(){
@@ -242,26 +231,4 @@ const isDietitian = function(){
 	});
 	return returnData=="true"?true:false;
 }
-
-
-
-if("${USER_INFO}" != ''){
-	console.log("로그인중인 회원 세션(\${USER_INFO})"					,"${USER_INFO}");
-}
-if("${SCHOOL_INFO}" != ''){
-	console.log("접속중인 학교 세션(\${SCHOOL_INFO})"					,"${SCHOOL_INFO}");
-}
-if("${CLASS_INFO}" != ''){
-	console.log("접속중인 반 세션(\${CLASS_INFO})"					,"${CLASS_INFO}");
-}
-if("${SCHOOL_USER_INFO}" != ''){
-	console.log("접속중인 학교의 학교소속회원 세션(\${SCHOOL_USER_INFO})"	,"${SCHOOL_USER_INFO}");
-}
-if("${CLASS_STD_INFO}" != ''){
-	console.log("접속중인 반의 반학생(자녀) 세션(\${CLASS_STD_INFO})"		,"${CLASS_STD_INFO}");
-}
-if("${CLASS_TCH_INFO}" != ''){
-	console.log("접속중인 반의 담임교사 세션(\${CLASS_TCH_INFO})"			,"${CLASS_TCH_INFO}");
-}
-
 </script>

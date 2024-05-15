@@ -13,7 +13,6 @@
 }
 
 .school{
-/* 	border-right: 2px solid #eee; */
     margin-right: 10px;
 }
 
@@ -110,6 +109,7 @@
    min-height: 83px;
    margin-top: 50px;
 }
+
 .MyPageAll .FreeTit {
    display: flex;
    justify-content: space-between;
@@ -130,6 +130,7 @@
    padding-left: 12px; 
    background-color: white;
 }
+
 .myPersonalData input[readonly]{
    background-color: #F0F0F0;
 }
@@ -139,9 +140,6 @@
 <script type="text/javascript">
 
 $(function(){
-	// 비밀번호 변경 모달 창 띄우기
-// 	$("#UpdatePasswordModal").modal('show');
-	
 	// 비밀번호 변경
 	$("#UpdatePasswordBtn").on("click", function(){
 		var mberId = ${memVO.mberId};
@@ -156,7 +154,6 @@ $(function(){
 	    }
 		
     	var formData = new FormData();
-    	
     	formData.append("password", pw1);
     	formData.append("mberId", mberId);
 		
@@ -178,14 +175,8 @@ $(function(){
 	
 	// 업로드한 사진 반영하기
     $("#inputImage").on("input", function() {
-    	// 업로드한 파일 가져오기
-        var file = $(this)[0].files[0]
-        console.log("uploadFile: " + file);
-        
-        // 파일 이름 추출하기
-        var fileName = file.name;
-        console.log("fileName: " + fileName);
-
+        var file = $(this)[0].files[0];	// 업로드한 파일 가져오기
+        var fileName = file.name;		// 파일 이름 추출하기
         var imgSrc = "/resources/images/member/profile/" + fileName;
 		
 		$("#profileImg").attr("src", imgSrc);        	
@@ -201,16 +192,15 @@ $(function(){
     	
     	// 업로드한 사진이 있으면 가져오기
         var file = $("#inputImage")[0].files[0];
-        console.log("file", file);
         
         // 수정된 정보가 없을 시 alert
-        if(mberNm == "${memVO.mberNm}" &&
-           moblphonNo == "${memVO.moblphonNo}" &&
-           mberEmail == "${memVO.mberEmail}" &&
-           mberAdres == "${memVO.mberAdres}" &&
-           file == null){
-        	Swal.fire('수정된 정보가 없습니다.', '', 'info');
-        	return;
+        if(mberNm == "${memVO.mberNm}" 
+			&& moblphonNo == "${memVO.moblphonNo}" 
+			&& mberEmail == "${memVO.mberEmail}" 
+			&& mberAdres == "${memVO.mberAdres}" 
+			&& file == null){
+			Swal.fire('수정된 정보가 없습니다.', '', 'info');
+			return;
         }
     	
     	Swal.fire({
@@ -223,7 +213,6 @@ $(function(){
 		}).then(result => {
 	        if(result.isConfirmed){
 		    	var formData = new FormData();
-		    	
 		    	formData.append("mberId", mberId);
 		    	formData.append("mberNm", mberNm);
 		    	formData.append("moblphonNo", moblphonNo);
@@ -297,10 +286,6 @@ $(function(){
     })
 });
 </script>
-<%-- <p>학부모 정보: ${memVO}</p> --%>
-<%-- <p>자녀 리스트1: ${childList[0].schulVOList[0]}</p> --%>
-<%-- <p>회원 이미지: ${memVO.mberImage}</p> --%>
-
 <!-- 학부모 정보 -->
 <div id="FreeBoardContainer">
     <h4>
@@ -385,7 +370,7 @@ $(function(){
                             <div class="col-lg-12" style="display: flex; justify-content: center;">
                                 <label for="inputImage" id="updateLabel" style="display: none;" class="btn btn-primary waves-effect waves-light">
                                     <input type="file" accept="image/*" name="uploadFile" id="inputImage" class="hide" />
-                                    	사진 업로드
+                                    사진 업로드
                                 </label>
                                 <input type="button" id="updateBtn" value="수정">
                                 <input type="reset" id="resetBtn" value="초기화">
@@ -406,49 +391,49 @@ $(function(){
 				<li class="active"><a href="#description">자녀 정보</a></li>
 			</ul>
 			<div id="myTabContent" class="tab-content custom-product-edit">
-			<div class="product-tab-list tab-pane fade active in" id="description">
-				<div class="row">
-					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<div class="product-status-wrap drp-lst" style="padding: 30px 30px 20px 30px;">
-							<div class="asset-inner">
-								<table>
-									<tbody id="childInfoTbody">
-										<tr>
-											<th>번호</th>
-											<th>프로필</th>
-											<th>이름</th>
-											<th>이메일</th>
-											<th>전화번호</th>
-											<th>소속 학교</th>
-											<th>학년</th>
-											<th>소속 클래스</th>
-											<th>가족 관계</th>
-										</tr>
-										<c:forEach var="child" items="${childList}" varStatus="status">
-											<tr style="border-bottom: 1px solid #e9ecef;">
-												<td>${status.count}</td>
-												<td>
-													<c:choose>
-                                                        <%-- 프로필이 있는 경우 --%>
-                                                        <c:when test="${child.schulVOList[0].schulPsitnMberVO.memberVO.mberImage != null}">
-															<img id="childImage" src="/upload/profile/${child.schulVOList[0].schulPsitnMberVO.memberVO.mberImage}" alt="">
-                                                        </c:when>
-                                                        <%-- 프로필이 없는 경우 --%>
-                                                        <c:otherwise>
-                                                            <img id="childImage" src="/resources/images/member/profile/루피2.png" alt="" />
-                                                        </c:otherwise>
-                                                    </c:choose>
-												</td>
-												<td>${child.schulVOList[0].schulPsitnMberVO.memberVO.mberNm}</td>
-												<td>${child.schulVOList[0].schulPsitnMberVO.memberVO.mberEmail}</td>
-												<td>${child.schulVOList[0].schulPsitnMberVO.memberVO.moblphonNo}</td>
-												<td>${child.schulVOList[0].schulNm}</td>
-												<td>${child.schulVOList[0].clasVO.cmmnGradeNo}</td>
-												<td>${child.schulVOList[0].clasVO.clasNm}</td>
-												<td>${child.familyRelateNm}</td>
+				<div class="product-tab-list tab-pane fade active in" id="description">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<div class="product-status-wrap drp-lst" style="padding: 30px 30px 20px 30px;">
+								<div class="asset-inner">
+									<table>
+										<tbody id="childInfoTbody">
+											<tr>
+												<th>번호</th>
+												<th>프로필</th>
+												<th>이름</th>
+												<th>이메일</th>
+												<th>전화번호</th>
+												<th>소속 학교</th>
+												<th>학년</th>
+												<th>소속 클래스</th>
+												<th>가족 관계</th>
 											</tr>
-										</c:forEach>
-									</tbody>
+											<c:forEach var="child" items="${childList}" varStatus="status">
+												<tr style="border-bottom: 1px solid #e9ecef;">
+													<td>${status.count}</td>
+													<td>
+														<c:choose>
+															<%-- 프로필이 있는 경우 --%>
+															<c:when test="${child.schulVOList[0].schulPsitnMberVO.memberVO.mberImage != null}">
+																<img id="childImage" src="/upload/profile/${child.schulVOList[0].schulPsitnMberVO.memberVO.mberImage}" alt="">
+															</c:when>
+															<%-- 프로필이 없는 경우 --%>
+															<c:otherwise>
+																<img id="childImage" src="/resources/images/member/profile/루피2.png" alt="" />
+															</c:otherwise>
+														</c:choose>
+													</td>
+													<td>${child.schulVOList[0].schulPsitnMberVO.memberVO.mberNm}</td>
+													<td>${child.schulVOList[0].schulPsitnMberVO.memberVO.mberEmail}</td>
+													<td>${child.schulVOList[0].schulPsitnMberVO.memberVO.moblphonNo}</td>
+													<td>${child.schulVOList[0].schulNm}</td>
+													<td>${child.schulVOList[0].clasVO.cmmnGradeNo}</td>
+													<td>${child.schulVOList[0].clasVO.clasNm}</td>
+													<td>${child.familyRelateNm}</td>
+												</tr>
+											</c:forEach>
+										</tbody>
 									</table>
 								</div>
 							</div>
@@ -462,9 +447,7 @@ $(function(){
 
 <!-- 비밀번호 변경 모달 -->
 <form id="updatePasswordForm" action="/student/updatePassword" method="post">
-	<div id="UpdatePasswordModal"
-		class="modal modal-edu-general default-popup-PrimaryModal fade"
-		role="dialog">
+	<div id="UpdatePasswordModal" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
 
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -479,17 +462,20 @@ $(function(){
 					</div>
 					<br>
 					<div id="pwChk" class="alert alert-danger alert-mg-b" role="alert" style="display: none;">
-						
 					</div>
 					<div id="UpdatePasswordContainer">
 						<ul class="InputPassword">
-							<li><span>비밀번호</span> <input type="password" name="password"
-								id="password1" class="form-control"> <small
-								data-chk="dataChk">특수기호/영문가능</small></li>
+							<li>
+								<span>비밀번호</span> 
+								<input type="password" name="password" id="password1" class="form-control">
+								<small data-chk="dataChk">특수기호/영문가능</small>
+							</li>
 							<br>
-							<li><span>비밀번호 확인</span> <input type="password"
-								name="password2" id="password2" class="form-control"> <small
-								data-chk="dataChk">동일한 비밀번호를 입력해주세요</small></li>
+							<li>
+								<span>비밀번호 확인</span> 
+								<input type="password" name="password2" id="password2" class="form-control"> 
+								<small data-chk="dataChk">동일한 비밀번호를 입력해주세요</small>
+							</li>
 						</ul>
 					</div>
 				</div>

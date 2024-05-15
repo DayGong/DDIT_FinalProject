@@ -1,12 +1,11 @@
-<%@page import="kr.or.ddit.util.etc.AuthManager"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ page import="kr.or.ddit.util.etc.AuthManager"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!doctype html>
 <html class="no-js" lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -60,41 +59,28 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
 	<!-- 두들 권한 체크 함수 -->
-	<jsp:include page="../util/secCheck.jsp" flush="false"/>
 	<jsp:include page="../util/secSession.jsp" flush="false"/>
 	<!-- 두들 CSS -->
 	<link rel="stylesheet" href="/resources/css/commonCss.css">
 	<!-- 두들 공통 함수 -->
 	<script type="text/javascript" src="/resources/js/commonFunction.js"></script>  
 	<script type="text/javascript" src="/resources/js/cjh.js"></script>  
-	
 </head>
 <style>
 	body{
 		font-family: "Pretendard";
-	
 	}
 </style>
 <body>
-
-    <!--[if lt IE 8]>
-		<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-	<![endif]-->
     <!-- Start Left menu area -->
-    <div class="left-sidebar-pro">
-        <!-- aside 시작 -->
-        	<%-- <tiles:insertAttribute name="aside" /> --%>
-        <!-- aside 끝 -->
-    </div>
+    <div class="left-sidebar-pro"></div>
     <!-- End Left menu area -->
     <!-- Start Welcome area -->
     <div class="all-content-wrapper">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="logo-pro">
-<!--                         <a href="/resources/kiaalap/index.html"><img class="main-logo" src="/resources/kiaalap/img/logo/logo.png" alt="" /></a> -->
-                    </div>
+                    <div class="logo-pro"></div>
                 </div>
             </div>
         </div>
@@ -110,10 +96,6 @@
             </div>
         </div>
         <!-- Body 끝    ============================================ -->
-        
-        <!-- footer 시작 ============================================ -->
-        <%-- <tiles:insertAttribute name="footer" /> --%>
-        <!-- footer 끝    ============================================ -->
     </div>
 
     <!-- jquery	============================================ -->
@@ -158,13 +140,10 @@
     <script src="/resources/kiaalap/js/plugins.js"></script>
     <!-- main JS ============================================ -->
     <script src="/resources/kiaalap/js/main.js"></script>
-    <!-- tawk chat JS ============================================ -->
-<!--     <script src="/resources/kiaalap/js/tawk-chat.js"></script> -->
     <script type="text/javascript">
     	$('#logoutBtn').on('click', function() {
 			$('#logoutFrm').submit();
 		});
     </script>
 </body>
-
 </html>

@@ -20,30 +20,4 @@ public interface TeacherMapper {
 	// 마이 페이지 프로필 변경
 	public int updateProfile(MemberVO memVO);
 	
-	// 담당 학급 목록
-	public String classList();
-	
-	// 학급 소속 회원 관리페이지
-	public String classMemberAdmin();
-	
-	// 결석 사유 신청 목록(체험학습 포함)
-	public String absentReasonList();
-		
-	// 투표/설문조사 등록
-	public String createVotingSurvey();
-	
-	// 알림장 등록
-	public String createNotice();
-	
-	// 과제 등록
-	public String createTask();
-	
-	// 성적 목록
-	public String gradeList();
-	 
-	// 학생 출결 목록
-	public String attendanceList();
-	
-	// 시간표 등록
-	public String createSchedule();
 }
