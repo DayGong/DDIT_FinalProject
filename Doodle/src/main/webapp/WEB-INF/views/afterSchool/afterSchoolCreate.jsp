@@ -27,49 +27,37 @@ window.onload = function(){
 	    let autoData = `
 	        <div>
 	            <div style="width:10%;float:left;">
-	                <input type="text" class="form-control aschaWeek"
-	                    name="aschaWeekPlanVOList[0].aschaWeek" id="aschaWeek1" value="1주" />
+	                <input type="text" class="form-control aschaWeek" name="aschaWeekPlanVOList[0].aschaWeek" id="aschaWeek1" value="1주" />
 	            </div>
 	            <div style="width:90%;float:left;">
-	                <input type="text" class="form-control aschaWeekPlanCn"
-	                    name="aschaWeekPlanVOList[0].aschaWeekPlanCn" id="aschaWeekPlanCn1"
-	                    placeholder="주간계획 입력" style=" margin-left: 10px;" value="기초 코딩"/>
+	                <input type="text" class="form-control aschaWeekPlanCn" name="aschaWeekPlanVOList[0].aschaWeekPlanCn" id="aschaWeekPlanCn1" placeholder="주간계획 입력" style=" margin-left: 10px;" value="기초 코딩"/>
 	            </div>						
 	        </div>
 	        
 	        <div>
 		        <div style="width:10%;float:left;">
-		            <input type="text" class="form-control aschaWeek"
-		                name="aschaWeekPlanVOList[1].aschaWeek" id="aschaWeek2" value="2주" />
+		            <input type="text" class="form-control aschaWeek" name="aschaWeekPlanVOList[1].aschaWeek" id="aschaWeek2" value="2주" />
 		        </div>
 		        <div style="width:90%;float:left;">
-		            <input type="text" class="form-control aschaWeekPlanCn"
-		                name="aschaWeekPlanVOList[1].aschaWeekPlanCn" id="aschaWeekPlanCn2"
-		                placeholder="주간계획 입력" style=" margin-left: 10px;" value="게임으로 배우는 코딩1"/>
+		            <input type="text" class="form-control aschaWeekPlanCn" name="aschaWeekPlanVOList[1].aschaWeekPlanCn" id="aschaWeekPlanCn2" placeholder="주간계획 입력" style=" margin-left: 10px;" value="게임으로 배우는 코딩1"/>
 		        </div>						
 	    	</div>
 	    	
 	        <div>
 		        <div style="width:10%;float:left;">
-		            <input type="text" class="form-control aschaWeek"
-		                name="aschaWeekPlanVOList[2].aschaWeek" id="aschaWeek3" value="3주" />
+		            <input type="text" class="form-control aschaWeek" name="aschaWeekPlanVOList[2].aschaWeek" id="aschaWeek3" value="3주" />
 		        </div>
 		        <div style="width:90%;float:left;">
-		            <input type="text" class="form-control aschaWeekPlanCn"
-		                name="aschaWeekPlanVOList[2].aschaWeekPlanCn" id="aschaWeekPlanCn2"
-		                placeholder="주간계획 입력" style=" margin-left: 10px;" value="게임으로 배우는 코딩2"/>
+		            <input type="text" class="form-control aschaWeekPlanCn" name="aschaWeekPlanVOList[2].aschaWeekPlanCn" id="aschaWeekPlanCn2" placeholder="주간계획 입력" style=" margin-left: 10px;" value="게임으로 배우는 코딩2"/>
 		        </div>						
 	    	</div>
 
 	    	<div>
 		        <div style="width:10%;float:left;">
-		            <input type="text" class="form-control aschaWeek"
-		                name="aschaWeekPlanVOList[3].aschaWeek" id="aschaWeek3" value="4주" />
+		            <input type="text" class="form-control aschaWeek" name="aschaWeekPlanVOList[3].aschaWeek" id="aschaWeek3" value="4주" />
 		        </div>
 		        <div style="width:90%;float:left;">
-		            <input type="text" class="form-control aschaWeekPlanCn"
-		                name="aschaWeekPlanVOList[3].aschaWeekPlanCn" id="aschaWeekPlanCn2"
-		                placeholder="주간계획 입력" style=" margin-left: 10px;" value="실전 코딩"/>
+		            <input type="text" class="form-control aschaWeekPlanCn" name="aschaWeekPlanVOList[3].aschaWeekPlanCn" id="aschaWeekPlanCn2" placeholder="주간계획 입력" style=" margin-left: 10px;" value="실전 코딩"/>
 		        </div>						
 	    	</div>`;
 
@@ -98,22 +86,20 @@ window.onload = function(){
 	document.querySelector(".weekAdd").addEventListener("click", function(){
 		let len = document.querySelectorAll(".aschaWeek").length;
 		let str = "";
-	    str += `
+	    	str += `
 		        <div>
 		            <div style="width:10%;float:left;">
-		                <input type="text" class="form-control aschaWeek"
-		                    name="aschaWeekPlanVOList[\${len}].aschaWeek" id="aschaWeek\${len+1}" value="\${len+1}주" />
+		                <input type="text" class="form-control aschaWeek" name="aschaWeekPlanVOList[\${len}].aschaWeek" id="aschaWeek\${len+1}" value="\${len+1}주" />
 		            </div>
 		            <div style="width:90%;float:left;">
-		                <input type="text" class="form-control aschaWeekPlanCn"
-		                    name="aschaWeekPlanVOList[\${len}].aschaWeekPlanCn" id="aschaWeekPlanCn\${len+1}"
+		                <input type="text" class="form-control aschaWeekPlanCn" name="aschaWeekPlanVOList[\${len}].aschaWeekPlanCn" id="aschaWeekPlanCn\${len+1}"
 		                    placeholder="주간계획 입력" style=" margin-left: 10px;" />
 		            </div>						
 		        </div>`;
 				
 		const temp = document.querySelector("#divWeekAdd").insertAdjacentHTML(
 			"beforeend",	// HTML 요소가 삽입되는 위치 선언
-			str 			// 삽입할 문자열
+			str 		// 삽입할 문자열
 		);
 	}); // 방과후학교 주간계획 추가 끝
 	
@@ -129,7 +115,7 @@ window.onload = function(){
 		const aschaAtnlcEndde = document.querySelector("#aschaAtnlcEndde").value;
 		
 		let formData = new FormData();
-		
+
 		formData.append("schulCode",schulCode);
 		formData.append("aschaNm",aschaNm);
 		formData.append("aschaDetailCn",aschaDetailCn);	    
@@ -338,41 +324,35 @@ label {
 <div id="AfterSchoolContainer">
 	<div class="review-content-section">
 		<h3>
-			<img src="/resources/images/school/aftSchool/aftSchoolIcon1.png"
-				style="width: 50px; display: inline-block; vertical-align: middel;">
-			<span id="schoolNm"></span> <span>&nbsp;방과후학교 관리</span> <img
-				src="/resources/images/school/aftSchool/aftSchoolIcon2.png"
-				style="width: 50px; display: inline-block; vertical-align: middel;">
+			<img src="/resources/images/school/aftSchool/aftSchoolIcon1.png" style="width: 50px; display: inline-block; vertical-align: middel;">
+			<span id="schoolNm"></span> <span>&nbsp;방과후학교 관리</span> 
+			<img src="/resources/images/school/aftSchool/aftSchoolIcon2.png" style="width: 50px; display: inline-block; vertical-align: middel;">
 		</h3>
-		<div class="AfterSchoolAll"
-			style="width: 1400px; margin: auto; margin-bottom: 50px; min-height: 820px; padding: 50px 80px;">
+		<div class="AfterSchoolAll" style="width: 1400px; margin: auto; margin-bottom: 50px; min-height: 820px; padding: 50px 80px;">
 			<div>
 				<div class="form-group">
-					<label>방과후학교 명</label> <input type="text" class="form-control"
-						id="aschaNm" name="aschaNm">
+					<label>방과후학교 명</label>
+					<input type="text" class="form-control" id="aschaNm" name="aschaNm">
 				</div>
 				<div class="form-group">
 					<label>강의 설명</label>
-					<textarea class="form-control" id="aschaDetailCn"
-						name="aschaDetailCn" style="border-radius: 10px; font-size: 1.1rem;"></textarea>
+					<textarea class="form-control" id="aschaDetailCn" name="aschaDetailCn" style="border-radius: 10px; font-size: 1.1rem;"></textarea>
 				</div>
 				<div class="form-group">
-					<label>수강 비용</label> <input type="number" class="form-control"
-						id="aschaAtnlcCt" name="aschaAtnlcCt" value="0"
-						placeholder="원 단위로 입력하세요">
+					<label>수강 비용</label>
+					<input type="number" class="form-control" id="aschaAtnlcCt" name="aschaAtnlcCt" value="0" placeholder="원 단위로 입력하세요">
 				</div>
 				<div class="form-group">
-					<label>수강 정원</label> <input type="number" class="form-control"
-						id="aschaAceptncPsncpa" name="aschaAceptncPsncpa" value="0"
-						placeholder="명 단위로 입력하세요">
+					<label>수강 정원</label>
+					<input type="number" class="form-control" id="aschaAceptncPsncpa" name="aschaAceptncPsncpa" value="0" placeholder="명 단위로 입력하세요">
 				</div>
 				<div class="form-group">
-					<label>수강 시작 일자</label> <input type="date" class="form-control"
-						id="aschaAtnlcBgnde" name="aschaAtnlcBgnde" value="0">
+					<label>수강 시작 일자</label>
+					<input type="date" class="form-control" id="aschaAtnlcBgnde" name="aschaAtnlcBgnde" value="0">
 				</div>
 				<div class="form-group">
-					<label>수강 종료 일자</label> <input type="date" class="form-control"
-						id="aschaAtnlcEndde" name="aschaAtnlcEndde" value="0">
+					<label>수강 종료 일자</label>
+					<input type="date" class="form-control" id="aschaAtnlcEndde" name="aschaAtnlcEndde" value="0">
 				</div>
 
 				<!-- 주간계획 -->
@@ -380,10 +360,8 @@ label {
 					<div style="display: inline-flex;">
 						<label for="">주간계획 등록</label>
 						<div style="margin-left: 32px;">
-							<button type="button"
-								class="btn btn-custon-rounded-two btn-primary weekAdd">추가</button>
-							<button type="button"
-								class="btn btn-custon-rounded-two btn-danger weekMinus">삭제</button>
+							<button type="button" class="btn btn-custon-rounded-two btn-primary weekAdd">추가</button>
+							<button type="button" class="btn btn-custon-rounded-two btn-danger weekMinus">삭제</button>
 						</div>
 					</div>
 					<hr>
@@ -391,15 +369,10 @@ label {
 						<div>
 							<!-- 주간계획 입력하기 -->
 							<div style="width: 10%; float: left;">
-								<input type="text" class="form-control aschaWeek"
-									name="aschaWeekPlanVOList[0].aschaWeek" id="aschaWeek1"
-									value="1주" />
+								<input type="text" class="form-control aschaWeek" name="aschaWeekPlanVOList[0].aschaWeek" id="aschaWeek1" value="1주" />
 							</div>
 							<div style="width: 90%; float: left;">
-								<input type="text" class="form-control aschaWeekPlanCn"
-									name="aschaWeekPlanVOList[0].aschaWeekPlanCn"
-									id="aschaWeekPlanCn1" placeholder="주간계획 입력"
-									style="margin-left: 10px;" />
+								<input type="text" class="form-control aschaWeekPlanCn" name="aschaWeekPlanVOList[0].aschaWeekPlanCn" id="aschaWeekPlanCn1" placeholder="주간계획 입력" style="margin-left: 10px;" />
 							</div>
 						</div>
 					</div>
