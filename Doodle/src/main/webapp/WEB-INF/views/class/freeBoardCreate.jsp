@@ -3,7 +3,6 @@
 <script type="text/javascript" src="/resources/js/jquery.min.js"></script>
 <!-- 네이버 스마트 에디터 JS -->
 <script type="text/javascript" src="/resources/se2/js/HuskyEZCreator.js" charset="UTF-8"></script>
-<%-- <h1>자유게시판 create${USER_INFO.mberNm}</h1> --%>
 <script type="text/javascript">
 
 // 네이버 스마트 에디터 API
@@ -15,8 +14,8 @@ $(function() {
 		//SmartEditor2Skin.html 파일이 존재하는 경로
 		sSkinURI : '<c:url value="/resources/se2/SmartEditor2Skin.html"/>',
 		htParams : {
-			bUseToolbar : true,				// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
-			bUseVerticalResizer : false,	// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+			bUseToolbar : true,			// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+			bUseVerticalResizer : false,		// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
 			bUseModeChanger : false,		// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
 			bSkipXssFilter : true,			// client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
 			fOnBeforeUnload : function(){
@@ -58,7 +57,6 @@ $(function() {
 				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 			},
 			success:function(result){
-				//게시글 등록이 성공했을때 1, 실패했을때 0
 				if(result==1){
 					resultAlert2(result, '게시글 등록 ', '리스트로 이동합니다.', '/freeBoard/freeBoardList');
 				}else{
