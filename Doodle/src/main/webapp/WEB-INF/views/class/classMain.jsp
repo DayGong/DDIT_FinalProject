@@ -540,14 +540,14 @@ const initSwiper = function(){
 	var swiper = new Swiper('.swiper', {
 	  slidesPerView : 'auto', 			// 한 슬라이드에 보여줄 갯수
 	  spaceBetween : 6, 				// 슬라이드 사이 여백
-	  loop : false, 					// 슬라이드 반복 여부
-	  loopAdditionalSlides : 1, 		// 슬라이드 반복 시 마지막 슬라이드에서 다음 슬라이드가 보여지지 않는 현상 수정
+	  loop : false, 				// 슬라이드 반복 여부
+	  loopAdditionalSlides : 1, 			// 슬라이드 반복 시 마지막 슬라이드에서 다음 슬라이드가 보여지지 않는 현상 수정
 	  pagination : false, 				// pager 여부
-	  autoplay : {  					// 자동 슬라이드 설정 , 비 활성화 시 false
+	  autoplay : {  				// 자동 슬라이드 설정 , 비 활성화 시 false
 	    delay : 3000,   				// 시간 설정
-	    disableOnInteraction : false,  	// false로 설정하면 스와이프 후 자동 재생이 비활성화 되지 않음
+	    disableOnInteraction : false,  		// false로 설정하면 스와이프 후 자동 재생이 비활성화 되지 않음
 	  },
-	  navigation: {   					// 버튼 사용자 지정
+	  navigation: {   				// 버튼 사용자 지정
 	  	nextEl: '.swiper-button-next',
 	  	prevEl: '.swiper-button-prev',
 	  },
@@ -611,18 +611,18 @@ window.onload = function() {
 					xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
 				},
 				success: function (result) {
-		          	//result가 있으면 내가 생성한 방이 있으므로 생성된 방으로 이동
-		          	if(result !='' && result != null){
-		         		openChatPop("/chat/chtt?chttRoomCode="+result);
-		         	}
-		          	 //result가 없으면 내가 초대 받은 방이 있는지확인 
+			          	//result가 있으면 내가 생성한 방이 있으므로 생성된 방으로 이동
+			          	if(result !='' && result != null){
+			         		openChatPop("/chat/chtt?chttRoomCode="+result);
+			         	}
+					//result가 없으면 내가 초대 받은 방이 있는지확인 
 					else{
 						let data = {
 							"crtrId":myId,
 							"prtcpntId":teacherId	 
 						}
-		          		 
-		          		$.ajax({
+			          		 
+			          		$.ajax({
 							url: '/chat/roomCode',
 							type: 'post',
 							data: JSON.stringify(data),
@@ -633,20 +633,20 @@ window.onload = function() {
 							},
 							success: function (result) {
 								//result가 있으면 내가 초대 받은 방이 있으므로 초대 받은 방으로 이동
-		                       	if(result != '' && result != null){
-		                      		openChatPop("/chat/chtt?chttRoomCode="+result);
-		                      	}
-		                     	 //result가 0이면 채팅방 생성
+					                       	if(result != '' && result != null){
+					                      		openChatPop("/chat/chtt?chttRoomCode="+result);
+					                      	}
+								//result가 0이면 채팅방 생성
 								else{
-		                     		let data = {
-		                       			"type":"room",
-		                       			"schulCode":"",
-		                       			"clasCode":clasCode,
-		                       			"crtrId":teacherId,
-		                       			"prtcpntId":myId
-		                       		}
-		                       		
-		                       		$.ajax({
+					                     		let data = {
+					                       			"type":"room",
+					                       			"schulCode":"",
+					                       			"clasCode":clasCode,
+					                       			"crtrId":teacherId,
+					                       			"prtcpntId":myId
+					                       		}
+					                       		
+					                       		$.ajax({
 										url: '/chat/room',
 										type: 'post',
 										data: JSON.stringify(data),
@@ -691,7 +691,7 @@ window.onload = function() {
 										},
 										error:function(xhr){
 										}
-		                       		});
+			                       				});
 								}
 							},
 							error:function(xhr){
@@ -735,10 +735,10 @@ window.onload = function() {
 				<div class="profile-img" style="text-align: center;">
 					<c:choose>
 						<c:when test="${hrtchrVO.memberVO.mberImage != null}">
-					        <img id="profileImg" src="/upload/profile/${hrtchrVO.memberVO.mberImage}" alt="">
+					        	<img id="profileImg" src="/upload/profile/${hrtchrVO.memberVO.mberImage}" alt="">
 						</c:when>
 						<c:otherwise>
-					        <img id="profileImg" src="/resources/images/member/profile/user_l.png" alt="">
+					        	<img id="profileImg" src="/resources/images/member/profile/user_l.png" alt="">
 						</c:otherwise>
 					</c:choose>
 				</div>
@@ -891,7 +891,7 @@ window.onload = function() {
 					<div class="swiper-wrapper">
 						<!-- Slides -->
 						<div class="swiper-slide">
-							<img  src="/resources/images/student/루피1.png"/>
+							<img src="/resources/images/student/루피1.png"/>
 							<img src="/resources/images/student/루피1.png"/>
 							<img src="/resources/images/student/루피1.png"/>
 						</div>
