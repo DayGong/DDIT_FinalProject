@@ -46,9 +46,9 @@ h3{
 		$.ajax({
 			type:"post",
 			url:"/class/classMberDetailAjax",
-			data:JSON.stringify(data), //얘를 스트링으로 바꿔서 보내면
-			dataType:"json",			//컨트롤러가 보내는값이 json
-			contentType:"application/json;charset=utf-8", //받는애한테 형식이 제이슨이라고 알려줘
+			data:JSON.stringify(data),
+			dataType:"json",
+			contentType:"application/json;charset=utf-8",
 			beforeSend:function(xhr){
 				xhr.setRequestHeader(header,token);
 			},
@@ -58,9 +58,9 @@ h3{
 				document.querySelector("#studMberNm").value = result.mberNm;		//이름
 				document.querySelector("#studMberId").value = result.mberId;		//아이디
 				document.querySelector("#studMberEmail").value = result.mberEmail;	//이메일
-				document.querySelector("#studBirthDate").value = result.birthDate;		//생년월일
-				document.querySelector("#studMoblphonNo").value = result.moblphonNo;		//핸드폰번호
-				document.querySelector("#studZip").value = result.zip;				//우편번호
+				document.querySelector("#studBirthDate").value = result.birthDate;	//생년월일
+				document.querySelector("#studMoblphonNo").value = result.moblphonNo;	//핸드폰번호
+				document.querySelector("#studZip").value = result.zip;			//우편번호
 				document.querySelector("#studMberAdres").value = result.mberAdres;	//상세주소
 			},
 			error: function (xhr, status, error) {
@@ -124,9 +124,9 @@ h3{
 				<thead>
 					<tr>
 						<th>순번</th>
-                        <th>학부모 명</th>
-                        <th>학생 명</th>
-                        <th>가족관계</th>
+			                        <th>학부모 명</th>
+			                        <th>학생 명</th>
+			                        <th>가족관계</th>
 					</tr>
 				</thead>
 				<tbody id="classPrentMemListBody">
