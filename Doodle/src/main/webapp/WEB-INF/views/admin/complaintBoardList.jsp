@@ -189,14 +189,14 @@ function fn_search(currentPage) {
 					html += rowNum > 0 ? `\${rowNum + "" + (idx + 1)}` : `\${(idx + 1)}`;
 					html += 	`</td>`;
 					html += `	<td>
-									\${cnsltVO.nttCode}
-									<img class="nttCodeTitle" data-ntt-code="\${cnsltVO.nttCode}" src="/resources/images/consultation/newWindow.png" style="width:20px; height:20px; display:inline-block; vertical-align:middel; cursor: pointer;"/>
-								</td>
-								<td>\${cnsltVO.cmmnSttemntCnNm}</td>
-								<td>\${cnsltVO.wrterId}</td>
-								<td>\${cnsltVO.sttemntId}</td>
-								<td>\${cnsltVO.nttSttemntAccmlt}</td>
-								<td>\${cnsltVO.rceptDt}</td>`;
+								\${cnsltVO.nttCode}
+								<img class="nttCodeTitle" data-ntt-code="\${cnsltVO.nttCode}" src="/resources/images/consultation/newWindow.png" style="width:20px; height:20px; display:inline-block; vertical-align:middel; cursor: pointer;"/>
+							</td>
+							<td>\${cnsltVO.cmmnSttemntCnNm}</td>
+							<td>\${cnsltVO.wrterId}</td>
+							<td>\${cnsltVO.sttemntId}</td>
+							<td>\${cnsltVO.nttSttemntAccmlt}</td>
+							<td>\${cnsltVO.rceptDt}</td>`;
 					
 					// 처리 일자
 					if (`\${cnsltVO.processDt}` === "null" || `\${cnsltVO.processDt}` === "") {
@@ -210,10 +210,10 @@ function fn_search(currentPage) {
 					
 					if (`\${cnsltVO.cmmnSttemntProcessSttusNm}` === "미확인") {
 						html += `<td>
-									<button class="noProblemBtn d-btn-blue" data-ntt-code="\${cnsltVO.nttCode}">이상없음</button>
-									<button class="stopBtn d-btn-red" data-ntt-code="\${cnsltVO.nttCode}">정지</button>
-								</td>
-							</tr>`;
+								<button class="noProblemBtn d-btn-blue" data-ntt-code="\${cnsltVO.nttCode}">이상없음</button>
+								<button class="stopBtn d-btn-red" data-ntt-code="\${cnsltVO.nttCode}">정지</button>
+							</td>
+						</tr>`;
 					} else {
 						html += `<td></td>`;
 					}
@@ -249,9 +249,9 @@ function fn_updateSttus(nttCode, sttus) {
 			if (result < 1) { res = "실패"; icon = "error"; }
 			
 			Swal.fire({
-		      title: "신고 상태 변경을 " + res + '하였습니다.',
-		      text: result + "개의 신고 게시물이 변경되었습니다.",
-		      icon: icon
+				title: "신고 상태 변경을 " + res + '하였습니다.',
+				text: result + "개의 신고 게시물이 변경되었습니다.",
+				icon: icon
 			}).then(result => { location.reload(); });
 		}
 	});
