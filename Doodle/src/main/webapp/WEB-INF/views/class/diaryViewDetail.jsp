@@ -186,8 +186,8 @@ $(function() {
 					data: JSON.stringify(data),
 					contentType: "application/json; charset=utf-8",
 					beforeSend:function(xhr){
-		    			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-		    		},
+			    			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+			    		},
 					success: function(result) {
 						let res = "성공";
 						let icon = "success";
@@ -195,9 +195,9 @@ $(function() {
 						if (result != 1) { res = "실패"; icon = "error"; }
 						
 						Swal.fire({
-					      title: "일기장 삭제를 " + res + '하였습니다.',
-					      text: ' ',
-					      icon: icon
+							title: "일기장 삭제를 " + res + '하였습니다.',
+							text: ' ',
+							icon: icon
 						}).then(result => { location.href="/diary/goToDiaryList"; });
 					}
 				});
@@ -243,27 +243,25 @@ $(function() {
 		// 현재 수정 중이 아닌 경우
 		if (!replyContainer.data("editing")) { 					
 	        let replyCn = replyContainer.find(".replylistCn"); 				// 댓글 내용
-	        let originalCn = replyCn.html().trim(); 						// 원래 댓글 내용
+	        let originalCn = replyCn.html().trim(); 					// 원래 댓글 내용
 	        originalCn = originalCn.replace(/<br>/gi, "\n");
 
 	        // 댓글 내용을 textarea로 교체
 	        let tarea = $("<textarea>").addClass("replyTextarea").val(originalCn);
 	        tarea.attr({
-	        	"name": "answerCn",
-	            "rows": "",
-	            "cols": "",
-	            "style": "resize: none; width:96%; padding:10px 15px; border: 1px solid #ccc; border-bottom-right-radius:0px; border-top-right-radius:0px;"
+			"name": "answerCn",
+			"rows": "",
+			"cols": "",
+			"style": "resize: none; width:96%; padding:10px 15px; border: 1px solid #ccc; border-bottom-right-radius:0px; border-top-right-radius:0px;"
 	        });
-	        replyCn.empty().append(tarea);									// 기존 내용 지우고 textarea 넣기
-
-	     
-	        replyContainer.data("editing", true); 							// 수정 중 플래그 설정
+	        replyCn.empty().append(tarea);							// 기존 내용 지우고 textarea 넣기
+	        replyContainer.data("editing", true); 						// 수정 중 플래그 설정
 	        
 	    } else { // 현재 수정 중인 경우												
 	        let modCn = replyContainer.find(".replyTextarea").val().trim(); // 수정된 댓글 내용
 
 	        submitReply(answerCode, replyContainer, modCn);					// 서버로 수정된 내용 전송
-	        replyContainer.data("editing", false);							// 수정 중 플래그 해제
+	        replyContainer.data("editing", false);						// 수정 중 플래그 해제
 	    }
 	});
 	
@@ -287,7 +285,7 @@ $(function() {
 				let html = result.answerCn;
 				html = html.replace(/\n/gi, "<br>");
 
-				replyContainer.find(".replylistCn").html(html); // 수정된 내용으로 업데이트
+				replyContainer.find(".replylistCn").html(html); 		// 수정된 내용으로 업데이트
 			}
 		});
 	}
@@ -338,12 +336,12 @@ function fn_getDiaryDetail(nttCode) {
 			let emotion = fn_emotionImg(result.nttAtchFileCode);
 			let answerCode = result.answerCode;
 			
-			$("#day").html(result.strNttWritngDt);							// 작성 일자
-			$("#weatherSpan").html(result.wethr);							// 날씨
-			$("#emotionSpan").html(emotion + " " + result.nttAtchFileCode);	// 감정
+			$("#day").html(result.strNttWritngDt);					// 작성 일자
+			$("#weatherSpan").html(result.wethr);					// 날씨
+			$("#emotionSpan").html(emotion + " " + result.nttAtchFileCode);		// 감정
 			$("#writerSpan").html(result.mberId + " " + result.mberNm);		// 작성자
-			$("#nttNm").attr("value", result.nttNm);						// 제목
-			$("#nttCn").html(result.nttCn);									// 내용
+			$("#nttNm").attr("value", result.nttNm);				// 제목
+			$("#nttCn").html(result.nttCn);						// 내용
 			
 			// 선생님 말씀 불러오기
 			fn_getAnswerDetail(nttCode);
