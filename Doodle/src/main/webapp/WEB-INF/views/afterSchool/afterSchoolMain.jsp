@@ -85,9 +85,9 @@ window.onload = function(){
 		var clasInNo = ""; 			// 번호
 		var mberNm   = ""; 			// 학생이름
 		var aschaNm  = ""; 			// 방과후학교 명
-		var cmmnDetailCode = "";    // 수강신청 상태
-		var aschaAtnlcCt   = "";   	// 방과후학교 금액
-		var moblphonNo =   "";      // 연락처(학부모)
+		var cmmnDetailCode = "";    		// 수강신청 상태
+		var aschaAtnlcCt   = "";   		// 방과후학교 금액
+		var moblphonNo =   "";      		// 연락처(학부모)
 
 		// 수납 안내 문자 전송
 		function sendMsg(idx, aschaVO){
@@ -154,7 +154,7 @@ window.onload = function(){
 				contentType : "application/json;charset=utf-8",
 				data: JSON.stringify({
 					"aschaCode": aschaCode
-	            }),
+				}),
 				type: "post",
 				dataType: "json",   
 				beforeSend: function(xhr){
@@ -168,14 +168,14 @@ window.onload = function(){
 								<br>
 								<table>
 									<tr><td colspan='8'>수강신청한 학생이 없습니다.</td></tr>
-									</table>`;
+								</table>`;
 						disp.innerHTML = tblStr;       
 									
 					}else{
 						let students = [];   		// 학생이름 넣을 배열
 						let studentsId = []; 		// 학생 아이디 넣을 배열
 						let atnlcReqstCodes = []; 	// 수강신청 코드 넣을 배열
-						let attends= {};   			// 출결정보 저장 예정
+						let attends= {};   		// 출결정보 저장 예정
 	
 						// 단계1 필요한 데이터 모양 완성
 						result.forEach(function(aschaVO, idx){
@@ -191,7 +191,7 @@ window.onload = function(){
 								atnlcReqstCodes.push(atnlcReqstCode);
 								studentsId.push(studentId);
 							});
-	               		});
+	               				});
 	                
 						// 단계 2  테이블 모양 맹글기
 						let startDate = new Date(result[0].aschaAtnlcBgnde); // 방과후 시작 날짜
@@ -233,11 +233,11 @@ window.onload = function(){
 										<i class="fa-regular fa-circle-check"></i>
 										</button></td>`;
 							}
-	               		}
+	               				}
 						tblStr += `   </tr>
 									</table>`;
 						disp.innerHTML = tblStr;                        
-	            	}
+	            			}
 	
 					// 단계 3, 테이블 날짜와 학생 출석날짜 비교
 					let shTrs = document.querySelector("#shTbl").querySelectorAll("tr");
@@ -327,7 +327,7 @@ window.onload = function(){
 					});
 				});
 			});
-    	}// 출결 수정 ajax 끝
+    		}// 출결 수정 ajax 끝
       
 		// 출결 삭제 ajax
 		const attendanceDelete = function(data){
@@ -465,20 +465,15 @@ window.onload = function(){
 									<td>\${aschaNm}</td>
 									<td>`;
 							if (cmmnDetailCode==='종강'){
-								str += `<label style="background: #df3c3c; padding: 5px 20px;
-									border-radius: 10px; color: white; font-size: 15px;">종강</label>`;
+								str += `<label style="background: #df3c3c; padding: 5px 20px; border-radius: 10px; color: white; font-size: 15px;">종강</label>`;
 							}else if( cmmnDetailCode==='수업 진행중'){
-								str += `<label class="btnLetureStart" style="background: #ffd34f; padding: 5px 8px;
-									border-radius: 10px; color: white; font-size: 15px;">수업 진행중</label>`;
+								str += `<label class="btnLetureStart" style="background: #ffd34f; padding: 5px 8px; border-radius: 10px; color: white; font-size: 15px;">수업 진행중</label>`;
 							}else if(cmmnDetailCode==='결제 완료'){
-								str += `<label class="btnPayDone" style="background: #1F81FF; padding: 5px 8px;
-									border-radius: 10px; color: white; font-size: 15px;">결제 완료</label>`;
+								str += `<label class="btnPayDone" style="background: #1F81FF; padding: 5px 8px; border-radius: 10px; color: white; font-size: 15px;">결제 완료</label>`;
 							}else if(cmmnDetailCode==='결제 대기'){
-								str += `<label class="btnPayWait" style="background: #dfdfdf; padding: 5px 8px;
-									border-radius: 10px; color: white; font-size: 15px;">결제 대기</label>`;
+								str += `<label class="btnPayWait" style="background: #dfdfdf; padding: 5px 8px; border-radius: 10px; color: white; font-size: 15px;">결제 대기</label>`;
 							}else{
-								str += `<label style="background: #262626; padding: 5px 20px;
-									border-radius: 10px; color: white; font-size: 15px;">취소</label>`;
+								str += `<label style="background: #262626; padding: 5px 20px; border-radius: 10px; color: white; font-size: 15px;">취소</label>`;
 							}      
 							str +=`
 									</td>
@@ -536,23 +531,18 @@ window.onload = function(){
 						<td>`;
 						
 					if (aschaVO.cmmnAtnlcNm==='종강'){
-						str += `<label style="background: #df3c3c; padding: 5px 20px;
-							border-radius: 10px; color: white; font-size: 15px;">종강</label>`;
+						str += `<label style="background: #df3c3c; padding: 5px 20px; border-radius: 10px; color: white; font-size: 15px;">종강</label>`;
 					}else if(aschaVO.cmmnAtnlcNm==='수업 진행중'){
-						str += `<label style="background: #ffd34f; padding: 5px 8px;
-							border-radius: 10px; color: white; font-size: 15px;">수업 진행중</label>`;
+						str += `<label style="background: #ffd34f; padding: 5px 8px; border-radius: 10px; color: white; font-size: 15px;">수업 진행중</label>`;
 					}else if(aschaVO.cmmnAtnlcNm==='신청 진행중'){
-						str += `<label style="background: #1F81FF; padding: 5px 8px;
-							border-radius: 10px; color: white; font-size: 15px;">신청 진행중</label>`;
+						str += `<label style="background: #1F81FF; padding: 5px 8px; border-radius: 10px; color: white; font-size: 15px;">신청 진행중</label>`;
 					}else{
-						str += `<label style="background: #262626; padding: 5px 20px;
-							border-radius: 10px; color: white; font-size: 15px;">폐강</label>`;
+						str += `<label style="background: #262626; padding: 5px 20px; border-radius: 10px; color: white; font-size: 15px;">폐강</label>`;
 					}
 					str +=`   
 						</td>
 						<td>
-							<button class="pd-setting btnUpdate" data-ascha-code="\${aschaVO.aschaCode}"
-								onclick="btnClick(this)" >수정하기</button>
+							<button class="pd-setting btnUpdate" data-ascha-code="\${aschaVO.aschaCode}" onclick="btnClick(this)" >수정하기</button>
 						</td>
 					</tr>`;
 				});
@@ -835,23 +825,23 @@ td {
    <div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-close-area modal-close-df">
-			<a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
+				<a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
 			</div>
 			<div class="modal-body">
-			<i class="educate-icon educate-checked modal-check-pro"></i>
-			<h2>출석체크</h2>
-			<p>해당 학생의 출결상태를 선택하세요</p>
-			<button type="button" class="btn btn-custon-rounded-two btn-primary cmmnAttendCd" value="A06001">출석</button>
-			<button type="button" class="btn btn-custon-rounded-two btn-danger cmmnAttendCd"  value="A06002">결석</button>
-			<button type="button" class="btn btn-custon-rounded-two btn-success cmmnAttendCd" value="A06004">지각</button>
-			<button type="button" class="btn btn-custon-rounded-two btn-warning cmmnAttendCd" value="A06003">조퇴</button>
-			<button type="button" class="btn btn-custon-rounded-two btn-default cmmnAttendCd" value="A06005">공결</button>
-			<button type="button" class="btn btn-custon-rounded-two btn-default cmmnAttendCd" value="A06006">외출</button>
+				<i class="educate-icon educate-checked modal-check-pro"></i>
+				<h2>출석체크</h2>
+				<p>해당 학생의 출결상태를 선택하세요</p>
+				<button type="button" class="btn btn-custon-rounded-two btn-primary cmmnAttendCd" value="A06001">출석</button>
+				<button type="button" class="btn btn-custon-rounded-two btn-danger cmmnAttendCd"  value="A06002">결석</button>
+				<button type="button" class="btn btn-custon-rounded-two btn-success cmmnAttendCd" value="A06004">지각</button>
+				<button type="button" class="btn btn-custon-rounded-two btn-warning cmmnAttendCd" value="A06003">조퇴</button>
+				<button type="button" class="btn btn-custon-rounded-two btn-default cmmnAttendCd" value="A06005">공결</button>
+				<button type="button" class="btn btn-custon-rounded-two btn-default cmmnAttendCd" value="A06006">외출</button>
 			</div>
 			<div class="modal-footer">
-			<a data-dismiss="modal" href="#">닫기</a>
+				<a data-dismiss="modal" href="#">닫기</a>
 			</div>
-      	</div>
+      		</div>
    	</div>
 </div>
 <!-- 출석체크 모달 끝 -->
@@ -863,8 +853,7 @@ td {
    	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-close-area modal-close-df">
-				<a class="close" data-dismiss="modal" href="#"><i
-				class="fa fa-close"></i></a>
+				<a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
 			</div>
 			<div class="modal-body">
 				<i class="educate-icon educate-checked modal-check-pro"></i>
