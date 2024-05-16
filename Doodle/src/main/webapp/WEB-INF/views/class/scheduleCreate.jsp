@@ -9,35 +9,34 @@ window.onload = function(){
 	
 	document.getElementById("semstr").addEventListener("change", function() {
 		const clasCode = "${CLASS_INFO.clasCode}";
-	    var selectedValue = this.value;
-
-	    let data ={
-	    	"clasCode": clasCode,
-	    	"semstr": selectedValue 
-	    }
+		var selectedValue = this.value;
+		
+		let data ={
+			"clasCode": clasCode,
+			"semstr": selectedValue 
+		}
 	    
 		// 학기 중복 확인
 		$.ajax({
 			url : "/class/checkScheduleSemstr",
 			contentType: "application/json;charset=utf-8",
-		    data: JSON.stringify(data),
-		    type: "post",
-		    dataType: "json",
-		    beforeSend: function(xhr) {
-		        xhr.setRequestHeader(header, token);
-		    },
-		    success: function(result){
-		    	if(result===1){
-		    		Swal.fire({
-		    		    icon: 'warning',
-		    		    title: '이미 존재하는 학기 입니다.',
-		    		    text: '중복 등록할 수 없습니다.'
-		    		}).then(function(){
-		    		    $("#insertBtn").prop("disabled", true); // 버튼 비활성화
-		    		});
-		    	
-			    }
-		    }
+			data: JSON.stringify(data),
+			type: "post",
+			dataType: "json",
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(header, token);
+			},
+			success: function(result){
+				if(result===1){
+					Swal.fire({
+					    icon: 'warning',
+					    title: '이미 존재하는 학기 입니다.',
+					    text: '중복 등록할 수 없습니다.'
+					}).then(function(){
+					    $("#insertBtn").prop("disabled", true); // 버튼 비활성화
+					});
+				}
+			}
 		}) // end ajax
 	});
 	
@@ -101,7 +100,7 @@ window.onload = function(){
 		
 		const temp = document.querySelector("#listBody").insertAdjacentHTML(
 			"beforeend",	// HTML 요소가 삽입되는 위치 선언
-			str 			// 삽입할 문자열		
+			str 		// 삽입할 문자열		
 		);
 		// select 넣음
 		insertSelectEl(); 
@@ -128,17 +127,17 @@ window.onload = function(){
 	    var selectElement = `
 	        <select class="form-control selectSubject">
 	            <option> 선택 </option>										
-	            <option value="A07001">	국어			</option>
+	            <option value="A07001">	국어		</option>
 	            <option value="A07002">	영어         	</option>
 	            <option value="A07003">	수학         	</option>
 	            <option value="A07004">	과학         	</option>
 	            <option value="A07005">	사회        	</option>
 	            <option value="A07006">	도덕         	</option>
 	            <option value="A07007">	음악         	</option>
-	            <option value="A07008">	미술       		</option>
+	            <option value="A07008">	미술       	</option>
 	            <option value="A07009">	체육        	</option>
 	            <option value="A07010">	과학/실과   	</option>
-	            <option value="A07011">	예술(음악/미술)</option>
+	            <option value="A07011">	예술(음악/미술)	</option>
 	            <option value="A07012">	바른 생활    	</option>
 	            <option value="A07013">	슬기로운 생활	</option>
 	            <option value="A07014">	즐거운 생활	</option>									
