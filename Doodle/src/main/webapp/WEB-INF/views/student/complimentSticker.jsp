@@ -177,25 +177,25 @@ var complimentStickerCount = "${complimentStickerCount}";
 									<h5>칭찬 스티커 받은 날</h5>
 								</div>
 								<div class="sticker-container" style="margin-right: 70px; height: 406.3px;">
-	                                <ul class="basic-list">
-	                                	<c:choose>
-		                                	<c:when test="${not empty taskResultVOList}">
-			                                	<c:forEach var="taskResultVO" items="${taskResultVOList}" varStatus="status">
-												    <li>
-												        <span class="dataSpan">· 
-												            <fmt:formatDate value="${taskResultVO.complimentStickerDate}" pattern="yyyy-MM-dd" />
-												        </span>
-												        [과제] ${taskResultVO.taskVO.taskSj}
-												    </li>
+									<ul class="basic-list">
+										<c:choose>
+											<c:when test="${not empty taskResultVOList}">
+												<c:forEach var="taskResultVO" items="${taskResultVOList}" varStatus="status">
+													<li>
+														<span class="dataSpan">· 
+															<fmt:formatDate value="${taskResultVO.complimentStickerDate}" pattern="yyyy-MM-dd" />
+														</span>
+														[과제] ${taskResultVO.taskVO.taskSj}
+													</li>
 												</c:forEach>
-		                                	</c:when>
-		                                	<c:otherwise>
-		                                		<div style="text-align: center; align-content: center; height: 350px;">
-			                                		<p style="color: #999">아직 받은 칭찬 스티커가 없습니다.</p>
-		                                		</div>
-		                                	</c:otherwise>
-	                                	</c:choose>
-	                                </ul>
+											</c:when>
+											<c:otherwise>
+												<div style="text-align: center; align-content: center; height: 350px;">
+													<p style="color: #999">아직 받은 칭찬 스티커가 없습니다.</p>
+												</div>
+											</c:otherwise>
+										</c:choose>
+									</ul>
 								</div>
 							</div>
 						</div>
