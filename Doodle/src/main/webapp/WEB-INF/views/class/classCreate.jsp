@@ -9,9 +9,9 @@ $(function(){
 	
 	//클래스 등록
 	$("#createBtn").on("click",function(){
-		var clasYear = $("#clasYear").val();							//년도
+		var clasYear = $("#clasYear").val();					//년도
 		var cmmnGrade = document.getElementById("cmmnGrade").value;		//선택학년
-		var clasNm = $("#clasNm").val();								//반 명
+		var clasNm = $("#clasNm").val();					//반 명
 		
 		var cmmnClasSttus = document.getElementById("classState").value;
 		var beginTm = document.getElementById("beginTm").value;
@@ -46,11 +46,11 @@ $(function(){
 		let data = {
 			"schulCode":schulCode,			//학교코드
 			"clasYear":clasYear,			//연도
-			"clasNm":clasNm,				//반이름
+			"clasNm":clasNm,			//반이름
 			"cmmnGrade":cmmnGrade,			//학년
-			"cmmnClasSttus":cmmnClasSttus,	//상태
-			"beginTm":beginTm,				//등교시간
-			"endTm":endTm					//하교시간
+			"cmmnClasSttus":cmmnClasSttus,		//상태
+			"beginTm":beginTm,			//등교시간
+			"endTm":endTm				//하교시간
 		}
 		
 		$.ajax({
@@ -107,7 +107,7 @@ function autoComplete(){
 </script>
 <style>
 .input-mark-inner {
-	margin-bottom: 50px; /* 원하는 여백 값으로 조정 */
+	margin-bottom: 50px;
 }
 
 #classCreateContainer {
