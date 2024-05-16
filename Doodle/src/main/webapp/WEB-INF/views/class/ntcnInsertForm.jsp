@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-   pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <style>
 /* 글 양식 셀렉트 박스 시작 */
@@ -203,40 +202,40 @@ var oEditors = [];
 // 이미지 드래그 앤 드롭
 window.onload = function(){
 	var fu = document.querySelector('.file-upload-div');
-    var imgStr = "";
+	var imgStr = "";
 	
 	/* 박스 안에 Drag를 하고 있을 때 */
 	fu.addEventListener('dragover', function(e) {
-        e.preventDefault();
-    });
+		e.preventDefault();
+	});
 	
 	/* 박스 안에서 Drag를 Drop했을 때 */
-    fu.addEventListener('drop', function(e) {
-        e.preventDefault();
-        
-        $("#imageDiv").removeAttr("style");
-        
-        // 드래그한 파일들을 files에 추가
-	    for (var i = 0; i < e.dataTransfer.files.length; i++) {
-	        files.push(e.dataTransfer.files[i]);
-	        
-	        var fileName = [];
-	        fileName[i] = e.dataTransfer.files[i].name;
-	        
-	    	var imgTag = document.createElement('img');
-	    	imgTag.setAttribute('id', 'images'+(index++));
-	    	imgTag.setAttribute('class', 'images');
-	    	imgTag.setAttribute('src', '/upload/시연용 폴더/'+fileName[i]);
-	       
-	    	var imageDiv = document.querySelector("#imageDiv");
-	        imageDiv.appendChild(imgTag);
-	    }
-    });
+	fu.addEventListener('drop', function(e) {
+		e.preventDefault();
+		
+		$("#imageDiv").removeAttr("style");
+		
+		// 드래그한 파일들을 files에 추가
+		for (var i = 0; i < e.dataTransfer.files.length; i++) {
+			files.push(e.dataTransfer.files[i]);
+			
+			var fileName = [];
+			fileName[i] = e.dataTransfer.files[i].name;
+			
+			var imgTag = document.createElement('img');
+			imgTag.setAttribute('id', 'images'+(index++));
+			imgTag.setAttribute('class', 'images');
+			imgTag.setAttribute('src', '/upload/시연용 폴더/'+fileName[i]);
+			
+			var imageDiv = document.querySelector("#imageDiv");
+			imageDiv.appendChild(imgTag);
+		}
+	});
 }
 
 $(function(){
 	// 소켓 객체 생성
-    var soc = new SockJS("/alram");
+	var soc = new SockJS("/alram");
 
 	$("#ntcnSj").on("focus");
 	
@@ -250,16 +249,16 @@ $(function(){
 		
 		// 업로드한 파일 가져와서 넣기
 		for (var i = 0; i < inputImage.files.length; i++) {
-	        files.push(inputImage.files[i]);
-	        
+		        files.push(inputImage.files[i]);
+		        
 			// 이미지 태그 동적 생성
-	    	var imgTag = document.createElement('img');
-	    	imgTag.setAttribute('id', 'images' + (index++));
-	    	imgTag.setAttribute('class', 'images');
-	    	imgTag.setAttribute('src', '/upload/시연용 폴더/' + inputImage.files[i].name);
-	       
-	    	var imageDiv = document.querySelector("#imageDiv");
-	        imageDiv.appendChild(imgTag);
+		    	var imgTag = document.createElement('img');
+		    	imgTag.setAttribute('id', 'images' + (index++));
+		    	imgTag.setAttribute('class', 'images');
+		    	imgTag.setAttribute('src', '/upload/시연용 폴더/' + inputImage.files[i].name);
+		       
+		    	var imageDiv = document.querySelector("#imageDiv");
+		        imageDiv.appendChild(imgTag);
 		}
 		
 	});
@@ -267,23 +266,23 @@ $(function(){
 	// 첨부한 사진 개별 삭제 이벤트
 	$(document).on("click", ".images", function(){
 		var imageId = $(this).attr("id"); 	// 클릭한 이미지의 id 가져오기
-	    var idx = imageId.replace("images", "");	// images를 제거하여 인덱스 추출
+		var idx = imageId.replace("images", "");	// images를 제거하여 인덱스 추출
 		  
-	    delete files[idx];
-	    
-	    $("#images"+idx).remove();
-	    
-	    var notUndefinedChk = 0;
-	    
-	    for (var i = 0; i < files.length; i++) {
+		delete files[idx];
+		
+		$("#images"+idx).remove();
+		
+		var notUndefinedChk = 0;
+		
+		for (var i = 0; i < files.length; i++) {
 			if(files[i] != undefined){
 				notUndefinedChk++;
 			}
 		}
 	    
-	    if(notUndefinedChk == 0){
-	    	$("#imageDiv").attr("style", "display: none;");
-	    }
+		if(notUndefinedChk == 0){
+			$("#imageDiv").attr("style", "display: none;");
+		}
 	});
       
 	// 알림장 게시글 등록
@@ -318,7 +317,7 @@ $(function(){
 		        data: formData,
 		        dataType: "text",
 		        beforeSend:function(xhr){
-					xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		        },
 	           	success: function(res){
 				var ntcnCode = res;
@@ -342,7 +341,7 @@ $(function(){
 			        	data: JSON.stringify(data),
 			        	dataType: "text",
 			        	beforeSend:function(xhr){
-							xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+						xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 				        },
 			           	success: function(res){
 						// 소켓 객체 생성
