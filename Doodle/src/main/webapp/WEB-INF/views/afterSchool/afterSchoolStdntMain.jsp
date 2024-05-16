@@ -48,39 +48,30 @@ window.onload = function(){
 					<td>`;	
 
 				if (aschaVO.cmmnAtnlcNm==='종강'){
-					str += `<label style="background: #df3c3c; padding: 5px 20px;
-					    border-radius: 10px; color: white; font-size: 15px;">종강</label>`;
+					str += `<label style="background: #df3c3c; padding: 5px 20px; border-radius: 10px; color: white; font-size: 15px;">종강</label>`;
 				}else if(aschaVO.cmmnAtnlcNm==='수업 진행중'){
-					str += `<label style="background: #ffd34f; padding: 5px 8px;
-					    border-radius: 10px; color: white; font-size: 15px;">수업 진행중</label>`;
+					str += `<label style="background: #ffd34f; padding: 5px 8px; border-radius: 10px; color: white; font-size: 15px;">수업 진행중</label>`;
 				}else if(aschaVO.cmmnAtnlcNm==='신청 진행중'){
-					str += `<label style="background: #1F81FF; padding: 5px 8px;
-					    border-radius: 10px; color: white; font-size: 15px;">신청 진행중</label>`;
+					str += `<label style="background: #1F81FF; padding: 5px 8px; border-radius: 10px; color: white; font-size: 15px;">신청 진행중</label>`;
 				}else{
-					str += `<label style="background: #262626; padding: 5px 20px;
-					    border-radius: 10px; color: white; font-size: 15px;">폐강</label>`;
+					str += `<label style="background: #262626; padding: 5px 20px; border-radius: 10px; color: white; font-size: 15px;">폐강</label>`;
 				}
 					str +=`	
 						</td><td>`;
 				if(aschaVO.stdntState==='종강'){
-					str += `<label style="background: #df3c3c; padding: 5px 20px;
-    				    border-radius: 10px; color: white; font-size: 15px;">종강</label>`;
+					str += `<label style="background: #df3c3c; padding: 5px 20px; border-radius: 10px; color: white; font-size: 15px;">종강</label>`;
 				}else if(aschaVO.stdntState==='수업 진행중'){
-					str += `<label class="btnLetureStart" style="background: #ffd34f; padding: 5px 8px;
-    				    border-radius: 10px; color: white; font-size: 15px;">수업 진행중</label>`;
+					str += `<label class="btnLetureStart" style="background: #ffd34f; padding: 5px 8px; border-radius: 10px; color: white; font-size: 15px;">수업 진행중</label>`;
 				}else if(aschaVO.stdntState==='결제 완료'){
-                    str += `<label class="btnPayDone" style="background: #1F81FF; padding: 5px 8px;
-    				    border-radius: 10px; color: white; font-size: 15px;">결제 완료</label>`;
-                }else if(aschaVO.stdntState==='결제 대기'){
-                    str += `<label class="btnPayWait" style="background: #dfdfdf; padding: 5px 8px;
-    				    border-radius: 10px; color: white; font-size: 15px;">결제 대기</label>`;
-                }else{
-                    str += `<label style="background: #262626; padding: 5px 20px;
-    				    border-radius: 10px; color: white; font-size: 15px;">취소</label>`;
-                }
+					str += `<label class="btnPayDone" style="background: #1F81FF; padding: 5px 8px; border-radius: 10px; color: white; font-size: 15px;">결제 완료</label>`;
+		                }else if(aschaVO.stdntState==='결제 대기'){
+					str += `<label class="btnPayWait" style="background: #dfdfdf; padding: 5px 8px; border-radius: 10px; color: white; font-size: 15px;">결제 대기</label>`;
+		                }else{
+					str += `<label style="background: #262626; padding: 5px 20px; border-radius: 10px; color: white; font-size: 15px;">취소</label>`;
+		                }
 					str +=`
-                    	</td>
-                    	</tr>`;
+		                    		</td>
+		                    		</tr>`;
 			});
 			document.querySelector("#stdntListBody").innerHTML = str;
 		}
