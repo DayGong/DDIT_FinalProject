@@ -5,9 +5,9 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
 <style>
 #clasInNo {
-	border: 2px solid #bbb;
-    border-radius: 5px; /* 둥근 테두리 설정 */
-    font-size: 15px; 	/* 원하는 크기로 설정 */
+    border: 2px solid #bbb;
+    border-radius: 5px; 	/* 둥근 테두리 설정 */
+    font-size: 15px; 		/* 원하는 크기로 설정 */
     padding: 10px; 		/* 텍스트 입력란의 내부 여백 설정 */
     width: 50px; 		/* 입력 필드의 너비 설정 */
 }
@@ -15,13 +15,13 @@
 /* Chrome, Safari, Edge, Opera input 숫자 화살표 없애기*/
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /* Firefox  input 숫자 화살표 없애기*/
 input[type='number'] {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
 
 .modal-dialog {
@@ -64,24 +64,24 @@ input[type='number'] {
 }
 
 #classListContainer h3{
-	font-size: 2.2rem;
-	text-align: center;
-	backdrop-filter: blur(4px);
-	background-color: rgba(255, 255, 255, 1);
-	border-radius: 50px;
-	box-shadow: 35px 35px 68px 0px rgba(145, 192, 255, 0.5), inset -8px -8px 16px 0px rgba(145, 192, 255, 0.6), inset 0px 11px 28px 0px rgb(255, 255, 255);
-	width: 370px;
-	padding-top: 35px;
-	padding-bottom: 35px;
-	margin: auto;
-	margin-bottom: 40px;
+    font-size: 2.2rem;
+    text-align: center;
+    backdrop-filter: blur(4px);
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 50px;
+    box-shadow: 35px 35px 68px 0px rgba(145, 192, 255, 0.5), inset -8px -8px 16px 0px rgba(145, 192, 255, 0.6), inset 0px 11px 28px 0px rgb(255, 255, 255);
+    width: 370px;
+    padding-top: 35px;
+    padding-bottom: 35px;
+    margin: auto;
+    margin-bottom: 40px;
 }
 #classListContainer{
-	min-height: 790px;
+    min-height: 790px;
 }
 #classListContainer .custom-pagination{
-	max-width:302px;
-	margin: auto;
+    max-width:302px;
+    margin: auto;
 }
 
 .modal-edu-general .modal-body p {
@@ -92,7 +92,7 @@ input[type='number'] {
 }
 
 .invCode:focus {
-	outline:none;
+    outline:none;
 }
   
 #invCodeJoinModal input.invCode {
@@ -112,43 +112,42 @@ input[type='number'] {
 }
 
 #cmmnClasSttusNm{
-	height: 40px;
-	border: 1px solid #ddd;
-	border-radius: 5px;
-	padding-left: 10px;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding-left: 10px;
 }
 
 .searchForm{
-	height: 40px;
-	border: 1px solid #ddd;
-	border-radius: 5px;
-	padding: 15px 20px;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px 20px;
 }
 
 #btnSearch, #createBtn{
-	background: #333;
-	height: 40px;
-	border: none;
-	padding: 10px 15px;
-	border-radius: 10px;
-	font-family: 'Pretendard' !important;
-	font-weight: 600;
-	color: #fff;
+    background: #333;
+    height: 40px;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-family: 'Pretendard' !important;
+    font-weight: 600;
+    color: #fff;
 }
 #btnSearch:hover, #createBtn:hover{
-	background: #ffd77a;
-	color:#333;
-	transition:all 1s;
-	font-weight: 700;
+    background: #ffd77a;
+    color:#333;
+    transition:all 1s;
+    font-weight: 700;
 }
 #createBtn{
-	background: #006DF0;
+    background: #006DF0;
 }
 
 .modal-area-button tbody tr.none-tr:hover {
     background: #f5f5f5!important;
 }
-
 </style>
 <script>
 //전역 변수
@@ -230,7 +229,7 @@ $(function(){
 						icon: 'warning',
 						
 						showCancelButton: true, 		// cancel버튼 보이기. 기본은 원래 없음
-						confirmButtonColor: '#3085d6', 	// confrim 버튼 색깔 지정
+						confirmButtonColor: '#3085d6', 		// confrim 버튼 색깔 지정
 						cancelButtonColor: '#d33', 		// cancel 버튼 색깔 지정
 						confirmButtonText: '승인', 		// confirm 버튼 텍스트 지정
 						cancelButtonText: '취소', 		// cancel 버튼 텍스트 지정
@@ -348,17 +347,17 @@ $(document).on('click', '#invCodeChkBtn', function() {
 function fn_search(page) {
 	
 	var keyword = $("#keyword").val();
-    var data = {
+	var data = {
 			"schulCode": schulCode,
 			"keyword" : keyword,
-    		"currentPage" : page,
-    		"cmmnClasSttusNm" : $("#cmmnClasSttusNm").val(),
+		"currentPage" : page,
+		"cmmnClasSttusNm" : $("#cmmnClasSttusNm").val(),
 			"size":size
-    }
+	}
 	
-    $("#classListBody").html(""); //목록 초기화
-
-    $.ajax({
+	$("#classListBody").html(""); //목록 초기화
+	
+	$.ajax({
 		url:"/class/classListAjax",
 		type:"post",
 		data:JSON.stringify(data), //현재 페이지 전달
@@ -368,15 +367,15 @@ function fn_search(page) {
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 		},
 		success:function(result){
-            if (result.total == 0) {
-                $("#keyword").val('');
-
-				var	str = `<tr data-index="0" class="none-tr">
-								<td style="text-align: center;" colspan="6" >조회된 클래스가 없습니다.</td>
-							</tr>`;
-                
-                $("#classListBody").html(str);
-            } else {
+			if (result.total == 0) {
+				$("#keyword").val('');
+				
+				var str = `<tr data-index="0" class="none-tr">
+				<td style="text-align: center;" colspan="6" >조회된 클래스가 없습니다.</td>
+				</tr>`;
+				
+				$("#classListBody").html(str);
+			} else {
 				let html = "";
 				$.each(result.content, function(idx, clasVO) {
 					html += `<tr>
@@ -404,7 +403,6 @@ function fn_search(page) {
 		}
 	}); //ajax끝
 }
-    
 </script>
 
 <div id="classListContainer">
