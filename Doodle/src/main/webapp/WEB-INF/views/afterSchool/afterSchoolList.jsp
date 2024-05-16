@@ -25,54 +25,54 @@ window.onload = function(){
 	// 카카오페이 결제
 	requestPay = function(){
 		var IMP = window.IMP; 
-        IMP.init("imp67011510");	// 테스트용 가맹점ID(변경 X)
+        	IMP.init("imp67011510");	// 테스트용 가맹점ID(변경 X)
       
-        /* 
-       	주문번호 = 같은 값은 사용 불가(결제 할 때마다 새로운 값 필요)
+        	/* 
+       		주문번호 = 같은 값은 사용 불가(결제 할 때마다 새로운 값 필요)
 		주문번호 만들 때 "코드" + 현재 시간 등으로 만들기 위한 makemerchantUid
 		*/
-        var today = new Date();   
-        var hours = today.getHours(); // 시
-        var minutes = today.getMinutes();  // 분
-        var seconds = today.getSeconds();  // 초
-        var milliseconds = today.getMilliseconds();
-        var makeMerchantUid = hours +  minutes + seconds + milliseconds;
+	        var today = new Date();   
+	        var hours = today.getHours(); // 시
+	        var minutes = today.getMinutes();  // 분
+	        var seconds = today.getSeconds();  // 초
+	        var milliseconds = today.getMilliseconds();
+	        var makeMerchantUid = hours +  minutes + seconds + milliseconds;
         
-        // 데이터 가지고 오기
-        let aschaCode = document.querySelector("#aschaCode").innerText; 		// 방과후코드
-        let aschaNm = document.querySelector("#aschaNm").innerText;				// 방과후명
-        let aschaAtnlcCt = document.querySelector("#aschaAtnlcCt").innerText;	// 방과후 금액
-        let schoolNm = document.querySelector("#schoolNm").innerText;			// 학교이름
-        let schoolAdres = document.querySelector("#schooolAdres").innerText;	// 학교 주소
-        let schoolTelNo = document.querySelector("#schoolTelNo").innerText;		// 학교 연락처
-
-        IMP.request_pay({
-            pg : 'kakaopay', 							// kcp: 미리 등록한 카드로 결제, kakaopay
-            pay_method : 'card',
-            merchant_uid: aschaCode + makeMerchantUid,  // 주문번호
-            name : aschaNm,								// 방과후명
-            amount : aschaAtnlcCt,						// 가격(방과후 금액)
-            buyer_name : schoolNm, 						// 판매자명(학교이름)
-            buyer_tel : schoolTelNo,					// 판매자 전화번호(학교연락처)
-            buyer_addr : schoolAdres					// 판매 주소(학교 주소)
-           
-        }, function (rsp) {
-            if (rsp.success) {
-				// 서버 결제 API 성공시 로직
-				let paymentInfo =
-				{
-					"imp_uid" : rsp.imp_uid, 			// 주문번호
-					"amount" : rsp.paid_amount,			// 결제 금액
-					"payDate" :today,					// 결제 날짜
-					"aschaCode" : aschaCode,			// 방과후 코드
-					"mberId" : "${USER_INFO.mberId}"	// 결제자 아이디
-				};
-                 
-            	afterSchoolLecture(paymentInfo);
-            } else {
-            	alert(`결제에 실패하였습니다. 에러 내용: ${rsp.error_msg}`);
-            }
-        });	
+	        // 데이터 가지고 오기
+	        let aschaCode = document.querySelector("#aschaCode").innerText; 	// 방과후코드
+	        let aschaNm = document.querySelector("#aschaNm").innerText;		// 방과후명
+	        let aschaAtnlcCt = document.querySelector("#aschaAtnlcCt").innerText;	// 방과후 금액
+	        let schoolNm = document.querySelector("#schoolNm").innerText;		// 학교이름
+	        let schoolAdres = document.querySelector("#schooolAdres").innerText;	// 학교 주소
+	        let schoolTelNo = document.querySelector("#schoolTelNo").innerText;	// 학교 연락처
+	
+	        IMP.request_pay({
+	            pg : 'kakaopay', 							// kcp: 미리 등록한 카드로 결제, kakaopay
+	            pay_method : 'card',
+	            merchant_uid: aschaCode + makeMerchantUid,  			// 주문번호
+	            name : aschaNm,							// 방과후명
+	            amount : aschaAtnlcCt,						// 가격(방과후 금액)
+	            buyer_name : schoolNm, 						// 판매자명(학교이름)
+	            buyer_tel : schoolTelNo,						// 판매자 전화번호(학교연락처)
+	            buyer_addr : schoolAdres						// 판매 주소(학교 주소)
+	           
+	        }, function (rsp) {
+	            if (rsp.success) {
+					// 서버 결제 API 성공시 로직
+					let paymentInfo =
+					{
+						"imp_uid" : rsp.imp_uid, 		// 주문번호
+						"amount" : rsp.paid_amount,		// 결제 금액
+						"payDate" :today,			// 결제 날짜
+						"aschaCode" : aschaCode,		// 방과후 코드
+						"mberId" : "${USER_INFO.mberId}"	// 결제자 아이디
+					};
+	                 
+	            	afterSchoolLecture(paymentInfo);
+	            } else {
+	            	alert(`결제에 실패하였습니다. 에러 내용: ${rsp.error_msg}`);
+	            }
+	        });	
 	
 	}
 	
@@ -87,10 +87,10 @@ window.onload = function(){
 		        input: 'number',
 		        inputPlaceholder: '계좌번호',
 		        html: `
-	                <a href="#" id="btnAuto" style="background: white; border:white;">
-		        		<i class="fa fa-pencil-square-o" aria-hidden="true" style="height:25px; width:25px; margin:5px; margin: 20px 10px 0 10px;"></i>
-		    		</a>
-	            `,
+		                <a href="#" id="btnAuto" style="background: white; border:white;">
+					<i class="fa fa-pencil-square-o" aria-hidden="true" style="height:25px; width:25px; margin:5px; margin: 20px 10px 0 10px;"></i>
+				</a>
+		            `,
 		    });
 		    
 		    // 이후 처리되는 내용.
@@ -124,7 +124,7 @@ window.onload = function(){
 							"방과후 신청 및 결제가 완료되었습니다.",
 							"목록으로 돌아갑니다.",
 							"success"
-					    )
+						)
 
 						$(".modal").modal("hide");
 						loadAfterSchoolList();
@@ -135,7 +135,7 @@ window.onload = function(){
 							"결제를 실패하였습니다.",
 							"다시 시도해주세요.",
 							"error"
-					    )
+						)
 					},
 				}); // ajax끝
 		    }; // if문 끝
@@ -150,7 +150,7 @@ window.onload = function(){
 			icon: 'warning',
 			   
 			showCancelButton: true, 		// cancel버튼 보이기. 기본은 원래 없음
-			confirmButtonColor: '#3085d6', 	// confrim 버튼 색깔 지정
+			confirmButtonColor: '#3085d6', 		// confrim 버튼 색깔 지정
 			cancelButtonColor: '#d33', 		// cancel 버튼 색깔 지정
 			confirmButtonText: '신청',		// confirm 버튼 텍스트 지정
 			cancelButtonText: '취소',		// cancel 버튼 텍스트 지정
@@ -165,13 +165,12 @@ window.onload = function(){
 					text: '취소시 미결제 상태로 등록됩니다.',
 					icon: 'warning',
 					
-					showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
-					confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
-					cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
-					confirmButtonText: '이동', // confirm 버튼 텍스트 지정
-					cancelButtonText: '취소', // cancel 버튼 텍스트 지정
-					
-					reverseButtons: false, // 버튼 순서 거꾸로
+					showCancelButton: true, 	// cancel버튼 보이기. 기본은 원래 없음
+					confirmButtonColor: '#3085d6', 	// confrim 버튼 색깔 지정
+					cancelButtonColor: '#d33', 	// cancel 버튼 색깔 지정
+					confirmButtonText: '이동', 	// confirm 버튼 텍스트 지정
+					cancelButtonText: '취소', 	// cancel 버튼 텍스트 지정
+					reverseButtons: false, 		// 버튼 순서 거꾸로
 					
 				}).then((result) => {
 					if (result.isConfirmed) {
@@ -622,8 +621,7 @@ td, th {
 					</tr>
 					<tr>
 						<td><label for="">수강 기간</label></td>
-						<td><span id="aschaAtnlcBgnde"></span> ~
-        					<span id="aschaAtnlcEndde"></span>
+						<td><span id="aschaAtnlcBgnde"></span> ~ <span id="aschaAtnlcEndde"></span>
         				</td>
 					</tr>
 					<tr>
@@ -639,9 +637,7 @@ td, th {
 						<td><div id="aschaDetailCn"></div></td>
 					</tr>					
 					<tr>
-						<td colspan='2' style="text-align: center;">
-						<label for="" >강의 계획서</label>
-						</td>
+						<td colspan='2' style="text-align: center;"><label for="" >강의 계획서</label></td>
 					</tr>					
 				</table>
 				<table id="weekPlanTable">
