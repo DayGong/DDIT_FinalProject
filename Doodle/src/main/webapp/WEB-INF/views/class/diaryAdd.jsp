@@ -72,24 +72,24 @@
 
 /* 날씨 */
 .weather {
-    border: 1px solid #B0E0E6;
-    background-color: #f2f9fa;
-    opacity: 0.8;
-    border-radius: 10px;
-    text-align:center;
-    height: 80px;
-    width: 80px;
-    line-height: normal;
-    font-weight:bold;
-    position: absolute;
-    top: 20%;
-    right:2%;
-    transform: translate(10%, 60%);
-    z-index: 2;
+	border: 1px solid #B0E0E6;
+	background-color: #f2f9fa;
+	opacity: 0.8;
+	border-radius: 10px;
+	text-align:center;
+	height: 80px;
+	width: 80px;
+	line-height: normal;
+	font-weight:bold;
+	position: absolute;
+	top: 20%;
+	right:2%;
+	transform: translate(10%, 60%);
+	z-index: 2;
 }
 .weather_icon {
-    margin-right: 5px;
-    line-height: 1.3;
+	margin-right: 5px;
+	line-height: 1.3;
 }
 
 /* 감정 이모티콘 */
@@ -135,13 +135,13 @@
 			//SmartEditor2Skin.html 파일이 존재하는 경로
 			sSkinURI : '<c:url value="/resources/se2/SmartEditor2Skin.html"/>',
 			htParams : {
-				bUseToolbar : true,						// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+				bUseToolbar : true,				// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
 				bUseVerticalResizer : false,			// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
-				bUseModeChanger : false,				// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
-				bSkipXssFilter : true,					// client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
+				bUseModeChanger : false,			/ 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+				bSkipXssFilter : true,				// client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
 				SE2M_FontName: {
 					// 초기 글꼴 설정
-					htMainFont: {'id': '나눔고딕','name': '나눔고딕','size': '18','url': '','cssUrl': ''} // 기본 글꼴 설정
+					htMainFont: {'id': '나눔고딕','name': '나눔고딕','size': '18','url': '','cssUrl': ''}
 				},
 			}, // boolean
 			fOnAppLoad : function(){},
@@ -193,8 +193,8 @@
 					},300)
 					
 					$("#day").html(`\${result.strNttWritngDt}`);	// 날짜 설정
-		            $("#nttCode").val(nttCode);		// 코드 설정
-					$("#nttNm").val(nttNm);			// 제목 설정
+		            		$("#nttCode").val(nttCode);			// 코드 설정
+					$("#nttNm").val(nttNm);				// 제목 설정
 					
 					// 감정 설정
 					for (let i = 0; i < $(".emotion-inner-div").length; i++) {
@@ -202,7 +202,7 @@
 						emoDiv =  $(".emotion-inner-div:contains(" + emoTxt + ")");
 						if (emo === emoTxt) {
 							$(".emotion-inner-div").removeClass("isSelected");		// 모든 감정 요소에서 isSelected 클래스를 제거
-							emoDiv.attr("class", "emotion-inner-div isSelected");	// 해당 감정 요소에 isSelected 클래스를 추가
+							emoDiv.attr("class", "emotion-inner-div isSelected");		// 해당 감정 요소에 isSelected 클래스를 추가
 							
 							let value = emoDiv.find('span').text();
 							$("#nttAtchFileCode").val(value);
@@ -216,7 +216,7 @@
 		$(document).on('click', '#bcPaint-export', function(){
 			
 			// 그림판에서 그린 이미지를 가져와서 스마트 에디터에 추가하는 코드
-		    var imgData = $('#bcPaintCanvas')[0].toDataURL('image/png');
+		    	var imgData = $('#bcPaintCanvas')[0].toDataURL('image/png');
 
 			// $("#tareaUpload").val(imgData);
 			let formData = new FormData();
