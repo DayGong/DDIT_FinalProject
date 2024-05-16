@@ -78,17 +78,17 @@ iframe{
 
 #insertBtn, #cancelBtn, #autoBtn{
 	display: block;
-    margin: 10px;
-    text-align: center;
-    background: #006DF0;
-    padding: 15px 30px;
-    font-size: 1rem;
-    border: none;
-    color: #fff;
-    font-weight: 700;
-    border-radius: 5px;
-    margin-top: 30px;
-    margin-bottom: 40px;
+	margin: 10px;
+	text-align: center;
+	background: #006DF0;
+	padding: 15px 30px;
+	font-size: 1rem;
+	border: none;
+	color: #fff;
+	font-weight: 700;
+	border-radius: 5px;
+	margin-top: 30px;
+	margin-bottom: 40px;
 }
 
 #autoBtn{
@@ -108,53 +108,49 @@ iframe{
 }
 
 .btnContainer{
-   display: flex;
-   justify-content: center;
+	display: flex;
+	justify-content: center;
 }
 .file-upload {
-  width: 100%;
+	width: 100%;
 }
 .input {
-  display: flex;
-  align-items: center;
-}
-.prepend-big-btn {
-  position: ;
+	display: flex;
+	align-items: center;
 }
 .icon-right {
-  margin-right: 10px;
+	margin-right: 10px;
 }
 .file-button {
-  background-color: #007bff;
-  color: #fff;
-  padding: 8px 16px;
-  margin-right: 10px;
-  cursor: pointer;
-  
+	background-color: #007bff;
+	color: #fff;
+	padding: 8px 16px;
+	margin-right: 10px;
+	cursor: pointer;
 }
 .file-button input {
-  display: none;
+	display: none;
 }
 .file-button label {
-  cursor: pointer;
+	cursor: pointer;
 }
 .file-upload input[type="text"] {
-  flex-grow: 1;
-  padding: 8px;
-  border: 1px solid #ced4da;
-  width: calc(100% - 100px - 10px - 16px); /* Subtract button width and margins */
+	flex-grow: 1;
+	padding: 8px;
+	border: 1px solid #ced4da;
+	width: calc(100% - 100px - 10px - 16px); /* Subtract button width and margins */
 }
 .input-file-button{
-  background-color:#007bff;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
+	background-color:#007bff;
+	border-radius: 4px;
+	color: white;
+	cursor: pointer;
 }
 
 .file-name{
-  width: 300px;
-  height: 32px;
-  border-style: none;
+	width: 300px;
+	height: 32px;
+	border-style: none;
 }
 
 .form-control{
@@ -166,10 +162,10 @@ label{
 }
 
 .file-upload-div {
-    border: 1px solid #ccc;
-    margin: 0px 0px;
-    padding: 20px;
-    text-align: center;
+	border: 1px solid #ccc;
+	margin: 0px 0px;
+	padding: 20px;
+	text-align: center;
 }
 
 /* 업로드한 이미지 썸네일이 출력되는 Div */
@@ -178,7 +174,7 @@ label{
 	justify-content: flex-start;
 	border: 1px solid #ccc;
 	height: 105px;
-    margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .images{
@@ -270,7 +266,7 @@ $(function(){
 	
 	// 첨부한 사진 개별 삭제 이벤트
 	$(document).on("click", ".images", function(){
-		var imageId = $(this).attr("id"); 			// 클릭한 이미지의 id 가져오기
+		var imageId = $(this).attr("id"); 	// 클릭한 이미지의 id 가져오기
 	    var idx = imageId.replace("images", "");	// images를 제거하여 인덱스 추출
 		  
 	    delete files[idx];
@@ -292,42 +288,42 @@ $(function(){
       
 	// 알림장 게시글 등록
 	$("#insertBtn").click(function() {
-        // 입력 정보들 가져오기
-        var ntcnSj = $("#ntcnSj").val();
-	    
-        // 에디터에 적은 내용 가져오기
-        var ntcnCn = oEditors.getById["se2Cn"].getIR();
-        $("#ntcnCn").val(ntcnCn);
-        
-        // 업로드한 파일 가져오기
-        // 개별 삭제 되어 empty처리 된 인덱스 필터 작업
+	        // 입력 정보들 가져오기
+	        var ntcnSj = $("#ntcnSj").val();
+		    
+	        // 에디터에 적은 내용 가져오기
+	        var ntcnCn = oEditors.getById["se2Cn"].getIR();
+	        $("#ntcnCn").val(ntcnCn);
+	        
+	        // 업로드한 파일 가져오기
+	        // 개별 삭제 되어 empty처리 된 인덱스 필터 작업
 		files = files.filter(function(item){
 			return item !== undefined && item !== null;
 		});
-		
-        var formData = new FormData();
-        formData.append("clasCode", clasCode);
-        formData.append("ntcnSj", ntcnSj);
-        formData.append("ntcnCn", ntcnCn);
-         
-        for (var i = 0; i < files.length; i++) {
-        	formData.append("uploadFiles", files[i]);
-        };
-         
-        $.ajax({
-	        url: "/ntcn/ntcnInsert",
-	        processData: false,
-	        contentType: false,
-	        type: "POST",
-	        data: formData,
-	        dataType: "text",
-	        beforeSend:function(xhr){
-				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-	        },
-           	success: function(res){
-	            var ntcnCode = res;
-	            
-	            ntcnSj = "[알림장] " + ntcnSj;
+			
+	        var formData = new FormData();
+	        formData.append("clasCode", clasCode);
+	        formData.append("ntcnSj", ntcnSj);
+	        formData.append("ntcnCn", ntcnCn);
+	         
+	        for (var i = 0; i < files.length; i++) {
+	        	formData.append("uploadFiles", files[i]);
+	        };
+	         
+	        $.ajax({
+		        url: "/ntcn/ntcnInsert",
+		        processData: false,
+		        contentType: false,
+		        type: "POST",
+		        data: formData,
+		        dataType: "text",
+		        beforeSend:function(xhr){
+					xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+		        },
+	           	success: function(res){
+				var ntcnCode = res;
+				
+				ntcnSj = "[알림장] " + ntcnSj;
 				var noticeCn = "새 글이 등록되었습니다.";
 				
 				var data = {
@@ -337,57 +333,57 @@ $(function(){
 					"noticeSj":ntcnSj,
 					"noticeCn":noticeCn
 				};
-				
+					
 				// 과제 게시글 등록 -> 알림 테이블 insert
-		        $.ajax({
-		        	url: "/ntcn/noticeInsertAll",
-		        	contentType:"application/json;charset=utf-8",
-		        	type: "post",
-		        	data: JSON.stringify(data),
-		        	dataType: "text",
-		        	beforeSend:function(xhr){
-						xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-			        },
-		           	success: function(res){
+			        $.ajax({
+			        	url: "/ntcn/noticeInsertAll",
+			        	contentType:"application/json;charset=utf-8",
+			        	type: "post",
+			        	data: JSON.stringify(data),
+			        	dataType: "text",
+			        	beforeSend:function(xhr){
+							xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+				        },
+			           	success: function(res){
 						// 소켓 객체 생성
-			            var soc = new SockJS("/alram");
-			            
-			            var str = "";
-			            str += "<div class='single-review-st-text'>";
-			            str += "<input id='noticeCheckBox0' class='noticeCheckBox' type='checkbox'>";
-			            str += "<img src='/resources/images/header/letter.png' alt='' style='margin-left: 12px; margin-top: 6px; width: 33px; height: 33px;'>";
-			            str += "<div class='review-ctn-hf' style='margin-left: 11px;'>";
-			            str += "<a id='readNotice' href='/ntcn/ntcnList?clasCode="+clasCode+"'>";
-			            str += "<h3 style='font-size: 16px;'>"+ntcnSj+"</h3>";
-			            str += "<p>"+noticeCn+"</p>";
-			            str += "</a>";
-			            str += "</div>";
-		               
-			            // 학생, 학부모 모두에게 보내기
+						var soc = new SockJS("/alram");
+						
+						var str = "";
+						str += "<div class='single-review-st-text'>";
+						str += "<input id='noticeCheckBox0' class='noticeCheckBox' type='checkbox'>";
+						str += "<img src='/resources/images/header/letter.png' alt='' style='margin-left: 12px; margin-top: 6px; width: 33px; height: 33px;'>";
+						str += "<div class='review-ctn-hf' style='margin-left: 11px;'>";
+						str += "<a id='readNotice' href='/ntcn/ntcnList?clasCode="+clasCode+"'>";
+						str += "<h3 style='font-size: 16px;'>"+ntcnSj+"</h3>";
+						str += "<p>"+noticeCn+"</p>";
+						str += "</a>";
+						str += "</div>";
+			               
+						// 학생, 학부모 모두에게 보내기
 						var msg = str+",toAll";
 						
 						soc.onopen = function() {
-						   soc.send(msg);
+							soc.send(msg);
 						};
-						
+							
 						Swal.fire({
-			               title: '등록이 완료되었습니다.',
-			               text: '',
-			               icon: 'success',
-			               confirmButtonText: '확인',
-			            }).then(result => {
+							title: '등록이 완료되었습니다.',
+							text: '',
+							icon: 'success',
+							confirmButtonText: '확인',
+						}).then(result => {
 							if (result.isConfirmed) {
 								location.href = "/ntcn/ntcnList?clasCode="+clasCode;
 							}
-			            });
-		           	}
-		        });
+						});
+					}
+				});
 			}
 		});
 	});
 	
-    // 알림장 양식 불러오기
-    $("#selectNtcn").on("change", function(){
+	// 알림장 양식 불러오기
+	$("#selectNtcn").on("change", function(){
 		var selectVal = $(this).val();
 		var ntcnData = "";
 		
@@ -406,13 +402,13 @@ $(function(){
 			type:"post",
 			beforeSend:function(xhr){
 				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-	        },
-           	success: function(ntcnForm){
-           		oEditors.getById["se2Cn"].exec("SET_IR", [""]); // 네이버 에디터 초기화
-           		oEditors.getById["se2Cn"].exec("PASTE_HTML", [ntcnForm]);
-           	}
+		        },
+	           	success: function(ntcnForm){
+	           		oEditors.getById["se2Cn"].exec("SET_IR", [""]); // 네이버 에디터 초기화
+	           		oEditors.getById["se2Cn"].exec("PASTE_HTML", [ntcnForm]);
+	           	}
 		})
-    });
+	});
     
 	// 자동 완성 버튼
 	$("#autoBtn").on("click", function(){
@@ -475,10 +471,10 @@ $(function() {
 				</div>
 			</div>
 		</div>
-	<div class="btnContainer" style="">
-		​​​​​​​​<input type="button" value="등록" id="insertBtn"/>
-		​​​​​​​​<input type="button" value="취소" id="cancelBtn" onclick="location.href='/ntcn/ntcnList?clasCode=${CLASS_INFO.clasCode}'"/>
-		​​​​​​​​<input type="button" value="자동 완성" id="autoBtn"/>
-	</div>
+		<div class="btnContainer" style="">
+			​​​​​​​​<input type="button" value="등록" id="insertBtn"/>
+			​​​​​​​​<input type="button" value="취소" id="cancelBtn" onclick="location.href='/ntcn/ntcnList?clasCode=${CLASS_INFO.clasCode}'"/>
+			​​​​​​​​<input type="button" value="자동 완성" id="autoBtn"/>
+		</div>
 	</div>
 </div>
