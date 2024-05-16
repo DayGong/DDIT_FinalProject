@@ -35,27 +35,27 @@
 			<c:when test="${USER_INFO.mberId eq chttRoomVO.prtcpntId}">
 				<c:choose>
 					<%-- 프로필이 있는 경우 --%>
-	                <c:when test="${chttRoomVO.crtrVO.mberImage != null}">
-	                    <img class="profile-img" src="/upload/profile/${chttRoomVO.crtrVO.mberImage}" alt="">
-	                </c:when>
-	                <%-- 프로필이 없는 경우 --%>
-	                <c:otherwise>
-	                    <img class="profile-img" src="/resources/images/member/profile/user_l.png" alt="" />
-	                </c:otherwise>
-                </c:choose>
+			                <c:when test="${chttRoomVO.crtrVO.mberImage != null}">
+			                    <img class="profile-img" src="/upload/profile/${chttRoomVO.crtrVO.mberImage}" alt="">
+			                </c:when>
+			                <%-- 프로필이 없는 경우 --%>
+			                <c:otherwise>
+			                    <img class="profile-img" src="/resources/images/member/profile/user_l.png" alt="" />
+			                </c:otherwise>
+		                </c:choose>
 				<span class="profile-name" style="font-size: 1.8rem;">${chttRoomVO.crtrVO.mberNm}</span>
 			</c:when>
 			<c:when test="${USER_INFO.mberId eq chttRoomVO.crtrId}">
 				<c:choose>
 					<%-- 프로필이 있는 경우 --%>
-	                <c:when test="${chttRoomVO.prtcpntVO.mberImage != null}">
-	                    <img class="profile-img" src="/upload/profile/${chttRoomVO.prtcpntVO.mberImage}" alt="">
-	                </c:when>
-	                <%-- 프로필이 없는 경우 --%>
-	                <c:otherwise>
-	                    <img class="profile-img" src="/resources/images/member/profile/user_l.png" alt="" />
-	                </c:otherwise>
-                </c:choose>
+			                <c:when test="${chttRoomVO.prtcpntVO.mberImage != null}">
+			                    <img class="profile-img" src="/upload/profile/${chttRoomVO.prtcpntVO.mberImage}" alt="">
+			                </c:when>
+			                <%-- 프로필이 없는 경우 --%>
+			                <c:otherwise>
+			                    <img class="profile-img" src="/resources/images/member/profile/user_l.png" alt="" />
+			                </c:otherwise>
+		                </c:choose>
 				<span class="profile-name" style="font-size: 1.8rem;">${chttRoomVO.prtcpntVO.mberNm}</span>
 			</c:when>	
 		</c:choose>
@@ -71,13 +71,13 @@
 	        <!-- 채팅 입력창 -->
 	        <div class="insert-content">
 	            <form name="chatform" action="#" method="post">
-	                <input type="text" id="msg" class="form-control" name="msg" required style="border: 3px solid black; height: 55px; font-size: 1.5rem;"/>
-	                <div class="input-group-append">
-			        	<button class="btn-send" type="button" id="button-auto">
-			        		<i class="fa-solid fa-pen-to-square"></i>
-			        	</button>
-			        	<button class="btn-send" type="button" id="button-send">전송</button>
-			          </div>
+			<input type="text" id="msg" class="form-control" name="msg" required style="border: 3px solid black; height: 55px; font-size: 1.5rem;"/>
+			<div class="input-group-append">
+				<button class="btn-send" type="button" id="button-auto">
+					<i class="fa-solid fa-pen-to-square"></i>
+				</button>
+				<button class="btn-send" type="button" id="button-send">전송</button>
+			</div>
 	            </form>
 	        </div>
         </div>
@@ -104,21 +104,21 @@
 </script>
 <script>
 	var date = new Date();
-	var year = date.getFullYear();	// 년	
+	var year = date.getFullYear();		// 년	
 	var month = date.getMonth() + 1;	// 월
-	var day = date.getDate();			// 일
+	var day = date.getDate();		// 일
 	var dayLabel = date.getDay();		// 요일을 나타내는 숫자
 	var hours = getHours() 			// 시
 	var minutes = date.getMinutes(); 	// 분
 	var seconds = date.getSeconds();	// 초
 	
 	//요일을 나타내는 숫자를 요일로 바꾸기
-    function getTodayLabel() {        
-    	var week = new Array('일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일');        
-    	var today = date.getDay();    
-    	var todayLabel = week[today];        
-    	return todayLabel;
-    }
+	function getTodayLabel() {        
+		var week = new Array('일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일');        
+		var today = date.getDay();    
+		var todayLabel = week[today];        
+		return todayLabel;
+	}
 	
 	//시간만들기
 	function getHours(){
@@ -265,8 +265,8 @@
 						str += "<time style='margin-left: auto;' id='receiveTime' datetime='"+hours+":"+minutes+":"+seconds+"+09:00'>"+dateToAmPmFormat(chttVO.chttDt)+"</time></div></div>";
 					}
 					$("#msgArea").append(str);
-        		});
-        	}
+        			});
+        		}
 		});
 	
 		//4. subscribe(path, callback)으로 메세지를 받을 수 있음
@@ -326,9 +326,9 @@
 
 		//3. send(path, header, message)로 메세지를 보낼 수 있음
 		stomp.send('/pub/chat/enter', {}, JSON.stringify({chttRoomCode: chttRoomCode, writer: dsptchNm}))
-    });
+	});
 
-    $("#button-send").on("click", function(e){
+	$("#button-send").on("click", function(e){
 		var msg = document.getElementById("msg");
 		var chttCn = msg.value;
 		var type = "chtt";
@@ -336,40 +336,40 @@
 		socket.send(type+","+chttRoomCode+","+dsptchId+","+dsptchNm+","+chttCn+","+crtrId+","+prtcpntId);
 		stomp.send('/pub/chat/message', {}, JSON.stringify({chttRoomCode: chttRoomCode, chttDt: chttDt, chttCn: chttCn, writer: dsptchNm, dsptchId: dsptchId, chttSn: chttSn, dsptchNm: dsptchNm}));
 		msg.value = '';
-    });
+	});
     
-    //나가기 버튼 클릭 이벤트를 처리하는 함수를 정의
-    $("#button-out").on("click",function(){
-  		//Stomp 연결을 종료하고, 다른 페이지로 이동
-    	stomp.disconnect();
-  		
-    	window.history.back();
-    })
+	//나가기 버튼 클릭 이벤트를 처리하는 함수를 정의
+	$("#button-out").on("click",function(){
+		//Stomp 연결을 종료하고, 다른 페이지로 이동
+		stomp.disconnect();
+		
+		window.history.back();
+	})
     
-    var msg = document.getElementById("msg");
+	var msg = document.getElementById("msg");
     
-    //메시지 입력 창에서 키보드 입력 이벤트를 처리하는 함수를 정의
-    msg.addEventListener("keypress", function (event) {
-    	//입력된 키가 Enter 키인 경우
-	    if (event.key === "Enter") {
-	    	//폼의 디폴트 동작을 중지하고, 전송 버튼을 클릭
-	        event.preventDefault();
-	        document.getElementById("button-send").click();
-	    }
+	//메시지 입력 창에서 키보드 입력 이벤트를 처리하는 함수를 정의
+	msg.addEventListener("keypress", function (event) {
+		//입력된 키가 Enter 키인 경우
+		if (event.key === "Enter") {
+			//폼의 디폴트 동작을 중지하고, 전송 버튼을 클릭
+			event.preventDefault();
+			document.getElementById("button-send").click();
+		}
 	});
   
-    //자동 입력
-    $("#button-auto").on("click",function(){
-	    //학부모일 경우
-	    <sec:authorize access = "hasRole('A01003')" >
-	    	$("#msg").val("오늘 상담 신청해도 될까요? ");
-	    </sec:authorize>
-	    
-	  	//담임일 경우
-	    <sec:authorize access = "hasRole('A14002')" >
+	//자동 입력
+	$("#button-auto").on("click",function(){
+		//학부모일 경우
+		<sec:authorize access = "hasRole('A01003')" >
+			$("#msg").val("오늘 상담 신청해도 될까요? ");
+		</sec:authorize>
+		
+		//담임일 경우
+		<sec:authorize access = "hasRole('A14002')" >
 			$("#msg").val("넵 신청해주세요 ㅎㅎ");
 		</sec:authorize>
-    });
+	});
 });
   
 </script>
