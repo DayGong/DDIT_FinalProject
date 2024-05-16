@@ -114,12 +114,12 @@
 		if (keyword == null || keyword == '') { keyword=""; }
 		
 		formData.append("mberId", `${mberVO.mberId}`);			// 작성자 아이디
-		formData.append("startDate", startDate);				// 시작일
-		formData.append("endDate", endDate);					// 종료일
-		formData.append("searchCondition", searchCondition);	// 검색 조건
-		formData.append("keyword", keyword);					// 검색어
+		formData.append("startDate", startDate);			// 시작일
+		formData.append("endDate", endDate);				// 종료일
+		formData.append("searchCondition", searchCondition);		// 검색 조건
+		formData.append("keyword", keyword);				// 검색어
 		formData.append("currentPage", currentPage);			// 현재 페이지
-		formData.append("size", size);							// 출력될 목록 수
+		formData.append("size", size);					// 출력될 목록 수
 		
 		// 일기장 목록 불러오기
 		$.ajax({
@@ -130,8 +130,8 @@
 			data: formData,
 			dataType: "json",
 			beforeSend:function(xhr){
-    			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-    		},
+	    			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+	    		},
 			success: function(result) {
 				let html = "";
 				
