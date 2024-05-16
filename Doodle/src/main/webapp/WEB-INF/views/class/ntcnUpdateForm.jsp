@@ -75,17 +75,17 @@
 
 #updateBtn, #cancelBtn{
 	display: block;
-    margin: 10px;
-    text-align: center;
-    background: #006DF0;
-    padding: 15px 30px;
-    font-size: 1rem;
-    border: none;
-    color: #fff;
-    font-weight: 700;
-    border-radius: 5px;
-    margin-top: 30px;
-    margin-bottom: 40px;
+	margin: 10px;
+	text-align: center;
+	background: #006DF0;
+	padding: 15px 30px;
+	font-size: 1rem;
+	border: none;
+	color: #fff;
+	font-weight: 700;
+	border-radius: 5px;
+	margin-top: 30px;
+	margin-bottom: 40px;
 }
 
 #updateBtn:hover, #cancelBtn:hover{
@@ -99,52 +99,50 @@
 }
 
 .btnContainer{
-   display: flex;
-   justify-content: center;
+	display: flex;
+	justify-content: center;
 }
 .file-upload {
-  width: 100%;
+	width: 100%;
 }
 .input {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
 }
-.prepend-big-btn {
-  position: ;
-}
+
 .icon-right {
-  margin-right: 10px;
+	margin-right: 10px;
 }
 .file-button {
-  background-color: #007bff;
-  color: #fff;
-  padding: 8px 16px;
-  margin-right: 10px;
-  cursor: pointer;
+	background-color: #007bff;
+	color: #fff;
+	padding: 8px 16px;
+	margin-right: 10px;
+	cursor: pointer;
 }
 .file-button input {
-  display: none;
+	display: none;
 }
 .file-button label {
-  cursor: pointer;
+	cursor: pointer;
 }
 .file-upload input[type="text"] {
-  flex-grow: 1;
-  padding: 8px;
-  border: 1px solid #ced4da;
-  width: calc(100% - 100px - 10px - 16px); /* Subtract button width and margins */
+	flex-grow: 1;
+	padding: 8px;
+	border: 1px solid #ced4da;
+	width: calc(100% - 100px - 10px - 16px); /* Subtract button width and margins */
 }
 .input-file-button{
-  background-color:#007bff;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
+	background-color:#007bff;
+	border-radius: 4px;
+	color: white;
+	cursor: pointer;
 }
 
 .file-name{
-  width: 300px;
-  height: 32px;
-  border-style: none;
+	width: 300px;
+	height: 32px;
+	border-style: none;
 }
 
 .form-control{
@@ -156,10 +154,10 @@ label{
 }
 
 .file-upload-div {
-    border: 1px solid #ccc;
-    margin: 0px 0px;
-    padding: 20px;
-    text-align: center;
+	border: 1px solid #ccc;
+	margin: 0px 0px;
+	padding: 20px;
+	text-align: center;
 }
 
 /* 업로드한 이미지 썸네일이 출력되는 Div */
@@ -169,7 +167,7 @@ label{
 	border: 1px solid #ccc;
 	height: 105px;
 	margin-top: 10px;
-    margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .images{
@@ -204,29 +202,28 @@ function fn_deleteOne(param){
 		beforeSend:function(xhr){
 			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
         },
-       	success: function(res){
-       	}	
+       	success: function(res){}	
 	})
 }
 
 // 이미지 드래그 앤 드롭
 window.onload = function(){
 	var fu = document.querySelector('.file-upload-div');
-    var imgStr = "";
+    	var imgStr = "";
 	
 	/* 박스 안에 Drag를 하고 있을 때 */
 	fu.addEventListener('dragover', function(e) {
-        e.preventDefault();
-    });
+		e.preventDefault();
+	});
 	
 	/* 박스 안에서 Drag를 Drop했을 때 */
-    fu.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.style.backgroundColor = 'white';
+	fu.addEventListener('drop', function(e) {
+		e.preventDefault();
+		this.style.backgroundColor = 'white';
         
-        // 드래그한 파일들을 files에 추가
-	    for (var i = 0; i < e.dataTransfer.files.length; i++) {
-	    	// 이미지 파일이 아니면 return
+		// 드래그한 파일들을 files에 추가
+		for (var i = 0; i < e.dataTransfer.files.length; i++) {
+			// 이미지 파일이 아니면 return
 			if(e.dataTransfer.files[i].type != "image/jpeg" && e.dataTransfer.files[i].type != "image/png" && e.dataTransfer.files[i].type != "image/gif"){
 				Swal.fire({
 				  title: '이미지 파일만 업로드 가능합니다.',
@@ -236,26 +233,26 @@ window.onload = function(){
 				return;
 			}
 
-	        files.push(e.dataTransfer.files[i]);
-	        
-	        var fileName = [];
-	        fileName[i] = e.dataTransfer.files[i].name;
-	        
-	        // 이미지 태그 동적 생성
-	    	var imgTag = document.createElement('img');
-	    	imgTag.setAttribute('id', 'images'+(index++));
-	    	imgTag.setAttribute('class', 'images');
-	    	imgTag.setAttribute('src', '/upload/시연용 폴더/'+fileName[i]);
-	       
-	    	var imageDiv = document.querySelector("#imageDiv");
-	        imageDiv.appendChild(imgTag);
+		        files.push(e.dataTransfer.files[i]);
+		        
+		        var fileName = [];
+		        fileName[i] = e.dataTransfer.files[i].name;
+		        
+		        // 이미지 태그 동적 생성
+		    	var imgTag = document.createElement('img');
+		    	imgTag.setAttribute('id', 'images'+(index++));
+		    	imgTag.setAttribute('class', 'images');
+		    	imgTag.setAttribute('src', '/upload/시연용 폴더/'+fileName[i]);
+		       
+		    	var imageDiv = document.querySelector("#imageDiv");
+		        imageDiv.appendChild(imgTag);
 	    }
     });
 }
 
 $(function(){
 	// 소켓 객체 생성
-    var soc = new SockJS("/alram");
+	var soc = new SockJS("/alram");
 	
 	$("#uploadBtn").on("click", function(){
 		$("#inputImage").trigger("click");
@@ -267,16 +264,16 @@ $(function(){
 
 		// 업로드한 파일 가져와서 넣기
 		for (var i = 0; i < inputImage.files.length; i++) {
-	        files.push(inputImage.files[i]);
-	        
-			// 이미지 태그 동적 생성
-	    	var imgTag = document.createElement('img');
-	    	imgTag.setAttribute('id', 'images'+(index++));
-	    	imgTag.setAttribute('class', 'images');
-	    	imgTag.setAttribute('src', '/upload/시연용 폴더/'+inputImage.files[i].name);
-	       
-	    	var imageDiv = document.querySelector("#imageDiv");
-	        imageDiv.appendChild(imgTag);
+		        files.push(inputImage.files[i]);
+		        
+				// 이미지 태그 동적 생성
+		    	var imgTag = document.createElement('img');
+		    	imgTag.setAttribute('id', 'images'+(index++));
+		    	imgTag.setAttribute('class', 'images');
+		    	imgTag.setAttribute('src', '/upload/시연용 폴더/'+inputImage.files[i].name);
+		       
+		    	var imageDiv = document.querySelector("#imageDiv");
+		        imageDiv.appendChild(imgTag);
 		}
 	});
 	
@@ -288,75 +285,75 @@ $(function(){
 		
 		fn_deleteOne(atchFileCours);
 		
-		var imageId = $(this).attr("id"); // 클릭한 이미지의 id 가져오기
-	    var idx = imageId.replace("images", ""); // images를 제거하여 인덱스 추출
+		var imageId = $(this).attr("id"); 		// 클릭한 이미지의 id 가져오기
+		var idx = imageId.replace("images", ""); 	// images를 제거하여 인덱스 추출
 		  
-	    delete files[idx];
-
-	    $("#images"+idx).remove();
+		delete files[idx];
+		
+		$("#images"+idx).remove();
 	});
       
 	// 알림장 게시글 수정
 	$("#updateBtn").click(function() {
-        var atchfilecours = $(".images").attr("data-atchfilecours");
+		var atchfilecours = $(".images").attr("data-atchfilecours");
 		oEditors.getById["se2Cn"].exec("UPDATE_CONTENTS_FIELD", []);
         
-        // 입력 정보들 가져오기
-        var ntcnSj = $("#ntcnSj").val();
-	    
-        // 에디터에 적은 내용 가져오기
-        var ntcnCn = oEditors.getById["se2Cn"].getIR();
-        $("#ntcnCn").val(ntcnCn);
-        
-        // 업로드한 파일 가져오기
-        // 개별 삭제 되어 empty처리 된 인덱스 필터 작업
+		// 입력 정보들 가져오기
+		var ntcnSj = $("#ntcnSj").val();
+		
+		// 에디터에 적은 내용 가져오기
+		var ntcnCn = oEditors.getById["se2Cn"].getIR();
+		$("#ntcnCn").val(ntcnCn);
+		
+		// 업로드한 파일 가져오기
+		// 개별 삭제 되어 empty처리 된 인덱스 필터 작업
 		files = files.filter(function(item){
 			return item !== undefined && item !== null;
 		});
 		
-        var formData = new FormData();
-        formData.append("ntcnCode", "${ntcnVO.ntcnCode}");
-        
-		if(atchfilecours != null){
-	        formData.append("atchFileCode", "${ntcnVO.atchFileCode}");
-        }else{
-	        formData.append("atchFileCode", "");
-        }
+		var formData = new FormData();
+		formData.append("ntcnCode", "${ntcnVO.ntcnCode}");
 		
-        formData.append("ntcnSj", ntcnSj);
-        formData.append("ntcnCn", ntcnCn);
-         
-        for (var i = 0; i < files.length; i++) {
-        	formData.append("uploadFiles", files[i]);
-        };
-        
-        $.ajax({
-	        url: "/ntcn/ntcnUpdate",
-	        processData: false,
-	        contentType: false,
-	        type: "POST",
-	        data: formData,
-	        dataType: "text",
-	        beforeSend:function(xhr){
+		if(atchfilecours != null){
+			formData.append("atchFileCode", "${ntcnVO.atchFileCode}");
+		}else{
+			formData.append("atchFileCode", "");
+		}
+		
+		formData.append("ntcnSj", ntcnSj);
+		formData.append("ntcnCn", ntcnCn);
+		
+		for (var i = 0; i < files.length; i++) {
+			formData.append("uploadFiles", files[i]);
+		};
+
+		$.ajax({
+			url: "/ntcn/ntcnUpdate",
+			processData: false,
+			contentType: false,
+			type: "POST",
+			data: formData,
+			dataType: "text",
+			beforeSend:function(xhr){
 				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-	        },
-           	success: function(ntcnCode){
-           		Swal.fire({
-	               title: '수정이 완료되었습니다.',
-	               text: '',
-	               icon: 'success',
-	               confirmButtonText: '확인',
-	            }).then(result => {
+			},
+			success: function(ntcnCode){
+				Swal.fire({
+					title: '수정이 완료되었습니다.',
+					text: '',
+					icon: 'success',
+					confirmButtonText: '확인',
+				}).then(result => {
 					if (result.isConfirmed) {
 						location.href = "/ntcn/ntcnList?clasCode="+clasCode;
 					}
-	            });
+				});
 			}
 		});
 	});
 	
-    // 알림장 양식 불러오기
-    $("#selectNtcn").on("change", function(){
+	// 알림장 양식 불러오기
+	$("#selectNtcn").on("change", function(){
 		var selectVal = $(this).val();
 		var ntcnData = "";
 		
@@ -373,16 +370,12 @@ $(function(){
 			type:"post",
 			beforeSend:function(xhr){
 				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-	        },
-           	success: function(ntcnForm){
-           		oEditors.getById["se2Cn"].exec("SET_IR", [""]); // 네이버 에디터 초기화
-           		oEditors.getById["se2Cn"].exec("PASTE_HTML", [ntcnForm]);
-           	}
+		        },
+	           	success: function(ntcnForm){
+	           		oEditors.getById["se2Cn"].exec("SET_IR", [""]); // 네이버 에디터 초기화
+	           		oEditors.getById["se2Cn"].exec("PASTE_HTML", [ntcnForm]);
+	           	}
 		})
-    });
-    
-	$("#cancelBtn").on("click", function(){
-		
 	});
 });
 // 네이버 스마트 에디터 API
