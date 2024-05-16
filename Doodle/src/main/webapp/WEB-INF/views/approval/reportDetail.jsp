@@ -529,42 +529,42 @@ let jsPDF = jspdf.jsPDF;
 
 function pdfPrint() {
 	window.scrollTo(0, 0);
-    // 페이지 크기 설정 (A4)
-    var pageWidth = 190;
-    var pageHeight = 297; // A4 용지 크기: 210mm x 297mm
-
-    // PDF 생성
-    html2canvas($('#pdfDiv')[0]).then(function (canvas) {
-        var filename = 'FieldReport_' + getTodayDate(Date.now()) + '${sanctnDocVO.familyRelateVO.stdntVO.mberNm}.pdf';
-        var doc = new jsPDF('p', 'mm', 'a4');
-
-        // 이미지 데이터 생성
-        var imgData = canvas.toDataURL('image/png');
-
-        // 이미지 크기 계산
-        var margin = 10; // 출력 페이지 여백설정
-        var imgWidth = pageWidth;
-        var imgHeight = canvas.height * imgWidth / canvas.width;
-
-        // 페이지 추가를 위한 높이 계산
-        var heightLeft = imgHeight;
-        var position = margin;
-
-        // 이미지를 페이지에 추가
-        doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-
-        // 이미지가 여러 페이지에 걸칠 경우 처리
-        heightLeft -= pageHeight;
-        while (heightLeft >= 0) {
-            position = heightLeft - imgHeight;
-            doc.addPage(); // 새 페이지 추가
-            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-        }
-
-        // PDF 저장
-        doc.save(filename);
-    });
+	// 페이지 크기 설정 (A4)
+	var pageWidth = 190;
+	var pageHeight = 297; // A4 용지 크기: 210mm x 297mm
+	
+	// PDF 생성
+	html2canvas($('#pdfDiv')[0]).then(function (canvas) {
+	var filename = 'FieldReport_' + getTodayDate(Date.now()) + '${sanctnDocVO.familyRelateVO.stdntVO.mberNm}.pdf';
+	var doc = new jsPDF('p', 'mm', 'a4');
+	
+	// 이미지 데이터 생성
+	var imgData = canvas.toDataURL('image/png');
+	
+	// 이미지 크기 계산
+	var margin = 10; // 출력 페이지 여백설정
+	var imgWidth = pageWidth;
+	var imgHeight = canvas.height * imgWidth / canvas.width;
+	
+	// 페이지 추가를 위한 높이 계산
+	var heightLeft = imgHeight;
+	var position = margin;
+	
+	// 이미지를 페이지에 추가
+	doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+	
+	// 이미지가 여러 페이지에 걸칠 경우 처리
+	heightLeft -= pageHeight;
+	while (heightLeft >= 0) {
+		position = heightLeft - imgHeight;
+		doc.addPage(); // 새 페이지 추가
+		doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+		heightLeft -= pageHeight;
+	}
+	
+	// PDF 저장
+	doc.save(filename);
+	});
 }
 
 function resultSAlert(result, actTitle, reloadPage) {
@@ -574,9 +574,9 @@ function resultSAlert(result, actTitle, reloadPage) {
 	if (result < 1) { res = "실패"; icon = "error"; }
 	
 	Swal.fire({
-      title: actTitle + " " + res + '하였습니다.',
-      text: reloadPage,
-      icon: icon
+		title: actTitle + " " + res + '하였습니다.',
+		text: reloadPage,
+		icon: icon
 	}).then(result => { location.reload(); });
 }
 
@@ -586,158 +586,152 @@ window.onload = function() {
 		pdfPrint();
 	});
 	
-    $("#tcherSanctn").css("width", "193px");
-    $("#tcherSanctn").css("height", "87.72px");
-
-    $("#deputyPrncpalSanctn").css("width", "193px");
-    $("#deputyPrncpalSanctn").css("height", "87.72px");
-
-    /* 서명 등록 */
-    $("#sign-submit-btn").on("click", function() {
-    	//서명이 이미 등록되어 있다면
-    	if('${SCHOOL_USER_INFO.sign}' !==''){
+	$("#tcherSanctn").css("width", "193px");
+	$("#tcherSanctn").css("height", "87.72px");
+	
+	$("#deputyPrncpalSanctn").css("width", "193px");
+	$("#deputyPrncpalSanctn").css("height", "87.72px");
+	
+	/* 서명 등록 */
+	$("#sign-submit-btn").on("click", function() {
+		//서명이 이미 등록되어 있다면
+		if('${SCHOOL_USER_INFO.sign}' !==''){
 			// 담임일 경우
-            <sec:authorize access = "hasRole('A14002')" >
-                let tcherId = '${CLASS_TCH_INFO.mberId}';
-                let tcherSanctn = '${SCHOOL_USER_INFO.sign}';
-            </sec:authorize>
-            // 교감일 경우 
-            <sec:authorize access = "hasRole('A14005')" >
-                let deputyPrncpalId = '${SCHOOL_USER_INFO.mberId}';
-                let deputyPrncpalSanctn = '${SCHOOL_USER_INFO.sign}';
-            </sec:authorize>
-            var frm = new FormData($("#sign-frm")[0]);
-            frm.append("docCode", docCode);
-
-            // 담임일 경우
-            <sec:authorize access = "hasRole('A14002')" >
-                frm.append("tcherId", tcherId);
-                frm.append("tcherSanctn", tcherSanctn);
-            </sec:authorize>
-
-            // 교감일 경우
-            <sec:authorize access = "hasRole('A14005')" >
-                frm.append("deputyPrncpalId", deputyPrncpalId);
-                frm.append("deputyPrncpalSanctn", deputyPrncpalSanctn);
-            </sec:authorize>
-
-            $.ajax({
-                url: "/approval/approvalSign",
-                processData: false,
-                contentType: false,
-                data: frm,
-                type: "post",
-                dataType: "text",
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader(
-                        "${_csrf.headerName}",
-                        "${_csrf.token}");
-                },
-                success: function(result) {
-                    // 성공했을때 1, 실패했을때 0
-                    if (result == 1 || result == 2) {
-                    	resultSAlert(result, '체험학습신청 결재를', '체험학습 상세 화면으로 이동합니다.');
-                    } else {
-                        alertError('서명 등록에 실패하였습니다.', ' ');
-                    }
-                }
-            });
-    	}else{
-	        let file = $("#file").files;
-	        // 담임일 경우
-	        <sec:authorize access = "hasRole('A14002')" >
-	            let tcherId = '${CLASS_TCH_INFO.mberId}';
-	        </sec:authorize>
-	        // 교감일 경우
-	        <sec:authorize access = "hasRole('A14005')" >
-	            let deputyPrncpalId = '${SCHOOL_USER_INFO.mberId}';
-	        </sec:authorize>
-	
-	        var frm = new FormData($("#sign-frm")[0]);
-	        frm.append("docCode", docCode);
-	
-	        // 담임일 경우
-	        <sec:authorize access = "hasRole('A14002')" >
-	            frm.append("tcherId", tcherId);
-	        </sec:authorize>
-	
-	        // 교감일 경우
-	        <sec:authorize access = "hasRole('A14005')" >
-	            frm.append("deputyPrncpalId", deputyPrncpalId);
-	        </sec:authorize>
-	
-	        $.ajax({
-	            url: "/approval/approvalSign",
-	            processData: false,
-	            contentType: false,
-	            data: frm,
-	            type: "post",
-	            dataType: "text",
-	            beforeSend: function(xhr) {
-	                xhr.setRequestHeader(
-	                    "${_csrf.headerName}",
-	                    "${_csrf.token}");
-	            },
-	            success: function(result) {
-	                // 성공했을때 2, 실패했을때 0
-	                if (result == 2) {
-	                	resultSAlert(result, '체험학습신청 결재를', '체험학습 상세 화면으로 이동합니다.');
-	                } else {
-	                    alertError('서명 등록에 실패하였습니다.', ' ');
-	                }
-	            }
-	        });
-    	}
-    });
+			<sec:authorize access = "hasRole('A14002')" >
+				let tcherId = '${CLASS_TCH_INFO.mberId}';
+				let tcherSanctn = '${SCHOOL_USER_INFO.sign}';
+			</sec:authorize>
+			// 교감일 경우 
+			<sec:authorize access = "hasRole('A14005')" >
+				let deputyPrncpalId = '${SCHOOL_USER_INFO.mberId}';
+				let deputyPrncpalSanctn = '${SCHOOL_USER_INFO.sign}';
+			</sec:authorize>
+			var frm = new FormData($("#sign-frm")[0]);
+			frm.append("docCode", docCode);
+			
+			// 담임일 경우
+			<sec:authorize access = "hasRole('A14002')" >
+				frm.append("tcherId", tcherId);
+				frm.append("tcherSanctn", tcherSanctn);
+			</sec:authorize>
+			
+			// 교감일 경우
+			<sec:authorize access = "hasRole('A14005')" >
+				frm.append("deputyPrncpalId", deputyPrncpalId);
+				frm.append("deputyPrncpalSanctn", deputyPrncpalSanctn);
+			</sec:authorize>
+			
+			$.ajax({
+				url: "/approval/approvalSign",
+				processData: false,
+				contentType: false,
+				data: frm,
+				type: "post",
+				dataType: "text",
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+				},
+				success: function(result) {
+					// 성공했을때 1, 실패했을때 0
+					if (result == 1 || result == 2) {
+						resultSAlert(result, '체험학습신청 결재를', '체험학습 상세 화면으로 이동합니다.');
+					} else {
+						alertError('서명 등록에 실패하였습니다.', ' ');
+					}
+				}
+			});
+		}else{
+			let file = $("#file").files;
+			// 담임일 경우
+			<sec:authorize access = "hasRole('A14002')" >
+				let tcherId = '${CLASS_TCH_INFO.mberId}';
+			</sec:authorize>
+			// 교감일 경우
+			<sec:authorize access = "hasRole('A14005')" >
+				let deputyPrncpalId = '${SCHOOL_USER_INFO.mberId}';
+			</sec:authorize>
+			
+			var frm = new FormData($("#sign-frm")[0]);
+			frm.append("docCode", docCode);
+			
+			// 담임일 경우
+			<sec:authorize access = "hasRole('A14002')" >
+				frm.append("tcherId", tcherId);
+			</sec:authorize>
+			
+			// 교감일 경우
+			<sec:authorize access = "hasRole('A14005')" >
+				frm.append("deputyPrncpalId", deputyPrncpalId);
+			</sec:authorize>
+			
+			$.ajax({
+				url: "/approval/approvalSign",
+				processData: false,
+				contentType: false,
+				data: frm,
+				type: "post",
+				dataType: "text",
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+				},
+				success: function(result) {
+					// 성공했을때 2, 실패했을때 0
+					if (result == 2) {
+						resultSAlert(result, '체험학습신청 결재를', '체험학습 상세 화면으로 이동합니다.');
+					} else {
+						alertError('서명 등록에 실패하였습니다.', ' ');
+					}
+				}
+			});
+		}
+	});
 		
-    /* 서명모달 닫기 */
-    $("#sign-close").on("click", function() {
-        $("#small-image-show").html("");
-        $("#file").val("");
-    });
+	/* 서명모달 닫기 */
+	$("#sign-close").on("click", function() {
+		$("#small-image-show").html("");
+		$("#file").val("");
+	});
 
-    /* 신청 거절 */
-    $("#refusal").on("click", function() {
-        if (!confirm("체험학습 신청을 거절하시겠습니까?")) {
-            alert("취소되었습니다.");
-            return;
-        }
-        var data = {
-            "docCode": docCode
-        };
-
-        $.ajax({
-            url: "/approval/approvalRefuse",
-            contentType: "application/json;charset=utf-8",
-            data: JSON.stringify(data),
-            type: "post",
-            dataType: "json",
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader(
-                    "${_csrf.headerName}",
-                    "${_csrf.token}");
-            },
-            success: function(result) {
-
-                let clasCode = '${CLASS_INFO.clasCode}';
-
-                if (result == 1) {
-                    alert("체험학습 신청 거부가 완료되었습니다.");
-                    //담임
-                    <sec:authorize access = "hasRole('A14002')" >
-                    	location.href = "/approval/approvalList?clasCode=" + clasCode;
-                    </sec:authorize>
-                    //교감
-                    <sec:authorize access = "hasRole('A14005')" >
-                    let schulCode = document.querySelector("#schulCode").value;
-                    	location.href = "/approval/approvalList?schulCode=" + schulCode; //체험학습 신청 목록으로
-                    </sec:authorize>
-                } else {
-                    alert("체험학습 신청 거부가 실패했습니다.");
-                }
-            }
-        });
-    });
+	/* 신청 거절 */
+	$("#refusal").on("click", function() {
+		if (!confirm("체험학습 신청을 거절하시겠습니까?")) {
+			alert("취소되었습니다.");
+			return;
+		}
+		var data = {
+			"docCode": docCode
+		};
+		
+		$.ajax({
+			url: "/approval/approvalRefuse",
+			contentType: "application/json;charset=utf-8",
+			data: JSON.stringify(data),
+			type: "post",
+			dataType: "json",
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+			},
+			success: function(result) {
+				
+				let clasCode = '${CLASS_INFO.clasCode}';
+				
+				if (result == 1) {
+					alert("체험학습 신청 거부가 완료되었습니다.");
+					//담임
+					<sec:authorize access = "hasRole('A14002')" >
+						location.href = "/approval/approvalList?clasCode=" + clasCode;
+					</sec:authorize>
+					//교감
+					<sec:authorize access = "hasRole('A14005')" >
+						let schulCode = document.querySelector("#schulCode").value;
+						location.href = "/approval/approvalList?schulCode=" + schulCode; //체험학습 신청 목록으로
+					</sec:authorize>
+				} else {
+					alert("체험학습 신청 거부가 실패했습니다.");
+				}
+			}
+		});
+	});
     
 	/* 목록으로 */
 	$(".goList").on("click", function() {
@@ -745,76 +739,72 @@ window.onload = function() {
 	});
 
 	 /* 결재창 열기 */
-    $("#sign").on("click", function() {
-    	//서명이 이미 있다면 보여주기
-    	if('${SCHOOL_USER_INFO.sign}' !==''){
-    		var img = $('<img>', {
-    	        id: 'signature',
-    	        src: '/upload/sign/' + '${SCHOOL_USER_INFO.sign}'
-    	    });
-    	    
-    	    img.css({
-    	        width: '218px',
-    	        height: '198px'
-    	    });
-    		
-    		$("#small-image-show").append(img);
-    	}
+	$("#sign").on("click", function() {
+		//서명이 이미 있다면 보여주기
+		if('${SCHOOL_USER_INFO.sign}' !==''){
+			var img = $('<img>', {
+				id: 'signature',
+				src: '/upload/sign/' + '${SCHOOL_USER_INFO.sign}'
+			});
+			
+			img.css({
+				width: '218px',
+				height: '198px'
+			});
+			
+			$("#small-image-show").append(img);
+		}
     	
-        // 이미지 파일을 선택하면 미리보기를 등록하는 이벤트 핸들러
-        document.getElementById('file').addEventListener(
-            'change',
-            function() {
-                var file = this.files[0];
-                if (file) {
-                    displayPreviewImage(file);
-                }
-            });
+		// 이미지 파일을 선택하면 미리보기를 등록하는 이벤트 핸들러
+		document.getElementById('file').addEventListener('change', function() {
+			var file = this.files[0];
+			if (file) {
+				displayPreviewImage(file);
+			}
+		});
 
-        /* sign */
-        var canvas = document.getElementById('signature-pad');
+		/* sign */
+		var canvas = document.getElementById('signature-pad');
+		
+		// 픽셀 비율을 고려하여 캔버스 좌표 공간을 조정합니다.
+		// 이것은 또한 캔버스가 지워지게 합니다.
+		function resizeCanvas() {
+			// 100% 미만으로 축소하면, 일부 브라우저는 devicePixelRatio를 1 미만으로 보고합니다.
+			// 그러면 캔버스의 일부만 지워집니다.
+			var ratio = Math.max(window.devicePixelRatio || 1, 1);
+			canvas.width = canvas.offsetWidth * ratio;
+			canvas.height = canvas.offsetHeight * ratio;
+			canvas.getContext("2d").scale(ratio, ratio); // 레티나 디스플레이 지원
+		}
 
-        // 픽셀 비율을 고려하여 캔버스 좌표 공간을 조정합니다.
-        // 모바일 장치에서 선명하게 보이도록 합니다.
-        // 이것은 또한 캔버스가 지워지게 합니다.
-        function resizeCanvas() {
-            // 아주 이상한 이유로 100% 미만으로 축소하면, 일부 브라우저는 devicePixelRatio를 1 미만으로 보고합니다.
-            // 그러면 캔버스의 일부만 지워집니다.
-            var ratio = Math.max(
-                window.devicePixelRatio || 1, 1);
-            canvas.width = canvas.offsetWidth * ratio;
-            canvas.height = canvas.offsetHeight * ratio;
-            canvas.getContext("2d").scale(ratio, ratio); // 레티나 디스플레이 지원
-        }
+		// 모달이 열릴 때 resizeCanvas 함수를 호출하여 캔버스 크기를 조정
+		$('#signPadModal').on('shown.bs.modal', function() {
+			resizeCanvas();
+		});
 
-        // 모달이 열릴 때 resizeCanvas 함수를 호출하여 캔버스 크기를 조정
-        $('#signPadModal').on('shown.bs.modal', function() {
-            resizeCanvas();
-        });
+		// 창 크기가 변경될 때마다 캔버스 크기를 조정합니다.
+		window.onresize = resizeCanvas;
+		resizeCanvas();
 
-        // 창 크기가 변경될 때마다 캔버스 크기를 조정합니다.
-        window.onresize = resizeCanvas;
-        resizeCanvas();
+		// 서명 패드를 생성합니다.
+		var signaturePad = new SignaturePad(canvas, {
+			backgroundColor: 'rgb(255, 255, 255)', // 배경색-흰색 rgb(255, 255, 255, 0) 투명색
+			penColor: "rgb(1, 2, 3)" // 펜 색상(검정색)
+		});
 
-        // 서명 패드를 생성합니다.
-        var signaturePad = new SignaturePad(canvas, {
-            backgroundColor: 'rgb(255, 255, 255)', // 배경색-흰색 rgb(255, 255, 255, 0) 투명색
-            penColor: "rgb(1, 2, 3)" // 펜 색상(검정색)
-        });
-
-        // PNG 형식으로 서명 저장 버튼을 클릭할 때 동작합니다.
-        document.getElementById('save-png').addEventListener('click', function() {
+		// PNG 형식으로 서명 저장 버튼을 클릭할 때 동작합니다.
+		document.getElementById('save-png').addEventListener('click', function() {
 			// 서명이 비어있는지 확인합니다.
 			if (signaturePad.isEmpty()) {
 				return alert("서명을 부탁 드립니다");
 			}
-
+			
 			// 서명을 PNG 이미지로 변환합니다.
 			var data = signaturePad.toDataURL('image/png');
-
+			
 			// 이미지를 미리보기로 표시합니다.
 			$("#img01").attr('src', data);
-
+			
 			/* 서명 저장 */
 			var link = document.createElement('a');
 			link.href = data;
@@ -824,275 +814,274 @@ window.onload = function() {
 			document.body.removeChild(link);
 			signaturePad.clear();
 			/* 서명 저장 */
-        });
+		});
 
-        document.getElementById('clear').addEventListener('click', function() {
-            signaturePad.clear(); // 서명 지우기
-        });
+	        document.getElementById('clear').addEventListener('click', function() {
+			signaturePad.clear(); // 서명 지우기
+	        });
 
-        document.getElementById('draw').addEventListener('click', function() {
+		document.getElementById('draw').addEventListener('click', function() {
 			var ctx = canvas.getContext('2d');
 			ctx.globalCompositeOperation = 'source-over'; // 기본 그리기 모드로 설정
 		});
 
-        document.getElementById('erase').addEventListener('click', function() {
+		document.getElementById('erase').addEventListener('click', function() {
 			var ctx = canvas.getContext('2d');
 			ctx.globalCompositeOperation = 'destination-out'; // 지우개 모드로 설정
 		});
-        /* sign */
-    });
+		/* sign */
+	});
 	 
 	/* 결재창 닫기 */
 	$("#tchrCancelBtn").on("click", function() {
 		$("#tchrSaveDiv").css("display", "none");
 		$("#tchrUpdateDiv").css("display", "block");
 	});
-
+	
 	$("#tchrSaveBtn").on("click", function() {
 		$("#tchrSaveDiv").css("display", "none");
 		$("#tchrUpdateDiv").css("display", "block");
 	});
+
 	/* 신청서 삭제 */
-    $("#deleteBtn").on("click", function() {
-        if (!confirm("삭제하시겠습니까?")) {
-            alert("삭제가 취소되었습니다.");
-            return;
-        }
-        var data = {
-            "docCode": docCode
-        };
-
-        $.ajax({
-            url: "/approval/approvalDelete",
-            contentType: "application/json;charset=utf-8",
-            data: JSON.stringify(data),
-            type: "post",
-            dataType: "json",
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader(
-                    "${_csrf.headerName}",
-                    "${_csrf.token}");
-            },
-            success: function(result) {
-                if (result == 1) {
-                    alert("게시글이 성공적으로 삭제되었습니다.");
-                    location.href = "/approval/approvalList?clasStdntCode=" + clasStdntCode; //체험학습 신청 목록으로
-                } else {
-                    alert("게시글 삭제가 실패했습니다.");
-                }
-            }
-        });
-    });
+	$("#deleteBtn").on("click", function() {
+		if (!confirm("삭제하시겠습니까?")) {
+			alert("삭제가 취소되었습니다.");
+			return;
+		}
+		var data = {
+			"docCode": docCode
+		};
+		
+		$.ajax({
+			url: "/approval/approvalDelete",
+			contentType: "application/json;charset=utf-8",
+			data: JSON.stringify(data),
+			type: "post",
+			dataType: "json",
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+			},
+			success: function(result) {
+				if (result == 1) {
+					alert("게시글이 성공적으로 삭제되었습니다.");
+					location.href = "/approval/approvalList?clasStdntCode=" + clasStdntCode; //체험학습 신청 목록으로
+				} else {
+					alert("게시글 삭제가 실패했습니다.");
+				}
+			}
+		});
+	});
 	
-    /* 취소버튼 클릭 */
-    $("#cancelBtn").on("click", function() {
-        $("#updateDiv").css("display", "block");
-        $("#saveDiv").css("display", "none");
-        $("#exprnLrnBgnde").attr('disabled', true);
-        $("#exprnLrnEndde").attr('disabled', true);
+	/* 취소버튼 클릭 */
+	$("#cancelBtn").on("click", function() {
+		$("#updateDiv").css("display", "block");
+		$("#saveDiv").css("display", "none");
+		$("#exprnLrnBgnde").attr('disabled', true);
+		$("#exprnLrnEndde").attr('disabled', true);
+		
+		//radio버튼 눌림 방지 
+		$("input[type='radio']").attr("onclick", "return false;");
+		$("#purps").attr('disabled', true);
+		$("#dstn").attr('disabled', true);
+		$("#docCn").attr('disabled', true);
+		$("#rqstDe").attr('disabled', true);
+	});
 
-        //radio버튼 눌림 방지 
-        $("input[type='radio']").attr("onclick", "return false;");
-        $("#purps").attr('disabled', true);
-        $("#dstn").attr('disabled', true);
-        $("#docCn").attr('disabled', true);
-        $("#rqstDe").attr('disabled', true);
-    });
+	/* 저장버튼 클릭 */
+	$("#saveBtn").on("click", function() {
 
-    /* 저장버튼 클릭 */
-    $("#saveBtn").on("click", function() {
+		//학습형태가 없을 때 
+		if (document.querySelector('input[name="lrnStle"]:checked') == null || document.querySelector('input[name="lrnStle"]:checked') == '') {
+			alertError('학습형태를 선택해주세요.', ' ');
+			return;
+		}
 
-        //학습형태가 없을 때 
-        if (document.querySelector('input[name="lrnStle"]:checked') == null || document.querySelector('input[name="lrnStle"]:checked') == '') {
-            alertError('학습형태를 선택해주세요.', ' ');
-            return;
-        }
+		let docCode = document.querySelector("#docCode").value;
+		let cmmnDocKnd = document.querySelector("#cmmnDocKnd").value;
+		let stdntId = document.querySelector("#stdntId").value;
+		let exprnLrnBgnde = document.querySelector("#exprnLrnBgnde").value;
+		let exprnLrnEndde = document.querySelector("#exprnLrnEndde").value;
+		let lrnStle = document.querySelector('input[name="lrnStle"]:checked').value;
+		let purps = document.querySelector("#purps").value;
+		let dstn = document.querySelector("#dstn").value;
+		let stdnprntId = document.querySelector("#stdnprntId").value;
+		let docCn = document.querySelector("#docCn").value;
+		let rqstDe = getTodayDate();
+		let schulCode = document.querySelector("#schulCode").value;
+		let clasCode = document.querySelector("#clasCode").value;
+		let clasStdntCode = document.querySelector("#clasStdntCode").value;
 
-        let docCode = document.querySelector("#docCode").value;
-        let cmmnDocKnd = document.querySelector("#cmmnDocKnd").value;
-        let stdntId = document.querySelector("#stdntId").value;
-        let exprnLrnBgnde = document.querySelector("#exprnLrnBgnde").value;
-        let exprnLrnEndde = document.querySelector("#exprnLrnEndde").value;
-        let lrnStle = document.querySelector('input[name="lrnStle"]:checked').value;
-        let purps = document.querySelector("#purps").value;
-        let dstn = document.querySelector("#dstn").value;
-        let stdnprntId = document.querySelector("#stdnprntId").value;
-        let docCn = document.querySelector("#docCn").value;
-        let rqstDe = getTodayDate();
-        let schulCode = document.querySelector("#schulCode").value;
-        let clasCode = document.querySelector("#clasCode").value;
-        let clasStdntCode = document.querySelector("#clasStdntCode").value;
+		//체험학습시작일이 없을 때 
+		if (exprnLrnBgnde == 'null' || exprnLrnBgnde == '') {
+			alertError('체험학습시작일을 선택해주세요.', ' ');
+			$("#exprnLrnBgnde").focus();
+			return;
+		}
 
-        //체험학습시작일이 없을 때 
-        if (exprnLrnBgnde == 'null' || exprnLrnBgnde == '') {
-            alertError('체험학습시작일을 선택해주세요.', ' ');
-            $("#exprnLrnBgnde").focus();
-            return;
-        }
+		//체험학습종료일이 없을 때 
+		if (exprnLrnEndde == 'null' || exprnLrnEndde == '') {
+			alertError('체험학습종료일을 선택해주세요.', ' ');
+			$("#exprnLrnEndde").focus();
+			return;
+		}
+		
+		//체험학습시작일이 체험학습종료일보다 클 때
+		if (exprnLrnBgnde > exprnLrnEndde) {
+			alertError('체험학습시작일이 체험학습종료일보다 클 수 없습니다.', ' ');
+			$("#exprnLrnBgnde").focus();
+			return;
+		}
+		
+		//목적이 없을 때 
+		if (purps == 'null' || purps == '') {
+			alertError('목적을 입력해주세요.', ' ');
+			$("#purps").focus();
+			return;
+		}
+		
+		//목적지가 없을 때 
+		if (dstn == 'null' || dstn == '') {
+			alertError('목적지를 입력해주세요.', ' ');
+			$("#dstn").focus();
+			return;
+		}
 
-        //체험학습종료일이 없을 때 
-        if (exprnLrnEndde == 'null' || exprnLrnEndde == '') {
-            alertError('체험학습종료일을 선택해주세요.', ' ');
-            $("#exprnLrnEndde").focus();
-            return;
-        }
+		//체험학습계획이 없을 때 
+		if (docCn == 'null' || docCn == '') {
+			alertError('체험학습계획을 입력해주세요.', ' ');
+			$("#docCn").focus();
+			return;
+		}
 
-        //체험학습시작일이 체험학습종료일보다 클 때
-        if (exprnLrnBgnde > exprnLrnEndde) {
-            alertError('체험학습시작일이 체험학습종료일보다 클 수 없습니다.', ' ');
-            $("#exprnLrnBgnde").focus();
-            return;
-        }
+		let fieldStudyApplyFrm = new FormData($("#fieldStudyApplyFrm")[0]);
+		fieldStudyApplyFrm.append("docCode", docCode);
+		fieldStudyApplyFrm.append("cmmnDocKnd", cmmnDocKnd);
+		fieldStudyApplyFrm.append("stdntId", stdntId);
+		fieldStudyApplyFrm.append("exprnLrnBgnde", exprnLrnBgnde);
+		fieldStudyApplyFrm.append("exprnLrnEndde", exprnLrnEndde);
+		fieldStudyApplyFrm.append("stdnprntId", stdnprntId);
+		fieldStudyApplyFrm.append("rqstDe", rqstDe);
+		fieldStudyApplyFrm.append("schulCode", schulCode);
+		fieldStudyApplyFrm.append("clasCode", clasCode);
+		fieldStudyApplyFrm.append("clasStdntCode", clasStdntCode);
 
-        //목적이 없을 때 
-        if (purps == 'null' || purps == '') {
-            alertError('목적을 입력해주세요.', ' ');
-            $("#purps").focus();
-            return;
-        }
+		$.ajax({
+			url: "/approval/approvalUpdate",
+			processData: false,
+			contentType: false,
+			data: fieldStudyApplyFrm,
+			type: "post",
+			dataType: "json",
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+			},
+			success: function(result) {
+				$("#updateDiv").css("display", "block");
+				$("#saveDiv").css("display", "none");
+				
+				resultAlert(result, '체험학습신청 수정을', '체험학습 상세 화면으로 이동합니다.');
+			}
+		});
+	});
 
-        //목적지가 없을 때 
-        if (dstn == 'null' || dstn == '') {
-            alertError('목적지를 입력해주세요.', ' ');
-            $("#dstn").focus();
-            return;
-        }
+	/* 수정버튼 클릭 */
+	$("#updateBtn").on("click", function() {
+		$("#updateDiv").css("display", "none");
+		$("#saveDiv").css("display", "block");
+		$("#exprnLrnBgnde").removeAttr('disabled');
+		$("#exprnLrnEndde").removeAttr('disabled');
+		
+		//radio버튼 눌림 방지 해제
+		$("input[type='radio']").attr("onclick", "return true;");
+		$("#purps").removeAttr('disabled');
+		$("#dstn").removeAttr('disabled');
+		$("#docCn").removeAttr('disabled');
+		$("#rqstDe").removeAttr('disabled');
+	});
 
-        //체험학습계획이 없을 때 
-        if (docCn == 'null' || docCn == '') {
-            alertError('체험학습계획을 입력해주세요.', ' ');
-            $("#docCn").focus();
-            return;
-        }
+	switch (cmmnGrade) {
+		case "A22001":
+			document.querySelector("#cmmnGrade").innerText = "1";
+			break;
+		case "A22002":
+			document.querySelector("#cmmnGrade").innerText = "2";
+			break;
+		case "A22003":
+			document.querySelector("#cmmnGrade").innerText = "3";
+			break;
+		case "A22004":
+			document.querySelector("#cmmnGrade").innerText = "4";
+			break;
+		case "A22005":
+			document.querySelector("#cmmnGrade").innerText = "5";
+			break;
+		case "A22006":
+			document.querySelector("#cmmnGrade").innerText = "6";
+			break;
+	}
 
-        let fieldStudyApplyFrm = new FormData($("#fieldStudyApplyFrm")[0]);
-        fieldStudyApplyFrm.append("docCode", docCode);
-        fieldStudyApplyFrm.append("cmmnDocKnd", cmmnDocKnd);
-        fieldStudyApplyFrm.append("stdntId", stdntId);
-        fieldStudyApplyFrm.append("exprnLrnBgnde", exprnLrnBgnde);
-        fieldStudyApplyFrm.append("exprnLrnEndde", exprnLrnEndde);
-        fieldStudyApplyFrm.append("stdnprntId", stdnprntId);
-        fieldStudyApplyFrm.append("rqstDe", rqstDe);
-        fieldStudyApplyFrm.append("schulCode", schulCode);
-        fieldStudyApplyFrm.append("clasCode", clasCode);
-        fieldStudyApplyFrm.append("clasStdntCode", clasStdntCode);
-
-        $.ajax({
-            url: "/approval/approvalUpdate",
-            processData: false,
-            contentType: false,
-            data: fieldStudyApplyFrm,
-            type: "post",
-            dataType: "json",
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-            },
-            success: function(result) {
-                $("#updateDiv").css("display", "block");
-                $("#saveDiv").css("display", "none");
-
-                resultAlert(result, '체험학습신청 수정을', '체험학습 상세 화면으로 이동합니다.');
-            }
-        });
-    });
-
-    /* 수정버튼 클릭 */
-    $("#updateBtn").on("click", function() {
-        $("#updateDiv").css("display", "none");
-        $("#saveDiv").css("display", "block");
-        $("#exprnLrnBgnde").removeAttr('disabled');
-        $("#exprnLrnEndde").removeAttr('disabled');
-        
-        //radio버튼 눌림 방지 해제
-        $("input[type='radio']").attr("onclick", "return true;");
-        $("#purps").removeAttr('disabled');
-        $("#dstn").removeAttr('disabled');
-        $("#docCn").removeAttr('disabled');
-        $("#rqstDe").removeAttr('disabled');
-    });
-
-    switch (cmmnGrade) {
-        case "A22001":
-            document.querySelector("#cmmnGrade").innerText = "1";
-            break;
-        case "A22002":
-            document.querySelector("#cmmnGrade").innerText = "2";
-            break;
-        case "A22003":
-            document.querySelector("#cmmnGrade").innerText = "3";
-            break;
-        case "A22004":
-            document.querySelector("#cmmnGrade").innerText = "4";
-            break;
-        case "A22005":
-            document.querySelector("#cmmnGrade").innerText = "5";
-            break;
-        case "A22006":
-            document.querySelector("#cmmnGrade").innerText = "6";
-            break;
-    }
-
-    let fieldStudyApplyFrm = document.fieldStudyApplyFrm;
-    let lrnStle = '${sanctnDocVO.lrnStle}';
-
-    if (lrnStle === "가족행사 참여를 통한 체험학습") {
-        fieldStudyApplyFrm.lrnStle[0].checked = true;
-    } else {
-        fieldStudyApplyFrm.lrnStle[1].checked = true;
-    }
-
-    //radio버튼 눌림 방지
-    $("input[type='radio']").attr("onclick", "return false;");
-
-    // 체험학습시작일 시작 날짜를 클릭하면 오늘 이후로 날짜가 시작
-    $('#exprnLrnBgnde').attr('min', getTodayDate());
-
-
-    // 체험학습시작일 시작 날짜를 클릭하면 종료 날짜의 최소 시작 날짜가 시작 날짜로 설정
-    $("#exprnLrnBgnde").on("input", function() {
-        let exprnLrnBgnde = $('#exprnLrnBgnde').val();
-        $('#exprnLrnEndde').attr('min', exprnLrnBgnde);
-    });
-
-    // 체험학습종료일 종료 날짜를 클릭하면 종료 날짜의 최소 시작 날짜가 시작 날짜로 설정
-    $("#exprnLrnEndde").on("input", function() {
-        let exprnLrnEndde = $('#exprnLrnEndde').val();
-        $('#exprnLrnBgnde').attr('max', exprnLrnEndde);
-    });
-    
-    // 담임이 서명한 경우에만 이미지 추가
-    if ('${sanctnDocVO.tcherSanctn}' !== '') {
-        // 이미지 생성
-        let img = $('<img>', {
-            id: 'tcherSanctn',
-            src: '/upload/sign/' + '${sanctnDocVO.tcherSanctn}'
-        });
-        
-        img.css({
-	        width: '197.72px',
-	        height: '87.72px'
-	    });
-
-        // 이미지를 td에 추가
-        $('#tcherSanctnTd').append(img);
-    }
-    
-    // 교감이 서명한 경우에만 이미지 추가
-    if ('${sanctnDocVO.deputyPrncpalSanctn}' !== '') {
-        // 이미지 생성
-        let img = $('<img>', {
-            id: 'deputyPrncpalSanctn',
-            src: '/upload/sign/' + '${sanctnDocVO.deputyPrncpalSanctn}'
-        });
-        
-        img.css({
-	        width: '197.72px',
-	        height: '87.72px'
-	    });
-
-        // 이미지를 td에 추가
-        $('#deputyPrncpalSanctnTd').append(img);
-    }
+	let fieldStudyApplyFrm = document.fieldStudyApplyFrm;
+	let lrnStle = '${sanctnDocVO.lrnStle}';
+	
+	if (lrnStle === "가족행사 참여를 통한 체험학습") {
+		fieldStudyApplyFrm.lrnStle[0].checked = true;
+	} else {
+		fieldStudyApplyFrm.lrnStle[1].checked = true;
+	}
+	
+	//radio버튼 눌림 방지
+	$("input[type='radio']").attr("onclick", "return false;");
+	
+	// 체험학습시작일 시작 날짜를 클릭하면 오늘 이후로 날짜가 시작
+	$('#exprnLrnBgnde').attr('min', getTodayDate());
+	
+	
+	// 체험학습시작일 시작 날짜를 클릭하면 종료 날짜의 최소 시작 날짜가 시작 날짜로 설정
+	$("#exprnLrnBgnde").on("input", function() {
+		let exprnLrnBgnde = $('#exprnLrnBgnde').val();
+		$('#exprnLrnEndde').attr('min', exprnLrnBgnde);
+	});
+	
+	// 체험학습종료일 종료 날짜를 클릭하면 종료 날짜의 최소 시작 날짜가 시작 날짜로 설정
+	$("#exprnLrnEndde").on("input", function() {
+		let exprnLrnEndde = $('#exprnLrnEndde').val();
+		$('#exprnLrnBgnde').attr('max', exprnLrnEndde);
+	});
+	    
+	// 담임이 서명한 경우에만 이미지 추가
+	if ('${sanctnDocVO.tcherSanctn}' !== '') {
+		// 이미지 생성
+		let img = $('<img>', {
+			id: 'tcherSanctn',
+			src: '/upload/sign/' + '${sanctnDocVO.tcherSanctn}'
+		});
+		
+		img.css({
+			width: '197.72px',
+			height: '87.72px'
+		});
+		
+		// 이미지를 td에 추가
+		$('#tcherSanctnTd').append(img);
+	}
+	
+	// 교감이 서명한 경우에만 이미지 추가
+	if ('${sanctnDocVO.deputyPrncpalSanctn}' !== '') {
+		// 이미지 생성
+		let img = $('<img>', {
+			id: 'deputyPrncpalSanctn',
+			src: '/upload/sign/' + '${sanctnDocVO.deputyPrncpalSanctn}'
+		});
+		
+		img.css({
+			width: '197.72px',
+			height: '87.72px'
+		});
+		
+		// 이미지를 td에 추가
+		$('#deputyPrncpalSanctnTd').append(img);
+	}
 }
 </script>
 
