@@ -101,21 +101,21 @@ h3{
 		// 초대버튼 클릭 시 체크박스 보이기
 		document.getElementById("sendMailChkBtn").addEventListener("click", function() {
 			// 모든 숨겨진 체크박스 요소를 가져옴
-			document.getElementById("sendMailChkBtn").style.display="none";												//초대하기 버튼 가리기
-			document.getElementById("sendMailBtn").style.display="inline";												//전송버튼 보이기
-			document.getElementById("sendCancleBtn").style.display="inline";											//취소하기 버튼 보이기
-			document.getElementById("selectAll").style.display = "inline";												//tr요소 보이기
-			document.getElementById("updateBtn").style.display="none";													//수정하기 버튼 가리기
+			document.getElementById("sendMailChkBtn").style.display="none";							//초대하기 버튼 가리기
+			document.getElementById("sendMailBtn").style.display="inline";							//전송버튼 보이기
+			document.getElementById("sendCancleBtn").style.display="inline";						//취소하기 버튼 보이기
+			document.getElementById("selectAll").style.display = "inline";							//tr요소 보이기
+			document.getElementById("updateBtn").style.display="none";							//수정하기 버튼 가리기
 			document.querySelectorAll('.individual-checkbox').forEach(checkbox => checkbox.style.display = "block");	//td요소 보이기
 		});
 		
 		// 초대버튼 -> 취소버튼
 		document.getElementById("sendCancleBtn").addEventListener("click", function() {
-			document.getElementById("sendMailBtn").style.display="none";												//전송버튼 가리기
-			document.getElementById("sendCancleBtn").style.display="none";												//취소하기 버튼 가리기
-			document.getElementById("sendMailChkBtn").style.display="inline";											//초대하기 버튼 보이기
-			document.getElementById("updateBtn").style.display="inline";												//수정하기 버튼 보이기
-			document.getElementById("selectAll").style.display = "none";												//tr요소 가리기
+			document.getElementById("sendMailBtn").style.display="none";							//전송버튼 가리기
+			document.getElementById("sendCancleBtn").style.display="none";							//취소하기 버튼 가리기
+			document.getElementById("sendMailChkBtn").style.display="inline";						//초대하기 버튼 보이기
+			document.getElementById("updateBtn").style.display="inline";							//수정하기 버튼 보이기
+			document.getElementById("selectAll").style.display = "none";							//tr요소 가리기
 			document.querySelectorAll('.individual-checkbox').forEach(checkbox => checkbox.style.display = "none");		//td요소 가리기
 		});
 			
@@ -154,11 +154,11 @@ h3{
 						});
 					}			
 				});//초대코드 보내기 Ajax 끝
-				document.getElementById("sendMailChkBtn").style.display="inline";		//초대하기 버튼 보이기
-				document.getElementById("updateBtn").style.display="inline";			//수정하기 버튼 보이기
-				document.getElementById("sendMailBtn").style.display="none";			//전송버튼 가리기
-				document.getElementById("sendCancleBtn").style.display="none";			//취소하기 버튼 가리기
-				document.getElementById("selectAll").style.display = "none";			//tr요소 가리기
+				document.getElementById("sendMailChkBtn").style.display="inline";					//초대하기 버튼 보이기
+				document.getElementById("updateBtn").style.display="inline";						//수정하기 버튼 보이기
+				document.getElementById("sendMailBtn").style.display="none";						//전송버튼 가리기
+				document.getElementById("sendCancleBtn").style.display="none";						//취소하기 버튼 가리기
+				document.getElementById("selectAll").style.display = "none";						//tr요소 가리기
 				document.querySelectorAll('.individual-checkbox').forEach(checkbox => checkbox.style.display = "none"); //td요소 가리기
 			}); //초대코드 메일보내기 끝
 
@@ -175,7 +175,7 @@ h3{
 			document.getElementById("updateOKBtn").style.display="inline";		//수정완료 버튼 보이기
 			document.getElementById("updateCancleBtn").style.display="inline";	//수정취소 버튼 보이기
 			document.getElementById("sendMailChkBtn").style.display="none";		//초대하기 버튼 가리기
-			document.getElementById("updateBtn").style.display="none";			//수정하기 버튼 가리기
+			document.getElementById("updateBtn").style.display="none";		//수정하기 버튼 가리기
 					
 			 //학급번호 변경
 			document.querySelectorAll("#classInNoCell").forEach(function(classInNoCell) {
@@ -228,7 +228,7 @@ h3{
 			document.querySelectorAll("#classSttusCell").forEach(function(classSttusCell) {
 
 				const classSttusNm = classSttusCell.textContent.trim(); // 기존 텍스트 가져오기
-				const selectClone = classSttusSelect.cloneNode(true); // classclsfNmSelect 복제
+				const selectClone = classSttusSelect.cloneNode(true); 	// classclsfNmSelect 복제
 				
 				// 옵션으로 사용할 목록
 				let optList = ["활동", "정지"];
@@ -244,8 +244,8 @@ h3{
 				selectClone.value = classSttusNm;
 				selectClone.name = "cmmnClasPsitnSttusNm";
 
-				classSttusCell.textContent = ''; // 기존 td요소 내용 비우기
-				classSttusCell.appendChild(selectClone); //새로운 요소 td에 추가
+				classSttusCell.textContent = ''; 		// 기존 td요소 내용 비우기
+				classSttusCell.appendChild(selectClone); 	//새로운 요소 td에 추가
 			});//상태변경 끝
 
 		});//수정버튼 끝
@@ -333,9 +333,9 @@ function stdntDetail(mberId){
 	$.ajax({
 		type:"post",
 		url:"/class/classMberDetailAjax",
-		data:JSON.stringify(data), //얘를 스트링으로 바꿔서 보내면
-		dataType:"json",			//컨트롤러가 보내는값이 json
-		contentType:"application/json;charset=utf-8", //받는애한테 형식이 제이슨이라고 알려줘
+		data:JSON.stringify(data),
+		dataType:"json",
+		contentType:"application/json;charset=utf-8",
 		beforeSend:function(xhr){
 			xhr.setRequestHeader(header,token);
 		},
@@ -345,9 +345,9 @@ function stdntDetail(mberId){
 			document.querySelector("#studMberNm").value = result.mberNm;		//이름
 			document.querySelector("#studMberId").value = result.mberId;		//아이디
 			document.querySelector("#studMberEmail").value = result.mberEmail;	//이메일
-			document.querySelector("#studBirthDate").value = result.birthDate;		//생년월일
-			document.querySelector("#studMoblphonNo").value = result.moblphonNo;		//핸드폰번호
-			document.querySelector("#studZip").value = result.zip;				//우편번호
+			document.querySelector("#studBirthDate").value = result.birthDate;	//생년월일
+			document.querySelector("#studMoblphonNo").value = result.moblphonNo;	//핸드폰번호
+			document.querySelector("#studZip").value = result.zip;			//우편번호
 			document.querySelector("#studMberAdres").value = result.mberAdres;	//상세주소
 		},
 		error: function (xhr, status, error) {
@@ -372,7 +372,7 @@ function dateFormat(date){
 // 체크박스 전체 선택
 function selectAll(selectAll) {
 	const checkboxes = document.querySelectorAll('.individual-checkbox');	//개별 체크박스 요소 모두 선택
-	checkboxes.forEach(checkbox => {										// 선택된걸로 변경
+	checkboxes.forEach(checkbox => {					// 선택된걸로 변경
 		checkbox.checked = selectAll.checked;
 	});
 }
@@ -380,11 +380,11 @@ function selectAll(selectAll) {
 // 체크박스 개별 선택
 function updateSelectAll() {
 	const checkboxes = document.querySelectorAll('.individual-checkbox'); 	//개별 체크박스 요소 모두 선택
-	const selectAllCheckbox = document.getElementById('selectAll');			//전체 선택 체크박스 요소 가져오기
+	const selectAllCheckbox = document.getElementById('selectAll');		//전체 선택 체크박스 요소 가져오기
 	
-	let allChecked = true;													//체크박스 선택되었나 확인 초기값true
-	checkboxes.forEach(checkbox => {										//모든 개별 체크박스 상태 확인
-		if (!checkbox.checked) {											//선택 안 한 체크박스 상태 false로 변경
+	let allChecked = true;							//체크박스 선택되었나 확인 초기값true
+	checkboxes.forEach(checkbox => {					//모든 개별 체크박스 상태 확인
+		if (!checkbox.checked) {					//선택 안 한 체크박스 상태 false로 변경
 			allChecked = false;
 		}
 	});
