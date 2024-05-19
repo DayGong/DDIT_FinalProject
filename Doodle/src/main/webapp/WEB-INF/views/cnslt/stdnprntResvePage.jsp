@@ -170,17 +170,17 @@ window.onload = function() {
 	}
 	
 	// 날짜 형식 변환
-    function getDate(time) {
+    	function getDate(time) {
 		// 숫자가 아니면 숫자로 변환
 		if (!isNaN(time)) { time = Number(time); }
 		
-        const date = new Date(time.replace("KST", "GMT+0900"));
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-
-        return`\${year}-\${month}-\${day}`; 
-    } // end getDate
+		const date = new Date(time.replace("KST", "GMT+0900"));
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const day = String(date.getDate()).padStart(2, '0');
+		
+		return`\${year}-\${month}-\${day}`; 
+	} // end getDate
     
 	// 달력 출력 시작 //
 	const makeCalendar = (date) => {
@@ -426,10 +426,18 @@ window.onload = function() {
 		let cmmnCnsltTime = $("#cmmnCnsltTime").val();
 		let cnsltRequstCn = $("#cnsltRequstCn").val();
 		
-		if ( cnsltTrgetId == null || cnsltTrgetId == '' ) 	{ Swal.fire({ title: '아이디를 입력해주세요', text: ' ', icon: 'info' }); $("#cnsltTrgetId").focus(); return false; }
-		if ( mberNm == null || mberNm == '' ) 				{ Swal.fire({ title: '이름을 입력해주세요', text: ' ', icon: 'info' }); $("#mberNm").focus(); return false; }
-		if ( cnsltDe == null || cnsltDe == '' || cmmnCnsltTime == null || cmmnCnsltTime == '') { Swal.fire({ title: '시간을 선택해주세요', text: ' ', icon: 'info' }); return false; }
-		if ( cnsltRequstCn == null || cnsltRequstCn == '' ) { Swal.fire({ title: '상담 요청 내용을 입력해주세요', text: ' ', icon: 'info' }); $("#cnsltRequstCn").focus(); return false; }
+		if ( cnsltTrgetId == null || cnsltTrgetId == '' ) {
+			Swal.fire({ title: '아이디를 입력해주세요', text: ' ', icon: 'info' }); $("#cnsltTrgetId").focus(); return false; 
+		}
+		if ( mberNm == null || mberNm == '' ) {
+			Swal.fire({ title: '이름을 입력해주세요', text: ' ', icon: 'info' }); $("#mberNm").focus(); return false;
+		}
+		if ( cnsltDe == null || cnsltDe == '' || cmmnCnsltTime == null || cmmnCnsltTime == '') { 
+			Swal.fire({ title: '시간을 선택해주세요', text: ' ', icon: 'info' }); return false; 
+		}
+		if ( cnsltRequstCn == null || cnsltRequstCn == '' ) { 
+			Swal.fire({ title: '상담 요청 내용을 입력해주세요', text: ' ', icon: 'info' }); $("#cnsltRequstCn").focus(); return false; 
+		}
 		
 		let formData = {
 			"cnsltTrgetId" : cnsltTrgetId,
@@ -471,10 +479,18 @@ window.onload = function() {
 		let cmmnCnsltTime = $("#cmmnCnsltTime").val();
 		let cnsltRequstCn = $("#cnsltRequstCn").val();
 		
-		if ( cnsltTrgetId == null || cnsltTrgetId == '' ) 	{ Swal.fire({ title: '아이디를 입력해주세요', text: ' ', icon: 'info' }); $("#cnsltTrgetId").focus(); return false; }
-		if ( mberNm == null || mberNm == '' ) 				{ Swal.fire({ title: '이름을 입력해주세요', text: ' ', icon: 'info' }); $("#mberNm").focus(); return false; }
-		if ( cnsltDe == null || cnsltDe == '' || cmmnCnsltTime == null || cmmnCnsltTime == '') { Swal.fire({ title: '시간을 선택해주세요', text: ' ', icon: 'info' }); return false; }
-		if ( cnsltRequstCn == null || cnsltRequstCn == '' ) { Swal.fire({ title: '상담 요청 내용을 입력해주세요', text: ' ', icon: 'info' }); $("#cnsltRequstCn").focus(); return false; }
+		if ( cnsltTrgetId == null || cnsltTrgetId == '' ) {
+			Swal.fire({ title: '아이디를 입력해주세요', text: ' ', icon: 'info' }); $("#cnsltTrgetId").focus(); return false; 
+		}
+		if ( mberNm == null || mberNm == '' ) {
+			Swal.fire({ title: '이름을 입력해주세요', text: ' ', icon: 'info' }); $("#mberNm").focus(); return false; 
+		}
+		if ( cnsltDe == null || cnsltDe == '' || cmmnCnsltTime == null || cmmnCnsltTime == '') {
+			Swal.fire({ title: '시간을 선택해주세요', text: ' ', icon: 'info' }); return false;
+		}
+		if ( cnsltRequstCn == null || cnsltRequstCn == '' ) {
+			Swal.fire({ title: '상담 요청 내용을 입력해주세요', text: ' ', icon: 'info' }); $("#cnsltRequstCn").focus(); return false; 
+		}
 		
 		let formData = {
 			"cnsltCode" : cnsltCode,
