@@ -161,12 +161,12 @@ window.onload = function() {
 		$("textarea[name='cnsltRequstCn']").val(`${modCnsltVO.cnsltRequstCn}`);
 		
 		$("#btnSpan").html(`<button type='button' id='modifyBtn' class='btn btn-custon-rounded-two btn-warning'>
-								<i class='fa fa-check edu-checked-pro' aria-hidden='true'></i>상담 수정하기
-							</button>`);
+					<i class='fa fa-check edu-checked-pro' aria-hidden='true'></i>상담 수정하기
+				</button>`);
 	} else {
 		$("#btnSpan").html(`<button type='button' id='submitBtn' class='btn btn-custon-rounded-two btn-primary'>
-								<i class='fa fa-check edu-checked-pro' aria-hidden='true'></i>상담 예약하기
-							</button>`);
+					<i class='fa fa-check edu-checked-pro' aria-hidden='true'></i>상담 예약하기
+				</button>`);
 	}
 	
 	// 날짜 형식 변환
@@ -323,9 +323,9 @@ window.onload = function() {
 						xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 					},
 					success: function(result) {
-						if (result == null || result == '') { return; }	// 예약 내역이 없을 때
+						if (result == null || result == '') { return; }				// 예약 내역이 없을 때
 						
-						if (modFlag != 'mod') {	// 수정일 때는 중복 확인 해제
+						if (modFlag != 'mod') {							// 수정일 때는 중복 확인 해제
 			 				for (let i = 0; i < result.length; i++) {			// 해당 날짜에 예약 내역이 중복되는지 확인
 			 					if (result[i].cnsltTrgetId == `${USER_INFO.mberId}`) {
 			 						Swal.fire({
@@ -343,13 +343,13 @@ window.onload = function() {
 		 					let resvetime = result[i].cmmnCnsltTime;					// 예약된 시간
 		 					let resveId = result[i].cnsltTrgetId;						// 예약 아이디
 		 					let resveNm = result[i].cnsltTrgetIdNm;						// 예약 이름
-		 					let pwNm = resveNm;											// *처리 된 다른 사람 이름
+		 					let pwNm = resveNm;								// *처리 된 다른 사람 이름
 		 					
 		 					for (let j = 0; j < $(".time_selector").length; j++) {
-		 						let timeSpan = $(".time_selector").eq(j).data("time");	// 예약 시간 div 불러오기
+		 						let timeSpan = $(".time_selector").eq(j).data("time");			// 예약 시간 div 불러오기
 								
 		 						let btn = $(`#btn\${j}`);
-		 						if (timeSpan == resvetime) {							// 예약된 시간은 비활성화
+		 						if (timeSpan == resvetime) {						// 예약된 시간은 비활성화
 		 							btn.removeClass('ok-click');
 		 							btn.css('background-color', 'gray');
 		 							btn.closest('li').css('background-color', '#eaeaea');
@@ -360,7 +360,7 @@ window.onload = function() {
 		 								
 		 								let nmArry = resveNm.split("");
 		 							
-		 								for (let i = 0; i < nmArry.length; i++) {	// 중간 이름 *로 대체
+		 								for (let i = 0; i < nmArry.length; i++) {		// 중간 이름 *로 대체
 		 									if ( 1 <= i && i < (nmArry.length - 1)) { nmArry[i] = "*"; }
 		 									pwNm += nmArry[i];
 		 								}
@@ -383,7 +383,7 @@ window.onload = function() {
 		let todayFlag = "";	// 오늘 날짜 이전/이후 확인 flag
 		
 		$(".onSelected").removeClass('onSelected');		// 현재 날짜의 선택을 해제
-		$(this).attr('class', 'getDate onSelected');	// 선택한 날짜의 클래스에 onSelected 추가
+		$(this).attr('class', 'getDate onSelected');		// 선택한 날짜의 클래스에 onSelected 추가
 		
 		let selectDay = $(this).attr("value");
 		loadCnsltResve(selectDay);
